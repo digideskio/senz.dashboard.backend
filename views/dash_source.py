@@ -61,21 +61,18 @@ def update_info_leancloud(user_id, parse_dict):
     app_id_list = list(app_set)
 
     for app_id in app_id_list:
-        query = Query(Object.extend('Application'))
-        query.equal_to('app_id', app_id)
-        app = query.find()[0]
         DashboardSource = Object.extend('DashboardSource')
         query = Query(DashboardSource)
-        query.equal_to('app', app)
-        query.equal_to('user', user)
+        query.equal_to('app_id', app_id)
+        query.equal_to('user_id', user_id)
         dst_table = query.find()
         if not dst_table:
             dst_table = DashboardSource()
         else:
             dst_table = dst_table[0]
 
-        dst_table.set('app', app)
-        dst_table.set('user', user)
+        dst_table.set('app_id', app_id)
+        dst_table.set('user_id', user_id)
         for key, value in parse_dict.items():
             if value:
                 dst_table.set(key, value)
