@@ -1163,7 +1163,7 @@ var DB = {
     init: function() {
         require.config({
             paths: {
-                echarts: '../static/lib/echarts-2.2.7/build/dist'
+                echarts: '../../static/lib/echarts-2.2.7/build/dist'
             }
         });
         this.renderDashBoard();

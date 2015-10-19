@@ -18,8 +18,21 @@
   <script src="{{ url_for('static', filename='lib/echarts-2.2.7/build/dist/echarts.js') }}"></script>
   <script src="{{ url_for('static', filename='scripts/dashboard.js') }}"></script>
  </head>
-
  <body>
+ {% block header %}
+  <div id="header" class="header">
+   <h2 class="site-title"><a href="#">名称或Logo</a></h2>
+   <nav class="main-nav">
+     <ul class="list">
+       <li class="item"><a href="/dashboard">Dashboard</a></li>
+       <li class="item"><a href="#">Integration</a></li>
+       <li class="item"><a href="#">Setting</a></li>
+       <li class="item"><a href="#">Panel</a></li>
+     </ul>
+   </nav>
+  </div>
+ {% endblock %}
+
  {% block navigation %}
    <div id="sidebar" class="sidebar">
    <ul id="sidebar-nav">
@@ -38,6 +51,7 @@
    </ul>
   </div>
  {% endblock %}
+
  {% block content %}{% endblock %}
  </body>
 </html>
