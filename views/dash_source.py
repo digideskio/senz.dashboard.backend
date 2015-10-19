@@ -6,10 +6,10 @@ dash_source = Blueprint('dash_source', __name__)
 
 @dash_source.route('/v1/Location', methods=['POST'])
 def update_location_info():
-    user_id = request.json.get('user_id', None)
+    user_id = request.json.get('user_id')
     if not user_id:
         return make_response('Error')
-    location = request.json.get('location', None)
+    location = request.json.get('location')
     update_info_leancloud(user_id, {'location': location})
     return make_response('OK')
 
@@ -17,7 +17,7 @@ def update_location_info():
 @dash_source.route('/v1/Motion', methods=['POST'])
 def update_motion_info():
     # motion: home_office_status
-    user_id = request.json.get('user_id', None)
+    user_id = request.json.get('user_id')
     if not user_id:
         return make_response('Error')
     home_office_status = request.json.get('home_office_status')
@@ -27,20 +27,20 @@ def update_motion_info():
 
 @dash_source.route('/v1/Event', methods=['POST'])
 def update_event_info():
-    user_id = request.json.get('user_id', None)
+    user_id = request.json.get('user_id')
     if not user_id:
         return make_response('Error')
-    event = request.json.get('event', None)
+    event = request.json.get('event')
     update_info_leancloud(user_id, {'event': event})
     return make_response('OK')
 
 
 @dash_source.route('/v1/StaticInfo', methods=['POST'])
 def update_static_info():
-    user_id = request.json.get('user_id', None)
+    user_id = request.json.get('user_id')
     if not user_id:
         return make_response('Error')
-    staticInfo = request.json.get('staticInfo', None)
+    staticInfo = request.json.get('staticInfo')
     parse_dict = parse_static_info(staticInfo=staticInfo)
     update_info_leancloud(user_id, parse_dict)
     return make_response('OK')
@@ -62,13 +62,13 @@ def update_info_leancloud(user_id, parse_dict):
 
     for app_id in app_id_list:
         query = Query(Object.extend('Application'))
-        query.equal_to('objectId', app_id)
+        query.equal_to('app_id', app_id)
         app = query.find()[0]
         DashboardSource = Object.extend('DashboardSource')
         query = Query(DashboardSource)
         query.equal_to('app', app)
         query.equal_to('user', user)
-        dst_table =query.find()
+        dst_table = query.find()
         if not dst_table:
             dst_table = DashboardSource()
         else:

@@ -1,5 +1,6 @@
 # coding: utf-8
 from flask import Blueprint, render_template, jsonify
+from leancloud import Object, Query
 
 dashboard = Blueprint('dashboard', __name__, template_folder='templates')
 
@@ -11,6 +12,9 @@ def show():
 
 @dashboard.route('/dashboard/profile')
 def profile():
+    query = Query(Object.extend('DashboardSource'))
+    result_list = query.find()
+
     gender = {'category': ['male', 'female'], 'series': [209, 249]}
     age = {"category": ["55up", "35to55", "16to35", "16down"], "series": [209, 249, 299, 304]}
     job = {"category": ["工程师", "销售", "教师", "学生", "军人", "公务员", "管理人员", "自由职业", "其他"],

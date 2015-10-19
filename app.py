@@ -4,7 +4,6 @@ from datetime import datetime
 
 from flask import Flask
 from flask import render_template
-from views.todos import todos_view
 from views.panel import panel
 from views.dashboard import dashboard
 from views.dash_source import dash_source
@@ -14,13 +13,11 @@ from views.settings import settings
 app = Flask(__name__)
 
 # 动态路由
-app.register_blueprint(todos_view, url_prefix='/todos')
 app.register_blueprint(panel)
 app.register_blueprint(dashboard)
 app.register_blueprint(dash_source)
 app.register_blueprint(integration)
 app.register_blueprint(settings)
-
 
 
 @app.route('/')
