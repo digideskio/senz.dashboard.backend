@@ -1,5 +1,5 @@
 # coding: utf-8
-from flask import Blueprint, render_template, jsonify
+from flask import Blueprint, render_template, jsonify, request
 from leancloud import Object, Query
 
 dashboard = Blueprint('dashboard', __name__, template_folder='templates')
@@ -7,12 +7,12 @@ dashboard = Blueprint('dashboard', __name__, template_folder='templates')
 
 @dashboard.route('/dashboard')
 def show():
-    return render_template('dashboard/test.html')
+    return render_template('dashboard/index.html')
 
 
-@dashboard.route('/dashboard/profile/<app_id>')
-def profile(app_id):
-
+@dashboard.route('/dashboard/profile')
+def profile():
+    app_id = request.args.get('app_id')
     gender_list = get_query_list(app_id, 'gender')
     age_list = get_query_list(app_id, 'age')
     occupation_list = get_query_list(app_id, 'occupation')
@@ -42,16 +42,24 @@ def profile(app_id):
         'errmsg': 'ok',
         'data': data
     }
-    return jsonify(user_profile)
+    return render_template('dashboard/user-identity.html')
 
 
-@dashboard.route('/dashboard/interest/<app_id>')
-def interest(app_id):
-    pass
+@dashboard.route('/dashboard/interest')
+def interest():
+    app_id = request.args.get('app_id')
+    data = {}
+    interest = {
+        'errcode': 0,
+        'errmsg': 'ok',
+        'data': data
+    }
+    return render_template('dashboard/user-hobby.html')
 
 
-@dashboard.route('/dashboard/marriage/<app_id>')
-def marriage(app_id):
+@dashboard.route('/dashboard/marriage')
+def marriage():
+    app_id = request.args.get('app_id')
     marriage_list = get_query_list(app_id, 'marriage')
     pregnant_list = get_query_list(app_id, 'pregnant')
 
@@ -66,11 +74,12 @@ def marriage(app_id):
             'pregnant': pregnant
         }
     }
-    return jsonify(ret_json)
+    return render_template('dashboard/user-matrimony.html')
 
 
-@dashboard.route('/dashboard/consumption/<app_id>')
-def consumption(app_id):
+@dashboard.route('/dashboard/consumption')
+def consumption():
+    app_id = request.args.get('app_id')
     consumption_list = get_query_list(app_id, 'consumption')
     car_list = get_query_list(app_id, 'has_car')
     pet_list = get_query_list(app_id, 'has_pet')
@@ -93,15 +102,28 @@ def consumption(app_id):
             'pet': pet
         }
     }
-    return jsonify(ret_json)
+    return render_template('dashboard/user-consumption.html')
 
 
-@dashboard.route('/dashboard/location/<app_id>')
-def location(app_id):
-    pass
+@dashboard.route('/dashboard/location')
+def location():
+    app_id = request.args.get('app_id')
+    return render_template('dashboard/user-location.html')
+
+
+@dashboard.route('/dashboard/motion')
+def motion():
+    return render_template('dashboard/scene.html')
+
+
+@dashboard.route('/dashboard/event')
+def event():
+    return render_template('dashboard/event.html')
 
 
 def get_query_list(app_id='', field=''):
+    if not app_id:
+        return []
     query = Query(Object.extend('DashboardSource'))
     query.equal_to('app_id', app_id)
     result_list = query.find()

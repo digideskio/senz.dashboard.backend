@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en">
+ <head> 
+  <meta charset="utf-8" /> 
+  <meta http-equiv="x-ua-compatible" content="ie=edge" /> 
+  <title>Dashboard</title> 
+  <meta name="description" content="" /> 
+  <meta name="description" content="" /> 
+  <meta name="keywords" content="css3, github, html5" /> 
+  <meta property="og:title" content="Dashboard" /> 
+  <meta property="og:description" content="Dashboard" /> 
+  <meta property="og:url" content="" /> 
+  <!-- <meta property="og:image" content="/images/ta.png" /> --> 
+  <meta property="og:site_name" content="Dashboard" /> 
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" /> 
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles/dashboard.css') }}">
+  <script src="{{ url_for('static', filename='lib/jquery-2.1.4.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='lib/echarts-2.2.7/build/dist/echarts.js') }}"></script>
+  <script src="{{ url_for('static', filename='scripts/dashboard.js') }}"></script>
+ </head>
+
+ <body>
+ {% block navigation %}
+   <div id="sidebar" class="sidebar">
+   <ul id="sidebar-nav">
+    <li class="active"><a href="/dashboard">概览</a></li>
+    <li class="has-sub-nav"> <a href="#">用户群体</a>
+     <ul class="sub-nav">
+      <li><a href="/dashboard/profile">用户属性</a></li>
+      <li><a href="/dashboard/interest">兴趣爱好</a></li>
+      <li><a href="/dashboard/marriage">婚育情况</a></li>
+      <li><a href="/dashboard/consumption">消费情况</a></li>
+      <li><a href="/dashboard/location">地理位置</a></li>
+     </ul>
+    </li>
+    <li><a href="/dashboard/motion">情景</a></li>
+    <li><a href="/dashboard/event">事件</a></li>
+   </ul>
+  </div>
+ {% endblock %}
+ {% block content %}{% endblock %}
+ </body>
+</html>
