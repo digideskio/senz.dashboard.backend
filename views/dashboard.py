@@ -48,7 +48,13 @@ def profile():
 @dashboard.route('/dashboard/interest')
 def interest():
     app_id = request.args.get('app_id')
-    data = {}
+    interest_list = get_query_list('5621fb0f60b27457e863fabb', 'interest')
+    category = []
+    series = []
+    for item in set(interest_list):
+        category.append(item)
+        series.append(interest_list.count(item))
+    data = {"category": category,  "series": series}
     interest = {
         'errcode': 0,
         'errmsg': 'ok',
@@ -80,9 +86,9 @@ def marriage():
 @dashboard.route('/dashboard/consumption')
 def consumption():
     app_id = request.args.get('app_id')
-    consumption_list = get_query_list(app_id, 'consumption')
-    car_list = get_query_list(app_id, 'has_car')
-    pet_list = get_query_list(app_id, 'has_pet')
+    consumption_list = get_query_list('5621fb0f60b27457e863fabb', 'consumption')
+    car_list = get_query_list('5621fb0f60b27457e863fabb', 'has_car')
+    pet_list = get_query_list('5621fb0f60b27457e863fabb', 'has_pet')
 
     category = []
     series = []
@@ -114,13 +120,24 @@ def location():
 @dashboard.route('/dashboard/motion')
 def motion():
     app_id = request.args.get('app_id')
-    home_office_list = get_query_list(app_id, 'home_office_status')
-    category = []
+
+    home_office_type = ['contextAtWork', 'contextAtHome', 'contextCommutingWork', 'contextCommutingHome']
+    home_office_list = get_query_list('5621fb0f60b27457e863fabb', 'home_office_status')
+
     series = []
-    for item in set(home_office_list):
-        category.append(item)
-        series.append(home_office_list.count(item))
-    data = {"category": category,  "series": series}
+    for i in range(4):
+        sub_series = []
+        for j in range(24):
+            sub_series.append(0)
+        series.append(sub_series)
+
+    for item in home_office_list:
+        for i in range(24):
+            for j in range(len(home_office_type)):
+                if item['status'+str(i)] == home_office_type[j]:
+                    series[j][i] += 1
+
+    data = {"category": home_office_type, "xAxis": list(range(24)), "series": series}
     home_office_status = {
         'errcode': 0,
         'errmsg': 'ok',
@@ -132,7 +149,7 @@ def motion():
 @dashboard.route('/dashboard/event')
 def event():
     app_id = request.args.get('app_id')
-    event_list = get_query_list(app_id, 'event')
+    event_list = get_query_list('5621fb0f60b27457e863fabb', 'event')
     category = []
     series = []
     for item in set(event_list):
@@ -150,9 +167,17 @@ def event():
 def get_query_list(app_id='', field=''):
     if not app_id:
         return []
-    query = Query(Object.extend('DashboardSource'))
+
+    query_limit = 1000
+    query = Query(Object.extend('DashDataSource'))
     query.equal_to('app_id', app_id)
-    result_list = query.find()
+    total_count = query.count()
+    query_times = (total_count + query_limit - 1) / query_limit
+    result_list = []
+    for index in range(query_times):
+        query.limit(query_limit)
+        query.skip(index * query_limit)
+        result_list.extend(query.find())
 
     ret_list = []
     for result in result_list:

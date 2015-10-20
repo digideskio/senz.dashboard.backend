@@ -1,26 +1,24 @@
 {% extends 'base.html' %}
 {% block navigation %}
 <div id="sidebar" class="sidebar">
-<ul id="sidebar-nav">
-<li class="active"><a href="#">~~概览</a></li>
-<li class="has-sub-nav"> <a href="#">~~用户群体</a>
- <ul class="sub-nav">
-  <li><a href="#">~~用户属性</a></li>
-  <li><a href="#">~~兴趣爱好</a></li>
-  <li><a href="#">~~婚育情况</a></li>
-  <li><a href="#">~~消费情况</a></li>
-  <li><a href="#">~~地理位置</a></li>
- </ul>
-</li>
-<li><a href="#">~~情景</a></li>
-<li><a href="#">~~事件</a></li>
-</ul>
+    <ul id="sidebar-nav">
+        <li class="active"><a href="#">基础信息</a></li>
+        <li class="has-sub-nav"> <a href="#">动态信息</a>
+            <ul class="sub-nav">
+                <li><a href="#">位置信息</a></li>
+                <li><a href="#">情境信息</a></li>
+                <li><a href="#">事件信息</a></li>
+                <li><a href="#">状态信息</a></li>
+            </ul>
+        </li>
+    {#    <li><a href="#">~~情景</a></li>#}
+    {#    <li><a href="#">~~事件</a></li>#}
+    </ul>
 </div>
 {% endblock %}
 {%  block content %}
 <div id="container" class="container">
     <div id="content" class="content" style="padding-top: 55px; padding-left: 20px;">
-
         <div id="location_type_one">
             {% for item1 in location1_list %}
                 <input type="radio" name="test" value="{{item1}}" />{{ item1 }} &nbsp;

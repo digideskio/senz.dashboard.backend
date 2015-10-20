@@ -1,13 +1,14 @@
-from flask import Blueprint, render_template
+import requests
+from flask import Blueprint, render_template, request
 panel = Blueprint('panel', __name__, template_folder='templates')
 
 
-@panel.route('/panel')
+@panel.route('/panel', methods=['GET', 'POST'])
 def show():
-    location1_list = ['home','dining','scenic_spot','traffic', 'exhibition',
-                      'entertainment','healthcare', 'estate','life_service','hotel',
-                      'work_office','finance', 'education','government','infrastructure',
-                      'auto_related','shopping','sports']
+    location1_list = ['home', 'dining', 'scenic_spot', 'traffic', 'exhibition',
+                      'entertainment', 'healthcare', 'estate', 'life_service', 'hotel',
+                      'work_office', 'finance', 'education', 'government', 'infrastructure',
+                      'auto_related', 'shopping', 'sports']
     location2_list = [
         ['home'],
         ['chinese_restaurant', 'japan_korea_restaurant','japan_restaurant','korea_restaurant', 'western_restaurant',
@@ -72,16 +73,17 @@ def show():
     #     flash('App not exists')
     #     return render_template('console.html')
     #
-    # type = request.form.get('type')
-    # val = request.form.get('val')
-    # if type and val:
-    #     if user.get_tracker_of_app(app_id):
-    #         tracker_list = user.tracker_list
-    #     headers = {"X-AVOSCloud-Application-Id": "qTFUwcnM3U3us8B3ArenyJbm",
-    #               "X-AVOSCloud-Application-Key": "ksfJtp9tIEriApWmbtOrQs5F"}
-    #     payload = {"type": type, "val": val}
-    #     #for tracker in tracker_list:
-    #     requests.post("https://leancloud.cn/1.1/functions/notify_new_details",  headers = headers, data = payload)
+    if request.method == 'POST':
+        type = request.form.get('type')
+        val = request.form.get('val')
+        if type and val:
+            # if user.get_tracker_of_app(app_id):
+            #     tracker_list = user.tracker_list
+            headers = {"X-AVOSCloud-Application-Id": "qTFUwcnM3U3us8B3ArenyJbm",
+                       "X-AVOSCloud-Application-Key": "ksfJtp9tIEriApWmbtOrQs5F"}
+            payload = {"type": type, "val": val}
+            # for tracker in tracker_list:
+            requests.post("https://leancloud.cn/1.1/functions/notify_new_details",  headers=headers, data=payload)
     return render_template('panel/panel.html', location1_list=location1_list,
                            location2_list=location2_list,
                            motion_dict=motion_dict,
