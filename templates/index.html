@@ -1,16 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title></title>
-</head>
-<body>
-<h1>INDEX</h1>
-<ul>
-    <li><a href="/dashboard">Dashboard</a></li>
-    <li><a href="/integration">Integration</a></li>
-    <li><a href="/settings">Settings</a></li>
-    <li><a href="/panel">Panel</a></li>
-</ul>
-</body>
-</html>
+{% extends 'base.html' %}
+{% block content %}
+  <div id="container" class="container"> 
+   <div id="content" class="content" style="padding-top: 55px;">
+    <div id="main" style="height:500px;border:1px solid #ccc;padding:10px;"></div> 
+    <div id="mainMap" style="height:500px;border:1px solid #ccc;padding:10px;"></div> 
+   </div> 
+  </div>
+{% endblock %}

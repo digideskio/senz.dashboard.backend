@@ -7,7 +7,7 @@ dashboard = Blueprint('dashboard', __name__, template_folder='templates')
 
 @dashboard.route('/dashboard')
 def show():
-    return render_template('dashboard/index.html')
+    return render_template('index.html')
 
 
 @dashboard.route('/dashboard/profile')
@@ -42,7 +42,7 @@ def profile():
         'errmsg': 'ok',
         'data': data
     }
-    return render_template('dashboard/user-identity.html')
+    return render_template('dashboard/user-identity.html', option=user_profile)
 
 
 @dashboard.route('/dashboard/interest')
@@ -54,7 +54,7 @@ def interest():
         'errmsg': 'ok',
         'data': data
     }
-    return render_template('dashboard/user-hobby.html')
+    return render_template('dashboard/user-hobby.html', option=interest)
 
 
 @dashboard.route('/dashboard/marriage')
@@ -74,7 +74,7 @@ def marriage():
             'pregnant': pregnant
         }
     }
-    return render_template('dashboard/user-matrimony.html')
+    return render_template('dashboard/user-matrimony.html', option=ret_json)
 
 
 @dashboard.route('/dashboard/consumption')
@@ -102,7 +102,7 @@ def consumption():
             'pet': pet
         }
     }
-    return render_template('dashboard/user-consumption.html')
+    return render_template('dashboard/user-consumption.html', option=ret_json)
 
 
 @dashboard.route('/dashboard/location')
@@ -113,12 +113,38 @@ def location():
 
 @dashboard.route('/dashboard/motion')
 def motion():
-    return render_template('dashboard/scene.html')
+    app_id = request.args.get('app_id')
+    home_office_list = get_query_list(app_id, 'home_office_status')
+    category = []
+    series = []
+    for item in set(home_office_list):
+        category.append(item)
+        series.append(home_office_list.count(item))
+    data = {"category": category,  "series": series}
+    home_office_status = {
+        'errcode': 0,
+        'errmsg': 'ok',
+        'data': data
+    }
+    return render_template('dashboard/scene.html',  option=home_office_status)
 
 
 @dashboard.route('/dashboard/event')
 def event():
-    return render_template('dashboard/event.html')
+    app_id = request.args.get('app_id')
+    event_list = get_query_list(app_id, 'event')
+    category = []
+    series = []
+    for item in set(event_list):
+        category.append(item)
+        series.append(event_list.count(item))
+    data = {"category": category,  "series": series}
+    event = {
+        'errcode': 0,
+        'errmsg': 'ok',
+        'data': data
+    }
+    return render_template('dashboard/event.html', option=event)
 
 
 def get_query_list(app_id='', field=''):
