@@ -24,7 +24,7 @@ $(document).ready(function(){
 
         for(var i=0; i<chkObjs.length; ++i){
             if(chkObjs[i].checked){
-                type = chkObjs[i].parentNode.getAttribute("id");
+                type = chkObjs[i].parentNode.parentNode.getAttribute("id");
                 val = chkObjs[i].value;
                 break;
             }

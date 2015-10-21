@@ -18,45 +18,44 @@
 {% endblock %}
 {%  block content %}
 <div id="container" class="container">
-    <div id="content" class="content" style="padding-top: 55px; padding-left: 20px;">
-        <div id="location_type_one">
-            {% for item1 in location1_list %}
-                <input type="radio" name="test" value="{{item1}}" />{{ item1 }} &nbsp;
-                <select id="{{ item1 }}" selected="selected">
-                {% for item2 in location2_list[location1_list.index(item1)] %}
-                    <option value="{{ item2 }}" >{{ item2 }}</option>
-                {% endfor %}
-                </select>
-                <br>
-            {% endfor %}
-        </div>
-        <br>
+    <div id="content" class="content" style="padding-top: 55px; padding-left: 20px; width: 630px">
 
-        <div id="motion">
+        <ul id="location_type_one" style="float: left">
+            {% for item1 in location1_list %}
+                <li>
+                <input type="radio" name="test" value="{{item1}}" />{{ item1 }} &nbsp;
+                    <select id="{{ item1 }}" selected="selected">
+                    {% for item2 in location2_list[location1_list.index(item1)] %}
+                        <option value="{{ item2 }}" >{{ item2 }}</option>
+                    {% endfor %}
+                    </select>
+                </li>
+            {% endfor %}
+        </ul>
+
+        <ul id="motion" style="float: left">
             <label>Motion:</label><br>
             {% for key, value in motion_dict.iteritems()%}
-            <input type="radio" name="test" value="{{value}}"/> {{key}} &nbsp;
+            <li><input type="radio" name="test" value="{{value}}"/> {{key}}</li>
             {% endfor %}
-        </div>
-        <br>
+        </ul>
 
-        <div id="event">
+        <ul id="context" style="float: left">
             <label>Event:</label><br>
-            {% for item in event_list%}
-            <input type="radio" name="test" value="{{item}}" /> {{item}} &nbsp;
+            {% for item in context_list%}
+            <li><input type="radio" name="test" value="{{item}}" /> {{item}}</li>
             {% endfor %}
-        </div>
-        <br>
+        </ul>
 
-        <div id="home_office_status">
-            <label>HomeOfficeStatus:</label><br>
-            {% for key, value in status_dict.iteritems()%}
-            <input type="radio" name="test" value="{{value}}"/> {{key}} &nbsp;
-            {% endfor %}
-        </div>
-        <br>
+{#        <div id="home_office_status">#}
+{#            <label>HomeOfficeStatus:</label><br>#}
+{#            {% for key, value in status_dict.iteritems()%}#}
+{#            <input type="radio" name="test" value="{{value}}"/> {{key}} &nbsp;#}
+{#            {% endfor %}#}
+{#        </div>#}
+{#        <br>#}
 
-        <input id="btn" type="button" value="Submit" />
+        <input id="btn" type="button" value="Submit" style="width: 100px"/>
 
     </div>
 </div>

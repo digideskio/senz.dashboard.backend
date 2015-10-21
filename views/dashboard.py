@@ -6,7 +6,7 @@ dashboard = Blueprint('dashboard', __name__, template_folder='templates')
 
 
 @dashboard.route('/dashboard')
-def show():
+def index():
     return render_template('index.html')
 
 
@@ -60,7 +60,7 @@ def interest():
         'errmsg': 'ok',
         'data': data
     }
-    return render_template('dashboard/user-hobby.html', option=interest)
+    return render_template('dashboard/user-hobby.html', option=json.dumps(interest))
 
 
 @dashboard.route('/dashboard/marriage')
@@ -80,7 +80,7 @@ def marriage():
             'pregnant': pregnant
         }
     }
-    return render_template('dashboard/user-matrimony.html', option=ret_json)
+    return render_template('dashboard/user-matrimony.html', option=json.dumps(ret_json))
 
 
 @dashboard.route('/dashboard/consumption')
@@ -108,7 +108,7 @@ def consumption():
             'pet': pet
         }
     }
-    return render_template('dashboard/user-consumption.html', option=ret_json)
+    return render_template('dashboard/user-consumption.html', option=json.dumps(ret_json))
 
 
 @dashboard.route('/dashboard/location')
@@ -143,7 +143,7 @@ def motion():
         'errmsg': 'ok',
         'data': data
     }
-    return render_template('dashboard/scene.html',  option=home_office_status)
+    return render_template('dashboard/scene.html',  option=json.dumps(home_office_status))
 
 
 @dashboard.route('/dashboard/event')
@@ -161,7 +161,7 @@ def event():
         'errmsg': 'ok',
         'data': data
     }
-    return render_template('dashboard/event.html', option=event)
+    return render_template('dashboard/event.html', option=json.dumps(event))
 
 
 def get_query_list(app_id='', field=''):
@@ -183,3 +183,19 @@ def get_query_list(app_id='', field=''):
     for result in result_list:
         ret_list.append(result.attributes[field])
     return ret_list
+
+
+@dashboard.route('/dashboard/v1/StaticInfo', methods=['POST'])
+def post_static_info():
+    pass
+
+
+@dashboard.route('/dashboard/v1/Location', methods=['POST'])
+def post_location_info():
+    pass
+
+
+@dashboard.route('/dashboard/v1/Context', methods=['POST'])
+def post_context_info():
+    pass
+

@@ -57,6 +57,11 @@ def show():
                   'shopping_in_mall', 'exercise_indoor']
     status_dict = {"unknown": -1, "arriving_home": 0, "leaving_home": 1, "arriving_office": 2, "leaving_office": 3,
                    "going_home": 4, "going_office": 5, "user_home_office_not_yet_defined": 6}
+    context_list = ['contextAtHome', 'contextCommutingWork', 'contextAtWork', 'contextCommutingHome',
+                    'contextWorkingInCBD', 'contextStudyingInSchool', 'contextWorkingInSchool',
+                    'contextOutdoorExercise', 'contextIndoorExercise', 'contextDinningOut', 'contextTravelling',
+                    'contextShortTrip', 'contextInParty', 'contextWindowShopping', 'contextAtCinema',
+                    'contextAtExhibition', 'contextAtPopsConcert', 'contextAtTheatre', 'contextAtClassicsConcert']
 
     # session_token = session.get('session_token')
     # if not session_token:
@@ -90,8 +95,7 @@ def show():
     return render_template('panel/panel.html', location1_list=location1_list,
                            location2_list=location2_list,
                            motion_dict=motion_dict,
-                           event_list=event_list,
-                           status_dict=status_dict)
+                           context_list=context_list)
 
 
 
