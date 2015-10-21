@@ -18,44 +18,21 @@
 {% endblock %}
 {%  block content %}
 <div id="container" class="container">
-    <div id="content" class="content" style="padding-top: 55px; padding-left: 20px; width: 630px">
-
-        <ul id="location_type_one" style="float: left">
-            {% for item1 in location1_list %}
-                <li>
-                <input type="radio" name="test" value="{{item1}}" />{{ item1 }} &nbsp;
-                    <select id="{{ item1 }}" selected="selected">
-                    {% for item2 in location2_list[location1_list.index(item1)] %}
-                        <option value="{{ item2 }}" >{{ item2 }}</option>
-                    {% endfor %}
-                    </select>
-                </li>
-            {% endfor %}
-        </ul>
-
+    <div id="content" class="content" style="padding-top: 55px; padding-left: 20px; width: 700px">
         <ul id="motion" style="float: left">
-            <label>Motion:</label><br>
+            <label><strong>Motion: </strong></label><br>
             {% for key, value in motion_dict.iteritems()%}
-            <li><input type="radio" name="test" value="{{value}}"/> {{key}}</li>
+            <li style="float: left; margin: 10px"><input type="radio" name="test" value="{{value}}"/> {{key}}</li>
             {% endfor %}
         </ul>
 
         <ul id="context" style="float: left">
-            <label>Event:</label><br>
+            <label><strong>Context:</strong></label><br>
             {% for item in context_list%}
-            <li><input type="radio" name="test" value="{{item}}" /> {{item}}</li>
+            <li style="float: left; margin: 10px"><input type="radio" name="test" value="{{item}}" /> {{item}}</li>
             {% endfor %}
         </ul>
-
-{#        <div id="home_office_status">#}
-{#            <label>HomeOfficeStatus:</label><br>#}
-{#            {% for key, value in status_dict.iteritems()%}#}
-{#            <input type="radio" name="test" value="{{value}}"/> {{key}} &nbsp;#}
-{#            {% endfor %}#}
-{#        </div>#}
-{#        <br>#}
-
-        <input id="btn" type="button" value="Submit" style="width: 100px"/>
+        <input style="float: left; margin: 10px; width: 100px" id="btn" type="button" value="Submit"/>
 
     </div>
 </div>
