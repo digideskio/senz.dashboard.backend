@@ -20,14 +20,23 @@
  </head>
  <body>
  {% block header %}
-  <div id="header" class="header">
-   <h2 class="site-title"><a href="#">名称或Logo</a></h2>
+    <div id="header" class="header">
+   <h2 class="site-title"><a href="./">Senz</a></h2>
+   <div class="inline-block">
+    <form action="/some_api" method="get">
+      <select name="select_app" class="select_app" id="select_app">
+       <option value="app1">App1</option>
+       <option value="app2">App2</option>
+       <option value="app3">App3</option>
+      </select>
+    </form>
+   </div>
    <nav class="main-nav">
      <ul class="list">
-       <li class="item"><a href="/dashboard">Dashboard</a></li>
-       <li class="item"><a href="#">Integration</a></li>
-       <li class="item"><a href="#">Setting</a></li>
-       <li class="item"><a href="/panel">Panel</a></li>
+       <li class="item"><a href="/dashboard">统计分析</a></li>
+       <li class="item"><a href="#">SDK集成</a></li>
+       <li class="item"><a href="#">设置</a></li>
+       <li class="item"><a href="/panel">调试</a></li>
      </ul>
    </nav>
   </div>

@@ -1,9 +1,37 @@
 {% extends 'base.html' %}
 {% block content %}
-  <div id="container" class="container"> 
+{#  <div id="container" class="container"> #}
+{#   <div id="content" class="content" style="padding-top: 55px;">#}
+{#    <div id="main" style="height:500px;border:1px solid #ccc;padding:10px;"></div> #}
+{#    <div id="mainMap" style="height:500px;border:1px solid #ccc;padding:10px;"></div> #}
+{#   </div> #}
+{#  </div>#}
+    <div id="container" class="container">
    <div id="content" class="content" style="padding-top: 55px;">
-    <div id="main" style="height:500px;border:1px solid #ccc;padding:10px;"></div> 
-    <div id="mainMap" style="height:500px;border:1px solid #ccc;padding:10px;"></div> 
-   </div> 
+      <div class="user-avatar-wrap">
+        <ul class="list">
+          <li class="item">
+            <img class="img" src="{{ url_for('static', filename='images/user1.png') }}" alt="">
+            <h2>时尚达人</h2>
+            <p>喜欢潮流、热衷社交、喜欢健身、关注时尚信息，有车无房，自由无拘束</p>
+          </li>
+          <li class="item">
+            <img class="img" src="{{ url_for('static', filename='images/user2.png') }}" alt="">
+            <h2>理工宅男</h2>
+            <p>喜欢科技、死宅、关注科技新闻和创业信息、爱玩游戏，有房无车</p>
+          </li>
+          <li class="item">
+            <img class="img" src="{{ url_for('static', filename='images/user3.png') }}" alt="">
+            <h2>干练白领</h2>
+            <p>工作能力强、生活规律有品质、养宠物、爱去星巴克、关注健康养生</p>
+          </li>
+        </ul>
+      </div>
+   </div>
   </div>
 {% endblock %}
+<script>
+(function(){
+
+}).call(this);
+</script>

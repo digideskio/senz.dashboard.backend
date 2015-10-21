@@ -1,5 +1,5 @@
 # coding: utf-8
-from flask import Blueprint, render_template, jsonify, request
+from flask import Blueprint, render_template, json, request
 from leancloud import Object, Query
 
 dashboard = Blueprint('dashboard', __name__, template_folder='templates')
@@ -13,7 +13,7 @@ def show():
 @dashboard.route('/dashboard/profile')
 def profile():
     app_id = request.args.get('app_id')
-    gender_list = get_query_list(app_id, 'gender')
+    gender_list = get_query_list('5621fb0f60b27457e863fabb', 'gender')
     age_list = get_query_list(app_id, 'age')
     occupation_list = get_query_list(app_id, 'occupation')
     field_list = get_query_list(app_id, 'field')
@@ -42,7 +42,7 @@ def profile():
         'errmsg': 'ok',
         'data': data
     }
-    return render_template('dashboard/user-identity.html', option=user_profile)
+    return render_template('dashboard/user-identity.html', option=json.dumps(user_profile))
 
 
 @dashboard.route('/dashboard/interest')

@@ -50,7 +50,8 @@ def show():
         ['golf','skiing','sports_venues','football_field','tennis_court','horsemanship','race_course',
          'basketball_court'],
     ]
-    motion_dict = {'sitting': 0, 'walking': 3, 'running': 4, 'ridding': 2, 'driving': 1, 'unknown': -1}
+    motion_dict = {'motionSitting': 0, 'motionWalking': 3, 'motionRunning': 4, 'motionBiking': 2, 'motionCommuting': 1,
+                   'unknown': -1}
     event_list = ['attend_concert', 'go_outing', 'dining_in_restaurant', 'watch_movie',
                   'study_in_class', 'visit_sights', 'work_in_office', 'exercise_outdoor',
                   'shopping_in_mall', 'exercise_indoor']
@@ -77,13 +78,15 @@ def show():
         type = request.form.get('type')
         val = request.form.get('val')
         if type and val:
+            print type, val
             # if user.get_tracker_of_app(app_id):
             #     tracker_list = user.tracker_list
-            headers = {"X-AVOSCloud-Application-Id": "qTFUwcnM3U3us8B3ArenyJbm",
-                       "X-AVOSCloud-Application-Key": "ksfJtp9tIEriApWmbtOrQs5F"}
-            payload = {"type": type, "val": val}
+            headers = {"X-AVOSCloud-Application-Id": "wsbz6p3ouef94ubvsdqk2jfty769wkyed3qsry5hebi2va2h",
+                       "X-AVOSCloud-Application-Key": "6z6n0w3dopxmt32oi2eam2dt0orh8rxnqc8lgpf2hqnar4tr"}
+            payload = {"userId": "559b8bd5e4b0d4d1b1d35e88", "type": type, "val": val}
             # for tracker in tracker_list:
             requests.post("https://leancloud.cn/1.1/functions/notify_new_details",  headers=headers, data=payload)
+            # requests.post("http://localhost:3000/functions/notify_new_details",  headers=headers, data=payload)
     return render_template('panel/panel.html', location1_list=location1_list,
                            location2_list=location2_list,
                            motion_dict=motion_dict,
