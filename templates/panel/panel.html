@@ -11,30 +11,30 @@
                 <li><a href="#">状态信息</a></li>
             </ul>
         </li>
-    {#    <li><a href="#">~~情景</a></li>#}
-    {#    <li><a href="#">~~事件</a></li>#}
     </ul>
 </div>
 {% endblock %}
 {%  block content %}
 <div id="container" class="container">
-    <div id="content" class="content" style="padding-top: 55px; padding-left: 20px; width: 700px">
-        <ul id="motion" style="float: left">
+    <div id="content" class="content clearfix" style="padding-top: 55px;">
+        <ul id="motion" class="filter-ul">
             <label><strong>Motion: </strong></label><br>
             {% for key, value in motion_dict.iteritems()%}
-            <li style="float: left; margin: 10px"><input type="radio" name="test" value="{{value}}"/> {{key}}</li>
+            <li class="clearfix"><input type="radio" name="test" value="{{value}}"/> {{key}}</li>
             {% endfor %}
         </ul>
 
-        <ul id="context" style="float: left">
+        <ul id="context" class="filter-ul">
             <label><strong>Context:</strong></label><br>
             {% for item in context_list%}
-            <li style="float: left; margin: 10px"><input type="radio" name="test" value="{{item}}" /> {{item}}</li>
+            <li class="clearfix"><input type="radio" name="test" value="{{item}}" /> {{item}}</li>
             {% endfor %}
+            <li><input class="btn" id="btn" type="button" value="Submit"/></li>
         </ul>
-        <input style="float: left; margin: 10px; width: 100px" id="btn" type="button" value="Submit"/>
+
 
     </div>
 </div>
 <script src="{{ url_for('static', filename='scripts/panel.js') }}"></script>
+<link rel="stylesheet" href="{{ url_for('static', filename='styles/panel.css') }}">
 {%  endblock %}

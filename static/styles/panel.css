@@ -1,0 +1,51 @@
+.clearfix {
+  *zoom: 1;
+}
+
+.clearfix:before,
+.clearfix:after {
+  display: table;
+  line-height: 0;
+  content: "";
+}
+.filter-ul {
+    list-style: none;
+    width: 25%;
+    padding: 10px;
+    margin-left: 30px;
+    border-left: 1px solid #ddd;
+    float: left;
+}
+.left {
+    float: left;
+}
+.right {
+    float: right;
+}
+
+.radio {
+    display: inline-block;
+}
+
+.select {
+    display: inline-block;
+    width: 180px;
+    height: 35px;
+}
+
+.filter-ul li {
+    padding: 5px 0;
+}
+
+.filter-ul li .select {
+    float: right;
+}
+
+.btn {
+    background: #38f;
+    border: 1px solid #38f;
+    cursor: pointer;
+    padding: 3px 5px;
+    color: #fff;
+    width: 100px;
+}

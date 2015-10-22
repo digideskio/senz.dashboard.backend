@@ -1,5 +1,5 @@
 # coding: utf-8
-from flask import Blueprint, render_template, json, request
+from flask import Blueprint, render_template, json, request, make_response
 from leancloud import Object, Query
 
 dashboard = Blueprint('dashboard', __name__, template_folder='templates')
@@ -184,18 +184,4 @@ def get_query_list(app_id='', field=''):
         ret_list.append(result.attributes[field])
     return ret_list
 
-
-@dashboard.route('/dashboard/v1/StaticInfo', methods=['POST'])
-def post_static_info():
-    pass
-
-
-@dashboard.route('/dashboard/v1/Location', methods=['POST'])
-def post_location_info():
-    pass
-
-
-@dashboard.route('/dashboard/v1/Context', methods=['POST'])
-def post_context_info():
-    pass
 
