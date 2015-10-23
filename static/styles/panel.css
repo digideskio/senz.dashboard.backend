@@ -1,26 +1,43 @@
 .clearfix {
-  *zoom: 1;
+  /**zoom: 1;*/
 }
 
 .clearfix:before,
 .clearfix:after {
   display: table;
-  line-height: 0;
+  line-height: 1;
   content: "";
 }
 .filter-ul {
     list-style: none;
-    width: 25%;
+    width: 50%;
     padding: 10px;
     margin-left: 30px;
-    border-left: 1px solid #ddd;
-    float: left;
+    /*border-left: 1px solid #ddd;*/
+    /*float: left;*/
 }
+.filter-sl {
+    list-style: none;
+    padding: 10px;
+    margin-left: 30px;
+    /*border-left: 1px solid #ddd;*/
+}
+.btn {
+    background: #38f;
+    border: 1px solid #38f;
+    cursor: pointer;
+    padding: 3px 5px;
+    margin-left: 30px;
+    color: #fff;
+    width: 100px;
+}
+
+
 .left {
-    float: left;
+    /*float: left;*/
 }
 .right {
-    float: right;
+    /*float: right;*/
 }
 
 .radio {
@@ -35,17 +52,10 @@
 
 .filter-ul li {
     padding: 5px 0;
+    display: inline;
 }
 
 .filter-ul li .select {
-    float: right;
+    /*float: right;*/
 }
 
-.btn {
-    background: #38f;
-    border: 1px solid #38f;
-    cursor: pointer;
-    padding: 3px 5px;
-    color: #fff;
-    width: 100px;
-}

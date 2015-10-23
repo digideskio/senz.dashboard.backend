@@ -10,8 +10,8 @@ engine = Engine(app)
 def post_static_info(**params):
     if 'userId' in params and 'staticInfo' in params:
         user_id = params['userId']
-        staticinfo = params['staticInfo']
-        parse_dict = parse_static_info(staticinfo)
+        static_info = params['staticInfo']
+        parse_dict = parse_static_info(static_info)
         return updata_backend_info(user_id, parse_dict)
     else:
         return False
@@ -19,10 +19,10 @@ def post_static_info(**params):
 
 @engine.define
 def post_location_info(**params):
-    if 'userId' in params and 'location' in params:
+    if 'userId' in params and 'locationInfo' in params:
         user_id = params['userId']
-        location = params['location']
-        parse_dict = parse_location_info(location)
+        location_info = params['locationInfo']
+        parse_dict = parse_location_info(location_info)
         return updata_backend_info(user_id, parse_dict)
     else:
         return False
@@ -32,16 +32,17 @@ def post_location_info(**params):
 def post_context_info(**params):
     if 'userId' in params and 'context' in params:
         user_id = params['userId']
-        context = params['location']
-        parse_dict = parse_context_info(context)
+        context_info = params['contextInfo']
+        parse_dict = parse_context_info(context_info)
         return updata_backend_info(user_id, parse_dict)
     else:
         return False
 
 
-def parse_static_info(staticinfo):
+def parse_static_info(static_info):
     ret_dict = {}
-    for key, value in staticinfo.items():
+    print type(static_info)
+    for key, value in static_info.items():
         if isinstance(value, dict):
             ret_dict[key] = sorted(value.items(), key=lambda value: -value[1])[0][0]
         elif isinstance(value, float):
@@ -53,12 +54,18 @@ def parse_static_info(staticinfo):
     return ret_dict
 
 
-def parse_location_info(location):
+def parse_location_info(location_info):
     ret_dict = {}
+    location = location_info.get('location')
+    ret_dict['location'] = location
+    poiProbLv1 = location_info.get('poiProbLv1')
+    poiProbLv2 = location_info.get('poiProbLv2')
+    ret_dict['poiProbLv1'] = sorted(poiProbLv1.items(), key=lambda value: -value[1])[0][0]
+    ret_dict['poiProbLv2'] = sorted(poiProbLv2.items(), key=lambda value: -value[1])[0][0]
     return ret_dict
 
 
-def parse_context_info(context):
+def parse_context_info(context_info):
     ret_dict = {}
     return ret_dict
 

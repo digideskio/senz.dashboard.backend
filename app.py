@@ -1,7 +1,6 @@
 # coding: utf-8
 
 from datetime import datetime
-
 from flask import Flask
 from flask import render_template
 from views.panel import panel
