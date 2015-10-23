@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+{% block navigation %}
+<div id="sidebar" class="sidebar">
+    <ul id="sidebar-nav">
+        <li class="active"><a href="#">@@@基础信息</a></li>
+        <li class="has-sub-nav"> <a href="#">@@@动态信息</a>
+            <ul class="sub-nav">
+                <li><a href="#">@@@位置信息</a></li>
+                <li><a href="#">@@@情境信息</a></li>
+                <li><a href="#">@@@事件信息</a></li>
+                <li><a href="#">@@@状态信息</a></li>
+            </ul>
+        </li>
+    </ul>
+</div>
+{% endblock %}
+
+{%  block content %}
+<div id="container" class="container">
+    <div id="content" class="content" style="padding-top: 55px;">
+        <div id="settings">
+        <div>
+        <div ng-view="" class="ng-scope">
+        <form>
+            <div>
+                <label>
+                App ID
+                </label>
+                <div>
+                    <input id="form-app-id" type="text" value="{{ app_id }}" required="" readonly="">
+                </div>
+            </div>
+            <div>
+                <label>
+                App Key
+                </label>
+                <div>
+                    <input id="form-app-key" class="form-control" type="text" value="{{ app_key }}" required="" readonly="">
+                </div>
+            </div>
+            {% if disabled %}
+                <div>
+                <button type="button" id="delete-app">
+                Delete This Application
+                </button>
+                </div>
+            {% else %}
+                <div>
+                <button type="button" id="delete-app">
+                Delete This Application
+                </button>
+                </div>
+            {% endif %}
+        </form>
+        </div>
+        </div>
+        </div>
+    </div>
+</div>
+{%  endblock %}

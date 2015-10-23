@@ -4,5 +4,5 @@ integration = Blueprint('integration', __name__, template_folder='templates')
 
 @integration.route('/integration')
 def show():
-    return render_template('integration/test.html')
+    return render_template('integration/integration.html')
 

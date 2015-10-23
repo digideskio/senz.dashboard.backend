@@ -14,6 +14,8 @@
   <meta property="og:site_name" content="Dashboard" /> 
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" /> 
   <link rel="stylesheet" href="{{ url_for('static', filename='styles/dashboard.css') }}">
+{#  <link rel="stylesheet" href="{{ url_for('static', filename='styles/bootstrap.min.css') }}">#}
+{#  <link rel="stylesheet" href="{{ url_for('static', filename='styles/psdash.css') }}">#}
   <script src="{{ url_for('static', filename='lib/jquery-2.1.4.min.js') }}"></script>
   <script src="{{ url_for('static', filename='lib/echarts-2.2.7/build/dist/echarts.js') }}"></script>
   <script src="{{ url_for('static', filename='scripts/dashboard.js') }}"></script>
@@ -55,8 +57,8 @@
       <li><a href="/dashboard/location">地理位置</a></li>
      </ul>
     </li>
-    <li><a href="/dashboard/motion">情景</a></li>
-    <li><a href="/dashboard/event">事件</a></li>
+    <li><a href="/dashboard/motion">情境</a></li>
+{#    <li><a href="/dashboard/event">事件</a></li>#}
    </ul>
   </div>
  {% endblock %}
