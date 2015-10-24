@@ -7,4 +7,94 @@
     </div>
    </div> 
   </div>
+<script>
+    (function() {
+        var hobbyMapOption = {
+            title: {
+                x: 'center',
+                text: '兴趣爱好（未完待完善）',
+                subtext: '',
+                link: ''
+            },
+            tooltip: {
+                trigger: 'axis',
+                showDelay: 0,
+                axisPointer: {
+                    show: true,
+                    type: 'cross',
+                    lineStyle: {
+                        type: 'dashed',
+                        width: 1
+                    }
+                }
+            },
+            legend: {
+                show: false,
+                data: ['兴趣爱好']
+            },
+            toolbox: {
+                show: true,
+                feature: {
+                    mark: {show: true},
+                    dataZoom: {show: true},
+                    dataView: {show: true, readOnly: false},
+                    restore: {show: false},
+                    saveAsImage: {show: true}
+                }
+            },
+            xAxis: [
+                {
+                    type: 'value',
+                    splitNumber: 4,
+                    scale: true,
+                    show: false
+                }
+            ],
+            yAxis: [
+                {
+                    type: 'value',
+                    splitNumber: 4,
+                    scale: true,
+                    show: false
+                }
+            ],
+            series: [
+                {
+                    name: '出境游',
+                    type: 'scatter',
+                    symbolSize: function (value) {
+                        return Math.round(value[2] / 5);
+                    },
+                    data: [[190, 93, 501]]
+                },
+                {
+                    name: '爬山',
+                    type: 'scatter',
+                    symbolSize: function (value) {
+                        return Math.round(value[2] / 5);
+                    },
+                    data: [[30, 93, 101]]
+                },
+                {
+                    name: '爬山',
+                    type: 'scatter',
+                    symbolSize: function (value) {
+                        return Math.round(value[2] / 5);
+                    },
+                    data: [[-30, -93, 101]]
+                }
+            ]
+        };
+
+        require(['echarts', 'echarts/chart/bar', 'echarts/chart/line', 'echarts/chart/map', 'echarts/chart/pie', 'echarts/chart/scatter'],
+        function(ec) {
+            // 兴趣爱好render
+            if(!document.getElementById('hobbyMap')){
+                return;
+            }
+            var hobbyMap = ec.init(document.getElementById('hobbyMap'));
+            hobbyMap.setOption(hobbyMapOption);
+        });
+    }).call(this);
+</script>
 {% endblock %}

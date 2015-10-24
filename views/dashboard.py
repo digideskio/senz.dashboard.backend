@@ -56,7 +56,7 @@ def interest():
 @dashboard.route('/dashboard/marriage')
 def marriage():
     app_id = request.args.get('app_id')
-    result_dict = get_query_list(app_id, 'marriage', 'pregnant')
+    result_dict = get_query_list('5621fb0f60b27457e863fabb', 'marriage', 'pregnant')
     marriage_list = [] if 'marriage' not in result_dict else result_dict['marriage']
     pregnant_list = [] if 'pregnant' not in result_dict else result_dict['pregnant']
 

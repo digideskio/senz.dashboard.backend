@@ -1,5 +1,4 @@
 var DB = {
-    
     config: {
         api: {}
     },
@@ -122,7 +121,7 @@ var DB = {
                     mark : {show: false},
                     dataView : {show: false, readOnly: false},
                     magicType : {
-                        show: false, 
+                        show: false,
                         type: ['pie', 'funnel'],
                         option: {
                             funnel: {
@@ -193,7 +192,7 @@ var DB = {
                     mark : {show: true},
                     dataView : {show: true, readOnly: false},
                     magicType : {
-                        show: true, 
+                        show: true,
                         type: ['pie', 'funnel'],
                         option: {
                             funnel: {
@@ -324,7 +323,7 @@ var DB = {
                 }
             ]
         };
-          
+
         var professionMapOption = {
             title: {
                 x: 'center',
@@ -406,8 +405,8 @@ var DB = {
                     }
                 }
             ]
-        };    
-                
+        };
+
 
         require(['echarts', 'echarts/chart/bar', 'echarts/chart/line', 'echarts/chart/map', 'echarts/chart/pie'],
         function(ec) {
@@ -1166,10 +1165,10 @@ var DB = {
                 echarts: '../../static/lib/echarts-2.2.7/build/dist'
             }
         });
-        this.renderDashBoard();
-        this.userIdentity();
-        this.userHobby();
-        this.userMatrimony();
+        //this.renderDashBoard();
+        //this.userIdentity();
+        //this.userHobby();
+        //this.userMatrimony();
         this.userConsumption();
         this.userLocation();
         this.sceneMap();
@@ -1179,4 +1178,4 @@ var DB = {
 
 (function() {
     DB.init();
-})()
+})();

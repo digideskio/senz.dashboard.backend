@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+
 {% block content %}
   <div id="container" class="container">
    <div id="content" class="content" style="padding-top: 55px;">
@@ -16,11 +17,9 @@
     </div>
    </div>
   </div>
-{% endblock %}
 
 <script>
-    var profile = {{ option|tojson }};
-alert(profile);
+var profile = JSON.parse({{ option|tojson }});
 (function(){
   require.config({
       paths: {
@@ -42,7 +41,7 @@ alert(profile);
           orient : 'vertical',
           x : 'left',
           y : '60',
-          data:['男','女']
+          data: profile.data.gender.category
       },
       toolbox: {
           show : true,
@@ -92,8 +91,8 @@ alert(profile);
                   }
               },
               data:[
-                  {value:205, name:'男'},
-                  {value:310, name:'女'}
+                  {value: profile.data.gender.series[0], name: profile.data.gender.category[0]},
+                  {value: profile.data.gender.series[1], name: profile.data.gender.category[1]}
               ]
           }
       ]
@@ -113,7 +112,7 @@ alert(profile);
           orient : 'vertical',
           x : 'right',
           y : '60',
-          data:['55以上','35-55','16-35','16岁一下']
+          data: profile.data.age.category
       },
       toolbox: {
           show : true,
@@ -163,10 +162,10 @@ alert(profile);
                   }
               },
               data:[
-                  {value:305, name:'55以上'},
-                  {value:310, name:'35-55'},
-                  {value:234, name:'16-35'},
-                  {value:135, name:'16岁一下'}
+                  {value: profile.data.age.series[0], name: profile.data.age.category[0]},
+                  {value: profile.data.age.series[1], name: profile.data.age.category[1]},
+                  {value: profile.data.age.series[2], name: profile.data.age.category[2]},
+                  {value: profile.data.age.series[3], name: profile.data.age.category[3]}
               ]
           }
       ]
@@ -200,7 +199,7 @@ alert(profile);
           {
               type: 'category',
               show: false,
-              data: ['工程师', '销售', '教师', '学生', '军人', '公务员', '管理人员', '自由职业', '其他']
+              data: profile.data.job.category
           }
       ],
       yAxis: [
@@ -231,24 +230,7 @@ alert(profile);
                       }
                   }
               },
-              data: [12,21,10,4,12,5,6,5,2],
-              markPoint: {
-                  tooltip: {
-                      trigger: 'item',
-                      backgroundColor: 'rgba(0,0,0,0)'
-                  },
-                  data: [
-                      {xAxis:0, y: 350, name:'工程师', symbolSize:0},
-                      {xAxis:1, y: 350, name:'销售', symbolSize:0},
-                      {xAxis:2, y: 350, name:'教师', symbolSize:0},
-                      {xAxis:3, y: 350, name:'学生', symbolSize:0},
-                      {xAxis:4, y: 350, name:'军人', symbolSize:0},
-                      {xAxis:5, y: 350, name:'公务员', symbolSize:0},
-                      {xAxis:6, y: 350, name:'管理人员', symbolSize:0},
-                      {xAxis:7, y: 350, name:'自由职业', symbolSize:0},
-                      {xAxis:8, y: 350, name:'其他', symbolSize:0}
-                  ]
-              }
+              data: profile.data.job.series,
           }
       ]
   };
@@ -281,7 +263,7 @@ alert(profile);
           {
               type: 'category',
               show: false,
-              data: ['IT', '贸易', '法律', '体育', '医务', '人力', '金融', '建筑', '人文科学', '自然科学', '制造业']
+              data: profile.data.profession.category
           }
       ],
       yAxis: [
@@ -312,26 +294,7 @@ alert(profile);
                       }
                   }
               },
-              data: [12,21,10,4,12,5,6,5,2,3,1],
-              markPoint: {
-                  tooltip: {
-                      trigger: 'item',
-                      backgroundColor: 'rgba(0,0,0,0)'
-                  },
-                  data: [
-                      {xAxis:0, y: 350, name:'IT', symbolSize:0},
-                      {xAxis:1, y: 350, name:'贸易', symbolSize:0},
-                      {xAxis:2, y: 350, name:'法律', symbolSize:0},
-                      {xAxis:3, y: 350, name:'体育', symbolSize:0},
-                      {xAxis:4, y: 350, name:'医务', symbolSize:0},
-                      {xAxis:5, y: 350, name:'人力', symbolSize:0},
-                      {xAxis:6, y: 350, name:'金融', symbolSize:0},
-                      {xAxis:7, y: 350, name:'建筑', symbolSize:0},
-                      {xAxis:8, y: 350, name:'人文科学', symbolSize:0},
-                      {xAxis:9, y: 350, name:'自然科学', symbolSize:0},
-                      {xAxis:10, y: 350, name:'制造业', symbolSize:0}
-                  ]
-              }
+              data: profile.data.profession.series,
           }
       ]
   };
@@ -370,3 +333,4 @@ alert(profile);
 
 }).call(this);
 </script>
+{% endblock %}
