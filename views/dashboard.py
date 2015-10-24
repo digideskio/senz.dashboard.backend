@@ -95,9 +95,7 @@ def consumption():
     consumption_list = [] if 'consumption' not in result_dict else result_dict['consumption']
     car_list = [] if 'has_car' not in result_dict else result_dict['has_car']
     pet_list = [] if 'has_pet' not in result_dict else result_dict['has_pet']
-    print consumption_list
-    print car_list
-    print pet_list
+
     category = []
     series = []
     for item in set(consumption_list):
@@ -134,12 +132,7 @@ def motion():
     result_dict = get_query_list('5621fb0f60b27457e863fabb', 'home_office_status')
     home_office_list = [] if 'home_office_status' not in result_dict else result_dict['home_office_status']
 
-    series = []
-    for i in range(4):
-        sub_series = []
-        for j in range(24):
-            sub_series.append(0)
-        series.append(sub_series)
+    series = map(lambda x: map(lambda x: 0, xrange(24)), xrange(len(home_office_type)))
 
     for item in home_office_list:
         for i in range(24):
