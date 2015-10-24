@@ -1,7 +1,6 @@
 # coding: utf-8
-from flask import Blueprint, render_template, json, request, make_response
+from flask import Blueprint, render_template, json, request
 from leancloud import Object, Query
-import time
 
 dashboard = Blueprint('dashboard', __name__, template_folder='templates')
 
@@ -24,21 +23,12 @@ def profile():
     age = {"category": ["55up", "35to55", "16to35", "16down"],
            "series": [age_list.count('55up'), age_list.count('35to55'),
                       age_list.count('16to35'), age_list.count('16down')]}
-    category = []
-    series = []
-    for item in set(occupation_list):
-        category.append(item)
-        series.append(occupation_list.count(item))
-    job = {"category": category, "series": series}
+    occupation_tmp = map(lambda x: list(x), zip(*map(lambda x: [x, occupation_list.count(x)], set(occupation_list))))
+    occupation = {"category": occupation_tmp[0], "series": occupation_tmp[1]}
+    field_tmp = map(lambda x: list(x), zip(*map(lambda x: [x, field_list.count(x)], set(field_list))))
+    field = {"category": field_tmp[0], "series": field_tmp[1]}
 
-    category = []
-    series = []
-    for item in set(field_list):
-        category.append(item)
-        series.append(field_list.count(item))
-    profession = {"category": category,  "series": series}
-
-    data = {'gender': gender, 'age': age, 'job': job, 'profession': profession}
+    data = {'gender': gender, 'age': age, 'job': occupation, 'profession': field}
     user_profile = {
         'errcode': 0,
         'errmsg': 'ok',
@@ -52,13 +42,9 @@ def interest():
     app_id = request.args.get('app_id')
     result_dict = get_query_list('5621fb0f60b27457e863fabb', 'interest')
     interest_list = [] if 'interest' not in result_dict else result_dict['interest']
+    interest_tmp = map(lambda x: list(x), zip(*map(lambda x: [x, interest_list.count(x)], set(interest_list))))
 
-    category = []
-    series = []
-    for item in set(interest_list):
-        category.append(item)
-        series.append(interest_list.count(item))
-    data = {"category": category,  "series": series}
+    data = {"category": interest_tmp[0],  "series": interest_tmp[1]}
     interest = {
         'errcode': 0,
         'errmsg': 'ok',
@@ -89,21 +75,17 @@ def marriage():
 
 @dashboard.route('/dashboard/consumption')
 def consumption():
-    s1 = time.clock()
     app_id = request.args.get('app_id')
     result_dict = get_query_list('5621fb0f60b27457e863fabb', 'consumption', 'has_car', 'has_pet')
     consumption_list = [] if 'consumption' not in result_dict else result_dict['consumption']
     car_list = [] if 'has_car' not in result_dict else result_dict['has_car']
     pet_list = [] if 'has_pet' not in result_dict else result_dict['has_pet']
 
-    category = []
-    series = []
-    for item in set(consumption_list):
-        category.append(item)
-        series.append(consumption_list.count(item))
-    consumption = {"category": category,  "series": series}
+    consumption_tmp = map(lambda x: list(x), zip(*map(lambda x: [x, consumption_list.count(x)], set(consumption_list))))
+    consumption = {"category": consumption_tmp[0],  "series": consumption_tmp[1]}
     car = {'category': ['yes', 'no'], 'series': [car_list.count('yes'), car_list.count('no')]}
     pet = {'category': ['yes', 'no'], 'series': [pet_list.count('yes'), pet_list.count('no')]}
+
     ret_json = {
         'errcode': 0,
         'errmsg': 'ok',
@@ -113,8 +95,6 @@ def consumption():
             'pet': pet
         }
     }
-    s2 = time.clock()
-    print s2 - s1
     return render_template('dashboard/user-consumption.html', option=json.dumps(ret_json))
 
 
@@ -132,13 +112,10 @@ def motion():
     result_dict = get_query_list('5621fb0f60b27457e863fabb', 'home_office_status')
     home_office_list = [] if 'home_office_status' not in result_dict else result_dict['home_office_status']
 
-    series = map(lambda x: map(lambda x: 0, xrange(24)), xrange(len(home_office_type)))
-
-    for item in home_office_list:
-        for i in range(24):
-            for j in range(len(home_office_type)):
-                if item['status'+str(i)] == home_office_type[j]:
-                    series[j][i] += 1
+    list_tmp = map(lambda x: map(lambda y: y[1], sorted(x.items(), key=lambda key: int(key[0][6:]))), home_office_list)
+    series = map(lambda x: list(x), zip(*map(lambda x:
+                                             [x.count(home_office_type[i]) for i in xrange(len(home_office_type))],
+                                             zip(*list_tmp))))
     data = {"category": home_office_type, "xAxis": list(range(24)), "series": series}
     home_office_status = {
         'errcode': 0,
@@ -154,17 +131,14 @@ def event():
     result_dict = get_query_list('5621fb0f60b27457e863fabb', 'event')
     event_list = [] if 'event' not in result_dict else result_dict['event']
 
-    category = []
-    series = []
-    for item in set(event_list):
-        category.append(item)
-        series.append(event_list.count(item))
-    data = {"category": category,  "series": series}
+    list_tmp = map(lambda x: list(x), zip(*map(lambda x: [x, event_list.count(x)], set(event_list))))
+    data = {"category": list_tmp[0],  "series": list_tmp[1]}
     event = {
         'errcode': 0,
         'errmsg': 'ok',
         'data': data
     }
+    print event
     return render_template('dashboard/event.html', option=json.dumps(event))
 
 
