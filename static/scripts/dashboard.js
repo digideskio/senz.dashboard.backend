@@ -761,7 +761,7 @@ var DB = {
                     mark : {show: false},
                     dataView : {show: false, readOnly: false},
                     magicType : {
-                        show: false, 
+                        show: false,
                         type: ['pie', 'funnel'],
                         option: {
                             funnel: {
@@ -833,7 +833,7 @@ var DB = {
                     mark : {show: false},
                     dataView : {show: false, readOnly: false},
                     magicType : {
-                        show: false, 
+                        show: false,
                         type: ['pie', 'funnel'],
                         option: {
                             funnel: {
@@ -881,7 +881,7 @@ var DB = {
                 }
             ]
         };
-                    
+
 
         require(['echarts', 'echarts/chart/bar', 'echarts/chart/line', 'echarts/chart/map', 'echarts/chart/pie'],
         function(ec) {
@@ -1169,10 +1169,10 @@ var DB = {
         //this.userIdentity();
         //this.userHobby();
         //this.userMatrimony();
-        this.userConsumption();
-        this.userLocation();
-        this.sceneMap();
-        this.eventMap();
+        //this.userConsumption();
+        //this.userLocation();
+        //this.sceneMap();
+        //this.eventMap();
     }
 };
 

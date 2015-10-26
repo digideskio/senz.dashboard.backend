@@ -16,7 +16,6 @@ def show():
                     'contextOutdoorExercise', 'contextIndoorExercise', 'contextDinningOut', 'contextTravelling',
                     'contextShortTrip', 'contextInParty', 'contextWindowShopping', 'contextAtCinema',
                     'contextAtExhibition', 'contextAtPopsConcert', 'contextAtTheatre', 'contextAtClassicsConcert']
-
     if request.method == 'POST':
         type = request.form.get('type')
         val = request.form.get('val')

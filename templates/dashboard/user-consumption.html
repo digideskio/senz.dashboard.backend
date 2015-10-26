@@ -13,4 +13,222 @@
     </div>
    </div> 
   </div>
+<script>
+var profile = JSON.parse({{ option|tojson }});
+(function() {
+    var consumerAbilityMapOption = {
+        title : {
+            x: 'center',
+            text: '消费能力',
+            subtext: ''
+        },
+        tooltip : {
+            trigger: 'axis'
+        },
+        legend: {
+            show: false,
+            data:['2011年']
+        },
+        toolbox: {
+            show : true,
+            feature : {
+                mark : {show: true},
+                dataView : {show: true, readOnly: false},
+                magicType: {show: true, type: ['line', 'bar']},
+                restore : {show: true},
+                saveAsImage : {show: true}
+            }
+        },
+        calculable : true,
+        xAxis : [
+            {
+                type : 'value',
+                boundaryGap : [0, 0.01]
+            }
+        ],
+        yAxis : [
+            {
+                type : 'category',
+                data : profile.data.consumption.category
+            }
+        ],
+        series : [
+            {
+                name:'消费能力',
+                type:'bar',
+                data: profile.data.consumption.series
+            }
+         ]
+    };
+
+    var carMapOption = {
+        title : {
+            text: '有车与否',
+            subtext: '',
+            x:'center'
+        },
+        tooltip : {
+            show: true,
+            trigger: 'item',
+            formatter: "{a} <br/>{b} : {c} ({d}%)"
+        },
+        legend: {
+            orient : 'vertical',
+            x : 'left',
+            y : '60',
+            data: profile.data.car.category
+        },
+        toolbox: {
+            show : true,
+            feature : {
+                mark : {show: false},
+                dataView : {show: false, readOnly: false},
+                magicType : {
+                    show: false,
+                    type: ['pie', 'funnel'],
+                    option: {
+                        funnel: {
+                            x: '25%',
+                            width: '50%',
+                            funnelAlign: 'center',
+                            max: 1548
+                        }
+                    }
+                },
+                restore : {show: true},
+                saveAsImage : {show: true}
+            }
+        },
+        calculable : true,
+        series : [
+            {
+                name:'有车与否',
+                type:'pie',
+                radius : ['50%', '65%'],
+                itemStyle : {
+                    normal : {
+                        label : {
+                            show : false
+                        },
+                        labelLine : {
+                            show : false
+                        }
+                    },
+                    emphasis : {
+                        label : {
+                            show : true,
+                            position : 'center',
+                            textStyle : {
+                                fontSize : '30',
+                                fontWeight : 'bold'
+                            }
+                        }
+                    }
+                },
+                data:[
+                    {value: profile.data.car.series[0], name: profile.data.car.category[0]},
+                    {value: profile.data.car.series[1], name: profile.data.car.category[1]},
+                ]
+            }
+        ]
+    };
+
+    var petMapOption = {
+        title : {
+            text: '养宠物与否',
+            subtext: '',
+            x:'center'
+        },
+        tooltip : {
+            show: true,
+            trigger: 'item',
+            formatter: "{a} <br/>{b} : {c} ({d}%)"
+        },
+        legend: {
+            orient : 'vertical',
+            x : 'left',
+            y : '60',
+            data: profile.data.pet.category
+        },
+        toolbox: {
+            show : true,
+            feature : {
+                mark : {show: false},
+                dataView : {show: false, readOnly: false},
+                magicType : {
+                    show: false,
+                    type: ['pie', 'funnel'],
+                    option: {
+                        funnel: {
+                            x: '25%',
+                            width: '50%',
+                            funnelAlign: 'center',
+                            max: 1548
+                        }
+                    }
+                },
+                restore : {show: true},
+                saveAsImage : {show: true}
+            }
+        },
+        calculable : true,
+        series : [
+            {
+                name:'养宠物与否',
+                type:'pie',
+                radius : ['50%', '65%'],
+                itemStyle : {
+                    normal : {
+                        label : {
+                            show : false
+                        },
+                        labelLine : {
+                            show : false
+                        }
+                    },
+                    emphasis : {
+                        label : {
+                            show : true,
+                            position : 'center',
+                            textStyle : {
+                                fontSize : '30',
+                                fontWeight : 'bold'
+                            }
+                        }
+                    }
+                },
+                data:[
+                    {value: profile.data.pet.series[0], name: profile.data.pet.category[0]},
+                    {value: profile.data.pet.series[1], name: profile.data.pet.category[1]},
+                ]
+            }
+        ]
+    };
+
+
+    require(['echarts', 'echarts/chart/bar', 'echarts/chart/line', 'echarts/chart/map', 'echarts/chart/pie'],
+    function(ec) {
+        // 消费能力
+        if(!document.getElementById('consumerAbilityMap')){
+            return;
+        }
+        var consumerAbilityMap = ec.init(document.getElementById('consumerAbilityMap'));
+        consumerAbilityMap.setOption(consumerAbilityMapOption);
+
+        // 车
+        if(!document.getElementById('carMap')){
+            return;
+        }
+        var carMap = ec.init(document.getElementById('carMap'));
+        carMap.setOption(carMapOption);
+
+        // 宠物
+        if(!document.getElementById('petMap')){
+            return;
+        }
+        var petMap = ec.init(document.getElementById('petMap'));
+        petMap.setOption(petMapOption);
+    });
+}).call(this);
+</script>
 {% endblock %}

@@ -1,4 +1,4 @@
-from leancloud import User, Object, Query
+from leancloud import User, Object, Query, LeanCloudError
 
 
 class Developer:
@@ -22,10 +22,13 @@ class Developer:
         return self.user.sign_up()
 
     def login(self, username, password):
-        self.user.login(username, password)
-        self.user_id = self.user.id
-        self.session_token = self.user.get_session_token()
-        return True
+        try:
+            self.user.login(username, password)
+            self.user_id = self.user.id
+            self.session_token = self.user.get_session_token()
+            return True
+        except LeanCloudError:
+            return False
 
     def logout(self, username):
         pass
