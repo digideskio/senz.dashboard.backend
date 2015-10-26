@@ -1,6 +1,6 @@
 import requests
 from models import Developer
-from flask import Blueprint, render_template, request
+from flask import Blueprint, render_template, request, session
 
 panel = Blueprint('panel', __name__, template_folder='templates')
 
@@ -21,8 +21,6 @@ def show():
         val = request.form.get('val')
         if type and val:
             print type, val
-            # if user.get_tracker_of_app(app_id):
-            #     tracker_list = user.tracker_list
             headers = {"X-AVOSCloud-Application-Id": "wsbz6p3ouef94ubvsdqk2jfty769wkyed3qsry5hebi2va2h",
                        "X-AVOSCloud-Application-Key": "6z6n0w3dopxmt32oi2eam2dt0orh8rxnqc8lgpf2hqnar4tr"}
             payload = {"userId": "559b8bd5e4b0d4d1b1d35e88", "type": type, "val": val}
@@ -30,6 +28,7 @@ def show():
             requests.post("https://leancloud.cn/1.1/functions/notify_new_details",  headers=headers, data=payload)
             # requests.post("http://localhost:3000/functions/notify_new_details",  headers=headers, data=payload)
     return render_template('panel/panel.html',
+                           username=session.get('username'),
                            motion_dict=motion_dict,
                            context_list=context_list,
                            tracker_list=developer.tracker_list)

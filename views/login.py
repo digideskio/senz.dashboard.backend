@@ -43,9 +43,22 @@ def logout():
 
 @login_view.route('/signup', methods=['GET', 'POST'])
 def signup():
-    return render_template('login/signup.html')
     username = session.get('username')
     if username:
         return redirect(url_for('dashboard.show'), username)
     if request.method == 'POST':
-        return redirect('/')
+        username = request.form['username']
+        email = request.form['email']
+        password = request.form['password']
+        user = User()
+        try:
+            user.set('email', email)
+            user.set('username', username)
+            user.set('password', password)
+            user.set('type', 'developer')
+            user.sign_up()
+            return redirect(url_for('login_view.login'))
+        except LeanCloudError, e:
+            print(e)
+            return render_template('login/signup.html')
+    return render_template('login/signup.html')
