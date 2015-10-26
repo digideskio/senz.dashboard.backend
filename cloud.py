@@ -29,6 +29,17 @@ def post_location_info(**params):
 
 
 @engine.define
+def post_homeoffice_info(**params):
+    if 'userId' in params and 'home_office_status' in params:
+        user_id = params['userId']
+        home_office_status = params['home_office_status']
+        parse_dict = parse_home_office_info(home_office_status)
+        return updata_backend_info(user_id, parse_dict)
+    else:
+        return False
+
+
+@engine.define
 def post_context_info(**params):
     if 'userId' in params and 'context' in params:
         user_id = params['userId']
@@ -68,6 +79,10 @@ def parse_location_info(location_info):
 def parse_context_info(context_info):
     ret_dict = {}
     return ret_dict
+
+
+def parse_home_office_info(homeoffice_info):
+    return {'home_office_status': homeoffice_info}
 
 
 def updata_backend_info(user_id, parse_dict):

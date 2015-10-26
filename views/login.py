@@ -1,7 +1,7 @@
 # coding: utf-8
 
 from flask import Blueprint, session, render_template, request, redirect, url_for
-from leancloud import User
+from leancloud import User, LeanCloudError
 import datetime
 
 login_view = Blueprint('login_view', __name__, template_folder='templates')
@@ -18,13 +18,16 @@ def login():
     session_token = session.get('session_token')
     if session_token:
         return redirect('/')
-    user = User()
     if request.method == 'POST':
+        user = User()
         username = request.form['username']
         password = request.form['password']
-        user.login(username, password)
-        session['username'] = username
-        session['session_token'] = user.get_session_token()
+        try:
+            user.login(username, password)
+            session['username'] = username
+            session['session_token'] = user.get_session_token()
+        except LeanCloudError:
+            return render_template('login/login.html')
         return redirect('/')
     return render_template('login/login.html')
 
@@ -38,8 +41,11 @@ def logout():
     return redirect('/')
 
 
-@login_view.route('/signup')
+@login_view.route('/signup', methods=['GET', 'POST'])
 def signup():
+    return render_template('login/signup.html')
     username = session.get('username')
     if username:
-        return redirect(url_for('dashboard.show'), username=username)
+        return redirect(url_for('dashboard.show'), username)
+    if request.method == 'POST':
+        return redirect('/')

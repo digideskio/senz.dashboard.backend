@@ -8,9 +8,11 @@ from views.dash_source import dash_source
 from views.integration import integration
 from views.settings import settings
 from views.login import login_view
+from datetime import timedelta
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'this is senz dashboard'
+app.permanent_session_lifetime = timedelta(hours=1)
 
 # 动态路由
 app.register_blueprint(panel)
@@ -24,7 +26,6 @@ app.register_blueprint(login_view)
 @app.route('/')
 def index():
     username = session.get('username')
-    print(username)
     return render_template('index.html', username=username)
 
 

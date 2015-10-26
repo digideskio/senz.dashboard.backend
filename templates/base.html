@@ -17,7 +17,7 @@
   <script src="{{ url_for('static', filename='lib/jquery-2.1.4.min.js') }}"></script>
   <script src="{{ url_for('static', filename='lib/echarts-2.2.7/build/dist/echarts.js') }}"></script>
 {#  <link rel="stylesheet" href="{{ url_for('static', filename='styles/bootstrap.min.css') }}">#}
-{#  <link rel="stylesheet" href="{{ url_for('static', filename='styles/psdash.css') }}">#}
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles/login.css') }}">
 {#  <script src="{{ url_for('static', filename='scripts/dashboard.js') }}"></script>#}
   <script>
       require.config({
@@ -66,8 +66,8 @@
    </div>
    {% else %}
     <ul class="list">
-        <li class="item"><a href="{{ url_for('login_view.login',_anchor='signin') }}">Login</a></li>
-        <li class="item"><a href="{{ url_for('login_view.login',_anchor='signup') }}">Sign up</a></li>
+        <li class="item"><a href="{{ url_for('login_view.login') }}">Login</a></li>
+        <li class="item"><a href="{{ url_for('login_view.signup') }}">Sign up</a></li>
     </ul>
    {% endif %}
    </div>

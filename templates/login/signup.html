@@ -7,11 +7,15 @@
     <div id="container" class="container">
     <div id="content" class="content" style="padding-top: 55px;">
         <div id="formwrapper">
-            <form action="{{ url_for('login_view.login') }}" method="post" name="apLogin" id="apLogin">
+            <form action="{{ url_for('login_view.signup') }}" method="post" name="apLogin" id="apLogin">
                 <div>
                     <label for="username">用户名</label>
                     <input type="text" name="username" id="username" size="20" maxlength="30" />
                     <br>
+                </div>
+                <div>
+                    <label for="email">邮箱 </label>
+                    <input type="text" name="email" id="email" value="" size="20" maxlength="150" />
                 </div>
                 <div>
                     <label for="password">密码</label>
@@ -19,7 +23,6 @@
                     <br>
                 </div>
                 <div class="cookiechk">
-                    <label><input type="checkbox" name="remember" id="remember" value="1" />记住我</label>
                     <input name="register-submit" type="submit" class="buttom" value="提交" />
                 </div>
             </form>
