@@ -54,6 +54,9 @@ div,p,h1,h2,h3,h4,h5,h6,ul,dl,ol,li {
     height:40px;
     z-index: 99999;
 }
+.header a {
+    color: #fff;
+}
 .header .site-title {
     font-size: 16px;
     padding-left: 15px;
@@ -104,6 +107,9 @@ div,p,h1,h2,h3,h4,h5,h6,ul,dl,ol,li {
     margin-left: 200px;
     position: relative;
 }
+.single-content {
+    margin-left: 0;
+}
 .sort-wrap {
     position: absolute;
     right: 40px;
@@ -148,16 +154,16 @@ div,p,h1,h2,h3,h4,h5,h6,ul,dl,ol,li {
     transition: 0.25s;
 }
 .sidebar ul li.has-sub-nav {
-	padding-bottom: 0;
+    padding-bottom: 0;
 }
 .sidebar ul.sub-nav {
-	padding: 0;
-	margin: 0;
-	margin-top: 10px;
+    padding: 0;
+    margin: 0;
+    margin-top: 10px;
 }
 .sidebar ul.sub-nav li {
-	border: none;
-	border-top: 1px solid #545567;
+    border: none;
+    border-top: 1px solid #545567;
 }
 .sidebar ul li a {
     text-decoration: none;
@@ -198,5 +204,16 @@ div,p,h1,h2,h3,h4,h5,h6,ul,dl,ol,li {
     padding: 2px 20px;
 }
 
+/* 注册页 */
+.main-nav-auth-wrap {
+    float: right;
+    left: 0;
+    padding-right: 10px;
+    height: 40px;
+    line-height: 40px;
+}
 
+#account {
+
+}
 

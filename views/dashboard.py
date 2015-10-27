@@ -11,7 +11,7 @@ def show():
     user = Developer()
     user.session_token = session.get('session_token')
     user_id = user.user_id()
-    app_dict = user.get_app_dict(user_id, kind=True)
+    app_dict = user.get_app_dict(user_id)
     return render_template('index.html',
                            username=session.get('username'),
                            app_dict=app_dict)
@@ -23,7 +23,7 @@ def profile():
     user = Developer()
     user.session_token = session.get('session_token')
     user_id = user.user_id()
-    app_dict = user.get_app_dict(user_id, kind=True)
+    app_dict = user.get_app_dict(user_id)
 
     result_dict = get_query_list('5621fb0f60b27457e863fabb', 'gender', 'age', 'occupation', 'field')
     gender_list = [] if 'gender' not in result_dict else result_dict['gender']
@@ -57,7 +57,7 @@ def interest():
     user = Developer()
     user.session_token = session.get('session_token')
     user_id = user.user_id()
-    app_dict = user.get_app_dict(user_id, kind=True)
+    app_dict = user.get_app_dict(user_id)
     result_dict = get_query_list('5621fb0f60b27457e863fabb', 'interest')
     interest_list = [] if 'interest' not in result_dict else result_dict['interest']
     interest_tmp = map(lambda x: list(x), zip(*map(lambda x: [x, interest_list.count(x)], set(interest_list))))
@@ -79,7 +79,7 @@ def marriage():
     user = Developer()
     user.session_token = session.get('session_token')
     user_id = user.user_id()
-    app_dict = user.get_app_dict(user_id, kind=True)
+    app_dict = user.get_app_dict(user_id)
     result_dict = get_query_list('5621fb0f60b27457e863fabb', 'marriage', 'pregnant')
     marriage_list = [] if 'marriage' not in result_dict else result_dict['marriage']
     pregnant_list = [] if 'pregnant' not in result_dict else result_dict['pregnant']
@@ -105,7 +105,7 @@ def consumption():
     user = Developer()
     user.session_token = session.get('session_token')
     user_id = user.user_id()
-    app_dict = user.get_app_dict(user_id, kind=True)
+    app_dict = user.get_app_dict(user_id)
     result_dict = get_query_list('5621fb0f60b27457e863fabb', 'consumption', 'has_car', 'has_pet')
     consumption_list = [] if 'consumption' not in result_dict else result_dict['consumption']
     car_list = [] if 'has_car' not in result_dict else result_dict['has_car']
@@ -136,7 +136,7 @@ def location():
     user = Developer()
     user.session_token = session.get('session_token')
     user_id = user.user_id()
-    app_dict = user.get_app_dict(user_id, kind=True)
+    app_dict = user.get_app_dict(user_id)
     return render_template('dashboard/user-location.html', username=session.get('username'))
 
 
@@ -171,7 +171,7 @@ def event():
     user = Developer()
     user.session_token = session.get('session_token')
     user_id = user.user_id()
-    app_dict = user.get_app_dict(user_id, kind=True)
+    app_dict = user.get_app_dict(user_id)
     result_dict = get_query_list('5621fb0f60b27457e863fabb', 'event')
     event_list = [] if 'event' not in result_dict else result_dict['event']
 

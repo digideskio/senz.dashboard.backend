@@ -1,3 +1,5 @@
+# coding: utf-8
+
 from leancloud import User, Object, Query
 from itsdangerous import Signer
 
@@ -10,7 +12,10 @@ class Developer(User):
         User.__init__(self)
 
     def user_id(self):
-        return self.become(session_token=self.session_token).id
+        if self.session_token:
+            return self.become(session_token=self.session_token).id
+        else:
+            return None
 
     def create_new_app(self, app_name):
         if not app_name:
@@ -51,18 +56,24 @@ class Developer(User):
             print(e)
             return False
 
-    def get_app_dict(self, user_id='', kind=False):
-        if kind:
-            return self.app_dict
+    def get_app_dict(self, user_id=''):
         query = Query(Object.extend('_User'))
         query.equal_to('objectId', user_id)
-        user = query.find()[0]
+        if query.find():
+            user = query.find()[0]
+        else:
+            self.app_dict = {}
+            return {}
         query = Query(Object.extend('Application'))
         query.equal_to('user', user)
         query.limit(1000)
-        self.app_dict = dict(map(lambda x: (x.attributes['app_id'],
-                                            {'app_name': x.attributes['app_name'],
-                                             'app_key': x.attributes['app_key']}), query.find()))
+        app_list = query.find()
+        if app_list:
+            self.app_dict = dict(map(lambda x: (x.attributes['app_id'],
+                                                {'app_name': x.attributes['app_name'],
+                                                 'app_key': x.attributes['app_key']}), app_list))
+        else:
+            self.app_dict = {}
         return self.app_dict
 
     def get_tracker_of_app(self, app_id=''):

@@ -61,11 +61,11 @@
      </ul>
    </nav>
 
-   <div class="main-nav">
+   <div class="main-nav main-nav-auth-wrap">
    {% if username %}
    <div id="account">
      <div class="dropdown">
-          <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <div class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             {{ username }}
           </button>
           <ul class="list">
@@ -75,8 +75,8 @@
    </div>
    {% else %}
     <ul class="list">
-        <li class="item"><a href="{{ url_for('login_view.login') }}">Login</a></li>
-        <li class="item"><a href="{{ url_for('login_view.signup') }}">Sign up</a></li>
+        <li class="item"><a href="{{ url_for('login_view.login') }}">登录</a></li>
+        <li class="item"><a href="{{ url_for('login_view.signup') }}">注册</a></li>
     </ul>
    {% endif %}
    </div>
