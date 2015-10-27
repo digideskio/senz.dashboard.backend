@@ -1,5 +1,5 @@
 # coding: utf-8
-from flask import Blueprint, render_template, json, request
+from flask import Blueprint, render_template, json, request, session
 from leancloud import Object, Query
 
 dashboard = Blueprint('dashboard', __name__, template_folder='templates')
@@ -7,7 +7,7 @@ dashboard = Blueprint('dashboard', __name__, template_folder='templates')
 
 @dashboard.route('/dashboard')
 def show():
-    return render_template('index.html')
+    return render_template('index.html', username=session.get('username'))
 
 
 @dashboard.route('/dashboard/profile')
@@ -34,7 +34,9 @@ def profile():
         'errmsg': 'ok',
         'data': data
     }
-    return render_template('dashboard/user-identity.html', option=json.dumps(user_profile))
+    return render_template('dashboard/user-identity.html',
+                           option=json.dumps(user_profile),
+                           username=session.get('username'))
 
 
 @dashboard.route('/dashboard/interest')
@@ -50,7 +52,9 @@ def interest():
         'errmsg': 'ok',
         'data': data
     }
-    return render_template('dashboard/user-hobby.html', option=json.dumps(interest))
+    return render_template('dashboard/user-hobby.html',
+                           option=json.dumps(interest),
+                           username=session.get('username'))
 
 
 @dashboard.route('/dashboard/marriage')
@@ -70,7 +74,9 @@ def marriage():
             'pregnant': pregnant
         }
     }
-    return render_template('dashboard/user-matrimony.html', option=json.dumps(ret_json))
+    return render_template('dashboard/user-matrimony.html',
+                           option=json.dumps(ret_json),
+                           username=session.get('username'))
 
 
 @dashboard.route('/dashboard/consumption')
@@ -95,13 +101,15 @@ def consumption():
             'pet': pet
         }
     }
-    return render_template('dashboard/user-consumption.html', option=json.dumps(ret_json))
+    return render_template('dashboard/user-consumption.html',
+                           option=json.dumps(ret_json),
+                           username=session.get('username'))
 
 
 @dashboard.route('/dashboard/location')
 def location():
     app_id = request.args.get('app_id')
-    return render_template('dashboard/user-location.html')
+    return render_template('dashboard/user-location.html', username=session.get('username'))
 
 
 @dashboard.route('/dashboard/motion')
@@ -122,7 +130,9 @@ def motion():
         'errmsg': 'ok',
         'data': data
     }
-    return render_template('dashboard/scene.html',  option=json.dumps(home_office_status))
+    return render_template('dashboard/scene.html',
+                           option=json.dumps(home_office_status),
+                           username=session.get('username'))
 
 
 @dashboard.route('/dashboard/event')
@@ -139,7 +149,9 @@ def event():
         'data': data
     }
     print event
-    return render_template('dashboard/event.html', option=json.dumps(event))
+    return render_template('dashboard/event.html',
+                           option=json.dumps(event),
+                           username=session.get('username'))
 
 
 def get_query_list(app_id='', *field):
