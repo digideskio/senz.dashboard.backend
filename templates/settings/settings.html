@@ -1,4 +1,12 @@
 {% extends 'base.html' %}
+{% block app_select %}
+<script>
+  var post_url = function(elm){
+    document.getElementById("app_id").value = elm.value;
+    document.getElementById("app_key").value = elm.value;
+  };
+</script>
+{% endblock %}
 {% block navigation %}
 {% endblock %}
 
@@ -6,41 +14,26 @@
 <div id="container" class="container">
     <div id="content" class="content" style="padding-top: 55px;">
         <div id="settings">
-        <div>
-        <div ng-view="" class="ng-scope">
-        <form>
-            <div>
-                <label>
-                App ID
-                </label>
-                <div>
-                    <input id="form-app-id" type="text" value="{{ app_id }}" required="" readonly="">
-                </div>
+            <div class="ng-scope">
+            <form action="{{ url_for('settings.add_app') }}" method="post">
+                <div><input type="text" size="36" name="app_name" placeholder="app_name" /></div>
+                <div><input type="submit" id="create-app" value="Create Application" ></div>
+            </form>
+            <br>
+            <br>
+            <br>
+            <form action="{{ url_for('settings.delete_app') }}" method="post">
+                <div><label>App ID</label><div>
+                    <input id="app_id" type="text" size="36" name="app_id" value="{{ app_id }}" readonly></div></div>
+                <div><label>App Key</label><div>
+                    <input id="app_key" type="text" size="36" name="app_key" value="{{ app_key }}" readonly></div></div>
+                {% if disabled %}
+                    <div><button type="submit" id="delete-app">Delete This Application</button></div>
+                {% else %}
+                    <div><button type="submit" id="delete-app">Delete This Application</button></div>
+                {% endif %}
+            </form>
             </div>
-            <div>
-                <label>
-                App Key
-                </label>
-                <div>
-                    <input id="form-app-key" class="form-control" type="text" value="{{ app_key }}" required="" readonly="">
-                </div>
-            </div>
-            {% if disabled %}
-                <div>
-                <button type="button" id="delete-app">
-                Delete This Application
-                </button>
-                </div>
-            {% else %}
-                <div>
-                <button type="button" id="delete-app">
-                Delete This Application
-                </button>
-                </div>
-            {% endif %}
-        </form>
-        </div>
-        </div>
         </div>
     </div>
 </div>

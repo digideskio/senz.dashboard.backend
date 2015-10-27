@@ -26,6 +26,13 @@
             }
         });
   </script>
+  {% block app_select %}
+  <script>
+      var post_url = function(elm){
+        $.post("/", {app_id: elm.value});
+      };
+  </script>
+  {% endblock %}
  </head>
  <body>
  {% block header %}
@@ -33,13 +40,15 @@
    <h2 class="site-title"><a href="/">Senz</a></h2>
    {% block app_list %}
     <div class="inline-block">
-    <form action="{{ url_for('panel.show') }}" method="get">
-      <select name="select_app" class="select_app" id="select_app">
-       <option value="sdfasdf">App1</option>
-       <option value="app2">App2</option>
-       <option value="app3">App3</option>
+      <select name="select_app" class="select_app" id="select_app" onchange="post_url(this)">
+          {% if app_dict %}
+          {% for key, value in app_dict.items() %}
+            <option value={{ key }}>{{ value.app_name }}</option>
+          {% endfor %}
+          {% else %}
+              <option value='5621fb0f60b27457e863fabb'>Demo</option>
+          {% endif %}
       </select>
-    </form>
    </div>
    {% endblock %}
    {% block main_nav %}

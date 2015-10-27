@@ -30,7 +30,6 @@ $(document).ready(function(){
                 break;
             }
         }
-
         $.post("/panel",
         {
             //_xsrf: _xsrf,
@@ -38,15 +37,5 @@ $(document).ready(function(){
             type: type,
             val: val
         });
-
-        //if(type === "location_type_one"){
-        //    $.post("/panel",
-        //    {
-        //        //_xsrf: _xsrf,
-        //        app_id: select_app,
-        //        type: "location_type_two",
-        //        val: location2
-        //    });
-        //}
     });
 });

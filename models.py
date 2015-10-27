@@ -1,39 +1,71 @@
-from leancloud import User, Object, Query, LeanCloudError
+from leancloud import User, Object, Query
+from itsdangerous import Signer
 
 
-class Developer:
-    def __init__(self, user_id=None):
-        self.user = User()
-        self.user_id = user_id
-        self.session_token = None
+class Developer(User):
+    def __init__(self):
         self.tracker_list = []
+        self.app_dict = {}
+        self.session_token = None
+        User.__init__(self)
 
-    @classmethod
-    def is_valid_emali(cls, email):
-        query = Query(User)
-        query.contained_in('email', email)
-        return False if query.find() else True
+    def user_id(self):
+        return self.become(session_token=self.session_token).id
 
-    def signup(self, username, password, email=None):
-        self.user.set('username', username)
-        self.user.set('password', password)
-        self.user.set('email', email)
-        self.user.set('type', 'developer')
-        return self.user.sign_up()
-
-    def login(self, username, password):
-        try:
-            self.user.login(username, password)
-            self.user_id = self.user.id
-            self.session_token = self.user.get_session_token()
+    def create_new_app(self, app_name):
+        if not app_name:
+            return False
+        user = self.become(session_token=self.session_token)
+        application = Object.extend('Application')
+        app = application()
+        query = Query(application)
+        query.equal_to('user', user)
+        query.equal_to('app_name', app_name)
+        if not query.find():
+            app.set('app_name', app_name)
+            app.set('user', user)
+            app.save()
+            app_id = app.id
+            signer = Signer('this is senz dashboard')
+            app_key = (signer.sign(app_id).split(app_id + '.'))[1]
+            app.set('app_id', app_id)
+            app.set('app_key', app_key)
+            app.save()
             return True
-        except LeanCloudError:
+        return False
+
+    def delete_app(self, app_id=None):
+        try:
+            user = self.become(session_token=self.session_token)
+            application = Object.extend('Application')
+            query = Query(application)
+            query.equal_to('user', user)
+            query.equal_to('app_id', app_id)
+            result = query.find()
+            if result:
+                result[0].destroy()
+                return True
+            else:
+                return False
+        except LookupError, e:
+            print(e)
             return False
 
-    def logout(self, username):
-        pass
+    def get_app_dict(self, user_id='', kind=False):
+        if kind:
+            return self.app_dict
+        query = Query(Object.extend('_User'))
+        query.equal_to('objectId', user_id)
+        user = query.find()[0]
+        query = Query(Object.extend('Application'))
+        query.equal_to('user', user)
+        query.limit(1000)
+        self.app_dict = dict(map(lambda x: (x.attributes['app_id'],
+                                            {'app_name': x.attributes['app_name'],
+                                             'app_key': x.attributes['app_key']}), query.find()))
+        return self.app_dict
 
-    def get_tracker_of_app(self, app_id):
+    def get_tracker_of_app(self, app_id=''):
         query = Query(Object.extend('Application'))
         query.equal_to('app_id', app_id)
         app_list = query.find()
@@ -45,8 +77,6 @@ class Developer:
         query.equal_to('application', the_app)
         query.select('user')
         installation_list = query.find()
-        user_set = set()
-        for installation in installation_list:
-            user_set.add(installation.attributes['user'].id)
-        self.tracker_list = list(user_set)
+        self.tracker_list = list(set(map(lambda x: x.attributes['user'].id, installation_list)))
 
+Developer._class_name = '_User'

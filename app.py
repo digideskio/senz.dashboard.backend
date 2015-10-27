@@ -1,32 +1,42 @@
 # coding: utf-8
 
-from flask import Flask, session
-from flask import render_template
+from flask import Flask, session, render_template, request
+from itsdangerous import Signer
 from views.panel import panel
 from views.dashboard import dashboard
-from views.dash_source import dash_source
 from views.integration import integration
 from views.settings import settings
 from views.login import login_view
 from datetime import timedelta
+from models import Developer
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'this is senz dashboard'
+signer = Signer(app.config['SECRET_KEY'])
 app.permanent_session_lifetime = timedelta(hours=1)
 
 # 动态路由
 app.register_blueprint(panel)
 app.register_blueprint(dashboard)
-app.register_blueprint(dash_source)
 app.register_blueprint(integration)
 app.register_blueprint(settings)
 app.register_blueprint(login_view)
 
 
-@app.route('/')
+@app.route('/', methods=['GET', 'POST'])
 def index():
     username = session.get('username')
-    return render_template('index.html', username=username)
+    user = Developer()
+    user.session_token = session.get('session_token')
+    user_id = user.user_id()
+    app_dict = user.get_app_dict(user_id)
+    if request.method == 'POST':
+        app_id = request.form.get('app_id')
+        session['app_id'] = app_id
+        session['app_key'] = app_dict[app_id]['app_key']
+    return render_template('index.html',
+                           username=username,
+                           app_dict=app_dict)
 
 
 @app.template_filter('translate_motion')

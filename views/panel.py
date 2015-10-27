@@ -9,7 +9,11 @@ panel = Blueprint('panel', __name__, template_folder='templates')
 def show():
     app_id = 'demo55bc5d8e00b0cb9c40dec37b'
     developer = Developer()
+    developer.session_token = session.get('session_token')
+    developer_id = developer.user_id()
+    app_dict = developer.get_app_dict(developer_id)
     developer.get_tracker_of_app(app_id)
+
     motion_dict = {'motionSitting': 0, 'motionWalking': 3, 'motionRunning': 4, 'motionBiking': 2, 'motionCommuting': 1}
     context_list = ['contextAtHome', 'contextCommutingWork', 'contextAtWork', 'contextCommutingHome',
                     'contextWorkingInCBD', 'contextStudyingInSchool', 'contextWorkingInSchool',
@@ -17,19 +21,18 @@ def show():
                     'contextShortTrip', 'contextInParty', 'contextWindowShopping', 'contextAtCinema',
                     'contextAtExhibition', 'contextAtPopsConcert', 'contextAtTheatre', 'contextAtClassicsConcert']
     if request.method == 'POST':
-        type = request.form.get('type')
+        event = request.form.get('type')
         val = request.form.get('val')
-        if type and val:
-            print type, val
+        if event and val:
+            print event, val
             headers = {"X-AVOSCloud-Application-Id": "wsbz6p3ouef94ubvsdqk2jfty769wkyed3qsry5hebi2va2h",
                        "X-AVOSCloud-Application-Key": "6z6n0w3dopxmt32oi2eam2dt0orh8rxnqc8lgpf2hqnar4tr"}
-            payload = {"userId": "559b8bd5e4b0d4d1b1d35e88", "type": type, "val": val}
-            # for tracker in tracker_list:
+            payload = {"userId": "559b8bd5e4b0d4d1b1d35e88", "type": event, "val": val}
             requests.post("https://leancloud.cn/1.1/functions/notify_new_details",  headers=headers, data=payload)
-            # requests.post("http://localhost:3000/functions/notify_new_details",  headers=headers, data=payload)
     return render_template('panel/panel.html',
                            username=session.get('username'),
                            motion_dict=motion_dict,
                            context_list=context_list,
-                           tracker_list=developer.tracker_list)
+                           tracker_list=developer.tracker_list,
+                           app_dict=app_dict)
 

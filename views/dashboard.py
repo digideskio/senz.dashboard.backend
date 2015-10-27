@@ -1,18 +1,30 @@
 # coding: utf-8
 from flask import Blueprint, render_template, json, request, session
 from leancloud import Object, Query
+from models import Developer
 
 dashboard = Blueprint('dashboard', __name__, template_folder='templates')
 
 
 @dashboard.route('/dashboard')
 def show():
-    return render_template('index.html', username=session.get('username'))
+    user = Developer()
+    user.session_token = session.get('session_token')
+    user_id = user.user_id()
+    app_dict = user.get_app_dict(user_id, kind=True)
+    return render_template('index.html',
+                           username=session.get('username'),
+                           app_dict=app_dict)
 
 
 @dashboard.route('/dashboard/profile')
 def profile():
-    app_id = request.args.get('app_id')
+    # app_id = request.args.get('app_id')
+    user = Developer()
+    user.session_token = session.get('session_token')
+    user_id = user.user_id()
+    app_dict = user.get_app_dict(user_id, kind=True)
+
     result_dict = get_query_list('5621fb0f60b27457e863fabb', 'gender', 'age', 'occupation', 'field')
     gender_list = [] if 'gender' not in result_dict else result_dict['gender']
     age_list = [] if 'age' not in result_dict else result_dict['age']
@@ -36,12 +48,16 @@ def profile():
     }
     return render_template('dashboard/user-identity.html',
                            option=json.dumps(user_profile),
-                           username=session.get('username'))
+                           username=session.get('username'),
+                           app_dict=app_dict)
 
 
 @dashboard.route('/dashboard/interest')
 def interest():
-    app_id = request.args.get('app_id')
+    user = Developer()
+    user.session_token = session.get('session_token')
+    user_id = user.user_id()
+    app_dict = user.get_app_dict(user_id, kind=True)
     result_dict = get_query_list('5621fb0f60b27457e863fabb', 'interest')
     interest_list = [] if 'interest' not in result_dict else result_dict['interest']
     interest_tmp = map(lambda x: list(x), zip(*map(lambda x: [x, interest_list.count(x)], set(interest_list))))
@@ -54,12 +70,16 @@ def interest():
     }
     return render_template('dashboard/user-hobby.html',
                            option=json.dumps(interest),
-                           username=session.get('username'))
+                           username=session.get('username'),
+                           app_dict=app_dict)
 
 
 @dashboard.route('/dashboard/marriage')
 def marriage():
-    app_id = request.args.get('app_id')
+    user = Developer()
+    user.session_token = session.get('session_token')
+    user_id = user.user_id()
+    app_dict = user.get_app_dict(user_id, kind=True)
     result_dict = get_query_list('5621fb0f60b27457e863fabb', 'marriage', 'pregnant')
     marriage_list = [] if 'marriage' not in result_dict else result_dict['marriage']
     pregnant_list = [] if 'pregnant' not in result_dict else result_dict['pregnant']
@@ -76,12 +96,16 @@ def marriage():
     }
     return render_template('dashboard/user-matrimony.html',
                            option=json.dumps(ret_json),
-                           username=session.get('username'))
+                           username=session.get('username'),
+                           app_dict=app_dict)
 
 
 @dashboard.route('/dashboard/consumption')
 def consumption():
-    app_id = request.args.get('app_id')
+    user = Developer()
+    user.session_token = session.get('session_token')
+    user_id = user.user_id()
+    app_dict = user.get_app_dict(user_id, kind=True)
     result_dict = get_query_list('5621fb0f60b27457e863fabb', 'consumption', 'has_car', 'has_pet')
     consumption_list = [] if 'consumption' not in result_dict else result_dict['consumption']
     car_list = [] if 'has_car' not in result_dict else result_dict['has_car']
@@ -103,19 +127,25 @@ def consumption():
     }
     return render_template('dashboard/user-consumption.html',
                            option=json.dumps(ret_json),
-                           username=session.get('username'))
+                           username=session.get('username'),
+                           app_dict=app_dict)
 
 
 @dashboard.route('/dashboard/location')
 def location():
-    app_id = request.args.get('app_id')
+    user = Developer()
+    user.session_token = session.get('session_token')
+    user_id = user.user_id()
+    app_dict = user.get_app_dict(user_id, kind=True)
     return render_template('dashboard/user-location.html', username=session.get('username'))
 
 
 @dashboard.route('/dashboard/motion')
 def motion():
-    app_id = request.args.get('app_id')
-
+    user = Developer()
+    user.session_token = session.get('session_token')
+    user_id = user.user_id()
+    app_dict = user.get_app_dict(user_id)
     home_office_type = ['contextAtWork', 'contextAtHome', 'contextCommutingWork', 'contextCommutingHome']
     result_dict = get_query_list('5621fb0f60b27457e863fabb', 'home_office_status')
     home_office_list = [] if 'home_office_status' not in result_dict else result_dict['home_office_status']
@@ -132,12 +162,16 @@ def motion():
     }
     return render_template('dashboard/scene.html',
                            option=json.dumps(home_office_status),
-                           username=session.get('username'))
+                           username=session.get('username'),
+                           app_dict=app_dict)
 
 
 @dashboard.route('/dashboard/event')
 def event():
-    app_id = request.args.get('app_id')
+    user = Developer()
+    user.session_token = session.get('session_token')
+    user_id = user.user_id()
+    app_dict = user.get_app_dict(user_id, kind=True)
     result_dict = get_query_list('5621fb0f60b27457e863fabb', 'event')
     event_list = [] if 'event' not in result_dict else result_dict['event']
 
@@ -151,7 +185,8 @@ def event():
     print event
     return render_template('dashboard/event.html',
                            option=json.dumps(event),
-                           username=session.get('username'))
+                           username=session.get('username'),
+                           app_dict=app_dict)
 
 
 def get_query_list(app_id='', *field):
