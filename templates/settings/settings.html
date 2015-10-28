@@ -36,13 +36,14 @@
 
 {% block app_select %}
 <script>
-(function(){
+ var post_url = function(){
     var obj = document.getElementById("select_app");
     document.getElementById("app_name").value = obj.options[obj.selectedIndex].text;
     document.getElementById("app_id").value = obj.value;
     document.getElementById("app_key").value = obj.options[obj.selectedIndex].id;
     $.post("/", {app_id: obj.value});
-  }).call(this);
+  };
+ post_url();
 </script>
 {% endblock %}
 

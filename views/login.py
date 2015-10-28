@@ -37,10 +37,16 @@ def login():
 
 @login_view.route('/logout', methods=['GET', 'POST'])
 def logout():
+    developer = Developer()
+    developer.session_token = session.get('session_token')
+    developer.logout()
     if session.get('session_token'):
         session['session_token'] = None
     if session.get('username'):
         session['username'] = None
+    session.pop('app_list', None)
+    session.pop('app_list', None)
+    session.pop('app_list', None)
     return redirect('/')
 
 

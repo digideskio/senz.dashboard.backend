@@ -9,14 +9,14 @@ dashboard = Blueprint('dashboard', __name__, template_folder='templates')
 @dashboard.route('/dashboard')
 def show():
     app_id = session.get('app_id', None)
-    if 'app_list' in session:
-        app_list = session.get('app_list')
-    else:
-        user = Developer()
-        user.session_token = session.get('session_token')
-        user.get_app_list()
-        app_list = user.app_list
-        session['app_list'] = app_list
+    app_list = []
+    if session.get('session_token'):
+        app_list = session.get('app_list', None)
+        if not app_list:
+            developer = Developer()
+            developer.session_token = session.get('session_token')
+            app_list = developer.get_app_list()
+            session['app_list'] = app_list
     return render_template('index.html',
                            username=session.get('username'),
                            app_id=app_id,
@@ -26,14 +26,14 @@ def show():
 @dashboard.route('/dashboard/profile')
 def profile():
     app_id = session.get('app_id', None)
-    if 'app_list' in session:
-        app_list = session.get('app_list')
-    else:
-        user = Developer()
-        user.session_token = session.get('session_token')
-        user.get_app_list()
-        app_list = user.app_list
-        session['app_list'] = app_list
+    app_list = []
+    if session.get('session_token'):
+        app_list = session.get('app_list', None)
+        if not app_list:
+            developer = Developer()
+            developer.session_token = session.get('session_token')
+            app_list = developer.get_app_list()
+            session['app_list'] = app_list
 
     result_dict = get_query_list('5621fb0f60b27457e863fabb', 'gender', 'age', 'occupation', 'field')
     gender_list = [] if 'gender' not in result_dict else result_dict['gender']
@@ -66,14 +66,14 @@ def profile():
 @dashboard.route('/dashboard/interest')
 def interest():
     app_id = session.get('app_id', None)
-    if 'app_list' in session:
-        app_list = session.get('app_list')
-    else:
-        user = Developer()
-        user.session_token = session.get('session_token')
-        user.get_app_list()
-        app_list = user.app_list
-        session['app_list'] = app_list
+    app_list = []
+    if session.get('session_token'):
+        app_list = session.get('app_list', None)
+        if not app_list:
+            developer = Developer()
+            developer.session_token = session.get('session_token')
+            app_list = developer.get_app_list()
+            session['app_list'] = app_list
     result_dict = get_query_list('5621fb0f60b27457e863fabb', 'interest')
     interest_list = [] if 'interest' not in result_dict else result_dict['interest']
     interest_tmp = map(lambda x: list(x), zip(*map(lambda x: [x, interest_list.count(x)], set(interest_list))))
@@ -94,14 +94,14 @@ def interest():
 @dashboard.route('/dashboard/marriage')
 def marriage():
     app_id = session.get('app_id', None)
-    if 'app_list' in session:
-        app_list = session.get('app_list')
-    else:
-        user = Developer()
-        user.session_token = session.get('session_token')
-        user.get_app_list()
-        app_list = user.app_list
-        session['app_list'] = app_list
+    app_list = []
+    if session.get('session_token'):
+        app_list = session.get('app_list', None)
+        if not app_list:
+            developer = Developer()
+            developer.session_token = session.get('session_token')
+            app_list = developer.get_app_list()
+            session['app_list'] = app_list
     result_dict = get_query_list('5621fb0f60b27457e863fabb', 'marriage', 'pregnant')
     marriage_list = [] if 'marriage' not in result_dict else result_dict['marriage']
     pregnant_list = [] if 'pregnant' not in result_dict else result_dict['pregnant']
@@ -126,14 +126,14 @@ def marriage():
 @dashboard.route('/dashboard/consumption')
 def consumption():
     app_id = session.get('app_id', None)
-    if 'app_list' in session:
-        app_list = session.get('app_list')
-    else:
-        user = Developer()
-        user.session_token = session.get('session_token')
-        user.get_app_list()
-        app_list = user.app_list
-        session['app_list'] = app_list
+    app_list = []
+    if session.get('session_token'):
+        app_list = session.get('app_list', None)
+        if not app_list:
+            developer = Developer()
+            developer.session_token = session.get('session_token')
+            app_list = developer.get_app_list()
+            session['app_list'] = app_list
     result_dict = get_query_list('5621fb0f60b27457e863fabb', 'consumption', 'has_car', 'has_pet')
     consumption_list = [] if 'consumption' not in result_dict else result_dict['consumption']
     car_list = [] if 'has_car' not in result_dict else result_dict['has_car']
@@ -163,14 +163,14 @@ def consumption():
 @dashboard.route('/dashboard/location')
 def location():
     app_id = session.get('app_id', None)
-    if 'app_list' in session:
-        app_list = session.get('app_list')
-    else:
-        user = Developer()
-        user.session_token = session.get('session_token')
-        user.get_app_list()
-        app_list = user.app_list
-        session['app_list'] = app_list
+    app_list = []
+    if session.get('session_token'):
+        app_list = session.get('app_list', None)
+        if not app_list:
+            developer = Developer()
+            developer.session_token = session.get('session_token')
+            app_list = developer.get_app_list()
+            session['app_list'] = app_list
     return render_template('dashboard/user-location.html',
                            username=session.get('username'),
                            app_id=app_id,
@@ -180,14 +180,14 @@ def location():
 @dashboard.route('/dashboard/motion')
 def motion():
     app_id = session.get('app_id', None)
-    if 'app_list' in session:
-        app_list = session.get('app_list')
-    else:
-        user = Developer()
-        user.session_token = session.get('session_token')
-        user.get_app_list()
-        app_list = user.app_list
-        session['app_list'] = app_list
+    app_list = []
+    if session.get('session_token'):
+        app_list = session.get('app_list', None)
+        if not app_list:
+            developer = Developer()
+            developer.session_token = session.get('session_token')
+            app_list = developer.get_app_list()
+            session['app_list'] = app_list
     home_office_type = ['contextAtWork', 'contextAtHome', 'contextCommutingWork', 'contextCommutingHome']
     result_dict = get_query_list('5621fb0f60b27457e863fabb', 'home_office_status')
     home_office_list = [] if 'home_office_status' not in result_dict else result_dict['home_office_status']
@@ -212,14 +212,14 @@ def motion():
 @dashboard.route('/dashboard/event')
 def event():
     app_id = session.get('app_id', None)
-    if 'app_list' in session:
-        app_list = session.get('app_list')
-    else:
-        user = Developer()
-        user.session_token = session.get('session_token')
-        user.get_app_list()
-        app_list = user.app_list
-        session['app_list'] = app_list
+    app_list = []
+    if session.get('session_token'):
+        app_list = session.get('app_list', None)
+        if not app_list:
+            developer = Developer()
+            developer.session_token = session.get('session_token')
+            app_list = developer.get_app_list()
+            session['app_list'] = app_list
     result_dict = get_query_list('5621fb0f60b27457e863fabb', 'event')
     event_list = [] if 'event' not in result_dict else result_dict['event']
 
