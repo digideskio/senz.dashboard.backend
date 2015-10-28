@@ -36,7 +36,7 @@ def profile():
     occupation_tmp = map(lambda x: list(x), zip(*map(lambda x: [x, occupation_list.count(x)], set(occupation_list))))
     occupation = {"category": occupation_tmp[0], "series": occupation_tmp[1]} if occupation_tmp else {}
     field_tmp = map(lambda x: list(x), zip(*map(lambda x: [x, field_list.count(x)], set(field_list))))
-    field = {"category": field_tmp[0], "series": field_tmp[1]}
+    field = {"category": field_tmp[0], "series": field_tmp[1]} if field_tmp else {}
 
     data = {'gender': gender, 'age': age, 'job': occupation, 'profession': field}
     user_profile = {
