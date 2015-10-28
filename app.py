@@ -28,15 +28,14 @@ def index():
     username = session.get('username')
     user = Developer()
     user.session_token = session.get('session_token')
-    user_id = user.user_id()
-    app_dict = user.get_app_dict(user_id)
+    app_dict = user.get_app_list()
     if request.method == 'POST':
         app_id = request.form.get('app_id')
         session['app_id'] = app_id
         session['app_key'] = app_dict[app_id]['app_key']
     return render_template('index.html',
                            username=username,
-                           app_dict=app_dict)
+                           app_list=user.app_list)
 
 
 @app.template_filter('translate_motion')

@@ -41,10 +41,10 @@
    {% block app_list %}
     <div class="inline-block">
       <select name="select_app" class="select_app" id="select_app" onchange="post_url(this)">
-          {% if app_dict %}
-          {% for key, value in app_dict.items() %}
-            <option value={{ key }}>{{ value.app_name }}</option>
-          {% endfor %}
+          {% if app_list %}
+              {% for item in app_list %}
+                <option value={{ item['app_key'] }}>{{ item['app_name'] }}</option>
+              {% endfor %}
           {% else %}
               <option value='5621fb0f60b27457e863fabb'>Demo</option>
           {% endif %}
@@ -65,7 +65,7 @@
    {% if username %}
    <div id="account">
      <div class="dropdown">
-          <div class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             {{ username }}
           </button>
           <ul class="list">

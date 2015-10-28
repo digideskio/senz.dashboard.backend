@@ -10,9 +10,8 @@ def show():
     app_id = 'demo55bc5d8e00b0cb9c40dec37b'
     developer = Developer()
     developer.session_token = session.get('session_token')
-    developer_id = developer.user_id()
-    app_dict = developer.get_app_dict(developer_id)
     developer.get_tracker_of_app(app_id)
+    developer.get_app_list()
 
     motion_dict = {'motionSitting': 0, 'motionWalking': 3, 'motionRunning': 4, 'motionBiking': 2, 'motionCommuting': 1}
     context_list = ['contextAtHome', 'contextCommutingWork', 'contextAtWork', 'contextCommutingHome',
@@ -34,5 +33,5 @@ def show():
                            motion_dict=motion_dict,
                            context_list=context_list,
                            tracker_list=developer.tracker_list,
-                           app_dict=app_dict)
+                           app_list=developer.app_list)
 

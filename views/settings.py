@@ -10,12 +10,12 @@ def show():
     app_key = session.get('app_key')
     user = Developer()
     user.session_token = session.get('session_token')
-    user_id = user.user_id()
-    app_dict = user.get_app_dict(user_id)
+    # user_id = user.user_id()
+    user.get_app_list()
     return render_template('settings/settings.html',
                            username=session.get('username'),
                            app_id=app_id, app_key=app_key,
-                           app_dict=app_dict)
+                           app_list=user.app_list)
 
 
 @settings.route('/delete', methods=['GET', 'POST'])

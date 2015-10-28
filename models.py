@@ -1,15 +1,32 @@
 # coding: utf-8
 
-from leancloud import User, Object, Query
+from leancloud import User, Object, Query, LeanCloudError
 from itsdangerous import Signer
 
 
 class Developer(User):
     def __init__(self):
         self.tracker_list = []
+        self.app_list = []
         self.app_dict = {}
         self.session_token = None
         User.__init__(self)
+
+    def login(self, username=None, password=None):
+        User.login(self, username, password)
+        self.session_token = self.get_session_token()
+        if self.session_token:
+            user = self.become(session_token=self.session_token)
+            query = Query(Object.extend('Application'))
+            query.equal_to('user', user)
+            query.limit(1000)
+            result = query.find()
+            if result:
+                self.app_list = map(lambda x: {'app_id': x.attributes['app_id'],
+                                               'app_key': x.attributes['app_key'],
+                                               'app_name': x.attributes['app_name']}, result)
+                return True
+        return False
 
     def user_id(self):
         if self.session_token:
@@ -56,38 +73,70 @@ class Developer(User):
             print(e)
             return False
 
-    def get_app_dict(self, user_id=''):
-        query = Query(Object.extend('_User'))
-        query.equal_to('objectId', user_id)
-        if query.find():
-            user = query.find()[0]
-        else:
-            self.app_dict = {}
-            return {}
-        query = Query(Object.extend('Application'))
-        query.equal_to('user', user)
-        query.limit(1000)
-        app_list = query.find()
-        if app_list:
-            self.app_dict = dict(map(lambda x: (x.attributes['app_id'],
-                                                {'app_name': x.attributes['app_name'],
-                                                 'app_key': x.attributes['app_key']}), app_list))
-        else:
-            self.app_dict = {}
-        return self.app_dict
+    def get_app_list(self):
+        try:
+            user = self.become(session_token=self.session_token)
+            query = Query(Object.extend('Application'))
+            query.equal_to('user', user)
+            query.limit(1000)
+            result = query.find()
+        except LeanCloudError, e:
+            print(e)
+            return []
+
+        self.app_list = map(lambda x: {'app_id': x.attributes['app_id'],
+                                       'app_key': x.attributes['app_key'],
+                                       'app_name': x.attributes['app_name']}, result)
+        return self.app_list
+
+        # if not user_id:
+        #     self.app_dict = {}
+        #     return {}
+        # try:
+        #     query = Query(Object.extend('_User'))
+        #     query.equal_to('objectId', user_id)
+        #     if not query.count():
+        #         self.app_dict = {}
+        #         return {}
+        #     user = query.find()[0]
+        #     print user
+        #     query = Query(Object.extend('Application'))
+        #     query.equal_to('user', user)
+        #     query.limit(1000)
+        #     app_list = query.find()
+        # except LookupError, e:
+        #     print(e)
+        #     self.app_dict = {}
+        #     return {}
+        #
+        # if not app_list:
+        #     self.app_dict = {}
+        # else:
+        #     self.app_dict = dict(map(lambda x: (x.attributes['app_id'],
+        #                                         {'app_name': x.attributes['app_name'],
+        #                                          'app_key': x.attributes['app_key']}), app_list))
+        # return self.app_dict
 
     def get_tracker_of_app(self, app_id=''):
-        query = Query(Object.extend('Application'))
-        query.equal_to('app_id', app_id)
-        app_list = query.find()
-        if not app_list:
-            return []
-        the_app = app_list[0]
+        try:
+            query = Query(Object.extend('Application'))
+            query.equal_to('app_id', app_id)
+            app_list = query.find()
+            if not app_list:
+                return []
+            the_app = app_list[0]
 
-        query = Query(Object.extend('BindingInstallation'))
-        query.equal_to('application', the_app)
-        query.select('user')
-        installation_list = query.find()
-        self.tracker_list = list(set(map(lambda x: x.attributes['user'].id, installation_list)))
+            query = Query(Object.extend('BindingInstallation'))
+            query.equal_to('application', the_app)
+            query.select('user')
+            installation_list = query.find()
+        except LookupError, e:
+            print(e)
+            return []
+        if not installation_list:
+            self.tracker_list = []
+        else:
+            self.tracker_list = list(set(map(lambda x: x.attributes['user'].id, installation_list)))
+        return self.tracker_list
 
 Developer._class_name = '_User'

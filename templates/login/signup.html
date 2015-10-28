@@ -5,25 +5,21 @@
 
 {% block content %}
     <div id="container" class="container">
-    <div id="content" class="content" style="padding-top: 55px;">
+    <div id="content" class="content single-content bg-gray" style="margin-top: 40px;">
         <div id="formwrapper">
             <form action="{{ url_for('login_view.signup') }}" method="post" name="apLogin" id="apLogin">
-                <div>
-                    <label for="username">用户名</label>
-                    <input type="text" name="username" id="username" size="20" maxlength="30" />
-                    <br>
+                <div class="title">注册</div>
+                <div class="item">
+                    <input type="text" placeholder="用户名" name="username" id="username" size="20" maxlength="30" />
                 </div>
-                <div>
-                    <label for="email">邮箱 </label>
-                    <input type="text" name="email" id="email" value="" size="20" maxlength="150" />
+                <div class="item">
+                    <input type="text" placeholder="邮箱" name="email" id="email" value="" size="20" maxlength="150" />
                 </div>
-                <div>
-                    <label for="password">密码</label>
-                    <input type="password" name="password" id="password" size="20" maxlength="30" />
-                    <br>
+                <div class="item">
+                    <input type="password" placeholder="密码" name="password" id="password" size="20" maxlength="30" />
                 </div>
-                <div class="cookiechk">
-                    <input name="register-submit" type="submit" class="buttom" value="提交" />
+                <div class="item cookiechk">
+                    <input name="register-submit" type="submit" class="button" value="提交" />
                 </div>
             </form>
         </div>

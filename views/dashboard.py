@@ -1,6 +1,6 @@
 # coding: utf-8
-from flask import Blueprint, render_template, json, request, session
-from leancloud import Object, Query
+from flask import Blueprint, render_template, json, session
+from leancloud import Object, Query, LeanCloudError
 from models import Developer
 
 dashboard = Blueprint('dashboard', __name__, template_folder='templates')
@@ -10,11 +10,10 @@ dashboard = Blueprint('dashboard', __name__, template_folder='templates')
 def show():
     user = Developer()
     user.session_token = session.get('session_token')
-    user_id = user.user_id()
-    app_dict = user.get_app_dict(user_id)
+    user.get_app_list()
     return render_template('index.html',
                            username=session.get('username'),
-                           app_dict=app_dict)
+                           app_list=user.app_list)
 
 
 @dashboard.route('/dashboard/profile')
@@ -22,8 +21,7 @@ def profile():
     # app_id = request.args.get('app_id')
     user = Developer()
     user.session_token = session.get('session_token')
-    user_id = user.user_id()
-    app_dict = user.get_app_dict(user_id)
+    user.get_app_list()
 
     result_dict = get_query_list('5621fb0f60b27457e863fabb', 'gender', 'age', 'occupation', 'field')
     gender_list = [] if 'gender' not in result_dict else result_dict['gender']
@@ -36,7 +34,7 @@ def profile():
            "series": [age_list.count('55up'), age_list.count('35to55'),
                       age_list.count('16to35'), age_list.count('16down')]}
     occupation_tmp = map(lambda x: list(x), zip(*map(lambda x: [x, occupation_list.count(x)], set(occupation_list))))
-    occupation = {"category": occupation_tmp[0], "series": occupation_tmp[1]}
+    occupation = {"category": occupation_tmp[0], "series": occupation_tmp[1]} if occupation_tmp else {}
     field_tmp = map(lambda x: list(x), zip(*map(lambda x: [x, field_list.count(x)], set(field_list))))
     field = {"category": field_tmp[0], "series": field_tmp[1]}
 
@@ -49,15 +47,14 @@ def profile():
     return render_template('dashboard/user-identity.html',
                            option=json.dumps(user_profile),
                            username=session.get('username'),
-                           app_dict=app_dict)
+                           app_list=user.app_list)
 
 
 @dashboard.route('/dashboard/interest')
 def interest():
     user = Developer()
     user.session_token = session.get('session_token')
-    user_id = user.user_id()
-    app_dict = user.get_app_dict(user_id)
+    user.get_app_list()
     result_dict = get_query_list('5621fb0f60b27457e863fabb', 'interest')
     interest_list = [] if 'interest' not in result_dict else result_dict['interest']
     interest_tmp = map(lambda x: list(x), zip(*map(lambda x: [x, interest_list.count(x)], set(interest_list))))
@@ -71,15 +68,14 @@ def interest():
     return render_template('dashboard/user-hobby.html',
                            option=json.dumps(interest),
                            username=session.get('username'),
-                           app_dict=app_dict)
+                           app_list=user.app_list)
 
 
 @dashboard.route('/dashboard/marriage')
 def marriage():
     user = Developer()
     user.session_token = session.get('session_token')
-    user_id = user.user_id()
-    app_dict = user.get_app_dict(user_id)
+    user.get_app_list()
     result_dict = get_query_list('5621fb0f60b27457e863fabb', 'marriage', 'pregnant')
     marriage_list = [] if 'marriage' not in result_dict else result_dict['marriage']
     pregnant_list = [] if 'pregnant' not in result_dict else result_dict['pregnant']
@@ -97,15 +93,14 @@ def marriage():
     return render_template('dashboard/user-matrimony.html',
                            option=json.dumps(ret_json),
                            username=session.get('username'),
-                           app_dict=app_dict)
+                           app_list=user.app_list)
 
 
 @dashboard.route('/dashboard/consumption')
 def consumption():
     user = Developer()
     user.session_token = session.get('session_token')
-    user_id = user.user_id()
-    app_dict = user.get_app_dict(user_id)
+    user.get_app_list()
     result_dict = get_query_list('5621fb0f60b27457e863fabb', 'consumption', 'has_car', 'has_pet')
     consumption_list = [] if 'consumption' not in result_dict else result_dict['consumption']
     car_list = [] if 'has_car' not in result_dict else result_dict['has_car']
@@ -128,15 +123,14 @@ def consumption():
     return render_template('dashboard/user-consumption.html',
                            option=json.dumps(ret_json),
                            username=session.get('username'),
-                           app_dict=app_dict)
+                           app_list=user.app_list)
 
 
 @dashboard.route('/dashboard/location')
 def location():
     user = Developer()
     user.session_token = session.get('session_token')
-    user_id = user.user_id()
-    app_dict = user.get_app_dict(user_id)
+    user.get_app_list()
     return render_template('dashboard/user-location.html', username=session.get('username'))
 
 
@@ -144,8 +138,7 @@ def location():
 def motion():
     user = Developer()
     user.session_token = session.get('session_token')
-    user_id = user.user_id()
-    app_dict = user.get_app_dict(user_id)
+    user.get_app_list()
     home_office_type = ['contextAtWork', 'contextAtHome', 'contextCommutingWork', 'contextCommutingHome']
     result_dict = get_query_list('5621fb0f60b27457e863fabb', 'home_office_status')
     home_office_list = [] if 'home_office_status' not in result_dict else result_dict['home_office_status']
@@ -163,15 +156,14 @@ def motion():
     return render_template('dashboard/scene.html',
                            option=json.dumps(home_office_status),
                            username=session.get('username'),
-                           app_dict=app_dict)
+                           app_list=user.app_list)
 
 
 @dashboard.route('/dashboard/event')
 def event():
     user = Developer()
     user.session_token = session.get('session_token')
-    user_id = user.user_id()
-    app_dict = user.get_app_dict(user_id)
+    user.get_app_list()
     result_dict = get_query_list('5621fb0f60b27457e863fabb', 'event')
     event_list = [] if 'event' not in result_dict else result_dict['event']
 
@@ -186,23 +178,26 @@ def event():
     return render_template('dashboard/event.html',
                            option=json.dumps(event),
                            username=session.get('username'),
-                           app_dict=app_dict)
+                           app_list=user.app_list)
 
 
 def get_query_list(app_id='', *field):
     if not app_id:
         return {}
-
-    query_limit = 1000
-    query = Query(Object.extend('DashDataSource'))
-    query.equal_to('app_id', app_id)
-    total_count = query.count()
-    query_times = (total_count + query_limit - 1) / query_limit
-    result_list = []
-    for index in range(query_times):
-        query.limit(query_limit)
-        query.skip(index * query_limit)
-        result_list.extend(query.find())
+    try:
+        query_limit = 100
+        query = Query(Object.extend('DashDataSource'))
+        query.equal_to('app_id', app_id)
+        total_count = query.count()
+        query_times = (total_count + query_limit - 1) / query_limit
+        result_list = []
+        for index in range(query_times):
+            query.limit(query_limit)
+            query.skip(index * query_limit)
+            result_list.extend(query.find())
+    except LeanCloudError, e:
+        print(e)
+        return {}
 
     ret_dict = {}
     for item in field:

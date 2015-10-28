@@ -3,8 +3,11 @@
 {% endblock %}
 
 {%  block content %}
+<script src="{{ url_for('static', filename='scripts/panel.js') }}"></script>
+<link rel="stylesheet" href="{{ url_for('static', filename='styles/panel.css') }}">
+
 <div id="container" class="container">
-    <div id="content" class="content" style="padding-top: 55px;">
+    <div id="content" class="content single-content" style="min-height: 678px; margin-top: 40px;">
         <select class="filter-sl">
             <option>Select All</option>
             {% for item in tracker_list %}
@@ -28,5 +31,4 @@
         <input class="btn" id="btn" type="button" value="Submit"/>
     </div>
 </div>
-<script src="{{ url_for('static', filename='scripts/panel.js') }}"></script>
 {%  endblock %}
