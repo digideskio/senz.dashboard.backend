@@ -59,7 +59,7 @@ def interest():
     interest_list = [] if 'interest' not in result_dict else result_dict['interest']
     interest_tmp = map(lambda x: list(x), zip(*map(lambda x: [x, interest_list.count(x)], set(interest_list))))
 
-    data = {"category": interest_tmp[0],  "series": interest_tmp[1]}
+    data = {"category": interest_tmp[0],  "series": interest_tmp[1]} if interest_tmp else {}
     interest = {
         'errcode': 0,
         'errmsg': 'ok',
@@ -107,7 +107,7 @@ def consumption():
     pet_list = [] if 'has_pet' not in result_dict else result_dict['has_pet']
 
     consumption_tmp = map(lambda x: list(x), zip(*map(lambda x: [x, consumption_list.count(x)], set(consumption_list))))
-    consumption = {"category": consumption_tmp[0],  "series": consumption_tmp[1]}
+    consumption = {"category": consumption_tmp[0],  "series": consumption_tmp[1]} if consumption_tmp else {}
     car = {'category': ['yes', 'no'], 'series': [car_list.count('yes'), car_list.count('no')]}
     pet = {'category': ['yes', 'no'], 'series': [pet_list.count('yes'), pet_list.count('no')]}
 
@@ -168,7 +168,7 @@ def event():
     event_list = [] if 'event' not in result_dict else result_dict['event']
 
     list_tmp = map(lambda x: list(x), zip(*map(lambda x: [x, event_list.count(x)], set(event_list))))
-    data = {"category": list_tmp[0],  "series": list_tmp[1]}
+    data = {"category": list_tmp[0],  "series": list_tmp[1]} if list_tmp else {}
     event = {
         'errcode': 0,
         'errmsg': 'ok',
