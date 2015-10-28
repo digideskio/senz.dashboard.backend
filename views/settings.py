@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, session, request, redirect, jsonify
+from flask import Blueprint, render_template, session, request, jsonify
 from models import Developer
 
 settings = Blueprint('settings', __name__, template_folder='templates')
@@ -6,16 +6,19 @@ settings = Blueprint('settings', __name__, template_folder='templates')
 
 @settings.route('/settings')
 def show():
-    app_id = session.get('app_id')
-    app_key = session.get('app_key')
-    user = Developer()
-    user.session_token = session.get('session_token')
-    # user_id = user.user_id()
-    user.get_app_list()
+    app_id = session.get('app_id', None)
+    if 'app_list' in session:
+        app_list = session.get('app_list')
+    else:
+        user = Developer()
+        user.session_token = session.get('session_token')
+        user.get_app_list()
+        app_list = user.app_list
+        session['app_list'] = app_list
     return render_template('settings/settings.html',
                            username=session.get('username'),
-                           app_id=app_id, app_key=app_key,
-                           app_list=user.app_list)
+                           app_id=app_id,
+                           app_list=app_list)
 
 
 @settings.route('/delete', methods=['GET', 'POST'])
@@ -24,6 +27,7 @@ def delete_app():
     user = Developer()
     user.session_token = session.get('session_token')
     if user.delete_app(app_id):
+        session.pop('app_list', None)
         return jsonify({'delete': 'success'})
     else:
         return jsonify({'delete': 'failed'})
@@ -36,6 +40,7 @@ def add_app():
         user = Developer()
         user.session_token = session.get('session_token')
         if user.create_new_app(app_name):
+            session.pop('app_list', None)
             return jsonify({'delete': 'success'})
         else:
             return jsonify({'delete': 'failed'})

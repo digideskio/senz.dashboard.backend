@@ -26,24 +26,23 @@
             }
         });
   </script>
-  {% block app_select %}
-  <script>
-      var post_url = function(elm){
-        $.post("/", {app_id: elm.value});
-      };
-  </script>
-  {% endblock %}
+
  </head>
+
  <body>
  {% block header %}
    <div id="header" class="header">
    <h2 class="site-title"><a href="/">Senz</a></h2>
    {% block app_list %}
     <div class="inline-block">
-      <select name="select_app" class="select_app" id="select_app" onchange="post_url(this)">
+      <select name="select_app" class="select_app" id="select_app" onchange="post_url()">
           {% if app_list %}
               {% for item in app_list %}
-                <option value={{ item['app_key'] }}>{{ item['app_name'] }}</option>
+                  {% if item['app_id'] == app_id %}
+                    <option value={{ item['app_id'] }} id={{ item['app_key'] }} selected="selected">{{ item['app_name'] }}</option>
+                  {% else %}
+                    <option value={{ item['app_id'] }} id={{ item['app_key'] }}>{{ item['app_name'] }}</option>
+                  {% endif %}
               {% endfor %}
           {% else %}
               <option value='5621fb0f60b27457e863fabb'>Demo</option>
@@ -51,6 +50,7 @@
       </select>
    </div>
    {% endblock %}
+
    {% block main_nav %}
    <nav class="main-nav">
      <ul class="list">
@@ -103,5 +103,15 @@
  {% endblock %}
 
  {% block content %}{% endblock %}
+
+  {% block app_select %}
+  <script>
+      var post_url = function(){
+        var obj = document.getElementById("select_app");
+        $.post("/", {app_id: obj.value});
+      };
+  </script>
+  {% endblock %}
+
  </body>
 </html>

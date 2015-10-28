@@ -8,10 +8,20 @@ panel = Blueprint('panel', __name__, template_folder='templates')
 @panel.route('/panel', methods=['GET', 'POST'])
 def show():
     app_id = 'demo55bc5d8e00b0cb9c40dec37b'
-    developer = Developer()
-    developer.session_token = session.get('session_token')
-    developer.get_tracker_of_app(app_id)
-    developer.get_app_list()
+    if 'app_list' in session and 'tracker_list' in session:
+        app_list = session.get('app_list')
+        tracker_list = session.get('tracker_list')
+    else:
+        developer = Developer()
+        developer.session_token = session.get('session_token')
+        tracker_list = developer.get_tracker_of_app(app_id)
+
+        developer.get_app_list()
+        app_list = developer.app_list
+        session['app_list'] = app_list
+        session['tracker_list'] = tracker_list
+
+    app_id = session.get('app_id', None)
 
     motion_dict = {'motionSitting': 0, 'motionWalking': 3, 'motionRunning': 4, 'motionBiking': 2, 'motionCommuting': 1}
     context_list = ['contextAtHome', 'contextCommutingWork', 'contextAtWork', 'contextCommutingHome',
@@ -32,6 +42,7 @@ def show():
                            username=session.get('username'),
                            motion_dict=motion_dict,
                            context_list=context_list,
-                           tracker_list=developer.tracker_list,
-                           app_list=developer.app_list)
+                           tracker_list=tracker_list,
+                           app_id=app_id,
+                           app_list=app_list)
 

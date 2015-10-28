@@ -1,6 +1,6 @@
 # coding: utf-8
 
-from flask import Flask, session, render_template, request
+from flask import Flask, session, render_template, request, redirect
 from itsdangerous import Signer
 from views.panel import panel
 from views.dashboard import dashboard
@@ -11,7 +11,7 @@ from datetime import timedelta
 from models import Developer
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'this is senz dashboard'
+app.config['SECRET_KEY'] = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?RT'
 signer = Signer(app.config['SECRET_KEY'])
 app.permanent_session_lifetime = timedelta(hours=1)
 
@@ -25,17 +25,23 @@ app.register_blueprint(login_view)
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
-    username = session.get('username')
-    user = Developer()
-    user.session_token = session.get('session_token')
-    app_dict = user.get_app_list()
     if request.method == 'POST':
         app_id = request.form.get('app_id')
         session['app_id'] = app_id
-        session['app_key'] = app_dict[app_id]['app_key']
+        return redirect('/')
+
+    username = session.get('username')
+    if 'app_list' in session:
+        app_list = session.get('app_list')
+    else:
+        user = Developer()
+        user.session_token = session.get('session_token')
+        user.get_app_list()
+        app_list = user.app_list
+        session['app_list'] = app_list
     return render_template('index.html',
                            username=username,
-                           app_list=user.app_list)
+                           app_list=app_list)
 
 
 @app.template_filter('translate_motion')

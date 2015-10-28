@@ -1,14 +1,7 @@
 {% extends 'base.html' %}
-{% block app_select %}
-<script>
-  var post_url = function(elm){
-    document.getElementById("app_id").value = elm.value;
-    document.getElementById("app_key").value = elm.value;
-  };
-</script>
-{% endblock %}
-{% block navigation %}
-{% endblock %}
+
+{% block navigation %}{% endblock %}
+
 
 {%  block content %}
 <div id="container" class="container">
@@ -23,6 +16,8 @@
             <br>
             <br>
             <form action="{{ url_for('settings.delete_app') }}" method="post">
+                <div><label>App Name</label><div>
+                    <input id="app_name" type="text" size="36" name="app_name" value="{{ app_name }}" readonly></div></div>
                 <div><label>App ID</label><div>
                     <input id="app_id" type="text" size="36" name="app_id" value="{{ app_id }}" readonly></div></div>
                 <div><label>App Key</label><div>
@@ -38,3 +33,16 @@
     </div>
 </div>
 {%  endblock %}
+
+{% block app_select %}
+<script>
+(function(){
+    var obj = document.getElementById("select_app");
+    document.getElementById("app_name").value = obj.options[obj.selectedIndex].text;
+    document.getElementById("app_id").value = obj.value;
+    document.getElementById("app_key").value = obj.options[obj.selectedIndex].id;
+    $.post("/", {app_id: obj.value});
+  }).call(this);
+</script>
+{% endblock %}
+

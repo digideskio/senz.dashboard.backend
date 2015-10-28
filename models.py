@@ -89,34 +89,6 @@ class Developer(User):
                                        'app_name': x.attributes['app_name']}, result)
         return self.app_list
 
-        # if not user_id:
-        #     self.app_dict = {}
-        #     return {}
-        # try:
-        #     query = Query(Object.extend('_User'))
-        #     query.equal_to('objectId', user_id)
-        #     if not query.count():
-        #         self.app_dict = {}
-        #         return {}
-        #     user = query.find()[0]
-        #     print user
-        #     query = Query(Object.extend('Application'))
-        #     query.equal_to('user', user)
-        #     query.limit(1000)
-        #     app_list = query.find()
-        # except LookupError, e:
-        #     print(e)
-        #     self.app_dict = {}
-        #     return {}
-        #
-        # if not app_list:
-        #     self.app_dict = {}
-        # else:
-        #     self.app_dict = dict(map(lambda x: (x.attributes['app_id'],
-        #                                         {'app_name': x.attributes['app_name'],
-        #                                          'app_key': x.attributes['app_key']}), app_list))
-        # return self.app_dict
-
     def get_tracker_of_app(self, app_id=''):
         try:
             query = Query(Object.extend('Application'))
