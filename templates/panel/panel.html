@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+
 {% block navigation %}
 {% endblock %}
 
@@ -7,11 +8,11 @@
 <link rel="stylesheet" href="{{ url_for('static', filename='styles/panel.css') }}">
 
 <div id="container" class="container">
-    <div id="content" class="content single-content" style="min-height: 678px; margin-top: 40px;">
-        <select class="filter-sl">
-            <option>Select All</option>
+    <div id="content" class="content" style="min-height: 678px; margin-top: 40px;">
+        <select id="select_tracker" class="filter-sl">
+            <option value="all">Select All</option>
             {% for item in tracker_list %}
-                <option>{{ item }}</option>
+                <option value="{{ item }}">{{ item }}</option>
             {% endfor %}
         </select>
 
@@ -32,3 +33,5 @@
     </div>
 </div>
 {%  endblock %}
+
+

@@ -17,24 +17,22 @@
 
 $(document).ready(function(){
     $('#btn').click(function(e){
-        //var _xsrf = $("[name='_xsrf']").attr('value');
-        //var app_id = $(".switch-app .dropdown button").attr("app_id");
         var chkObjs = document.getElementsByName('test');
-        //var type, val;
         var select_app = document.getElementById('select_app').value;
+        var select_tracker = document.getElementById('select_tracker').value;
 
         for(var i=0; i<chkObjs.length; ++i){
             if(chkObjs[i].checked){
-                var type = chkObjs[i].parentNode.parentNode.getAttribute("id");
+                var event = chkObjs[i].parentNode.parentNode.getAttribute("id");
                 var val = chkObjs[i].value;
                 break;
             }
         }
         $.post("/panel",
         {
-            //_xsrf: _xsrf,
+            tracker: select_tracker,
             app_id: select_app,
-            type: type,
+            event: event,
             val: val
         });
     });

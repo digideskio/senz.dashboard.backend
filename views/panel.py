@@ -28,13 +28,20 @@ def show():
                     'contextShortTrip', 'contextInParty', 'contextWindowShopping', 'contextAtCinema',
                     'contextAtExhibition', 'contextAtPopsConcert', 'contextAtTheatre', 'contextAtClassicsConcert']
     if request.method == 'POST':
-        event = request.form.get('type')
+        tracker = request.form.get('tracker')
+        event = request.form.get('event')
         val = request.form.get('val')
+        print(tracker, event, val)
         if event and val:
             headers = {"X-AVOSCloud-Application-Id": "wsbz6p3ouef94ubvsdqk2jfty769wkyed3qsry5hebi2va2h",
                        "X-AVOSCloud-Application-Key": "6z6n0w3dopxmt32oi2eam2dt0orh8rxnqc8lgpf2hqnar4tr"}
-            payload = {"userId": "559b8bd5e4b0d4d1b1d35e88", "type": event, "val": val}
-            requests.post("https://leancloud.cn/1.1/functions/notify_new_details",  headers=headers, data=payload)
+            if tracker == 'all':
+                for item in tracker_list:
+                    payload = {"userId": item, "type": event, "val": val}
+                    requests.post("https://leancloud.cn/1.1/functions/notify_new_details",  headers=headers, data=payload)
+            else:
+                payload = {"userId": tracker, "type": event, "val": val}
+                requests.post("https://leancloud.cn/1.1/functions/notify_new_details",  headers=headers, data=payload)
     return render_template('panel/panel.html',
                            username=session.get('username'),
                            motion_dict=motion_dict,
