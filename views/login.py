@@ -16,8 +16,7 @@ def get_expiration():
 
 @login_view.route('/login', methods=['GET', 'POST'])
 def login():
-    session_token = session.get('session_token')
-    if session_token:
+    if session.get('session_token'):
         return redirect('/')
     if request.method == 'POST':
         user = Developer()
@@ -40,13 +39,11 @@ def logout():
     developer = Developer()
     developer.session_token = session.get('session_token')
     developer.logout()
-    if session.get('session_token'):
-        session['session_token'] = None
-    if session.get('username'):
-        session['username'] = None
+    session.pop('session_token', None)
+    session.pop('username', None)
     session.pop('app_list', None)
-    session.pop('app_list', None)
-    session.pop('app_list', None)
+    session.pop('app_id', None)
+    session.pop('app_key', None)
     return redirect('/')
 
 
