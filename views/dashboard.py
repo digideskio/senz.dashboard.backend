@@ -171,12 +171,17 @@ def location():
             developer.session_token = session.get('session_token')
             app_list = developer.get_app_list()
             session['app_list'] = app_list
-    # result_dict = get_query_list('5621fb0f60b27457e863fabb', 'province', 'city')
-    # print(result_dict)
+    result_dict = get_query_list('5621fb0f60b27457e863fabb', 'province', 'city')
+    provice_list = [] if 'province' not in result_dict else result_dict['province']
+    city_list = [] if 'city' not in result_dict else result_dict['city']
+    provice_tmp = map(lambda x: list(x), zip(*map(lambda x: [x, provice_list.count(x)], set(provice_list))))
+    city_tmp = map(lambda x: list(x), zip(*map(lambda x: [x, city_list.count(x)], set(city_list))))
     return render_template('dashboard/user-location.html',
                            username=session.get('username'),
                            app_id=app_id,
-                           app_list=app_list)
+                           app_list=app_list,
+                           provice_tmp=provice_tmp[0][1],
+                           city_tmp=city_tmp[0][1])
 
 
 @dashboard.route('/dashboard/motion')
@@ -257,7 +262,6 @@ def get_query_list(app_id='', *field):
     except LeanCloudError, e:
         print(e)
         return {}
-    print(result_list[0].attributes)
     ret_dict = {}
     for item in field:
         ret_dict[item] = map(lambda result: result.attributes[item], result_list)
