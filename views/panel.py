@@ -31,7 +31,6 @@ def show():
         tracker = request.form.get('tracker')
         event = request.form.get('event')
         val = request.form.get('val')
-        print(tracker, event, val)
         if event and val:
             headers = {"X-AVOSCloud-Application-Id": "wsbz6p3ouef94ubvsdqk2jfty769wkyed3qsry5hebi2va2h",
                        "X-AVOSCloud-Application-Key": "6z6n0w3dopxmt32oi2eam2dt0orh8rxnqc8lgpf2hqnar4tr"}

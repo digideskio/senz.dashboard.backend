@@ -171,6 +171,8 @@ def location():
             developer.session_token = session.get('session_token')
             app_list = developer.get_app_list()
             session['app_list'] = app_list
+    # result_dict = get_query_list('5621fb0f60b27457e863fabb', 'province', 'city')
+    # print(result_dict)
     return render_template('dashboard/user-location.html',
                            username=session.get('username'),
                            app_id=app_id,
@@ -255,7 +257,7 @@ def get_query_list(app_id='', *field):
     except LeanCloudError, e:
         print(e)
         return {}
-
+    print(result_list[0].attributes)
     ret_dict = {}
     for item in field:
         ret_dict[item] = map(lambda result: result.attributes[item], result_list)

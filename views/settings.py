@@ -41,6 +41,6 @@ def add_app():
         user.session_token = session.get('session_token')
         if user.create_new_app(app_name):
             session.pop('app_list', None)
-            return jsonify({'delete': 'success'})
+            return jsonify({'create': 'success'})
         else:
-            return jsonify({'delete': 'failed'})
+            return jsonify({'create': 'failed'})

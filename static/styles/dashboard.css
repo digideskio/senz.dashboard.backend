@@ -39,7 +39,7 @@ div,p,h1,h2,h3,h4,h5,h6,ul,dl,ol,li {
     float: right;
 }
 .ol li {
-    list-style-position: inside;
+    list-style-position: outside;
 }
 .relative {
     position: relative;
@@ -127,9 +127,14 @@ div,p,h1,h2,h3,h4,h5,h6,ul,dl,ol,li {
     /*border: 1px solid #888;*/
 }
 .sort-wrap .nav-list {
-    border-bottom: 1px solid #ddd;
-    margin-bottom: 4px;
+    /*border-bottom: 1px solid #ddd;*/
     cursor: pointer;
+}
+.sort-wrap .list {
+    border-top: 1px solid #ddd;
+}
+.sort-wrap .list .ol {
+    padding-top: 5px;
 }
 .sort-wrap .nav-list .item {
     border: 1px solid #ddd;
@@ -140,6 +145,11 @@ div,p,h1,h2,h3,h4,h5,h6,ul,dl,ol,li {
     position: relative;
     z-index: 10;
 }
+
+.sort-wrap .nav-list .active {
+    border-bottom: 1px solid #fff;
+}
+
 .sidebar {
     background: rgba(48,49,50, 1);
     height: 100%;
@@ -229,4 +239,28 @@ div,p,h1,h2,h3,h4,h5,h6,ul,dl,ol,li {
 #dropdownMenu2 {
     padding: 4px 8px;
 }
+
+.line {
+    display: inline-block;
+    height: 3px;
+    max-width: 60%;
+    margin-left: 4px;
+    position: relative;
+    max-width: 50%;
+    top: -3px;
+    background: #38f;
+}
+
+.line1 {
+    width: 50%;
+}
+.line2 { width: 45%;}
+.line3 { width: 42%;}
+.line4 { width: 40%;}
+.line5 { width: 35%;}
+.line6 { width: 33%;}
+.line7 { width: 30%;}
+.line8 { width: 27%;}
+.line9 { width: 25%;}
+.line10 { width: 20%;}
 
