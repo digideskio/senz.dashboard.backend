@@ -114,6 +114,7 @@ div,p,h1,h2,h3,h4,h5,h6,ul,dl,ol,li {
     margin-left: 0;
     border-radius: 0;
     min-height: 0px;
+    padding: 20px;
 }
 .bg-gray {
     background: rgba(48, 49, 50, 1)!important;

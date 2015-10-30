@@ -1,6 +1,17 @@
 {% extends 'base.html' %}
 
 {% block navigation %}
+<div id="sidebar" class="sidebar">
+   <ul id="sidebar-nav">
+    <li class="has-sub-nav"> <a href="#">Panel设置</a>
+     <ul class="sub-nav">
+      <li><a href="{{ url_for('panel.show') }}">调试模式</a></li>
+      <li><a href="{{ url_for('panel.demo') }}">演示模式</a></li>
+      <li><a href="{{ url_for('panel.real') }}">真实模式</a></li>
+     </ul>
+    </li>
+   </ul>
+  </div>
 {% endblock %}
 
 {%  block content %}

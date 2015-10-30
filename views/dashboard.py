@@ -17,10 +17,24 @@ def show():
             developer.session_token = session.get('session_token')
             app_list = developer.get_app_list()
             session['app_list'] = app_list
+    result_dict = get_query_list('5621fb0f60b27457e863fabb', 'event')
+    event_list = [] if 'event' not in result_dict else result_dict['event']
+
+    # list_tmp = map(lambda x: list(x), zip(*map(lambda x: [x, event_list.count(x)], set(event_list))))
+    event_tmp = sorted(map(lambda x: (x, event_list.count(x)), set(event_list)), key=lambda item: -item[1])
+    data = map(lambda x: {'rank': x, 'name': event_tmp[x-1][0]}, xrange(1, 9))
+    data.append({'rank': 9, 'name': '...'})
+    event = {
+        'errcode': 0,
+        'errmsg': 'ok',
+        'data': data
+    }
+
     return render_template('index.html',
                            username=session.get('username'),
                            app_id=app_id,
-                           app_list=app_list)
+                           app_list=app_list,
+                           option=event)
 
 
 @dashboard.route('/dashboard/profile')
@@ -76,9 +90,9 @@ def interest():
             session['app_list'] = app_list
     result_dict = get_query_list('5621fb0f60b27457e863fabb', 'interest')
     interest_list = [] if 'interest' not in result_dict else result_dict['interest']
-    interest_tmp = map(lambda x: list(x), zip(*map(lambda x: [x, interest_list.count(x)], set(interest_list))))
-
-    data = {"category": interest_tmp[0],  "series": interest_tmp[1]} if interest_tmp else {}
+    interest_tmp = sorted(map(lambda x: (x, interest_list.count(x)), set(interest_list)), key=lambda item: -item[1])
+    data = map(lambda x: {'rank': x, 'name': interest_tmp[x-1][0]}, xrange(1, 9))
+    data.append({'rank': 9, 'name': '...'})
     interest = {
         'errcode': 0,
         'errmsg': 'ok',
@@ -196,8 +210,10 @@ def motion():
             app_list = developer.get_app_list()
             session['app_list'] = app_list
     home_office_type = ['contextAtWork', 'contextAtHome', 'contextCommutingWork', 'contextCommutingHome']
-    result_dict = get_query_list('5621fb0f60b27457e863fabb', 'home_office_status')
+    result_dict = get_query_list('5621fb0f60b27457e863fabb', 'home_office_status', 'event')
     home_office_list = [] if 'home_office_status' not in result_dict else result_dict['home_office_status']
+    #
+    #
 
     list_tmp = map(lambda x: map(lambda y: y[1], sorted(x.items(), key=lambda key: int(key[0][6:]))), home_office_list)
     series = map(lambda x: list(x), zip(*map(lambda x:

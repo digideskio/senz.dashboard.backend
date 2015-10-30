@@ -3,6 +3,7 @@
 from flask import Flask, session, render_template, request, redirect
 from itsdangerous import Signer
 from views.panel import panel
+from views.restapi import restapi
 from views.dashboard import dashboard
 from views.integration import integration
 from views.settings import settings
@@ -21,6 +22,7 @@ app.register_blueprint(dashboard)
 app.register_blueprint(integration)
 app.register_blueprint(settings)
 app.register_blueprint(login_view)
+app.register_blueprint(restapi)
 
 
 @app.route('/', methods=['GET', 'POST'])

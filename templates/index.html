@@ -2,7 +2,7 @@
 {% block content %}
   <div id="container" class="container">
    <div id="content" class="content" style="margin-top: 40px;">
-      <div class="user-avatar-wrap">
+      <div class="user-avatar-wrap clearfix">
         <ul class="list">
           <li class="item">
             <img class="img" src="{{ url_for('static', filename='images/user1.png') }}" alt="">
@@ -21,12 +21,173 @@
           </li>
         </ul>
       </div>
+<style>
+.event-cirle-wrap {
+  position: relative;
+  background: #f0f0f0;
+  width: 95%;
+  margin: 30px auto;
+  height: 450px;
+  overflow: hidden;
+}
+.main-title {
+  z-index: 20;
+  top: 50%;
+  margin-top: -53px;
+  position: absolute;
+  width: 100px;
+  height: 100px;
+  margin-left: -10px;
+  border-radius: 60px;
+  background: rgba(38,199,152, 1);
+  line-height: 100px;
+  text-align: center;
+  color: #fff;
+  font-size: 16px;
+  border: 3px solid #fff;
+}
+.vertical-line {
+  position: absolute;
+  border-top: 1px solid #fff;
+  height:2px;
+  width: 100%;
+  top: 50%;
+}
+.circle1 {
+  position: absolute;
+  width: 300px;
+  height: 300px;
+  top: 50%;
+  left: -150px;
+  margin-top: -150px;
+  border-radius: 50%;
+  border: 1px solid #fff;
+}
+.circle2 {
+  position: absolute;
+  width: 600px;
+  height: 600px;
+  top: 50%;
+  left: -300px;
+  margin-top: -300px;
+  border-radius: 50%;
+  border: 1px solid #fff;
+}
+.circle3 {
+  position: absolute;
+  width: 900px;
+  height: 900px;
+  top: 50%;
+  left: -450px;
+  margin-top: -450px;
+  border-radius: 50%;
+  border: 1px solid #fff;
+}
+.circle4 {
+  position: absolute;
+  width: 1200px;
+  height: 1200px;
+  top: 50%;
+  left: -600px;
+  margin-top: -600px;
+  border-radius: 50%;
+  border: 1px solid #fff;
+}
+.circle5 {
+  position: absolute;
+  width: 1500px;
+  height: 1500px;
+  top: 50%;
+  left: -750px;
+  margin-top: -750px;
+  border-radius: 50%;
+  border: 1px solid #fff;
+}
+.pr1 {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 1px solid #fff;
+  top: 85%;
+  left: 0;
+  background: rgba(96,110,120,1);
+}
+.pr {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 1px solid #fff;
+  /*top: 85%;*/
+  left: 0;
+  background: rgba(96,110,120,1);
+}
+.text {
+  position: relative;
+  height: 20px;
+  width: 100px;
+  line-height: 20px;
+  padding-left: 24px;
+}
+.pr2 {
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 1px solid #fff;
+  top: 85%;
+  left: 15%;
+  background: rgba(96,110,120,1);
+}
+.pr3 {
+  width: 16px;
+  height: 16px;
+}
+
+.pr4 {
+  width: 14px;
+  height: 14px;
+}
+.pr5 {
+  width: 12px;
+  height: 12px;
+}
+.pr6 {
+  width: 10px;
+  height: 10px;
+  background: #999;
+}
+</style>
+
+      <div id="event-cirle-wrap" class="event-cirle-wrap">
+        <div class="vertical-line"></div>
+        <div class="circle1"></div>
+        <div class="circle2"></div>
+        <div class="circle3"></div>
+        <div class="circle4"></div>
+        <div class="circle5"></div>
+        <div class="main-title" data-title="天将雄师"></div>
+   <!--      <div class="pr1"><div class="text">电影天堂</div></div>
+        <div class="pr2"><div class="text">完整版</div></div>
+        <div class="pr2"><div class="text">迅雷</div></div> -->
+      </div>
+
    </div>
   </div>
-{% endblock %}
-
 <script>
+var rankData = {{ option | tojson | safe }};
 (function(){
-
+    function renderCircleCharts(data) {
+    var tpl = [];
+    for(var i = 0, len = data.length; i < len; i++) {
+      if(data[i].rank==1) continue;
+      tpl.push('<div class="pr '+ (data[i].rank==1 ? 'main-title' : 'pr' + data[i].rank) + '" style="left:' + (((data[i].rank-1) * 140)+(150 * Math.random()*1) ) + 'px; top:' + (430* Math.random()*1) + 'px;" >'+ '<div class="text">'+ data[i].name+'</div></div>')
+    }
+    return tpl.join('');
+  }
+  $(".main-title").text(rankData.data[0].name);
+  $("#event-cirle-wrap").append(renderCircleCharts(rankData.data));
 }).call(this);
 </script>
+{% endblock %}

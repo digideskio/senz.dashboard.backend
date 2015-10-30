@@ -108,9 +108,9 @@ def parse_avtivity_info(activity_info):
     activities = activity_info.get('matched_activities')
     activities = activities[0] if activities else {}
     activity = activities.get('category')
-    ret_dict['activities'] = {'category': activity,
-                              'time_range_start': int(time_range_start*1000),
-                              'time_range_end': int(time_range_end*1000)}
+    ret_dict['activity'] = {'category': activity,
+                            'time_range_start': int(time_range_start*1000),
+                            'time_range_end': int(time_range_end*1000)}
     ret_dict['user_id'] = user_id
     return ret_dict
 

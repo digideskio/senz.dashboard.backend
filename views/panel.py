@@ -5,7 +5,17 @@ from flask import Blueprint, render_template, request, session
 panel = Blueprint('panel', __name__, template_folder='templates')
 
 
-@panel.route('/panel', methods=['GET', 'POST'])
+@panel.route('/panel/demo', methods=['GET', 'POST'])
+def demo():
+    return render_template('panel/demo.html')
+
+
+@panel.route('/panel/real', methods=['GET', 'POST'])
+def real():
+    return render_template('panel/real.html')
+
+
+@panel.route('/panel/debug', methods=['GET', 'POST'])
 def show():
     app_id = session.get('app_id', None)
     app_list = []
@@ -41,7 +51,7 @@ def show():
             else:
                 payload = {"userId": tracker, "type": event, "val": val}
                 requests.post("https://leancloud.cn/1.1/functions/notify_new_details",  headers=headers, data=payload)
-    return render_template('panel/panel.html',
+    return render_template('panel/debug.html',
                            username=session.get('username'),
                            motion_dict=motion_dict,
                            context_list=context_list,
