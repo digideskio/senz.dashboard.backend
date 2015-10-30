@@ -28,7 +28,7 @@ $(document).ready(function(){
                 break;
             }
         }
-        $.post("/panel",
+        $.post("/panel/debug",
         {
             tracker: select_tracker,
             app_id: select_app,

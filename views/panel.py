@@ -7,6 +7,8 @@ panel = Blueprint('panel', __name__, template_folder='templates')
 
 @panel.route('/panel/demo', methods=['GET', 'POST'])
 def demo():
+    if request.method == 'POST':
+        pass
     return render_template('panel/demo.html')
 
 

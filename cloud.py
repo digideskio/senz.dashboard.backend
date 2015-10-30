@@ -1,7 +1,8 @@
 # coding: utf-8
 
 from leancloud import Engine, Query, Object
-from app import app
+from server import app
+from common.timer import CountDownExec
 from datetime import datetime
 import time
 
@@ -42,6 +43,25 @@ def post_activity_info(**params):
 def post_context_info(**params):
     parse_dict = parse_context_info(params)
     return updata_backend_info(parse_dict)
+
+
+# @engine.define
+# def timeline_distribute(**params):
+#     global uid
+#     user_id = params.get('user_id')
+#     uid = user_id
+#     data = {'data': 'test1'}
+#     CountDownExec(1, post_fake_to_wilddog, user_id, data).start()
+#     return user_id
+#
+#
+# def post_fake_to_wilddog(*param):
+#     print(param)
+#     print(uid, param[0][0])
+#     if uid == param[0][0]:
+#         data = {'data': 'testn'}
+#         CountDownExec(1, post_fake_to_wilddog, uid, data).start()
+#     return True
 
 
 def parse_static_info(info_log):

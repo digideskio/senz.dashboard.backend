@@ -14,8 +14,275 @@
 {% block content %}
 <div id="container" class="container">
     <div id="content" class="content" style="min-height: 678px;margin-top: 40px;">
-        <div id="integration">
-        </div>
+         <div id="readme" class="blob instapaper_body">
+    <article class="markdown-body entry-content" itemprop="mainContentOfPage"><h1><a id="user-content-senz-sdk-android" class="anchor" href="#senz-sdk-android" aria-hidden="true"><span class="octicon octicon-link"></span></a>senz-sdk-android</h1>
+
+<h2><a id="user-content-1-android-studio-中引用" class="anchor" href="#1-android-studio-中引用" aria-hidden="true"><span class="octicon octicon-link"></span></a>1、 Android studio 中引用</h2>
+
+<p>在工程目录 <em>build.gradle</em> 文件中添加如下内容：</p>
+
+<pre><code>    repositories {
+            jcenter()
+            maven {
+                url "https://raw.githubusercontent.com/petchat/senz.sdk.android.maven/master"
+            }
+        }
+    packagingOptions {
+                exclude 'META-INF/LICENSE'
+                exclude 'META-INF/LICENSE-FIREBASE.txt'
+                exclude 'META-INF/NOTICE'
+    }
+    dependencies {
+        compile 'io.petchat:senzsdk:2.0.1'
+        compile 'com.firebase:firebase-client-android:2.3.1+'
+    }
+</code></pre>
+
+<h2><a id="user-content-2-使用senz-sdk" class="anchor" href="#2-使用senz-sdk" aria-hidden="true"><span class="octicon octicon-link"></span></a>2、 使用SENZ SDK</h2>
+
+<h3><a id="user-content-21-初始化" class="anchor" href="#21-初始化" aria-hidden="true"><span class="octicon octicon-link"></span></a>2.1 初始化</h3>
+
+<p>在MainActivity 的 onCreate()中（必须在UI主线程中调用），调用：</p>
+
+<div class="highlight highlight-source-java"><pre><span class="pl-c">//please register on senz server to get your own appId</span>
+    <span class="pl-smi">Senz</span><span class="pl-k">.</span>initialize(<span class="pl-smi">MainActivity</span><span class="pl-k">.</span><span class="pl-v">this</span>,appId);</pre></div>
+
+<h3><a id="user-content-22-senz核心api接口" class="anchor" href="#22-senz核心api接口" aria-hidden="true"><span class="octicon octicon-link"></span></a>2.2 Senz核心api接口</h3>
+
+<h4><a id="user-content-221-用户属性userinfo类" class="anchor" href="#221-用户属性userinfo类" aria-hidden="true"><span class="octicon octicon-link"></span></a>2.2.1 用户属性UserInfo类</h4>
+
+<p>该类主要用于分析用户的属性，如：年龄、性别、消费能力、社会属性等。</p>
+
+<p>调用例子：</p>
+
+<div class="highlight highlight-source-java"><pre>    <span class="pl-smi">UserInfo</span> userInfo <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-smi">UserInfo</span>(<span class="pl-v">this</span>);
+        userInfo<span class="pl-k">.</span>getUserInfos(<span class="pl-k">new</span> <span class="pl-smi">SenzCallback</span>() {
+            <span class="pl-k">@Override</span>
+            <span class="pl-k">public</span> <span class="pl-k">void</span> <span class="pl-en">done</span>(<span class="pl-smi">Exception</span> <span class="pl-v">e</span>, <span class="pl-smi">Object</span> <span class="pl-v">object</span>) {
+                <span class="pl-k">if</span> (e <span class="pl-k">==</span> <span class="pl-c1">null</span>) {
+                    <span class="pl-k">HashMap&lt;<span class="pl-smi">String</span>, <span class="pl-smi">Double</span>&gt;</span> hashMap <span class="pl-k">=</span> (<span class="pl-k">HashMap&lt;<span class="pl-smi">String</span>, <span class="pl-smi">Double</span>&gt;</span>) object);
+                    <span class="pl-c">//...</span>
+
+                } <span class="pl-k">else</span> {
+                   <span class="pl-c">//...</span>
+                }
+            }
+        });</pre></div>
+
+<h5><a id="user-content-hashmap数据格式说明" class="anchor" href="#hashmap数据格式说明" aria-hidden="true"><span class="octicon octicon-link"></span></a>hashMap数据格式说明</h5>
+
+<p>用户属性名称保存在了hashMap的key中，对应的值保存在了value中，
+senz会根据不同的用户，计算不同的属性值，所以返回结果hashMap中的
+key是不固定的，使用者可以自行遍历hashMap来获得各个属性值。
+数据模版：</p>
+
+<pre><code>has_car:0.10048
+online_shopping:0.20056
+current_news:0.10076
+...
+</code></pre>
+
+<h4><a id="user-content-222-用户的情境识别-contextdeprecated" class="anchor" href="#222-用户的情境识别-contextdeprecated" aria-hidden="true"><span class="octicon octicon-link"></span></a>2.2.2 用户的情境识别 context(<em>deprecated</em>)</h4>
+
+<p>调用例子：</p>
+
+<div class="highlight highlight-source-java"><pre>     <span class="pl-smi">UserContext</span> userContext <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-smi">UserContext</span>(<span class="pl-v">this</span>);
+        userContext<span class="pl-k">.</span>getUserContext(<span class="pl-k">new</span> <span class="pl-smi">SenzCallback</span>() {
+            <span class="pl-k">@Override</span>
+            <span class="pl-k">public</span> <span class="pl-k">void</span> <span class="pl-en">done</span>(<span class="pl-smi">Exception</span> <span class="pl-v">e</span>, <span class="pl-smi">Object</span> <span class="pl-v">object</span>) {
+                <span class="pl-k">if</span> (e <span class="pl-k">==</span> <span class="pl-c1">null</span>) {
+                    <span class="pl-smi">SenzContext</span> senzContext <span class="pl-k">=</span> (<span class="pl-smi">SenzContext</span>) object;
+                    <span class="pl-c">//...</span>
+                } <span class="pl-k">else</span> {
+                    <span class="pl-c">//...</span>
+                }
+            }
+        });</pre></div>
+
+<h5><a id="user-content-数据格式说明" class="anchor" href="#数据格式说明" aria-hidden="true"><span class="octicon octicon-link"></span></a>数据格式说明</h5>
+
+<p>SenzContext类：</p>
+
+<div class="highlight highlight-source-java"><pre><span class="pl-k">public</span> <span class="pl-k">class</span> <span class="pl-en">SenzContext</span> {
+    <span class="pl-k">public</span> <span class="pl-k">HashMap&lt;<span class="pl-smi">String</span>, <span class="pl-smi">Double</span>&gt;</span> poiProbLv1;
+    <span class="pl-k">public</span> <span class="pl-k">HashMap&lt;<span class="pl-smi">String</span>, <span class="pl-smi">Double</span>&gt;</span> poiProbLv2;
+    <span class="pl-k">public</span> <span class="pl-k">HashMap&lt;<span class="pl-smi">String</span>, <span class="pl-smi">Double</span>&gt;</span> motionProb;
+    <span class="pl-k">public</span> <span class="pl-k">HashMap&lt;<span class="pl-smi">String</span>, <span class="pl-smi">Double</span>&gt;</span> sceneProb;
+    <span class="pl-k">public</span> <span class="pl-smi">String</span> locationUpdatedAt;
+    <span class="pl-k">public</span> <span class="pl-smi">String</span> motionUpdatedAt;
+    <span class="pl-k">public</span> <span class="pl-smi">String</span> sceneUpdatedAt;
+    }</pre></div>
+
+<p>poiProbLv1 和 poiProbLv2 为用户location的情境识别， sceneProb 为用户的所处场景识别， motionProb 为
+ 用户的动作情境识别。
+ 属性保存在了key中，对应的值保存在了value中，
+ 键值不是固定的，请使用者自行遍历相应的map。</p>
+
+<h4><a id="user-content-223-用户事件识别-event" class="anchor" href="#223-用户事件识别-event" aria-hidden="true"><span class="octicon octicon-link"></span></a>2.2.3 用户事件识别 event</h4>
+
+<p>event指用户发生的事件，如某个时间段，用户在看电影或者逛商场。
+ event所包含的所有事件类型：商圈工作中、学校工作中、学校上课中、户外锻炼、室内锻炼、在餐厅吃饭、
+ 旅游、郊游、逛街、聚会、看电影、展览会、演唱会、音乐会、戏剧。
+ event值的获取需要注册监听：</p>
+
+<p>action： senz.intent.action.EVENT</p>
+
+<p>调用例子：</p>
+
+<div class="highlight highlight-source-java"><pre>        <span class="pl-smi">BroadcastReceiver</span> eventReceiver <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-smi">BroadcastReceiver</span>() {
+        <span class="pl-k">@Override</span>
+        <span class="pl-k">public</span> <span class="pl-k">void</span> <span class="pl-en">onReceive</span>(<span class="pl-smi">Context</span> <span class="pl-v">context</span>, <span class="pl-smi">Intent</span> <span class="pl-v">intent</span>) {
+            <span class="pl-k">if</span> (<span class="pl-s"><span class="pl-pds">"</span>senz.intent.action.EVENT<span class="pl-pds">"</span></span><span class="pl-k">.</span>equals(intent<span class="pl-k">.</span>getAction())) {
+                <span class="pl-smi">Bundle</span> bundle <span class="pl-k">=</span> intent<span class="pl-k">.</span>getExtras();
+                <span class="pl-smi">Serializable</span> data <span class="pl-k">=</span> bundle<span class="pl-k">.</span>getSerializable(<span class="pl-s"><span class="pl-pds">"</span>event<span class="pl-pds">"</span></span>);
+                <span class="pl-k">List&lt;<span class="pl-smi">SenzEvent</span>&gt;</span> events <span class="pl-k">=</span> (<span class="pl-k">List&lt;<span class="pl-smi">SenzEvent</span>&gt;</span>) data;
+                <span class="pl-c">//...</span>
+            }
+        }
+    };</pre></div>
+
+<h5><a id="user-content-数据格式说明-1" class="anchor" href="#数据格式说明-1" aria-hidden="true"><span class="octicon octicon-link"></span></a>数据格式说明</h5>
+
+<p>SenzEvent 类：</p>
+
+<div class="highlight highlight-source-java"><pre> <span class="pl-k">public</span> <span class="pl-k">class</span> <span class="pl-en">SenzEvent</span> <span class="pl-k">implements</span> <span class="pl-e">Serializable</span> {
+    <span class="pl-k">public</span> <span class="pl-k">long</span> startTime;       <span class="pl-c">//事件开始时间</span>
+    <span class="pl-k">public</span> <span class="pl-k">long</span> endTime;         <span class="pl-c">//事件结束时间</span>
+    <span class="pl-k">public</span> <span class="pl-smi">String</span> eventType;     <span class="pl-c">//事件类型</span>
+    <span class="pl-k">public</span> <span class="pl-k">double</span> probability;   <span class="pl-c">//事件发生的概率（测试值，有待优化）</span>
+    }</pre></div>
+
+<h4><a id="user-content-224-用户的-home-和-office-的识别和监听" class="anchor" href="#224-用户的-home-和-office-的识别和监听" aria-hidden="true"><span class="octicon octicon-link"></span></a>2.2.4 用户的 home 和 office 的识别和监听</h4>
+
+<p>senz可以自动的识别用户的家庭和工作地点，也可以检测出用户离开、进入家或者公司。
+ 检测出这些变化时，senz会发出相应的广播。</p>
+
+<p>监听action：</p>
+
+<p>action： senz.intent.action.HOME_OFFICE_STATUS</p>
+
+<p>调用例子：</p>
+
+<div class="highlight highlight-source-java"><pre>        <span class="pl-smi">BroadcastReceiver</span> statusReceiver <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-smi">BroadcastReceiver</span>() {
+        <span class="pl-k">@Override</span>
+        <span class="pl-k">public</span> <span class="pl-k">void</span> <span class="pl-en">onReceive</span>(<span class="pl-smi">Context</span> <span class="pl-v">context</span>, <span class="pl-smi">Intent</span> <span class="pl-v">intent</span>) {
+            <span class="pl-k">if</span> (<span class="pl-s"><span class="pl-pds">"</span>senz.intent.action.HOME_OFFICE_STATUS<span class="pl-pds">"</span></span><span class="pl-k">.</span>equals(intent<span class="pl-k">.</span>getAction())) {
+                <span class="pl-smi">Bundle</span> bundle <span class="pl-k">=</span> intent<span class="pl-k">.</span>getExtras();
+                <span class="pl-smi">Serializable</span> data <span class="pl-k">=</span> bundle<span class="pl-k">.</span>getSerializable(<span class="pl-s"><span class="pl-pds">"</span>home_office_status<span class="pl-pds">"</span></span>);
+                <span class="pl-smi">SenzOHStatus</span> status <span class="pl-k">=</span> (<span class="pl-smi">SenzOHStatus</span>) data;
+                <span class="pl-c">//...</span>
+            }
+        }
+    };</pre></div>
+
+<h5><a id="user-content-数据格式说明-2" class="anchor" href="#数据格式说明-2" aria-hidden="true"><span class="octicon octicon-link"></span></a>数据格式说明</h5>
+
+<p>SenzOHStatus 类：</p>
+
+<div class="highlight highlight-source-java"><pre> <span class="pl-k">public</span> <span class="pl-k">class</span> <span class="pl-en">SenzOHStatus</span> <span class="pl-k">implements</span> <span class="pl-e">Serializable</span> {
+    <span class="pl-k">public</span> <span class="pl-k">long</span> updateTime;  <span class="pl-c">//状态更新时间</span>
+    <span class="pl-k">public</span> <span class="pl-k">int</span> stautsType;       <span class="pl-c">//状态值</span>
+    }
+
+    <span class="pl-c">//对应的状态值</span>
+ <span class="pl-k">public</span> <span class="pl-k">class</span> <span class="pl-en">OHStatusType</span> {
+    <span class="pl-k">public</span> <span class="pl-k">final</span> <span class="pl-k">static</span> <span class="pl-k">int</span> <span class="pl-c1">UNKNOWN</span> <span class="pl-k">=</span> <span class="pl-k">-</span><span class="pl-c1">1</span>;
+    <span class="pl-k">public</span> <span class="pl-k">final</span> <span class="pl-k">static</span> <span class="pl-k">int</span> <span class="pl-c1">ARRIVING_HOME</span> <span class="pl-k">=</span> <span class="pl-c1">0</span>;
+    <span class="pl-k">public</span> <span class="pl-k">final</span> <span class="pl-k">static</span> <span class="pl-k">int</span> <span class="pl-c1">LEAVING_HOME</span> <span class="pl-k">=</span> <span class="pl-c1">1</span>;
+    <span class="pl-k">public</span> <span class="pl-k">final</span> <span class="pl-k">static</span> <span class="pl-k">int</span> <span class="pl-c1">ARRIVING_OFFICE</span> <span class="pl-k">=</span> <span class="pl-c1">2</span>;
+    <span class="pl-k">public</span> <span class="pl-k">final</span> <span class="pl-k">static</span> <span class="pl-k">int</span> <span class="pl-c1">LEAVING_OFFICE</span> <span class="pl-k">=</span> <span class="pl-c1">3</span>;
+    <span class="pl-k">public</span> <span class="pl-k">final</span> <span class="pl-k">static</span> <span class="pl-k">int</span> <span class="pl-c1">GOING_HOME</span> <span class="pl-k">=</span> <span class="pl-c1">4</span>;
+    <span class="pl-k">public</span> <span class="pl-k">final</span> <span class="pl-k">static</span> <span class="pl-k">int</span> <span class="pl-c1">GOING_OFFICE</span> <span class="pl-k">=</span> <span class="pl-c1">5</span>;
+    <span class="pl-k">public</span> <span class="pl-k">final</span> <span class="pl-k">static</span> <span class="pl-k">int</span> <span class="pl-c1">USER_HOME_OFFICE_NOT_YET_DEFINED</span> <span class="pl-k">=</span> <span class="pl-c1">6</span>;
+    }
+
+    <span class="pl-c">//我们提供了解析工具类 ParseUtils:</span>
+    <span class="pl-k">public</span> <span class="pl-k">static</span> <span class="pl-smi">String</span> parseStatusType(<span class="pl-k">final</span> <span class="pl-k">int</span> stautsType)</pre></div>
+
+<h4><a id="user-content-225-用户-motion-的识别和-motion-改变的监听" class="anchor" href="#225-用户-motion-的识别和-motion-改变的监听" aria-hidden="true"><span class="octicon octicon-link"></span></a>2.2.5 用户 motion 的识别和 motion 改变的监听</h4>
+
+<p>senz可以识别出用户当前的动作，如 坐、跑步、走路等。当检测到用户的动作发生改变时
+senz会发出相应的广播。</p>
+
+<p>监听action：</p>
+
+<p>action： senz.intent.action.MOTION_CHANGED</p>
+
+<p>调用例子：</p>
+
+<div class="highlight highlight-source-java"><pre>        <span class="pl-smi">BroadcastReceiver</span> motionReceiver <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-smi">BroadcastReceiver</span>() {
+        <span class="pl-k">@Override</span>
+        <span class="pl-k">public</span> <span class="pl-k">void</span> <span class="pl-en">onReceive</span>(<span class="pl-smi">Context</span> <span class="pl-v">context</span>, <span class="pl-smi">Intent</span> <span class="pl-v">intent</span>) {
+            <span class="pl-k">if</span> (<span class="pl-s"><span class="pl-pds">"</span>senz.intent.action.MOTION_CHANGED<span class="pl-pds">"</span></span><span class="pl-k">.</span>equals(intent<span class="pl-k">.</span>getAction())) {
+                <span class="pl-smi">Bundle</span> bundle <span class="pl-k">=</span> intent<span class="pl-k">.</span>getExtras();
+                <span class="pl-smi">Serializable</span> data <span class="pl-k">=</span> bundle<span class="pl-k">.</span>getSerializable(<span class="pl-s"><span class="pl-pds">"</span>motion_changed<span class="pl-pds">"</span></span>);
+                <span class="pl-smi">SenzMotion</span> motion <span class="pl-k">=</span> (<span class="pl-smi">SenzMotion</span>) data;
+                <span class="pl-c">//...</span>
+            }
+        }
+    };</pre></div>
+
+<h5><a id="user-content-数据格式说明-3" class="anchor" href="#数据格式说明-3" aria-hidden="true"><span class="octicon octicon-link"></span></a>数据格式说明</h5>
+
+<p>SenzMotion 类：</p>
+
+<div class="highlight highlight-source-java"><pre> <span class="pl-k">public</span> <span class="pl-k">class</span> <span class="pl-en">SenzMotion</span> <span class="pl-k">implements</span> <span class="pl-e">Serializable</span> {
+    <span class="pl-k">public</span> <span class="pl-k">int</span> motionType;      <span class="pl-c">//motion类型</span>
+    <span class="pl-k">public</span> <span class="pl-k">double</span> similarity;       <span class="pl-c">//该类型的相似度</span>
+    }
+
+    <span class="pl-c">//对应的状态值</span>
+ <span class="pl-k">public</span> <span class="pl-k">class</span> <span class="pl-en">MotionType</span> {
+    <span class="pl-k">public</span> <span class="pl-k">final</span> <span class="pl-k">static</span> <span class="pl-k">int</span> <span class="pl-c1">UNKNOWN</span> <span class="pl-k">=</span> <span class="pl-k">-</span><span class="pl-c1">1</span>;
+    <span class="pl-k">public</span> <span class="pl-k">final</span> <span class="pl-k">static</span> <span class="pl-k">int</span> <span class="pl-c1">SITTING</span> <span class="pl-k">=</span> <span class="pl-c1">0</span>;
+    <span class="pl-k">public</span> <span class="pl-k">final</span> <span class="pl-k">static</span> <span class="pl-k">int</span> <span class="pl-c1">DRIVING</span> <span class="pl-k">=</span> <span class="pl-c1">1</span>;
+    <span class="pl-k">public</span> <span class="pl-k">final</span> <span class="pl-k">static</span> <span class="pl-k">int</span> <span class="pl-c1">RIDING</span> <span class="pl-k">=</span> <span class="pl-c1">2</span>;
+    <span class="pl-k">public</span> <span class="pl-k">final</span> <span class="pl-k">static</span> <span class="pl-k">int</span> <span class="pl-c1">WALKING</span> <span class="pl-k">=</span> <span class="pl-c1">3</span>;
+    <span class="pl-k">public</span> <span class="pl-k">final</span> <span class="pl-k">static</span> <span class="pl-k">int</span> <span class="pl-c1">RUNNING</span> <span class="pl-k">=</span> <span class="pl-c1">4</span>;
+    }
+
+    <span class="pl-c">//我们提供了解析工具类 ParseUtils:</span>
+    <span class="pl-k">public</span> <span class="pl-k">static</span> <span class="pl-smi">String</span> parseMotionType(<span class="pl-k">final</span> <span class="pl-k">int</span> motionType)</pre></div>
+
+<h2><a id="user-content-23-设置监听的另一种方法" class="anchor" href="#23-设置监听的另一种方法" aria-hidden="true"><span class="octicon octicon-link"></span></a>2.3 设置监听的另一种方法</h2>
+
+<ul>
+<li>1.
+在manifest中注册想要监听的事件：</li>
+</ul>
+
+<div class="highlight highlight-text-xml"><pre>&lt;<span class="pl-ent">receiver</span> <span class="pl-e">android</span><span class="pl-e">:</span><span class="pl-e">name</span>=<span class="pl-s"><span class="pl-pds">"</span>.YourBroadcastReceiverClassNameHere<span class="pl-pds">"</span></span>&gt;
+    &lt;<span class="pl-ent">intent-filter</span>&gt;
+        &lt;<span class="pl-ent">action</span> <span class="pl-e">android</span><span class="pl-e">:</span><span class="pl-e">name</span>=<span class="pl-s"><span class="pl-pds">"</span>senz.intent.action.HOME_OFFICE_STATUS<span class="pl-pds">"</span></span>/&gt;
+        &lt;<span class="pl-ent">action</span> <span class="pl-e">android</span><span class="pl-e">:</span><span class="pl-e">name</span>=<span class="pl-s"><span class="pl-pds">"</span>senz.intent.action.MOTION_CHANGED<span class="pl-pds">"</span></span>/&gt;
+        &lt;<span class="pl-ent">action</span> <span class="pl-e">android</span><span class="pl-e">:</span><span class="pl-e">name</span>=<span class="pl-s"><span class="pl-pds">"</span>senz.intent.action.EVENT<span class="pl-pds">"</span></span>/&gt;
+
+    &lt;/<span class="pl-ent">intent-filter</span>&gt;
+&lt;/<span class="pl-ent">receiver</span>&gt;</pre></div>
+
+<ul>
+<li>2.
+编写自己的类，继承自 BroadcastReceiver，监听相应的action，并从intent中提取相应的值。
+三种事件的值，通过序列化后的键分别为："motion_changed", "event", "home_office_status"。
+请参考下面的例子：</li>
+</ul>
+
+<div class="highlight highlight-source-java"><pre><span class="pl-k">public</span> <span class="pl-k">class</span> <span class="pl-en">YourReceiver</span> <span class="pl-k">extends</span> <span class="pl-e">BroadcastReceiver</span> {
+
+    <span class="pl-k">@Override</span>
+    <span class="pl-k">public</span> <span class="pl-k">void</span> <span class="pl-en">onReceive</span>(<span class="pl-smi">Context</span> <span class="pl-v">context</span>, <span class="pl-smi">Intent</span> <span class="pl-v">intent</span>) {
+        <span class="pl-k">if</span> (<span class="pl-s"><span class="pl-pds">"</span>senz.intent.action.MOTION_CHANGED<span class="pl-pds">"</span></span><span class="pl-k">.</span>equals(intent<span class="pl-k">.</span>getAction())) {
+                <span class="pl-smi">Bundle</span> bundle <span class="pl-k">=</span> intent<span class="pl-k">.</span>getExtras();
+                <span class="pl-smi">Serializable</span> data <span class="pl-k">=</span> bundle<span class="pl-k">.</span>getSerializable(<span class="pl-s"><span class="pl-pds">"</span>motion_changed<span class="pl-pds">"</span></span>);
+                <span class="pl-smi">SenzMotion</span> motion <span class="pl-k">=</span> (<span class="pl-smi">SenzMotion</span>) data;
+                <span class="pl-c">//...</span>
+            }
+    }
+}</pre></div>
+</article>
+  </div>
+
+
     </div>
 </div>
 {% endblock %}

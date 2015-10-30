@@ -1,6 +1,7 @@
 # coding: utf-8
 
 from leancloud import User, Object, Query, LeanCloudError
+from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from itsdangerous import Signer
 
 

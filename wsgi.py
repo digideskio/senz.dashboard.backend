@@ -4,7 +4,7 @@ import os
 import sys
 import leancloud
 from wsgiref import simple_server
-from app import app
+from server import app
 from cloud import engine
 
 
