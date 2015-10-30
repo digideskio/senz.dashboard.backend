@@ -90,7 +90,7 @@
     <li class="active"><a href="{{ url_for('dashboard.show') }}">概览</a></li>
     <li class="has-sub-nav"> <a href="#">用户群体</a>
      <ul class="sub-nav">
-      <li><a href="{{ url_for('dashboard.profile') }}">用户属性</a></li>
+      <li class="<% (option.data.cur_page == profile ? 'cative' : '') %>"><a href="{{ url_for('dashboard.profile') }}">用户属性</a></li>
       <li><a href="{{ url_for('dashboard.interest') }}">兴趣爱好</a></li>
       <li><a href="{{ url_for('dashboard.marriage') }}">婚育情况</a></li>
       <li><a href="{{ url_for('dashboard.consumption') }}">消费情况</a></li>
