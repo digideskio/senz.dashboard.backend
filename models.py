@@ -2,7 +2,8 @@
 
 from leancloud import User, Object, Query, LeanCloudError
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
-from itsdangerous import Signer
+from itsdangerous import Signer, SignatureExpired, BadSignature
+import server
 
 
 class Developer(User):
@@ -13,21 +14,27 @@ class Developer(User):
         self.session_token = None
         User.__init__(self)
 
-    def login(self, username=None, password=None):
-        User.login(self, username, password)
-        self.session_token = self.get_session_token()
-        if self.session_token:
-            user = self.become(session_token=self.session_token)
-            query = Query(Object.extend('Application'))
-            query.equal_to('user', user)
-            query.limit(1000)
-            result = query.find()
-            if result:
-                self.app_list = map(lambda x: {'app_id': x.attributes['app_id'],
-                                               'app_key': x.attributes['app_key'],
-                                               'app_name': x.attributes['app_name']}, result)
-                return True
-        return False
+    def generate_auth_token(self, expiration=60):
+        s = Serializer(server.app.config['SECRET_KEY'], expires_in=expiration)
+        return s.dumps({'id': self.id})
+
+    @staticmethod
+    def verify_auth_token(token):
+        s = Serializer(server.app.config['SECRET_KEY'])
+        try:
+            data = s.loads(token)
+            print('fuck')
+            print(s)
+            print(data)
+        except SignatureExpired:
+            return None  # valid token, but expired
+        except BadSignature:
+            return None  # invalid token
+        query = Query(Object.extend('User'))
+        query.equal_to('objectId', data['id'])
+        if query.count():
+            return query.find()[0]
+        return None
 
     def user_id(self):
         if self.session_token:

@@ -18,7 +18,10 @@ def show():
             developer.session_token = session.get('session_token')
             app_list = developer.get_app_list()
             session['app_list'] = app_list
-    result_dict = get_query_list('5621fb0f60b27457e863fabb', 'event')
+    result_dict = server.cache.get('event')
+    if not result_dict:
+        result_dict = get_query_list('5621fb0f60b27457e863fabb', 'event')
+        server.cache.set('event', result_dict, timeout=10*60)
     event_list = [] if 'event' not in result_dict else result_dict['event']
     event_list = map(lambda x: server.translate_context(x), event_list)
     event_tmp = sorted(map(lambda x: (x, event_list.count(x)), set(event_list)), key=lambda item: -item[1])
@@ -48,8 +51,10 @@ def profile():
             developer.session_token = session.get('session_token')
             app_list = developer.get_app_list()
             session['app_list'] = app_list
-
-    result_dict = get_query_list('5621fb0f60b27457e863fabb', 'gender', 'age', 'occupation', 'field')
+    result_dict = server.cache.get('profile')
+    if not result_dict:
+        result_dict = get_query_list('5621fb0f60b27457e863fabb', 'gender', 'age', 'occupation', 'field')
+        server.cache.set('profile', result_dict, timeout=10*60)
     gender_list = [] if 'gender' not in result_dict else result_dict['gender']
     age_list = [] if 'age' not in result_dict else result_dict['age']
     occupation_list = [] if 'occupation' not in result_dict else result_dict['occupation']
@@ -88,7 +93,10 @@ def interest():
             developer.session_token = session.get('session_token')
             app_list = developer.get_app_list()
             session['app_list'] = app_list
-    result_dict = get_query_list('5621fb0f60b27457e863fabb', 'interest')
+    result_dict = server.cache.get('interest')
+    if not result_dict:
+        result_dict = get_query_list('5621fb0f60b27457e863fabb', 'interest')
+        server.cache.set('interest', result_dict, timeout=10*60)
     interest_list = [] if 'interest' not in result_dict else result_dict['interest']
     interest_tmp = sorted(map(lambda x: (x, interest_list.count(x)), set(interest_list)), key=lambda item: -item[1])
     data = map(lambda x: {'rank': x, 'name': interest_tmp[x-1][0]}, xrange(1, 9))
@@ -116,7 +124,10 @@ def marriage():
             developer.session_token = session.get('session_token')
             app_list = developer.get_app_list()
             session['app_list'] = app_list
-    result_dict = get_query_list('5621fb0f60b27457e863fabb', 'marriage', 'pregnant')
+    result_dict = server.cache.get('marriage')
+    if not result_dict:
+        result_dict = get_query_list('5621fb0f60b27457e863fabb', 'marriage', 'pregnant')
+        server.cache.set('marriage', result_dict, timeout=10*60)
     marriage_list = [] if 'marriage' not in result_dict else result_dict['marriage']
     pregnant_list = [] if 'pregnant' not in result_dict else result_dict['pregnant']
 
@@ -148,7 +159,10 @@ def consumption():
             developer.session_token = session.get('session_token')
             app_list = developer.get_app_list()
             session['app_list'] = app_list
-    result_dict = get_query_list('5621fb0f60b27457e863fabb', 'consumption', 'has_car', 'has_pet')
+    result_dict = server.cache.get('consumption')
+    if not result_dict:
+        result_dict = get_query_list('5621fb0f60b27457e863fabb', 'consumption', 'has_car', 'has_pet')
+        server.cache.set('consumption', result_dict, timeout=10*60)
     consumption_list = [] if 'consumption' not in result_dict else result_dict['consumption']
     car_list = [] if 'has_car' not in result_dict else result_dict['has_car']
     pet_list = [] if 'has_pet' not in result_dict else result_dict['has_pet']
@@ -185,7 +199,10 @@ def location():
             developer.session_token = session.get('session_token')
             app_list = developer.get_app_list()
             session['app_list'] = app_list
-    result_dict = get_query_list('5621fb0f60b27457e863fabb', 'province', 'city')
+    result_dict = server.cache.get('location')
+    if not result_dict:
+        result_dict = get_query_list('5621fb0f60b27457e863fabb', 'province', 'city')
+        server.cache.set('location', result_dict, timeout=10*60)
     provice_list = [] if 'province' not in result_dict else result_dict['province']
     city_list = [] if 'city' not in result_dict else result_dict['city']
     provice_tmp = map(lambda x: list(x), zip(*map(lambda x: [x, provice_list.count(x)], set(provice_list))))
@@ -227,35 +244,6 @@ def motion():
                            username=session.get('username'),
                            app_id=app_id,
                            app_list=app_list)
-
-
-# @dashboard.route('/dashboard/event')
-# def event():
-#     app_id = session.get('app_id', None)
-#     app_list = []
-#     if session.get('session_token'):
-#         app_list = session.get('app_list', None)
-#         if not app_list:
-#             developer = Developer()
-#             developer.session_token = session.get('session_token')
-#             app_list = developer.get_app_list()
-#             session['app_list'] = app_list
-#     result_dict = get_query_list('5621fb0f60b27457e863fabb', 'event')
-#     event_list = [] if 'event' not in result_dict else result_dict['event']
-#
-#     list_tmp = map(lambda x: list(x), zip(*map(lambda x: [x, event_list.count(x)], set(event_list))))
-#     data = {"category": list_tmp[0],  "series": list_tmp[1]} if list_tmp else {}
-#     event = {
-#         'errcode': 0,
-#         'errmsg': 'ok',
-#         'data': data
-#     }
-#     print event
-#     return render_template('dashboard/event.html',
-#                            option=json.dumps(event),
-#                            username=session.get('username'),
-#                            app_id=app_id,
-#                            app_list=app_list)
 
 
 def get_query_list(app_id='', *field):

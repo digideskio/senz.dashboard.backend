@@ -9,12 +9,14 @@ from views.integration import integration
 from views.settings import settings
 from views.login import login_view
 from datetime import timedelta
-from models import Developer
+from werkzeug.contrib.cache import SimpleCache
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?RT'
 signer = Signer(app.config['SECRET_KEY'])
 app.permanent_session_lifetime = timedelta(hours=1)
+
+cache = SimpleCache()
 
 # 动态路由
 app.register_blueprint(panel)

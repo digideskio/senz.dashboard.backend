@@ -1,6 +1,7 @@
-from flask import Blueprint, render_template, request, session, jsonify, url_for, abort
+from flask import Blueprint, request, jsonify, make_response, abort, g
 from flask.ext.httpauth import HTTPBasicAuth
 from models import Developer
+from leancloud import LeanCloudError
 
 auth = HTTPBasicAuth()
 
@@ -20,12 +21,45 @@ def new_user():
     user.set('password', password)
     user.set('type', 'developer')
     user.sign_up()
-    # return jsonify({'username': user.username }), 201,
-    # {'Location': url_for('get_user', id = user.id, _external = True)}
     return jsonify({'username': username}), 201
+
+
+@restapi.route('/api/token')
+@auth.login_required
+def get_auth_token():
+    token = g.user.generate_auth_token()
+    return jsonify({'token': token.decode('ascii')})
 
 
 @restapi.route('/api/test')
 @auth.login_required
 def test():
-    return jsonify({'data': 'Hello, REST!'})
+    return jsonify({'data': 'Hello,  test!'})
+
+
+@auth.verify_password
+def verify_token(username_or_token, password):
+    user = Developer.verify_auth_token(username_or_token)
+    if not user:
+        user = Developer()
+        try:
+            user.login(username_or_token, password)
+            if user.get_session_token():
+                g.user = user
+                user.logout()
+                return True
+        except LeanCloudError:
+            g.user = None
+            return False
+    g.user = user
+    return True
+
+
+@auth.error_handler
+def unauthorized():
+    return make_response(jsonify({'error': 'Unauthorized access'}), 401)
+
+
+@auth.error_handler
+def unauthorized():
+    return make_response(jsonify({'error': 'Unauthorized access'}), 403)
