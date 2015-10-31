@@ -1,7 +1,7 @@
 from flask import Blueprint, request, jsonify, make_response, abort, g
 from flask.ext.httpauth import HTTPBasicAuth
-from models import Developer
 from leancloud import LeanCloudError
+from models import Developer
 
 auth = HTTPBasicAuth()
 

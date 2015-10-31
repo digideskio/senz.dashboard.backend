@@ -1,6 +1,7 @@
 import requests
 from models import Developer
 from flask import Blueprint, render_template, request, session
+from restapi import auth
 
 panel = Blueprint('panel', __name__, template_folder='templates')
 
@@ -18,6 +19,7 @@ def real():
 
 
 @panel.route('/panel/debug', methods=['GET', 'POST'])
+@auth.login_required
 def show():
     app_id = session.get('app_id', None)
     app_list = []
