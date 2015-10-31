@@ -40,7 +40,18 @@ def index():
 @app.template_filter('translate_motion')
 def translate_motion(s):
     library = {'motionCommuting': '乘车',   'motionWalking': '走路', 'motionSitting': '静坐',
-               'motionBiking': '骑车', 'motionRunning': '跑步'}
+               'motionBiking': '骑车', 'motionRunning': '跑步', '': ''}
+    return library[s]
+
+
+@app.template_filter('translate_interest')
+def translate_interest(s):
+    library = {"jogging": "慢跑", "fitness": "健身", "basketball": "篮球", "football": "足球", "badminton": "羽毛球",
+               "bicycling": " 骑车", "table_tennis": "网球", 'social': "社交", 'online_shopping': "网络购物",
+               'offline_shoppng': "线下购物", 'tech_news': "教育新闻", 'entertainment_news': "娱乐新闻", 'current_news': "时事新闻",
+               'business_news': "商业新闻", 'sports_news': "运动新闻",  'game_news': "游戏新闻", 'study': "学霸", 'gamer': "游戏玩家",
+               'health': "健康", 'sports_show': "体育节目", 'game_show': "游戏节目", "variety_show": "综艺节目",
+               'tvseries_show': "电视剧", 'acg': "动漫", 'indoorsman': "宅男", '': ''}
     return library[s]
 
 
@@ -53,11 +64,7 @@ def translate_context(s):
                'contextDinningOut': '在餐厅吃饭', 'contextTravelling': '旅游', 'contextShortTrip': '郊游',
                'contextInParty': '聚会', 'contextWindowShopping': '逛街', 'contextAtCinema': '看电影',
                'contextAtExhibition': '展览会', 'contextAtPopsConcert': '演唱会', 'contextAtTheatre': '戏剧',
-               'contextAtClassicsConcert': '音乐会'}
+               'contextAtClassicsConcert': '音乐会', '': ''}
     return library[s]
 
 
-@app.template_filter('translate_interest')
-def translate_interest(s):
-    library = {}
-    return library[s]

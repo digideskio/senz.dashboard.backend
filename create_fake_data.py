@@ -46,7 +46,7 @@ def set_fake_data_to_db(app_id, user_id):
     pregnant_list = ['yes', 'no', '']
     # home_offic_status_list = ['contextAtWork', 'contextAtHome', 'contextCommutingWork', 'contextCommutingHome', '']
     # interest_list = ["jogging", "fitness", "basketball", "football", "badminton", "bicycling", "table_tennis",
-    #                  'social', 'online_shopping', 'offline_shoppng', 'tech_news', 'entertainment_news',
+    #                  'social', 'online_shopping', 'offline_shopping', 'tech_news', 'entertainment_news',
     #                  'current_news', 'business_news', 'sports_news', 'game_news', 'study', 'gamer', 'health',
     #                  'sports_show', 'game_show', 'variety_show', 'tvseries_show', 'acg', 'indoorsman', '']
     province_list = ['北京', '天津', '上海', '重庆', '河北', '河南', '云南', '辽宁', '黑龙江', '湖南', '安徽', '山东',

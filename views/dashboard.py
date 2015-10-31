@@ -98,6 +98,7 @@ def interest():
         result_dict = get_query_list('5621fb0f60b27457e863fabb', 'interest')
         server.cache.set('interest', result_dict, timeout=10*60)
     interest_list = [] if 'interest' not in result_dict else result_dict['interest']
+    interest_list = map(lambda x: server.translate_interest(x), interest_list)
     interest_tmp = sorted(map(lambda x: (x, interest_list.count(x)), set(interest_list)), key=lambda item: -item[1])
     data = map(lambda x: {'rank': x, 'name': interest_tmp[x-1][0]}, xrange(1, 9))
     data.append({'rank': 9, 'name': '...'})
