@@ -47,9 +47,8 @@ def logout():
 
 @accounts_bp.route('/signup', methods=['GET', 'POST'])
 def signup():
-    username = session.get('username')
-    if username:
-        return redirect(url_for('dashboard.show'), username)
+    if session.get('username'):
+        return redirect(url_for('dashboard_bp.show'))
     if request.method == 'POST':
         username = request.form['username']
         email = request.form['email']
@@ -61,7 +60,7 @@ def signup():
             user.set('password', password)
             user.set('type', 'developer')
             user.sign_up()
-            return redirect(url_for('login_view.account'))
+            return redirect(url_for('accounts_bp.login'))
         except LeanCloudError, e:
             print(e)
             return render_template('account/signup.html')

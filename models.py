@@ -23,9 +23,6 @@ class Developer(User):
         s = Serializer(server.app.config['SECRET_KEY'])
         try:
             data = s.loads(token)
-            print('fuck')
-            print(s)
-            print(data)
         except SignatureExpired:
             return None  # valid token, but expired
         except BadSignature:
