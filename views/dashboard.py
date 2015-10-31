@@ -4,10 +4,10 @@ from leancloud import Object, Query, LeanCloudError
 from models import Developer
 import server
 
-dashboard = Blueprint('dashboard', __name__, template_folder='templates')
+dashboard_bp = Blueprint('dashboard_bp', __name__, template_folder='templates')
 
 
-@dashboard.route('/dashboard')
+@dashboard_bp.route('/dashboard')
 def show():
     app_id = session.get('app_id', None)
     app_list = []
@@ -40,7 +40,7 @@ def show():
                            option=json.dumps(event))
 
 
-@dashboard.route('/dashboard/profile')
+@dashboard_bp.route('/dashboard/profile')
 def profile():
     app_id = session.get('app_id', None)
     app_list = []
@@ -82,7 +82,7 @@ def profile():
                            app_list=app_list)
 
 
-@dashboard.route('/dashboard/interest')
+@dashboard_bp.route('/dashboard/interest')
 def interest():
     app_id = session.get('app_id', None)
     app_list = []
@@ -113,7 +113,7 @@ def interest():
                            app_list=app_list)
 
 
-@dashboard.route('/dashboard/marriage')
+@dashboard_bp.route('/dashboard/marriage')
 def marriage():
     app_id = session.get('app_id', None)
     app_list = []
@@ -148,7 +148,7 @@ def marriage():
                            app_list=app_list)
 
 
-@dashboard.route('/dashboard/consumption')
+@dashboard_bp.route('/dashboard/consumption')
 def consumption():
     app_id = session.get('app_id', None)
     app_list = []
@@ -188,7 +188,7 @@ def consumption():
                            app_list=app_list)
 
 
-@dashboard.route('/dashboard/location')
+@dashboard_bp.route('/dashboard/location')
 def location():
     app_id = session.get('app_id', None)
     app_list = []
@@ -215,7 +215,7 @@ def location():
                            city_tmp=city_tmp[0][1])
 
 
-@dashboard.route('/dashboard/motion')
+@dashboard_bp.route('/dashboard/motion')
 def motion():
     app_id = session.get('app_id', None)
     app_list = []

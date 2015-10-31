@@ -5,19 +5,17 @@ from leancloud import LeanCloudError
 from models import Developer
 import datetime
 
-login_view = Blueprint('login_view', __name__, template_folder='templates')
+accounts_bp = Blueprint('accounts_bp', __name__, template_folder='templates')
 
 
 def get_expiration():
-    expire_date = datetime.datetime.now()
-    expire_date = expire_date + datetime.timedelta(days=30)
-    return expire_date
+    return datetime.datetime.now() + datetime.timedelta(days=30)
 
 
-@login_view.route('/login', methods=['GET', 'POST'])
+@accounts_bp.route('/account', methods=['GET', 'POST'])
 def login():
     if session.get('session_token'):
-        return redirect('/')
+        return redirect(url_for('index'))
     if request.method == 'POST':
         user = Developer()
         username = request.form['username']
@@ -28,13 +26,13 @@ def login():
             session['user_id'] = user.id
             session['session_token'] = user.get_session_token()
         except LeanCloudError:
-            return render_template('login/login.html')
+            return render_template('account/account.html')
 
-        return redirect('/')
-    return render_template('login/login.html')
+        return redirect(url_for('index'))
+    return render_template('account/account.html')
 
 
-@login_view.route('/logout', methods=['GET', 'POST'])
+@accounts_bp.route('/logout', methods=['GET', 'POST'])
 def logout():
     developer = Developer()
     developer.session_token = session.get('session_token')
@@ -44,10 +42,10 @@ def logout():
     session.pop('app_list', None)
     session.pop('app_id', None)
     session.pop('app_key', None)
-    return redirect('/')
+    return redirect(url_for('index'))
 
 
-@login_view.route('/signup', methods=['GET', 'POST'])
+@accounts_bp.route('/signup', methods=['GET', 'POST'])
 def signup():
     username = session.get('username')
     if username:
@@ -63,8 +61,8 @@ def signup():
             user.set('password', password)
             user.set('type', 'developer')
             user.sign_up()
-            return redirect(url_for('login_view.login'))
+            return redirect(url_for('login_view.account'))
         except LeanCloudError, e:
             print(e)
-            return render_template('login/signup.html')
-    return render_template('login/signup.html')
+            return render_template('account/signup.html')
+    return render_template('account/signup.html')

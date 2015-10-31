@@ -1,13 +1,13 @@
 # coding: utf-8
 
-from flask import Flask, session, render_template, request, redirect
+from flask import Flask, session, request, redirect
 from itsdangerous import Signer
 from views.panel import panel
 from views.restapi import restapi
-from views.dashboard import dashboard
+from views.dashboard import dashboard_bp
 from views.integration import integration
 from views.settings import settings
-from views.login import login_view
+from views.account import accounts_bp
 from datetime import timedelta
 from werkzeug.contrib.cache import SimpleCache
 
@@ -20,10 +20,10 @@ cache = SimpleCache()
 
 # 动态路由
 app.register_blueprint(panel)
-app.register_blueprint(dashboard)
+app.register_blueprint(dashboard_bp)
 app.register_blueprint(integration)
 app.register_blueprint(settings)
-app.register_blueprint(login_view)
+app.register_blueprint(accounts_bp)
 app.register_blueprint(restapi)
 
 

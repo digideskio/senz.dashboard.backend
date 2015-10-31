@@ -364,7 +364,7 @@ body .caret{
     /*border: 1px solid #ffffff;*/
 }
 
-/*for login page */
+/*for account page */
 
 .panel-login {
 	border-color: #ccc;
@@ -372,13 +372,13 @@ body .caret{
 	-moz-box-shadow: 0px 2px 3px 0px rgba(0,0,0,0.2);
 	box-shadow: 0px 2px 3px 0px rgba(0,0,0,0.2);
 }
-/*.panel-login>.panel-heading {*/
+/*.panel-account>.panel-heading {*/
 	/*color: #00415d;*/
 	/*background-color: #fff;*/
 	/*border-color: #fff;*/
 	/*text-align:center;*/
 /*}*/
-/*.panel-login>.panel-heading a{*/
+/*.panel-account>.panel-heading a{*/
 	/*text-decoration: none;*/
 	/*color: #666;*/
 	/*font-weight: bold;*/
@@ -387,11 +387,11 @@ body .caret{
 	/*-moz-transition: all 0.1s linear;*/
 	/*transition: all 0.1s linear;*/
 /*}*/
-/*.panel-login>.panel-heading a.active{*/
+/*.panel-account>.panel-heading a.active{*/
 	/*color: #029f5b;*/
 	/*font-size: 18px;*/
 /*}*/
-/*.panel-login>.panel-heading hr{*/
+/*.panel-account>.panel-heading hr{*/
 	/*margin-top: 10px;*/
 	/*margin-bottom: 0px;*/
 	/*clear: both;*/

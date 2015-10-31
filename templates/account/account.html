@@ -7,7 +7,7 @@
     <div id="container" class="container">
     <div id="content" class="content single-content bg-gray" style="margin-top: 40px;">
         <div id="formwrapper">
-            <form action="{{ url_for('login_view.login') }}" method="post" name="apLogin" id="apLogin">
+            <form action="{{ url_for('accounts_bp.login') }}" method="post" name="apLogin" id="apLogin">
                 <div class="title">登录</div>
                 <div class="item">
                     <input type="text" placeholder="用户名" name="username" id="username" size="20" maxlength="30" />

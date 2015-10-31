@@ -2,8 +2,8 @@
 {% block navigation %}
  <div id="sidebar" class="sidebar">
    <ul id="sidebar-nav">
-    <li><a href="#">Android配置</a></li>
-    <li><a href="#">IOS配置</a></li>
+    <li><a href="#senz-sdk-android">Android配置</a></li>
+    <li><a href="#senz-sdk-ios">IOS配置</a></li>
      <ul class="sub-nav">
      </ul>
     </li>
@@ -14,274 +14,572 @@
 {% block content %}
 <div id="container" class="container">
     <div id="content" class="content" style="min-height: 678px;margin-top: 40px;">
-         <div id="readme" class="blob instapaper_body">
-    <article class="markdown-body entry-content" itemprop="mainContentOfPage"><h1><a id="user-content-senz-sdk-android" class="anchor" href="#senz-sdk-android" aria-hidden="true"><span class="octicon octicon-link"></span></a>senz-sdk-android</h1>
-
-<h2><a id="user-content-1-android-studio-中引用" class="anchor" href="#1-android-studio-中引用" aria-hidden="true"><span class="octicon octicon-link"></span></a>1、 Android studio 中引用</h2>
-
-<p>在工程目录 <em>build.gradle</em> 文件中添加如下内容：</p>
-
-<pre><code>    repositories {
+        <div id="readme" class="blob instapaper_body">
+        <a name="senz-sdk-android"><h1>Senz SDK for Android 用户手册</h1></a>
+        <h2>1、 Android studio 中引用</h2>
+        <p>在工程目录 <em>build.gradle</em> 文件中添加如下内容：</p>
+        <pre><code>
+            repositories {
             jcenter()
             maven {
-                url "https://raw.githubusercontent.com/petchat/senz.sdk.android.maven/master"
+            url "https://raw.githubusercontent.com/petchat/senz.sdk.android.maven/master"
             }
-        }
-    packagingOptions {
-                exclude 'META-INF/LICENSE'
-                exclude 'META-INF/LICENSE-FIREBASE.txt'
-                exclude 'META-INF/NOTICE'
-    }
-    dependencies {
-        compile 'io.petchat:senzsdk:2.0.1'
-        compile 'com.firebase:firebase-client-android:2.3.1+'
-    }
-</code></pre>
-
-<h2><a id="user-content-2-使用senz-sdk" class="anchor" href="#2-使用senz-sdk" aria-hidden="true"><span class="octicon octicon-link"></span></a>2、 使用SENZ SDK</h2>
-
-<h3><a id="user-content-21-初始化" class="anchor" href="#21-初始化" aria-hidden="true"><span class="octicon octicon-link"></span></a>2.1 初始化</h3>
-
-<p>在MainActivity 的 onCreate()中（必须在UI主线程中调用），调用：</p>
-
-<div class="highlight highlight-source-java"><pre><span class="pl-c">//please register on senz server to get your own appId</span>
-    <span class="pl-smi">Senz</span><span class="pl-k">.</span>initialize(<span class="pl-smi">MainActivity</span><span class="pl-k">.</span><span class="pl-v">this</span>,appId);</pre></div>
-
-<h3><a id="user-content-22-senz核心api接口" class="anchor" href="#22-senz核心api接口" aria-hidden="true"><span class="octicon octicon-link"></span></a>2.2 Senz核心api接口</h3>
-
-<h4><a id="user-content-221-用户属性userinfo类" class="anchor" href="#221-用户属性userinfo类" aria-hidden="true"><span class="octicon octicon-link"></span></a>2.2.1 用户属性UserInfo类</h4>
-
-<p>该类主要用于分析用户的属性，如：年龄、性别、消费能力、社会属性等。</p>
-
-<p>调用例子：</p>
-
-<div class="highlight highlight-source-java"><pre>    <span class="pl-smi">UserInfo</span> userInfo <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-smi">UserInfo</span>(<span class="pl-v">this</span>);
-        userInfo<span class="pl-k">.</span>getUserInfos(<span class="pl-k">new</span> <span class="pl-smi">SenzCallback</span>() {
-            <span class="pl-k">@Override</span>
-            <span class="pl-k">public</span> <span class="pl-k">void</span> <span class="pl-en">done</span>(<span class="pl-smi">Exception</span> <span class="pl-v">e</span>, <span class="pl-smi">Object</span> <span class="pl-v">object</span>) {
-                <span class="pl-k">if</span> (e <span class="pl-k">==</span> <span class="pl-c1">null</span>) {
-                    <span class="pl-k">HashMap&lt;<span class="pl-smi">String</span>, <span class="pl-smi">Double</span>&gt;</span> hashMap <span class="pl-k">=</span> (<span class="pl-k">HashMap&lt;<span class="pl-smi">String</span>, <span class="pl-smi">Double</span>&gt;</span>) object);
-                    <span class="pl-c">//...</span>
-
-                } <span class="pl-k">else</span> {
-                   <span class="pl-c">//...</span>
-                }
             }
-        });</pre></div>
-
-<h5><a id="user-content-hashmap数据格式说明" class="anchor" href="#hashmap数据格式说明" aria-hidden="true"><span class="octicon octicon-link"></span></a>hashMap数据格式说明</h5>
-
-<p>用户属性名称保存在了hashMap的key中，对应的值保存在了value中，
-senz会根据不同的用户，计算不同的属性值，所以返回结果hashMap中的
-key是不固定的，使用者可以自行遍历hashMap来获得各个属性值。
-数据模版：</p>
-
-<pre><code>has_car:0.10048
-online_shopping:0.20056
-current_news:0.10076
-...
-</code></pre>
-
-<h4><a id="user-content-222-用户的情境识别-contextdeprecated" class="anchor" href="#222-用户的情境识别-contextdeprecated" aria-hidden="true"><span class="octicon octicon-link"></span></a>2.2.2 用户的情境识别 context(<em>deprecated</em>)</h4>
-
-<p>调用例子：</p>
-
-<div class="highlight highlight-source-java"><pre>     <span class="pl-smi">UserContext</span> userContext <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-smi">UserContext</span>(<span class="pl-v">this</span>);
-        userContext<span class="pl-k">.</span>getUserContext(<span class="pl-k">new</span> <span class="pl-smi">SenzCallback</span>() {
-            <span class="pl-k">@Override</span>
-            <span class="pl-k">public</span> <span class="pl-k">void</span> <span class="pl-en">done</span>(<span class="pl-smi">Exception</span> <span class="pl-v">e</span>, <span class="pl-smi">Object</span> <span class="pl-v">object</span>) {
-                <span class="pl-k">if</span> (e <span class="pl-k">==</span> <span class="pl-c1">null</span>) {
-                    <span class="pl-smi">SenzContext</span> senzContext <span class="pl-k">=</span> (<span class="pl-smi">SenzContext</span>) object;
-                    <span class="pl-c">//...</span>
-                } <span class="pl-k">else</span> {
-                    <span class="pl-c">//...</span>
-                }
+            packagingOptions {
+            exclude 'META-INF/LICENSE'
+            exclude 'META-INF/LICENSE-FIREBASE.txt'
+            exclude 'META-INF/NOTICE'
             }
-        });</pre></div>
-
-<h5><a id="user-content-数据格式说明" class="anchor" href="#数据格式说明" aria-hidden="true"><span class="octicon octicon-link"></span></a>数据格式说明</h5>
-
-<p>SenzContext类：</p>
-
-<div class="highlight highlight-source-java"><pre><span class="pl-k">public</span> <span class="pl-k">class</span> <span class="pl-en">SenzContext</span> {
-    <span class="pl-k">public</span> <span class="pl-k">HashMap&lt;<span class="pl-smi">String</span>, <span class="pl-smi">Double</span>&gt;</span> poiProbLv1;
-    <span class="pl-k">public</span> <span class="pl-k">HashMap&lt;<span class="pl-smi">String</span>, <span class="pl-smi">Double</span>&gt;</span> poiProbLv2;
-    <span class="pl-k">public</span> <span class="pl-k">HashMap&lt;<span class="pl-smi">String</span>, <span class="pl-smi">Double</span>&gt;</span> motionProb;
-    <span class="pl-k">public</span> <span class="pl-k">HashMap&lt;<span class="pl-smi">String</span>, <span class="pl-smi">Double</span>&gt;</span> sceneProb;
-    <span class="pl-k">public</span> <span class="pl-smi">String</span> locationUpdatedAt;
-    <span class="pl-k">public</span> <span class="pl-smi">String</span> motionUpdatedAt;
-    <span class="pl-k">public</span> <span class="pl-smi">String</span> sceneUpdatedAt;
-    }</pre></div>
-
-<p>poiProbLv1 和 poiProbLv2 为用户location的情境识别， sceneProb 为用户的所处场景识别， motionProb 为
- 用户的动作情境识别。
- 属性保存在了key中，对应的值保存在了value中，
- 键值不是固定的，请使用者自行遍历相应的map。</p>
-
-<h4><a id="user-content-223-用户事件识别-event" class="anchor" href="#223-用户事件识别-event" aria-hidden="true"><span class="octicon octicon-link"></span></a>2.2.3 用户事件识别 event</h4>
-
-<p>event指用户发生的事件，如某个时间段，用户在看电影或者逛商场。
- event所包含的所有事件类型：商圈工作中、学校工作中、学校上课中、户外锻炼、室内锻炼、在餐厅吃饭、
- 旅游、郊游、逛街、聚会、看电影、展览会、演唱会、音乐会、戏剧。
- event值的获取需要注册监听：</p>
-
-<p>action： senz.intent.action.EVENT</p>
-
-<p>调用例子：</p>
-
-<div class="highlight highlight-source-java"><pre>        <span class="pl-smi">BroadcastReceiver</span> eventReceiver <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-smi">BroadcastReceiver</span>() {
-        <span class="pl-k">@Override</span>
-        <span class="pl-k">public</span> <span class="pl-k">void</span> <span class="pl-en">onReceive</span>(<span class="pl-smi">Context</span> <span class="pl-v">context</span>, <span class="pl-smi">Intent</span> <span class="pl-v">intent</span>) {
-            <span class="pl-k">if</span> (<span class="pl-s"><span class="pl-pds">"</span>senz.intent.action.EVENT<span class="pl-pds">"</span></span><span class="pl-k">.</span>equals(intent<span class="pl-k">.</span>getAction())) {
-                <span class="pl-smi">Bundle</span> bundle <span class="pl-k">=</span> intent<span class="pl-k">.</span>getExtras();
-                <span class="pl-smi">Serializable</span> data <span class="pl-k">=</span> bundle<span class="pl-k">.</span>getSerializable(<span class="pl-s"><span class="pl-pds">"</span>event<span class="pl-pds">"</span></span>);
-                <span class="pl-k">List&lt;<span class="pl-smi">SenzEvent</span>&gt;</span> events <span class="pl-k">=</span> (<span class="pl-k">List&lt;<span class="pl-smi">SenzEvent</span>&gt;</span>) data;
-                <span class="pl-c">//...</span>
+            dependencies {
+            compile 'io.petchat:senzsdk:2.0.1'
+            compile 'com.firebase:firebase-client-android:2.3.1+'
             }
-        }
-    };</pre></div>
+        </code></pre>
 
-<h5><a id="user-content-数据格式说明-1" class="anchor" href="#数据格式说明-1" aria-hidden="true"><span class="octicon octicon-link"></span></a>数据格式说明</h5>
+        <h2>2、 使用SENZ SDK</h2>
+        <h3>2.1 初始化</h3>
+        <p>在MainActivity 的 onCreate()中（必须在UI主线程中调用），调用：</p>
 
-<p>SenzEvent 类：</p>
+        <div><pre><span>//please register on senz server to get your own appId
+        Senz.initialize(MainActivity.this,appId);</span></pre></div>
 
-<div class="highlight highlight-source-java"><pre> <span class="pl-k">public</span> <span class="pl-k">class</span> <span class="pl-en">SenzEvent</span> <span class="pl-k">implements</span> <span class="pl-e">Serializable</span> {
-    <span class="pl-k">public</span> <span class="pl-k">long</span> startTime;       <span class="pl-c">//事件开始时间</span>
-    <span class="pl-k">public</span> <span class="pl-k">long</span> endTime;         <span class="pl-c">//事件结束时间</span>
-    <span class="pl-k">public</span> <span class="pl-smi">String</span> eventType;     <span class="pl-c">//事件类型</span>
-    <span class="pl-k">public</span> <span class="pl-k">double</span> probability;   <span class="pl-c">//事件发生的概率（测试值，有待优化）</span>
-    }</pre></div>
+        <h3>2.2 Senz核心api接口</h3>
+        <h4>2.2.1 用户属性UserInfo类</h4>
+        <p>该类主要用于分析用户的属性，如：年龄、性别、消费能力、社会属性等。</p>
+        <p>调用例子：</p>
+        <pre><code>
+            UserInfo userInfo = new UserInfo(this);
+            userInfo.getUserInfos(new SenzCallback() {
+            @Override
+            public void done(Exception e, Object object) {
+            if (e == null) {
+            HashMap&lt;String, Double&gt; hashMap = (HashMap&lt;String, Double&gt;) object);
+            //...
 
-<h4><a id="user-content-224-用户的-home-和-office-的识别和监听" class="anchor" href="#224-用户的-home-和-office-的识别和监听" aria-hidden="true"><span class="octicon octicon-link"></span></a>2.2.4 用户的 home 和 office 的识别和监听</h4>
-
-<p>senz可以自动的识别用户的家庭和工作地点，也可以检测出用户离开、进入家或者公司。
- 检测出这些变化时，senz会发出相应的广播。</p>
-
-<p>监听action：</p>
-
-<p>action： senz.intent.action.HOME_OFFICE_STATUS</p>
-
-<p>调用例子：</p>
-
-<div class="highlight highlight-source-java"><pre>        <span class="pl-smi">BroadcastReceiver</span> statusReceiver <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-smi">BroadcastReceiver</span>() {
-        <span class="pl-k">@Override</span>
-        <span class="pl-k">public</span> <span class="pl-k">void</span> <span class="pl-en">onReceive</span>(<span class="pl-smi">Context</span> <span class="pl-v">context</span>, <span class="pl-smi">Intent</span> <span class="pl-v">intent</span>) {
-            <span class="pl-k">if</span> (<span class="pl-s"><span class="pl-pds">"</span>senz.intent.action.HOME_OFFICE_STATUS<span class="pl-pds">"</span></span><span class="pl-k">.</span>equals(intent<span class="pl-k">.</span>getAction())) {
-                <span class="pl-smi">Bundle</span> bundle <span class="pl-k">=</span> intent<span class="pl-k">.</span>getExtras();
-                <span class="pl-smi">Serializable</span> data <span class="pl-k">=</span> bundle<span class="pl-k">.</span>getSerializable(<span class="pl-s"><span class="pl-pds">"</span>home_office_status<span class="pl-pds">"</span></span>);
-                <span class="pl-smi">SenzOHStatus</span> status <span class="pl-k">=</span> (<span class="pl-smi">SenzOHStatus</span>) data;
-                <span class="pl-c">//...</span>
+            } else {
+            //...
             }
-        }
-    };</pre></div>
-
-<h5><a id="user-content-数据格式说明-2" class="anchor" href="#数据格式说明-2" aria-hidden="true"><span class="octicon octicon-link"></span></a>数据格式说明</h5>
-
-<p>SenzOHStatus 类：</p>
-
-<div class="highlight highlight-source-java"><pre> <span class="pl-k">public</span> <span class="pl-k">class</span> <span class="pl-en">SenzOHStatus</span> <span class="pl-k">implements</span> <span class="pl-e">Serializable</span> {
-    <span class="pl-k">public</span> <span class="pl-k">long</span> updateTime;  <span class="pl-c">//状态更新时间</span>
-    <span class="pl-k">public</span> <span class="pl-k">int</span> stautsType;       <span class="pl-c">//状态值</span>
-    }
-
-    <span class="pl-c">//对应的状态值</span>
- <span class="pl-k">public</span> <span class="pl-k">class</span> <span class="pl-en">OHStatusType</span> {
-    <span class="pl-k">public</span> <span class="pl-k">final</span> <span class="pl-k">static</span> <span class="pl-k">int</span> <span class="pl-c1">UNKNOWN</span> <span class="pl-k">=</span> <span class="pl-k">-</span><span class="pl-c1">1</span>;
-    <span class="pl-k">public</span> <span class="pl-k">final</span> <span class="pl-k">static</span> <span class="pl-k">int</span> <span class="pl-c1">ARRIVING_HOME</span> <span class="pl-k">=</span> <span class="pl-c1">0</span>;
-    <span class="pl-k">public</span> <span class="pl-k">final</span> <span class="pl-k">static</span> <span class="pl-k">int</span> <span class="pl-c1">LEAVING_HOME</span> <span class="pl-k">=</span> <span class="pl-c1">1</span>;
-    <span class="pl-k">public</span> <span class="pl-k">final</span> <span class="pl-k">static</span> <span class="pl-k">int</span> <span class="pl-c1">ARRIVING_OFFICE</span> <span class="pl-k">=</span> <span class="pl-c1">2</span>;
-    <span class="pl-k">public</span> <span class="pl-k">final</span> <span class="pl-k">static</span> <span class="pl-k">int</span> <span class="pl-c1">LEAVING_OFFICE</span> <span class="pl-k">=</span> <span class="pl-c1">3</span>;
-    <span class="pl-k">public</span> <span class="pl-k">final</span> <span class="pl-k">static</span> <span class="pl-k">int</span> <span class="pl-c1">GOING_HOME</span> <span class="pl-k">=</span> <span class="pl-c1">4</span>;
-    <span class="pl-k">public</span> <span class="pl-k">final</span> <span class="pl-k">static</span> <span class="pl-k">int</span> <span class="pl-c1">GOING_OFFICE</span> <span class="pl-k">=</span> <span class="pl-c1">5</span>;
-    <span class="pl-k">public</span> <span class="pl-k">final</span> <span class="pl-k">static</span> <span class="pl-k">int</span> <span class="pl-c1">USER_HOME_OFFICE_NOT_YET_DEFINED</span> <span class="pl-k">=</span> <span class="pl-c1">6</span>;
-    }
-
-    <span class="pl-c">//我们提供了解析工具类 ParseUtils:</span>
-    <span class="pl-k">public</span> <span class="pl-k">static</span> <span class="pl-smi">String</span> parseStatusType(<span class="pl-k">final</span> <span class="pl-k">int</span> stautsType)</pre></div>
-
-<h4><a id="user-content-225-用户-motion-的识别和-motion-改变的监听" class="anchor" href="#225-用户-motion-的识别和-motion-改变的监听" aria-hidden="true"><span class="octicon octicon-link"></span></a>2.2.5 用户 motion 的识别和 motion 改变的监听</h4>
-
-<p>senz可以识别出用户当前的动作，如 坐、跑步、走路等。当检测到用户的动作发生改变时
-senz会发出相应的广播。</p>
-
-<p>监听action：</p>
-
-<p>action： senz.intent.action.MOTION_CHANGED</p>
-
-<p>调用例子：</p>
-
-<div class="highlight highlight-source-java"><pre>        <span class="pl-smi">BroadcastReceiver</span> motionReceiver <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-smi">BroadcastReceiver</span>() {
-        <span class="pl-k">@Override</span>
-        <span class="pl-k">public</span> <span class="pl-k">void</span> <span class="pl-en">onReceive</span>(<span class="pl-smi">Context</span> <span class="pl-v">context</span>, <span class="pl-smi">Intent</span> <span class="pl-v">intent</span>) {
-            <span class="pl-k">if</span> (<span class="pl-s"><span class="pl-pds">"</span>senz.intent.action.MOTION_CHANGED<span class="pl-pds">"</span></span><span class="pl-k">.</span>equals(intent<span class="pl-k">.</span>getAction())) {
-                <span class="pl-smi">Bundle</span> bundle <span class="pl-k">=</span> intent<span class="pl-k">.</span>getExtras();
-                <span class="pl-smi">Serializable</span> data <span class="pl-k">=</span> bundle<span class="pl-k">.</span>getSerializable(<span class="pl-s"><span class="pl-pds">"</span>motion_changed<span class="pl-pds">"</span></span>);
-                <span class="pl-smi">SenzMotion</span> motion <span class="pl-k">=</span> (<span class="pl-smi">SenzMotion</span>) data;
-                <span class="pl-c">//...</span>
             }
-        }
-    };</pre></div>
+            });
+        </code></pre>
 
-<h5><a id="user-content-数据格式说明-3" class="anchor" href="#数据格式说明-3" aria-hidden="true"><span class="octicon octicon-link"></span></a>数据格式说明</h5>
+        <h5>hashMap数据格式说明</h5>
 
-<p>SenzMotion 类：</p>
+        <p>用户属性名称保存在了hashMap的key中，对应的值保存在了value中，
+        senz会根据不同的用户，计算不同的属性值，所以返回结果hashMap中的
+        key是不固定的，使用者可以自行遍历hashMap来获得各个属性值。
+        数据模版：</p>
+        <pre><code>
+            has_car:0.10048
+            online_shopping:0.20056
+            current_news:0.10076
+            ...
+        </code></pre>
 
-<div class="highlight highlight-source-java"><pre> <span class="pl-k">public</span> <span class="pl-k">class</span> <span class="pl-en">SenzMotion</span> <span class="pl-k">implements</span> <span class="pl-e">Serializable</span> {
-    <span class="pl-k">public</span> <span class="pl-k">int</span> motionType;      <span class="pl-c">//motion类型</span>
-    <span class="pl-k">public</span> <span class="pl-k">double</span> similarity;       <span class="pl-c">//该类型的相似度</span>
-    }
+        <h4>2.2.2 用户的情境识别 context(<em>deprecated</em>)</h4>
+        <p>调用例子：</p>
 
-    <span class="pl-c">//对应的状态值</span>
- <span class="pl-k">public</span> <span class="pl-k">class</span> <span class="pl-en">MotionType</span> {
-    <span class="pl-k">public</span> <span class="pl-k">final</span> <span class="pl-k">static</span> <span class="pl-k">int</span> <span class="pl-c1">UNKNOWN</span> <span class="pl-k">=</span> <span class="pl-k">-</span><span class="pl-c1">1</span>;
-    <span class="pl-k">public</span> <span class="pl-k">final</span> <span class="pl-k">static</span> <span class="pl-k">int</span> <span class="pl-c1">SITTING</span> <span class="pl-k">=</span> <span class="pl-c1">0</span>;
-    <span class="pl-k">public</span> <span class="pl-k">final</span> <span class="pl-k">static</span> <span class="pl-k">int</span> <span class="pl-c1">DRIVING</span> <span class="pl-k">=</span> <span class="pl-c1">1</span>;
-    <span class="pl-k">public</span> <span class="pl-k">final</span> <span class="pl-k">static</span> <span class="pl-k">int</span> <span class="pl-c1">RIDING</span> <span class="pl-k">=</span> <span class="pl-c1">2</span>;
-    <span class="pl-k">public</span> <span class="pl-k">final</span> <span class="pl-k">static</span> <span class="pl-k">int</span> <span class="pl-c1">WALKING</span> <span class="pl-k">=</span> <span class="pl-c1">3</span>;
-    <span class="pl-k">public</span> <span class="pl-k">final</span> <span class="pl-k">static</span> <span class="pl-k">int</span> <span class="pl-c1">RUNNING</span> <span class="pl-k">=</span> <span class="pl-c1">4</span>;
-    }
-
-    <span class="pl-c">//我们提供了解析工具类 ParseUtils:</span>
-    <span class="pl-k">public</span> <span class="pl-k">static</span> <span class="pl-smi">String</span> parseMotionType(<span class="pl-k">final</span> <span class="pl-k">int</span> motionType)</pre></div>
-
-<h2><a id="user-content-23-设置监听的另一种方法" class="anchor" href="#23-设置监听的另一种方法" aria-hidden="true"><span class="octicon octicon-link"></span></a>2.3 设置监听的另一种方法</h2>
-
-<ul>
-<li>1.
-在manifest中注册想要监听的事件：</li>
-</ul>
-
-<div class="highlight highlight-text-xml"><pre>&lt;<span class="pl-ent">receiver</span> <span class="pl-e">android</span><span class="pl-e">:</span><span class="pl-e">name</span>=<span class="pl-s"><span class="pl-pds">"</span>.YourBroadcastReceiverClassNameHere<span class="pl-pds">"</span></span>&gt;
-    &lt;<span class="pl-ent">intent-filter</span>&gt;
-        &lt;<span class="pl-ent">action</span> <span class="pl-e">android</span><span class="pl-e">:</span><span class="pl-e">name</span>=<span class="pl-s"><span class="pl-pds">"</span>senz.intent.action.HOME_OFFICE_STATUS<span class="pl-pds">"</span></span>/&gt;
-        &lt;<span class="pl-ent">action</span> <span class="pl-e">android</span><span class="pl-e">:</span><span class="pl-e">name</span>=<span class="pl-s"><span class="pl-pds">"</span>senz.intent.action.MOTION_CHANGED<span class="pl-pds">"</span></span>/&gt;
-        &lt;<span class="pl-ent">action</span> <span class="pl-e">android</span><span class="pl-e">:</span><span class="pl-e">name</span>=<span class="pl-s"><span class="pl-pds">"</span>senz.intent.action.EVENT<span class="pl-pds">"</span></span>/&gt;
-
-    &lt;/<span class="pl-ent">intent-filter</span>&gt;
-&lt;/<span class="pl-ent">receiver</span>&gt;</pre></div>
-
-<ul>
-<li>2.
-编写自己的类，继承自 BroadcastReceiver，监听相应的action，并从intent中提取相应的值。
-三种事件的值，通过序列化后的键分别为："motion_changed", "event", "home_office_status"。
-请参考下面的例子：</li>
-</ul>
-
-<div class="highlight highlight-source-java"><pre><span class="pl-k">public</span> <span class="pl-k">class</span> <span class="pl-en">YourReceiver</span> <span class="pl-k">extends</span> <span class="pl-e">BroadcastReceiver</span> {
-
-    <span class="pl-k">@Override</span>
-    <span class="pl-k">public</span> <span class="pl-k">void</span> <span class="pl-en">onReceive</span>(<span class="pl-smi">Context</span> <span class="pl-v">context</span>, <span class="pl-smi">Intent</span> <span class="pl-v">intent</span>) {
-        <span class="pl-k">if</span> (<span class="pl-s"><span class="pl-pds">"</span>senz.intent.action.MOTION_CHANGED<span class="pl-pds">"</span></span><span class="pl-k">.</span>equals(intent<span class="pl-k">.</span>getAction())) {
-                <span class="pl-smi">Bundle</span> bundle <span class="pl-k">=</span> intent<span class="pl-k">.</span>getExtras();
-                <span class="pl-smi">Serializable</span> data <span class="pl-k">=</span> bundle<span class="pl-k">.</span>getSerializable(<span class="pl-s"><span class="pl-pds">"</span>motion_changed<span class="pl-pds">"</span></span>);
-                <span class="pl-smi">SenzMotion</span> motion <span class="pl-k">=</span> (<span class="pl-smi">SenzMotion</span>) data;
-                <span class="pl-c">//...</span>
+        <pre><code>
+            UserContext userContext = new UserContext(this);
+            userContext.getUserContext(new SenzCallback() {
+            @Override
+            public void done(Exception e, Object object) {
+            if (e == null) {
+            SenzContext senzContext = (SenzContext) object;
+            //...
+            } else {
+            //...
             }
-    }
-}</pre></div>
-</article>
-  </div>
+            }
+            });
+        </code></pre>
 
+        <h5>数据格式说明</h5>
+        <p>SenzContext类：</p>
+        <pre><code>
+            public class SenzContext {
+            public HashMap&lt;String, Double&gt; poiProbLv1;
+            public HashMap&lt;String, Double&gt; poiProbLv2;
+            public HashMap&lt;String, Double&gt; motionProb;
+            public HashMap&lt;String, Double&gt; sceneProb;
+            public String locationUpdatedAt;
+            public String motionUpdatedAt;
+            public String sceneUpdatedAt;
+            }
+        </code></pre>
+
+        <p>poiProbLv1 和 poiProbLv2 为用户location的情境识别， sceneProb 为用户的所处场景识别， motionProb 为
+        用户的动作情境识别。
+        属性保存在了key中，对应的值保存在了value中，
+        键值不是固定的，请使用者自行遍历相应的map。</p>
+
+        <h4>2.2.3 用户事件识别 event</h4>
+        <p>event指用户发生的事件，如某个时间段，用户在看电影或者逛商场。
+event所包含的所有事件类型：商圈工作中、学校工作中、学校上课中、户外锻炼、室内锻炼、在餐厅吃饭、
+旅游、郊游、逛街、聚会、看电影、展览会、演唱会、音乐会、戏剧。
+event值的获取需要注册监听：</p>
+
+        <p>action： senz.intent.action.EVENT</p>
+        <p>调用例子：</p>
+        <pre><code>
+            BroadcastReceiver eventReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+            if ("senz.intent.action.EVENT".equals(intent.getAction())) {
+            Bundle bundle = intent.getExtras();
+            Serializable data = bundle.getSerializable("event");
+            List&lt;SenzEvent&gt; events = (List&lt;SenzEvent&gt;) data;
+            //...
+            }
+            }
+            };
+        </code></pre>
+
+        <h5>数据格式说明</h5>
+        <p>SenzEvent 类：</p>
+        <pre><code>
+            public class SenzEvent implements Serializable {
+            public long startTime;       //事件开始时间
+            public long endTime;         //事件结束时间
+            public String eventType;     //事件类型
+            public double probability;   //事件发生的概率（测试值，有待优化）
+            }
+        </code></pre>
+
+
+        <h4></a>2.2.4 用户的 home 和 office 的识别和监听</h4>
+        <p>senz可以自动的识别用户的家庭和工作地点，也可以检测出用户离开、进入家或者公司。
+        检测出这些变化时，senz会发出相应的广播。</p>
+        <p>监听action：</p>
+        <p>action： senz.intent.action.HOME_OFFICE_STATUS</p>
+        <p>调用例子：</p>
+        <pre><code>
+            BroadcastReceiver statusReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+            if ("senz.intent.action.HOME_OFFICE_STATUS".equals(intent.getAction())) {
+            Bundle bundle = intent.getExtras();
+            Serializable data = bundle.getSerializable("home_office_status");
+            SenzOHStatus status = (SenzOHStatus) data;
+            //...
+            }
+            }
+            };
+        </code></pre>
+
+        <h5>数据格式说明</h5>
+        <p>SenzOHStatus 类：</p>
+        <pre><code>
+            public class SenzOHStatus implements Serializable {
+            public long updateTime;  //状态更新时间
+            public int stautsType;       //状态值
+            }
+        </code></pre>
+        <pre><code>
+            //对应的状态值
+            public class OHStatusType {
+            public final static int UNKNOWN = -1;
+            public final static int ARRIVING_HOME = 0;
+            public final static int LEAVING_HOME = 1;
+            public final static int ARRIVING_OFFICE = 2;
+            public final static int LEAVING_OFFICE = 3;
+            public final static int GOING_HOME = 4;
+            public final static int GOING_OFFICE = 5;
+            public final static int USER_HOME_OFFICE_NOT_YET_DEFINED = 6;
+            }
+        </code></pre>
+        <span class="pl-c">//我们提供了解析工具类 ParseUtils: public static String  parseStatusType( final int  stautsType) </span>
+
+        <h4>2.2.5 用户 motion 的识别和 motion 改变的监听</h4>
+        <p>senz可以识别出用户当前的动作，如 坐、跑步、走路等。当检测到用户的动作发生改变时
+        senz会发出相应的广播。</p>
+        <p>监听action：</p>
+        <p>action： senz.intent.action.MOTION_CHANGED</p>
+        <p>调用例子：</p>
+        <pre><code>
+            BroadcastReceiver motionReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+            if ("senz.intent.action.MOTION_CHANGED".equals(intent.getAction())) {
+            Bundle bundle = intent.getExtras();
+            Serializable data = bundle.getSerializable("motion_changed");
+            SenzMotion motion = (SenzMotion) data;
+            //...
+            }
+            }
+            };
+        </code></pre>
+
+        <h5></a>数据格式说明</h5>
+        <p>SenzMotion 类：</p>
+        <pre><code>
+            public class SenzMotion implements Serializable {
+            public int motionType;      //motion类型
+            public double similarity;       //该类型的相似度
+            }
+        </code></pre>
+        <pre><code>
+            //对应的状态值
+            public class MotionType {
+            public final static int UNKNOWN = -1;
+            public final static int SITTING = 0;
+            public final static int DRIVING = 1;
+            public final static int RIDING = 2;
+            public final static int WALKING = 3;
+            public final static int RUNNING = 4;
+            }
+        </code></pre>
+        <span>//我们提供了解析工具类 ParseUtils: public static String parseMotionType(final int motionType)</span>
+
+        <h2>2.3 设置监听的另一种方法</h2>
+
+        <ul>
+        <li>1.在manifest中注册想要监听的事件：</li>
+        </ul>
+        <pre><code>
+            &lt;receiver android:name=".YourBroadcastReceiverClassNameHere"&gt;
+            &lt;intent-filter&gt;
+            &lt;action android:name="senz.intent.action.HOME_OFFICE_STATUS"/&gt;
+            &lt;action android:name="senz.intent.action.MOTION_CHANGED"/&gt;
+            &lt;action android:name="senz.intent.action.EVENT"/&gt;
+
+            &lt;/intent-filter&gt;
+            &lt;/receiver>
+        </code></pre>
+
+        <ul>
+        <li>2.
+        编写自己的类，继承自 BroadcastReceiver，监听相应的action，并从intent中提取相应的值。
+        三种事件的值，通过序列化后的键分别为："motion_changed", "event", "home_office_status"。
+        请参考下面的例子：</li>
+        </ul>
+        <pre><code>
+            public class YourReceiver extends BroadcastReceiver {
+
+            @Override
+            public void onReceive(Context context, Intent intent) {
+            if ("senz.intent.action.MOTION_CHANGED".equals(intent.getAction())) {
+            Bundle bundle = intent.getExtras();
+            Serializable data = bundle.getSerializable("motion_changed");
+            SenzMotion motion = (SenzMotion) data;
+            //...
+            }
+            }
+            }
+        </code></pre>
+        </div>
+
+
+
+
+
+        <div id="wiki-content">
+            <a name="senz-sdk-ios"><h1 class="gh-header-title instapaper_title">Senz SDK for iOS 用户手册</h1></a>
+            <div class="wrap has-rightbar">
+                <div id="wiki-body" class="gollum-markdown-content instapaper_body">
+            <div class="markdown-body">
+            <h2>
+            <a id="user-content-1-项目配置" class="anchor" href="#1-%E9%A1%B9%E7%9B%AE%E9%85%8D%E7%BD%AE" aria-hidden="true"><span class="octicon octicon-link"></span></a>1. 项目配置</h2>
+
+            <h3>
+            <a id="user-content-11-导入sdk" class="anchor" href="#11-%E5%AF%BC%E5%85%A5sdk" aria-hidden="true"><span class="octicon octicon-link"></span></a>1.1 导入SDK</h3>
+
+            <p><em>以下配置过程适用Xcode 7.0新建的默认iOS工程，iOS版本为8.0或更高，语言推荐使用Swift</em></p>
+
+            <ol>
+            <li>将下载的<code>Senz.framework</code>文件拖到Xcode左侧边栏的工程目录中。（注意勾选“Copy items if needed”）</li>
+            <li>在Xcode左侧边栏中选中工程，查看“General”页，在“Embedded Binaries”中添加<code>Senz.framework</code>，并确保“Linked Frameworks and Libraries”中也有<code>Senz.framework</code>。</li>
+            <li>确保“Linked Frameworks and Libraries”中添加了<code>CoreLocation</code>和<code>CoreMotion</code>两个标准框架。</li>
+            <li>查看“Capabilities”页，确保“Background Modes”打开，并勾选里面的“Location Updates”。</li>
+            <li>查看“Build Settings”页，将“Build Option”中的“Enable Bitcode”一项设置为<code>NO</code>；点击“Editor”菜单，选择“Add Build Setting” -&gt; “Add User-Defined Setting”，名字设置为<code>STRIP_BITCODE_FROM_COPIED_FILES</code>，值填写<code>NO</code>。</li>
+            <li>仍在“Build Settings”页，将“Build Option”中<code>EMBEDDED_CONTENT_CONTAINS_SWIFT</code>一项设置为<code>YES</code>。</li>
+            <li>编辑工程的<code>Info.plist</code>文件，加入<code>NSAppTransportSecurity</code>键，设为Dictionary类型；在其中增加子项<code>NSAllowsArbitraryLoads</code>，设为Boolean值<code>YES</code>。</li>
+            </ol>
+
+            <p>检查是否正常导入了SDK：</p>
+
+            <div class="highlight highlight-source-swift"><pre><span class="pl-c">// Swift</span>
+            <span class="pl-k">import</span> <span class="pl-c1">CoreLocation</span>
+            <span class="pl-k">import</span> <span class="pl-c1">CoreMotion</span>
+            <span class="pl-k">import</span> <span class="pl-c1">Senz</span>
+            <span class="pl-k">...</span>
+            NSLog(<span class="pl-s"><span class="pl-pds">"</span><span class="pl-pse">\(</span><span class="pl-s1">SZSDKVersion</span><span class="pl-pse">)</span><span class="pl-pds">"</span></span>) <span class="pl-c">// 能够正常编译并打印SDK版本号</span></pre></div>
+
+            <div class="highlight highlight-source-objc"><pre><span class="pl-c">// Objective-C</span>
+            #<span class="pl-k">import</span> <span class="pl-s"><span class="pl-pds">&lt;</span>CoreLocation/CoreLocation.h<span class="pl-pds">&gt;</span></span>
+            #<span class="pl-k">import</span> <span class="pl-s"><span class="pl-pds">&lt;</span>CoreMotion/CoreMotion.h<span class="pl-pds">&gt;</span></span>
+            #<span class="pl-k">import</span> <span class="pl-s"><span class="pl-pds">"</span>Senz/Senz.h<span class="pl-pds">"</span></span>
+            #<span class="pl-k">import</span> <span class="pl-s"><span class="pl-pds">"</span>Senz/Senz-swift.h<span class="pl-pds">"</span></span>
+
+            ...
+            <span class="pl-c1">NSLog</span>(<span class="pl-s"><span class="pl-pds">@"</span><span class="pl-c1">%@</span><span class="pl-pds">"</span></span>, SZConstants.sdkVersion); <span class="pl-c">// 能够正常编译并打印SDK版本号</span></pre></div>
+
+            <h3>
+            <a id="user-content-12-获取地理位置权限" class="anchor" href="#12-%E8%8E%B7%E5%8F%96%E5%9C%B0%E7%90%86%E4%BD%8D%E7%BD%AE%E6%9D%83%E9%99%90" aria-hidden="true"><span class="octicon octicon-link"></span></a>1.2 获取地理位置权限</h3>
+
+            <p><em>SDK的正常运行依赖地理位置权限（<code>CLLocationManager</code>的<code>AlwaysAuthorization</code>权限），获取这一权限是客户App的职责。</em></p>
+
+            <p>在工程的Info.plist文件中，加入<code>NSLocationAlwaysUsageDescription</code>键，值填写向最终用户展示的提示文字；并在代码中通过<code>CLLocationMananger</code>来获取<code>CLAuthorizationStatus.AuthorizedAlways</code>权限：</p>
+
+            <div class="highlight highlight-source-swift"><pre><span class="pl-c">// Swift</span>
+            <span class="pl-k">if</span> CLLocationManager<span class="pl-k">.</span>authorizationStatus() <span class="pl-k">==</span> <span class="pl-k">.</span>NotDetermined {
+            <span class="pl-k">self</span><span class="pl-k">.</span>locationManager<span class="pl-k">.</span>requestAlwaysAuthorization()
+            }</pre></div>
+
+            <div class="highlight highlight-source-objc"><pre><span class="pl-c">// Objective-C</span>
+            <span class="pl-k">if</span> ([CLLocationManager <span class="pl-c1">authorizationStatus</span>] == <span class="pl-c1">kCLAuthorizationStatusNotDetermined</span>) {
+            [<span class="pl-v">self</span>.locationManager <span class="pl-c1">requestAlwaysAuthorization</span>];
+            }</pre></div>
+
+            <h2>
+            <a id="user-content-2-准备工作" class="anchor" href="#2-%E5%87%86%E5%A4%87%E5%B7%A5%E4%BD%9C" aria-hidden="true"><span class="octicon octicon-link"></span></a>2. 准备工作</h2>
+
+            <h3>
+            <a id="user-content-21-注册设备" class="anchor" href="#21-%E6%B3%A8%E5%86%8C%E8%AE%BE%E5%A4%87" aria-hidden="true"><span class="octicon octicon-link"></span></a>2.1 注册设备</h3>
+
+            <p>首次调用Senz SDK的服务之前，需要先进行注册，将客户端的App ID（在Senz网站申请）和设备ID（自动生成）告知Senz服务器。</p>
+
+            <div class="highlight highlight-source-swift"><pre><span class="pl-c">// Swift</span>
+            <span class="pl-k">if</span> SZSenz<span class="pl-k">.</span>isRegistered {
+            <span class="pl-c">// 已经成功注册</span>
+            } <span class="pl-k">else</span> {
+            <span class="pl-c">// 在Senz服务器上注册设备</span>
+            SZSenz<span class="pl-k">.</span>registerDevice(appID: <span class="pl-s"><span class="pl-pds">"</span>xxxxxxxx<span class="pl-pds">"</span></span>, completion: { (succeeded, err) <span class="pl-k">in</span>
+            <span class="pl-c">// 检查succeeded变量得知是否成功注册</span>
+            }
+            }</pre></div>
+
+            <div class="highlight highlight-source-objc"><pre><span class="pl-c">// Objective-C</span>
+            <span class="pl-k">if</span> (SZSenz.isRegistered) {
+            <span class="pl-c">// 已经成功注册</span>
+            } <span class="pl-k">else</span> {
+            <span class="pl-c">// 在Senz服务器上注册设备</span>
+            [SZSenz <span class="pl-c1">registerDeviceWithAppID:</span><span class="pl-s"><span class="pl-pds">@"</span>xxxxxxxx<span class="pl-pds">"</span></span> <span class="pl-c1">completion:</span>^(<span class="pl-k">BOOL</span> succeeded, <span class="pl-c1">NSError</span> * _Nullable err) {
+            <span class="pl-c">// 检查succeeded变量得知是否成功注册</span>
+            }];
+            }</pre></div>
+
+            <p>一旦注册成功，Senz SDK会将注册信息保存在<code>NSUserDefaults</code>中。使用<code>SZUserDefault</code>类来查询注册信息：</p>
+
+            <div class="highlight highlight-source-swift"><pre><span class="pl-c">// Swift and Objective-C</span>
+            SZUserDefault<span class="pl-k">.</span>deviceUUID     <span class="pl-c">// 设备ID</span>
+            SZUserDefault<span class="pl-k">.</span>appID          <span class="pl-c">// 应用ID</span>
+            SZUserDefault<span class="pl-k">.</span>userID         <span class="pl-c">// 用户ID</span>
+            SZUserDefault<span class="pl-k">.</span>installationID <span class="pl-c">// 本次安装ID</span></pre></div>
+
+            <h3>
+            <a id="user-content-22-启动和停止服务" class="anchor" href="#22-%E5%90%AF%E5%8A%A8%E5%92%8C%E5%81%9C%E6%AD%A2%E6%9C%8D%E5%8A%A1" aria-hidden="true"><span class="octicon octicon-link"></span></a>2.2 启动和停止服务</h3>
+
+            <p><code>SZSenz</code>类是一个单例类，它提供了Senz服务的主要接口。获取<code>SZSenz</code>单例：</p>
+
+            <div class="highlight highlight-source-swift"><pre><span class="pl-c">// Swift</span>
+            <span class="pl-k">let</span> senz <span class="pl-k">=</span> SZSenz<span class="pl-k">.</span>sharedInstance</pre></div>
+
+            <div class="highlight highlight-source-objc"><pre><span class="pl-c">// Objective-C</span>
+            SZSenz *senz = SZSenz.sharedInstance;</pre></div>
+
+            <p>默认情况下Senz服务是停止状态的，除占用少量内存外，不消耗其他系统资源。启动和停止Senz服务：</p>
+
+            <div class="highlight highlight-source-swift"><pre><span class="pl-c">// Swift</span>
+            senz<span class="pl-k">.</span>startService() <span class="pl-c">// 启动服务</span>
+            <span class="pl-k">...</span>
+            senz<span class="pl-k">.</span>stopService()  <span class="pl-c">// 停止服务</span></pre></div>
+
+            <div class="highlight highlight-source-objc"><pre><span class="pl-c">// Objective-C</span>
+            [senz <span class="pl-c1">startService</span>]; <span class="pl-c">// 启动服务</span>
+            ...
+            [senz <span class="pl-c1">stopService</span>];  <span class="pl-c">// 停止服务</span></pre></div>
+
+            <p>Senz服务启动后，客户端程序即便进入系统后台，程序代码仍然可以在后台继续维持执行。</p>
+
+            <h2>
+            <a id="user-content-3-使用服务" class="anchor" href="#3-%E4%BD%BF%E7%94%A8%E6%9C%8D%E5%8A%A1" aria-hidden="true"><span class="octicon octicon-link"></span></a>3. 使用服务</h2>
+
+            <h3>
+            <a id="user-content-31-获取地理位置" class="anchor" href="#31-%E8%8E%B7%E5%8F%96%E5%9C%B0%E7%90%86%E4%BD%8D%E7%BD%AE" aria-hidden="true"><span class="octicon octicon-link"></span></a>3.1 获取地理位置</h3>
+
+            <p><code>SZLocationData</code>数据结构的内容：</p>
+
+            <div class="highlight highlight-source-swift"><pre><span class="pl-c">// Swift</span>
+            <span class="pl-k">public</span> <span class="pl-k">final</span> <span class="pl-k">class</span> SZLocationData {
+            <span class="pl-c">// 数据获取时间</span>
+            <span class="pl-k">public</span> <span class="pl-k">let</span> timestamp: NSDate
+            <span class="pl-c">// 经纬度坐标</span>
+            <span class="pl-k">public</span> <span class="pl-k">let</span> coordinate: CLLocationCoordinate2D
+            <span class="pl-c">// 海拔</span>
+            <span class="pl-k">public</span> <span class="pl-k">let</span> altitude: CLLocationDistance
+            <span class="pl-c">// 精度半径</span>
+            <span class="pl-k">public</span> <span class="pl-k">var</span> accuracyRadius: CLLocationAccuracy
+            <span class="pl-c">// 行进速度向量</span>
+            <span class="pl-k">public</span> <span class="pl-k">let</span> velocity: (spped: CLLocationSpeed, course: CLLocationDirection)
+            }</pre></div>
+
+            <div class="highlight highlight-source-objc"><pre><span class="pl-c">// Objective-C</span>
+            <span class="pl-k">@interface</span> <span class="pl-en">SZLocationData</span> : <span class="pl-e">NSObject</span>
+            <span class="pl-c">// 数据获取时间</span>
+            <span class="pl-k">@property</span> (<span class="pl-k">nonatomic</span>, <span class="pl-k">readonly</span>) <span class="pl-c1">NSDate</span> * __nonnull timestamp;
+            <span class="pl-c">// 经纬度坐标</span>
+            <span class="pl-k">@property</span> (<span class="pl-k">nonatomic</span>, <span class="pl-k">readonly</span>) CLLocationCoordinate2D coordinate;
+            <span class="pl-c">// 海拔</span>
+            <span class="pl-k">@property</span> (<span class="pl-k">nonatomic</span>, <span class="pl-k">readonly</span>) CLLocationDistance altitude;
+            <span class="pl-c">// 精度半径</span>
+            <span class="pl-k">@property</span> (<span class="pl-k">nonatomic</span>, <span class="pl-k">readonly</span>) CLLocationAccuracy accuracyRadius;
+            <span class="pl-k">@end</span></pre></div>
+
+            <p>Senz SDK能够周期性获取当前地理位置，可以通过监听<code>SZDidCollectLocationData</code>通知来获知：</p>
+
+            <div class="highlight highlight-source-swift"><pre><span class="pl-c">// Swift</span>
+            <span class="pl-k">let</span> center <span class="pl-k">=</span> NSNotificationCenter<span class="pl-k">.</span>defaultCenter()
+            <span class="pl-k">let</span> queue <span class="pl-k">=</span> NSOperationQueue<span class="pl-k">.</span>mainQueue()
+            center<span class="pl-k">.</span>addObserverForName(SZDidCollectLocationData, object: <span class="pl-c1">nil</span>, queue: queue) { note <span class="pl-k">in</span>
+            <span class="pl-k">let</span> locationData <span class="pl-k">=</span> note<span class="pl-k">.</span>userInfo<span class="pl-k">!</span>[kSZLocationData] <span class="pl-k">as!</span> SZLocationData
+            <span class="pl-c">// 收到地理位置更新：locationData</span>
+            }</pre></div>
+
+            <div class="highlight highlight-source-objc"><pre><span class="pl-c">// Objective-C</span>
+            <span class="pl-c1">NSNotificationCenter</span> *center = [<span class="pl-c1">NSNotificationCenter</span> <span class="pl-c1">defaultCenter</span>];
+            <span class="pl-c1">NSOperationQueue</span> *queue = [<span class="pl-c1">NSOperationQueue</span> <span class="pl-c1">mainQueue</span>];
+            [center <span class="pl-c1">addObserverForName:</span>SZDidCollectLocationData <span class="pl-c1">object:</span><span class="pl-c1">nil</span> <span class="pl-c1">queue:</span>queue <span class="pl-c1">usingBlock:</span>^(<span class="pl-c1">NSNotification</span> * _Nonnull note) {
+            SZLocationData *locationData = (SZLocationData *) note.<span class="pl-smi">userInfo</span>[<span class="pl-c1">kSZLocationData</span>];
+            <span class="pl-c">// 收到地理位置更新：locationData</span>
+            }];</pre></div>
+
+            <p>数据更新周期设定：</p>
+
+            <div class="highlight highlight-source-swift"><pre><span class="pl-c">// Swift and Objective-C</span>
+            senz<span class="pl-k">.</span>dataCollector<span class="pl-k">.</span>periodInMinutes <span class="pl-k">=</span> <span class="pl-c1">3</span><span class="pl-k">.</span><span class="pl-c1">0</span> <span class="pl-c">// 每隔3分钟更新一次</span></pre></div>
+
+            <p>也可以快速同步查询最近一次地理位置：</p>
+
+            <div class="highlight highlight-source-swift"><pre><span class="pl-c">// Swift</span>
+            <span class="pl-k">if</span> <span class="pl-k">let</span> location <span class="pl-k">=</span> senz<span class="pl-k">.</span>dataCollector<span class="pl-k">.</span>latestLocation {
+            <span class="pl-c">// location是最近一次更新的地理位置</span>
+            }</pre></div>
+
+            <div class="highlight highlight-source-objc"><pre><span class="pl-c">// Objective-C</span>
+            CLLocation *location = senz.dataCollector.latestLocation;
+            <span class="pl-k">if</span> (location != <span class="pl-c1">nil</span>) {
+            <span class="pl-c">// location是最近一次更新的地理位置</span>
+            }</pre></div>
+
+            <h3>
+            <a id="user-content-32-监听senz事件senz-event" class="anchor" href="#32-%E7%9B%91%E5%90%ACsenz%E4%BA%8B%E4%BB%B6senz-event" aria-hidden="true"><span class="octicon octicon-link"></span></a>3.2 监听Senz事件（Senz Event）</h3>
+
+            <p>Senz事件指用户发生的事件，如某个时间段，用户在看电影或者逛商场。Senz事件的可能类型有：商圈工作中、学校工作中、学校上课中、户外锻炼、室内锻炼、在餐厅吃饭、 旅游、郊游、逛街、聚会、看电影、展览会、演唱会、音乐会、戏剧。
+            <code>SZSenzEvent</code>类的结构：</p>
+
+            <div class="highlight highlight-source-swift"><pre><span class="pl-c">// Swift</span>
+            <span class="pl-k">public</span> <span class="pl-k">final</span> <span class="pl-k">class</span> SZSenzEvent {
+            <span class="pl-k">public</span> <span class="pl-k">let</span> startTime: NSDate   <span class="pl-c">// 事件开始时间</span>
+            <span class="pl-k">public</span> <span class="pl-k">let</span> endTime: NSDate     <span class="pl-c">// 事件结束时间</span>
+            <span class="pl-k">public</span> <span class="pl-k">let</span> eventType: <span class="pl-c1">String</span>   <span class="pl-c">// 事件类型</span>
+            <span class="pl-k">public</span> <span class="pl-k">let</span> probability: <span class="pl-c1">Double</span> <span class="pl-c">// 可能性，取值0.0-1.0</span>
+            }</pre></div>
+
+            <div class="highlight highlight-source-objc"><pre><span class="pl-c">// Objective-C</span>
+            <span class="pl-k">@interface</span> <span class="pl-en">SZSenzEvent</span> : <span class="pl-e">NSObject</span>
+            <span class="pl-c">// 事件开始时间</span>
+            <span class="pl-k">@property</span> (<span class="pl-k">nonatomic</span>, <span class="pl-k">readonly</span>) <span class="pl-c1">NSDate</span> * __nonnull startTime;
+            <span class="pl-c">// 事件结束时间</span>
+            <span class="pl-k">@property</span> (<span class="pl-k">nonatomic</span>, <span class="pl-k">readonly</span>) <span class="pl-c1">NSDate</span> * __nonnull endTime;
+            <span class="pl-c">// 事件类型</span>
+            <span class="pl-k">@property</span> (<span class="pl-k">nonatomic</span>, <span class="pl-k">readonly</span>, <span class="pl-k">copy</span>) <span class="pl-c1">NSString</span> * __nonnull eventType;
+            <span class="pl-c">// 可能性，取值0.0-1.0</span>
+            <span class="pl-k">@property</span> (<span class="pl-k">nonatomic</span>, <span class="pl-k">readonly</span>) <span class="pl-k">double</span> probability;
+            <span class="pl-k">@end</span></pre></div>
+
+            <p>当Senz服务开启时，可以通过下面的接口来监听Senz事件：</p>
+
+            <div class="highlight highlight-source-swift"><pre><span class="pl-c">// Swift</span>
+            <span class="pl-c">// 开始监听</span>
+            senz<span class="pl-k">.</span>startObservingSenzEvent() { events <span class="pl-k">in</span>
+            <span class="pl-c">// 收到新事件</span>
+            }
+            <span class="pl-k">...</span>
+            <span class="pl-c">// 停止监听</span>
+            senz<span class="pl-k">.</span>stopObservingSenzEvent()</pre></div>
+
+            <div class="highlight highlight-source-objc"><pre><span class="pl-c">// Objective-C</span>
+            <span class="pl-c">// 开始监听</span>
+            [senz <span class="pl-c1">startObservingSenzEvent:</span>^(<span class="pl-c1">NSArray</span>&lt;SZSenzEvent *&gt; * _Nonnull events) {
+            <span class="pl-c">// 收到新事件</span>
+            }];
+            ...
+            <span class="pl-c">// 停止监听</span>
+            [senz <span class="pl-c1">stopObservingSenzEvent</span>];</pre></div>
+
+            <p>开启监听后，也可以通过<code>NSNotificationCenter</code>来监听<code>SZDidReceiveSenzEvents</code>事件来获知Senz事件。事件保存在<code>NSNotification</code>的<code>userInfo</code>属性中，通过键<code>kSZSenzEvents</code>来获得<code>SZSenzEvent</code>数组。</p>
+
+            <h3>
+            <a id="user-content-33-监听homeoffice状态" class="anchor" href="#33-%E7%9B%91%E5%90%AChomeoffice%E7%8A%B6%E6%80%81" aria-hidden="true"><span class="octicon octicon-link"></span></a>3.3 监听Home/Office状态</h3>
+
+            <p><code>SZHomeOfficeStatus</code>类的结构：</p>
+
+            <div class="highlight highlight-source-swift"><pre><span class="pl-c">// Swift</span>
+            <span class="pl-k">public</span> <span class="pl-k">final</span> <span class="pl-k">class</span> SZHomeOfficeStatus {
+            <span class="pl-k">public</span> <span class="pl-k">enum</span> SZHomeOfficeStatusType {
+            <span class="pl-k">case</span> Unknown        <span class="pl-c">// 未知状态</span>
+            <span class="pl-k">case</span> ArrivingHome   <span class="pl-c">// 即将到家</span>
+            <span class="pl-k">case</span> LeavingHome    <span class="pl-c">// 即将离开家</span>
+            <span class="pl-k">case</span> ArrivingOffice <span class="pl-c">// 即将到达办公室</span>
+            <span class="pl-k">case</span> LeavingOffice  <span class="pl-c">// 即将离开办公室</span>
+            <span class="pl-k">case</span> GoingHome      <span class="pl-c">// 回家路上</span>
+            <span class="pl-k">case</span> GoingOffice    <span class="pl-c">// 前往办公室路上</span>
+            <span class="pl-k">case</span> Undefined      <span class="pl-c">// 尚未在此SDK版本中定义的状态</span>
+            }
+            <span class="pl-k">public</span> <span class="pl-k">let</span> type: SZHomeOfficeStatusType <span class="pl-c">// 状态类型</span>
+            <span class="pl-k">public</span> <span class="pl-k">let</span> timestamp: NSDate            <span class="pl-c">// 状态发生时间</span>
+            <span class="pl-k">public</span> <span class="pl-k">let</span> expireTime: NSDate           <span class="pl-c">// 状态过期时间</span>
+            }</pre></div>
+
+            <div class="highlight highlight-source-objc"><pre><span class="pl-c">// Objective-C</span>
+            <span class="pl-k">@interface</span> <span class="pl-en">SZHomeOfficeStatus</span> : <span class="pl-e">NSObject</span>
+            <span class="pl-c">// 状态类型</span>
+            <span class="pl-k">@property</span> (<span class="pl-k">nonatomic</span>, <span class="pl-k">readonly</span>) <span class="pl-k">enum</span> SZHomeOfficeStatusType type;
+            <span class="pl-c">// 状态发生时间</span>
+            <span class="pl-k">@property</span> (<span class="pl-k">nonatomic</span>, <span class="pl-k">readonly</span>) <span class="pl-c1">NSDate</span> * __nonnull timestamp;
+            <span class="pl-c">// 状态过期时间</span>
+            <span class="pl-k">@property</span> (<span class="pl-k">nonatomic</span>, <span class="pl-k">readonly</span>) <span class="pl-c1">NSDate</span> * __nonnull expireTime;
+            <span class="pl-k">@end</span>
+
+            <span class="pl-k">typedef</span> <span class="pl-en">SWIFT_ENUM</span>(<span class="pl-k">NSInteger</span>, SZHomeOfficeStatusType) {
+            SZHomeOfficeStatusTypeUnknown = -<span class="pl-c1">1</span>,       <span class="pl-c">// 未知状态</span>
+            SZHomeOfficeStatusTypeArrivingHome = <span class="pl-c1">0</span>,   <span class="pl-c">// 即将到家</span>
+            SZHomeOfficeStatusTypeLeavingHome = <span class="pl-c1">1</span>,    <span class="pl-c">// 即将离开家</span>
+            SZHomeOfficeStatusTypeArrivingOffice = <span class="pl-c1">2</span>, <span class="pl-c">// 即将到达办公室</span>
+            SZHomeOfficeStatusTypeLeavingOffice = <span class="pl-c1">3</span>,  <span class="pl-c">// 即将离开办公室</span>
+            SZHomeOfficeStatusTypeGoingHome = <span class="pl-c1">4</span>,      <span class="pl-c">// 回家路上</span>
+            SZHomeOfficeStatusTypeGoingOffice = <span class="pl-c1">5</span>,    <span class="pl-c">// 前往办公室路上</span>
+            SZHomeOfficeStatusTypeUndefined = <span class="pl-c1">6</span>,      <span class="pl-c">// 尚未在此SDK版本中定义的状态</span>
+            };</pre></div>
+
+            <p>当Senz服务开启时，可以通过下面的接口来监听Home/Office状态变化：</p>
+
+            <div class="highlight highlight-source-swift"><pre><span class="pl-c">// Swift</span>
+            <span class="pl-c">// 开始监听</span>
+            senz<span class="pl-k">.</span>startObservingHomeOfficeStatus() { status <span class="pl-k">in</span>
+            <span class="pl-c">// 收到新状态</span>
+            }
+            <span class="pl-k">...</span>
+            <span class="pl-c">// 停止监听</span>
+            senz<span class="pl-k">.</span>stopObservingHomeOfficeStatus()</pre></div>
+
+            <div class="highlight highlight-source-objc"><pre><span class="pl-c">// Objective-C</span>
+            <span class="pl-c">// 开始监听</span>
+            [senz <span class="pl-c1">startObservingHomeOfficeStatus:</span>^(SZHomeOfficeStatus * _Nonnull status) {
+            <span class="pl-c">// 收到新状态</span>
+            }];
+            ...
+            <span class="pl-c">// 停止监听</span>
+            [senz <span class="pl-c1">stopObservingHomeOfficeStatus</span>];</pre></div>
+
+            <p>开启监听后，也可以通过<code>NSNotificationCenter</code>来监听<code>SZDidReceiveHomeOfficeStatus</code>事件来获知Home/Office状态变化。新的状态保存在<code>NSNotification</code>的<code>userInfo</code>属性中，通过键<code>kSZHomeOfficeStatus</code>来获得<code>SZHomeOfficeStatus</code>对象。</p>
+
+            </div>
+
+            </div>
+            </div>
+        </div>
 
     </div>
 </div>

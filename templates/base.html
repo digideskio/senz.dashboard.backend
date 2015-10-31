@@ -17,7 +17,7 @@
   <script src="{{ url_for('static', filename='lib/jquery-2.1.4.min.js') }}"></script>
   <script src="{{ url_for('static', filename='lib/echarts-2.2.7/build/dist/echarts.js') }}"></script>
 {#  <link rel="stylesheet" href="{{ url_for('static', filename='styles/bootstrap.min.css') }}">#}
-  <link rel="stylesheet" href="{{ url_for('static', filename='styles/login.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles/account.css') }}">
 {#  <script src="{{ url_for('static', filename='scripts/dashboard.js') }}"></script>#}
   <script>
       require.config({
@@ -54,7 +54,7 @@
    {% block main_nav %}
    <nav class="main-nav">
      <ul class="list">
-       <li class="item"><a href="{{ url_for('dashboard.show') }}">统计分析</a></li>
+       <li class="item"><a href="{{ url_for('dashboard_bp.show') }}">统计分析</a></li>
        <li class="item"><a href="{{ url_for('integration.show') }}">SDK集成</a></li>
        <li class="item"><a href="{{ url_for('settings.show') }}">设置</a></li>
        <li class="item"><a href="{{ url_for('panel.show') }}">调试</a></li>
@@ -69,14 +69,14 @@
             {{ username }}
           </button>
           <ul class="list">
-            <li class="item"><a href="{{ url_for('login_view.logout') }}">注销</a></li>
+            <li class="item"><a href="{{ url_for('accounts_bp.logout') }}">注销</a></li>
           </ul>
         </div>
    </div>
    {% else %}
     <ul class="list">
-        <li class="item"><a href="{{ url_for('login_view.login') }}">登录</a></li>
-        <li class="item"><a href="{{ url_for('login_view.signup') }}">注册</a></li>
+        <li class="item"><a href="{{ url_for('accounts_bp.login') }}">登录</a></li>
+        <li class="item"><a href="{{ url_for('accounts_bp.signup') }}">注册</a></li>
     </ul>
    {% endif %}
    </div>
@@ -87,17 +87,18 @@
  {% block navigation %}
    <div id="sidebar" class="sidebar">
    <ul id="sidebar-nav">
-    <li class="active"><a href="{{ url_for('dashboard.show') }}">概览</a></li>
+    <li class="active"><a href="{{ url_for('dashboard_bp.show') }}">概览</a></li>
     <li class="has-sub-nav"> <a href="#">用户群体</a>
      <ul class="sub-nav">
-      <li class="<% (option.data.cur_page == profile ? 'cative' : '') %>"><a href="{{ url_for('dashboard.profile') }}">用户属性</a></li>
-      <li><a href="{{ url_for('dashboard.interest') }}">兴趣爱好</a></li>
-      <li><a href="{{ url_for('dashboard.marriage') }}">婚育情况</a></li>
-      <li><a href="{{ url_for('dashboard.consumption') }}">消费情况</a></li>
-      <li><a href="{{ url_for('dashboard.location') }}">地理位置</a></li>
+      <li class="<% (option.data.cur_page == profile ? 'cative' : '') %>">
+          <a href="{{ url_for('dashboard_bp.profile') }}">用户属性</a></li>
+      <li><a href="{{ url_for('dashboard_bp.interest') }}">兴趣爱好</a></li>
+      <li><a href="{{ url_for('dashboard_bp.marriage') }}">婚育情况</a></li>
+      <li><a href="{{ url_for('dashboard_bp.consumption') }}">消费情况</a></li>
+      <li><a href="{{ url_for('dashboard_bp.location') }}">地理位置</a></li>
      </ul>
     </li>
-    <li><a href="{{ url_for('dashboard.motion') }}">情境</a></li>
+    <li><a href="{{ url_for('dashboard_bp.motion') }}">情境</a></li>
    </ul>
   </div>
  {% endblock %}
