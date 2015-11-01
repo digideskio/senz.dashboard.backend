@@ -225,7 +225,7 @@ def location():
                            option=json.dumps(location))
 
 
-@dashboard_bp.route('/dashboard/motion')
+@dashboard_bp.route('/dashboard/context')
 def motion():
     app_id = session.get('app_id', None)
     app_list = []
@@ -239,18 +239,25 @@ def motion():
     home_office_type = ['contextAtWork', 'contextAtHome', 'contextCommutingWork', 'contextCommutingHome']
     result_dict = get_query_list('5621fb0f60b27457e863fabb', 'home_office_status', 'event')
     home_office_list = [] if 'home_office_status' not in result_dict else result_dict['home_office_status']
-    list_tmp = map(lambda x: map(lambda y: y[1], sorted(x.items(), key=lambda key: int(key[0][6:]))), home_office_list)
+    event_list = [] if 'event' not in result_dict else result_dict['event']
+    event_list = map(lambda x: server.translate_context(x), filter(lambda x: x not in home_office_type, event_list))
+    event_tmp = sorted(map(lambda x: (x, event_list.count(x)), set(event_list)), key=lambda item: -item[1])
+    home_office_tmp = map(lambda x: map(lambda y: y[1], sorted(x.items(), key=lambda key: int(key[0][6:]))), home_office_list)
     series = map(lambda x: list(x), zip(*map(lambda x:
                                              [x.count(home_office_type[i]) for i in xrange(len(home_office_type))],
-                                             zip(*list_tmp))))
-    data = {"category": home_office_type, "xAxis": list(range(24)), "series": series}
-    home_office_status = {
+                                             zip(*home_office_tmp))))
+    home_office = {"category": home_office_type, "xAxis": list(range(24)), "series": series}
+    event = {"category": list(zip(*event_tmp)[0]), "series": list(zip(*event_tmp)[1])}
+    context = {
         'errcode': 0,
         'errmsg': 'ok',
-        'data': data
+        'data': {
+            'home_office': home_office,
+            'event': event
+        }
     }
     return render_template('dashboard/scene.html',
-                           option=json.dumps(home_office_status),
+                           option=json.dumps(context),
                            username=session.get('username'),
                            app_id=app_id,
                            app_list=app_list)
