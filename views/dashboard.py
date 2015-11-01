@@ -31,7 +31,6 @@ def show():
         'errmsg': 'ok',
         'data': data
     }
-
     return render_template('index.html',
                            username=session.get('username'),
                            app_id=app_id,
@@ -205,14 +204,25 @@ def location():
         server.cache.set('location', result_dict, timeout=10*60)
     provice_list = [] if 'province' not in result_dict else result_dict['province']
     city_list = [] if 'city' not in result_dict else result_dict['city']
-    provice_tmp = map(lambda x: list(x), zip(*map(lambda x: [x, provice_list.count(x)], set(provice_list))))
-    city_tmp = map(lambda x: list(x), zip(*map(lambda x: [x, city_list.count(x)], set(city_list))))
+
+    province = map(lambda x: {'name': x[0], 'value': x[1]},
+                   sorted(map(lambda x: (x, provice_list.count(x)), set(provice_list)), key=lambda x: -x[1]))
+    city = map(lambda x: {'name': x[0], 'value': x[1]},
+               sorted(map(lambda x: (x, city_list.count(x)), set(city_list)), key=lambda x: -x[1]))
+    print(province)
+    location = {
+        'errcode': 0,
+        'errmsg': 'ok',
+        'data': {
+            'province': province,
+            'city': city
+        }
+    }
     return render_template('dashboard/user-location.html',
                            username=session.get('username'),
                            app_id=app_id,
                            app_list=app_list,
-                           provice_tmp=provice_tmp[0][1],
-                           city_tmp=city_tmp[0][1])
+                           option=json.dumps(location))
 
 
 @dashboard_bp.route('/dashboard/motion')

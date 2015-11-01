@@ -19,7 +19,6 @@ def real():
 
 
 @panel.route('/panel/debug', methods=['GET', 'POST'])
-@auth.login_required
 def show():
     app_id = session.get('app_id', None)
     app_list = []

@@ -5,6 +5,11 @@
     <div class="relative" style="padding: 5px;">
       <div id="sceneMap" style="height:600px;border:1px solid #ccc;"></div>
     </div>
+
+    <div class="relative" style="padding: 5px;">
+      <div id="eventMap" style="height:600px;border:1px solid #ccc;"></div>
+    </div>
+
    </div>
   </div>
 <script>
@@ -77,14 +82,86 @@ var profile = JSON.parse({{ option|tojson }});
     };
 
     require(['echarts', 'echarts/chart/bar', 'echarts/chart/line', 'echarts/chart/map'],
-    function(ec) {
+        function(ec) {
 
-        if(!document.getElementById('sceneMap')){
-            return;
-        }
-        var sceneMap = ec.init(document.getElementById('sceneMap'));
-        sceneMap.setOption(sceneMapOption);
-    });
+            if(!document.getElementById('sceneMap')){
+                return;
+            }
+            var sceneMap = ec.init(document.getElementById('sceneMap'));
+            sceneMap.setOption(sceneMapOption);
+        });
+
+        require.config({
+          paths: {
+              echarts: './public/lib/echarts-2.2.7/build/dist'
+          }
+      });
+      var eventMapOption = {
+          title : {
+              text: '事件频次',
+              subtext: ''
+          },
+          tooltip: {
+              trigger: 'axis'
+          },
+          legend: {
+              show: false,
+              data: ['蒸发量']
+          },
+          toolbox: {
+              show: true,
+              feature: {
+                  mark: {
+                      show: true
+                  },
+                  dataView: {
+                      show: true,
+                      readOnly: false
+                  },
+                  magicType: {
+                      show: true,
+                      type: ['line', 'bar']
+                  },
+                  restore: {
+                      show: true
+                  },
+                  saveAsImage: {
+                      show: true
+                  }
+              }
+          },
+          calculable: true,
+          xAxis: [{
+              type: 'category',
+              data: ["商圈工作中", "学校上课中 ", "学校工作中 ", "户外锻炼", "室内锻炼", "在餐厅吃饭", "郊游 ", "逛街", "看电影", "演唱会", "聚会", "展览 ", "戏剧", "音乐会 ", "旅游"],
+              show: true
+
+          }],
+          yAxis: [{
+              type: 'value',
+              splitArea: {
+                  show: true
+              }
+          }],
+          series: [{
+              name: '事件频次',
+              type: 'bar',
+              data: [20, 49, 70, 232, 256, 77, 136, 162, 126, 200, 64, 33,56,78,50]
+          }]
+      }
+
+      require(['echarts', 'echarts/chart/bar', 'echarts/chart/line', 'echarts/chart/map'],
+      function(ec) {
+          //--- 折柱 ---
+          if(!document.getElementById('eventMap')){
+              return;
+          }
+
+          var eventMap = ec.init(document.getElementById('eventMap'));
+          eventMap.setOption(eventMapOption);
+      })
+
+
 }).call(this);
 </script>
 {% endblock %}

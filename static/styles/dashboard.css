@@ -121,10 +121,10 @@ div,p,h1,h2,h3,h4,h5,h6,ul,dl,ol,li {
 }
 .sort-wrap {
     position: absolute;
-    right: 40px;
-    top: 240px;
+    left: 84%;
+    top: 36%;
     width: 120px;
-    height: 300px;
+    height: 25px;
     /*border: 1px solid #888;*/
 }
 .sort-wrap .nav-list {
