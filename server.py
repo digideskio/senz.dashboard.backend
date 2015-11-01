@@ -18,6 +18,7 @@ app.permanent_session_lifetime = timedelta(hours=1)
 
 cache = SimpleCache()
 
+
 # 动态路由
 app.register_blueprint(panel)
 app.register_blueprint(dashboard_bp)
@@ -46,10 +47,11 @@ def translate_motion(s):
 
 @app.template_filter('translate_interest')
 def translate_interest(s):
-    library = {"jogging": "慢跑", "fitness": "健身", "basketball": "篮球", "football": "足球", "badminton": "羽毛球",
-               "bicycling": " 骑车", "table_tennis": "网球", 'social': "社交", 'online_shopping': "网络购物",
-               'offline_shoppng': "线下购物", 'tech_news': "教育新闻", 'entertainment_news': "娱乐新闻", 'current_news': "时事新闻",
-               'business_news': "商业新闻", 'sports_news': "运动新闻",  'game_news': "游戏新闻", 'study': "学霸", 'gamer': "游戏玩家",
+    library = {"jogging": "慢跑", "fitness": "健身", "basketball": "篮球", "football": "足球",
+               "badminton": "羽毛球", "bicycling": " 骑车", "table_tennis": "网球", 'social': "社交",
+               'online_shopping': "网络购物", 'offline_shoppng': "线下购物", 'tech_news': "教育新闻",
+               'entertainment_news': "娱乐新闻", 'current_news': "时事新闻", 'business_news': "商业新闻",
+               'sports_news': "运动新闻",  'game_news': "游戏新闻", 'study': "学霸", 'gamer': "游戏玩家",
                'health': "健康", 'sports_show': "体育节目", 'game_show': "游戏节目", "variety_show": "综艺节目",
                'tvseries_show': "电视剧", 'acg': "动漫", 'indoorsman': "宅男", '': ''}
     return library[s]

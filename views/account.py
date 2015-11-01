@@ -18,18 +18,20 @@ def login():
         return redirect(url_for('index'))
     if request.method == 'POST':
         user = Developer()
+        print(user.get_session_token())
         username = request.form['username']
         password = request.form['password']
         try:
             user.login(username, password)
             session['username'] = username
-            session['user_id'] = user.id
+            # session['user_id'] = user.id
             session['session_token'] = user.get_session_token()
+            print(user.get_session_token())
         except LeanCloudError:
-            return render_template('account/account.html')
+            return render_template('account/login.html')
 
         return redirect(url_for('index'))
-    return render_template('account/account.html')
+    return render_template('account/login.html')
 
 
 @accounts_bp.route('/logout', methods=['GET', 'POST'])
@@ -48,7 +50,8 @@ def logout():
 @accounts_bp.route('/signup', methods=['GET', 'POST'])
 def signup():
     if session.get('username'):
-        return redirect(url_for('dashboard_bp.show'))
+        username = session.get('username')
+        return redirect(url_for('dashboard_bp.show'), username)
     if request.method == 'POST':
         username = request.form['username']
         email = request.form['email']
