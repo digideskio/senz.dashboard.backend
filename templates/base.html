@@ -33,25 +33,6 @@
  {% block header %}
    <div id="header" class="header">
    <h2 class="site-title"><a href="/">Senz</a></h2>
-   {% block app_list %}
-    <div class="inline-block">
-      <select name="select_app" class="select_app" id="select_app" onchange="post_url()">
-          {% if app_list %}
-              <option value='5621fb0f60b27457e863fabb' id="qfv0xYn7SjQ4W23TeyeqhsiH19A">Demo</option>
-              {% for item in app_list %}
-                  {% if item['app_id'] == app_id %}
-                    <option value={{ item['app_id'] }} id={{ item['app_key'] }} selected="selected">{{ item['app_name'] }}</option>
-                  {% else %}
-                    <option value={{ item['app_id'] }} id={{ item['app_key'] }}>{{ item['app_name'] }}</option>
-                  {% endif %}
-              {% endfor %}
-          {% else %}
-              <option value='5621fb0f60b27457e863fabb' id="qfv0xYn7SjQ4W23TeyeqhsiH19A">Demo</option>
-          {% endif %}
-      </select>
-   </div>
-   {% endblock %}
-
    {% block main_nav %}
    <nav class="main-nav">
      <ul class="list">
@@ -59,6 +40,27 @@
        <li class="item"><a href="{{ url_for('integration.show') }}">SDK集成</a></li>
        <li class="item"><a href="{{ url_for('settings.show') }}">设置</a></li>
        <li class="item"><a href="{{ url_for('panel.show') }}">调试</a></li>
+{#       <div class="item">#}
+
+       {% block app_list %}
+        <div class="inline-block">
+          <select name="select_app" class="select_app" id="select_app" onchange="post_url()">
+              {% if app_list %}
+                  <option value='5621fb0f60b27457e863fabb' id="qfv0xYn7SjQ4W23TeyeqhsiH19A">Demo</option>
+                  {% for item in app_list %}
+                      {% if item['app_id'] == app_id %}
+                        <option value={{ item['app_id'] }} id={{ item['app_key'] }} selected="selected">{{ item['app_name'] }}</option>
+                      {% else %}
+                        <option value={{ item['app_id'] }} id={{ item['app_key'] }}>{{ item['app_name'] }}</option>
+                      {% endif %}
+                  {% endfor %}
+              {% else %}
+                  <option value='5621fb0f60b27457e863fabb' id="qfv0xYn7SjQ4W23TeyeqhsiH19A">Demo</option>
+              {% endif %}
+          </select>
+       </div>
+       {% endblock %}
+
      </ul>
    </nav>
 

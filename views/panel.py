@@ -22,6 +22,7 @@ def show():
         server.cache.set('app_list', app_list)
     if not tracker_list:
         tracker_list = developer.get_tracker_of_app(app_id)
+        print(tracker_list)
         server.cache.set('tracker_list', tracker_list)
 
     if request.method == 'POST':

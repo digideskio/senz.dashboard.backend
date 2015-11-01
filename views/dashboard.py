@@ -22,7 +22,7 @@ def show():
 
     result_dict = server.cache.get('event')
     if not result_dict:
-        result_dict = get_query_list('5621fb0f60b27457e863fabb', 'event')
+        result_dict = get_query_list(app_id, 'event')
         server.cache.set('event', result_dict, timeout=10*60)
     event_list = [] if 'event' not in result_dict else result_dict['event']
     event_list = map(lambda x: server.translate_context(x), event_list)
@@ -55,7 +55,7 @@ def profile():
 
     result_dict = server.cache.get('profile')
     if not result_dict:
-        result_dict = get_query_list('5621fb0f60b27457e863fabb', 'gender', 'age', 'occupation', 'field')
+        result_dict = get_query_list(app_id, 'gender', 'age', 'occupation', 'field')
         server.cache.set('profile', result_dict, timeout=10*60)
     gender_list = [] if 'gender' not in result_dict else result_dict['gender']
     age_list = [] if 'age' not in result_dict else result_dict['age']
@@ -104,8 +104,11 @@ def interest():
     interest_list = [] if 'interest' not in result_dict else result_dict['interest']
     interest_list = map(lambda x: server.translate_interest(x), interest_list)
     interest_tmp = sorted(map(lambda x: (x, interest_list.count(x)), set(interest_list)), key=lambda item: -item[1])
-    data = map(lambda x: {'rank': x, 'name': interest_tmp[x-1][0]}, xrange(1, 9))
-    data.append({'rank': 9, 'name': '...'})
+    if interest_tmp:
+        data = map(lambda x: {'rank': x, 'name': interest_tmp[x-1][0]}, xrange(1, 9))
+        data.append({'rank': 9, 'name': '...'})
+    else:
+        data = []
     interest = {
         'errcode': 0,
         'errmsg': 'ok',
@@ -133,7 +136,7 @@ def marriage():
 
     result_dict = server.cache.get('marriage')
     if not result_dict:
-        result_dict = get_query_list('5621fb0f60b27457e863fabb', 'marriage', 'pregnant')
+        result_dict = get_query_list(app_id, 'marriage', 'pregnant')
         server.cache.set('marriage', result_dict, timeout=10*60)
     marriage_list = [] if 'marriage' not in result_dict else result_dict['marriage']
     pregnant_list = [] if 'pregnant' not in result_dict else result_dict['pregnant']
@@ -169,7 +172,7 @@ def consumption():
         server.cache.set('app_list', app_list)
     result_dict = server.cache.get('consumption')
     if not result_dict:
-        result_dict = get_query_list('5621fb0f60b27457e863fabb', 'consumption', 'has_car', 'has_pet')
+        result_dict = get_query_list(app_id, 'consumption', 'has_car', 'has_pet')
         server.cache.set('consumption', result_dict, timeout=10*60)
     consumption_list = [] if 'consumption' not in result_dict else result_dict['consumption']
     car_list = [] if 'has_car' not in result_dict else result_dict['has_car']
@@ -211,7 +214,7 @@ def location():
 
     result_dict = server.cache.get('location')
     if not result_dict:
-        result_dict = get_query_list('5621fb0f60b27457e863fabb', 'province', 'city')
+        result_dict = get_query_list(app_id, 'province', 'city')
         server.cache.set('location', result_dict, timeout=10*60)
     provice_list = [] if 'province' not in result_dict else result_dict['province']
     city_list = [] if 'city' not in result_dict else result_dict['city']
@@ -250,17 +253,21 @@ def motion():
         server.cache.set('app_list', app_list)
 
     home_office_type = ['contextAtWork', 'contextAtHome', 'contextCommutingWork', 'contextCommutingHome']
-    result_dict = get_query_list('5621fb0f60b27457e863fabb', 'home_office_status', 'event')
+    result_dict = get_query_list(app_id, 'home_office_status', 'event')
+
     home_office_list = [] if 'home_office_status' not in result_dict else result_dict['home_office_status']
     event_list = [] if 'event' not in result_dict else result_dict['event']
+
     event_list = map(lambda x: server.translate_context(x), filter(lambda x: x not in home_office_type, event_list))
     event_tmp = sorted(map(lambda x: (x, event_list.count(x)), set(event_list)), key=lambda item: -item[1])
+
     home_office_tmp = map(lambda x: map(lambda y: y[1], sorted(x.items(), key=lambda key: int(key[0][6:]))), home_office_list)
     series = map(lambda x: list(x), zip(*map(lambda x:
                                              [x.count(home_office_type[i]) for i in xrange(len(home_office_type))],
                                              zip(*home_office_tmp))))
     home_office = {"category": home_office_type, "xAxis": list(range(24)), "series": series}
-    event = {"category": list(zip(*event_tmp)[0]), "series": list(zip(*event_tmp)[1])}
+    event = {"category": list(zip(*event_tmp)[0]), "series": list(zip(*event_tmp)[1])} \
+        if event_tmp else {"category": [], "series": []}
     context = {
         'errcode': 0,
         'errmsg': 'ok',

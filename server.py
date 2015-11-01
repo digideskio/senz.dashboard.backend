@@ -33,6 +33,7 @@ def index():
     if request.method == 'POST':
         app_id = request.form.get('app_id')
         session['app_id'] = app_id
+        cache.clear()
         return redirect(url_for('dashboard_bp.show'))
     if request.method == 'GET':
         return redirect(url_for('dashboard_bp.show'))
