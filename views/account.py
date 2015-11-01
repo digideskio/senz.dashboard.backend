@@ -13,7 +13,7 @@ def get_expiration():
     return datetime.datetime.now() + datetime.timedelta(days=30)
 
 
-@accounts_bp.route('/account', methods=['GET', 'POST'])
+@accounts_bp.route('/login', methods=['GET', 'POST'])
 def login():
     if session.get('session_token'):
         return redirect(url_for('index'))
@@ -36,13 +36,8 @@ def logout():
     developer = Developer()
     developer.session_token = session.get('session_token')
     developer.logout()
-    # developer.session_token = None
-    # session.pop('session_token', None)
-    # session.pop('app_id', None)
     session.clear()
     server.cache.clear()
-    # server.cache.set('app_list', None)
-    # server.cache.set('tracker_list', None)
     return redirect(url_for('index'))
 
 

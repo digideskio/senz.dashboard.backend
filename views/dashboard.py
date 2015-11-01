@@ -9,9 +9,7 @@ dashboard_bp = Blueprint('dashboard_bp', __name__, template_folder='templates')
 
 @dashboard_bp.route('/dashboard')
 def show():
-    # if not session.get('session_token'):
-    #     return redirect(url_for('accounts_bp.login'))
-    app_id = session.get('app_id', None)
+    app_id = session.get('app_id')
     developer = Developer()
     developer.session_token = session.get('session_token')
     username = developer.username()
@@ -42,9 +40,7 @@ def show():
 
 @dashboard_bp.route('/dashboard/profile')
 def profile():
-    # if not session.get('session_token'):
-    #     return redirect(url_for('accounts_bp.login'))
-    app_id = session.get('app_id', None)
+    app_id = session.get('app_id')
     developer = Developer()
     developer.session_token = session.get('session_token')
     username = developer.username()
@@ -86,9 +82,7 @@ def profile():
 
 @dashboard_bp.route('/dashboard/interest')
 def interest():
-    # if not session.get('session_token'):
-    #     return redirect(url_for('accounts_bp.login'))
-    app_id = session.get('app_id', None)
+    app_id = session.get('app_id')
     developer = Developer()
     developer.session_token = session.get('session_token')
     username = developer.username()
@@ -99,7 +93,7 @@ def interest():
 
     result_dict = server.cache.get('interest')
     if not result_dict:
-        result_dict = get_query_list('5621fb0f60b27457e863fabb', 'interest')
+        result_dict = get_query_list(app_id, 'interest')
         server.cache.set('interest', result_dict, timeout=10*60)
     interest_list = [] if 'interest' not in result_dict else result_dict['interest']
     interest_list = map(lambda x: server.translate_interest(x), interest_list)
@@ -123,9 +117,7 @@ def interest():
 
 @dashboard_bp.route('/dashboard/marriage')
 def marriage():
-    # if not session.get('session_token'):
-    #     return redirect(url_for('accounts_bp.login'))
-    app_id = session.get('app_id', None)
+    app_id = session.get('app_id')
     developer = Developer()
     developer.session_token = session.get('session_token')
     username = developer.username()
@@ -160,9 +152,7 @@ def marriage():
 
 @dashboard_bp.route('/dashboard/consumption')
 def consumption():
-    # if not session.get('session_token'):
-    #     return redirect(url_for('accounts_bp.login'))
-    app_id = session.get('app_id', None)
+    app_id = session.get('app_id')
     developer = Developer()
     developer.session_token = session.get('session_token')
     username = developer.username()
@@ -201,9 +191,7 @@ def consumption():
 
 @dashboard_bp.route('/dashboard/location')
 def location():
-    # if not session.get('session_token'):
-    #     return redirect(url_for('accounts_bp.login'))
-    app_id = session.get('app_id', None)
+    app_id = session.get('app_id')
     developer = Developer()
     developer.session_token = session.get('session_token')
     username = developer.username()
@@ -223,7 +211,6 @@ def location():
                    sorted(map(lambda x: (x, provice_list.count(x)), set(provice_list)), key=lambda x: -x[1]))
     city = map(lambda x: {'name': x[0], 'value': x[1]},
                sorted(map(lambda x: (x, city_list.count(x)), set(city_list)), key=lambda x: -x[1]))
-    print(province)
     location = {
         'errcode': 0,
         'errmsg': 'ok',
@@ -241,9 +228,7 @@ def location():
 
 @dashboard_bp.route('/dashboard/context')
 def motion():
-    # if not session.get('session_token'):
-    #     return redirect(url_for('accounts_bp.login'))
-    app_id = session.get('app_id', None)
+    app_id = session.get('app_id')
     developer = Developer()
     developer.session_token = session.get('session_token')
     username = developer.username()

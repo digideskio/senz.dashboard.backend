@@ -8,7 +8,10 @@
     <div id="content" class="content single-content bg-gray" style="margin-top: 40px;">
         <div id="formwrapper">
             <form action="{{ url_for('accounts_bp.login') }}" method="post" name="apLogin" id="apLogin">
-                <div class="title">登录</div>
+                <div class="title clearfix">
+                    <span class="left"><a href="/login">登录</a></span>
+                    <span class="right"><a href="/signup">注册</a></span>
+                </div>
                 <div class="item">
                     <input type="text" placeholder="用户名" name="username" id="username" size="20" maxlength="30" />
                     <br>
