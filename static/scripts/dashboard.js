@@ -18,4 +18,13 @@ $(function(){
         $(".index").addClass("active");
     }
 
+    if (path.indexOf("dashboard") > 0) {
+        $(".nav-dashboard").addClass("active");
+    } else if (path.indexOf("integration") > 0) {
+        $(".nav-integration").addClass("active");
+    } else if (path.indexOf("settings") > 0) {
+        $(".nav-settings").addClass("active");   
+    } else if (path.indexOf("panel") > 0) {
+        $(".nav-panel").addClass("active"); 
+    }
 });

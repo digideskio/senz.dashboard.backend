@@ -2,7 +2,6 @@
 from flask import Blueprint, render_template, json, session, redirect, url_for
 from leancloud import Object, Query, LeanCloudError
 from models import Developer
-import server
 
 dashboard_bp = Blueprint('dashboard_bp', __name__, template_folder='templates')
 
@@ -13,10 +12,10 @@ def get_app_list():
     developer = Developer()
     developer.session_token = session.get('session_token')
     username = developer.username()
-    # app_list = server.cache.get('app_list')
-    # if not app_list:
-    app_list = developer.get_app_list()
-    # server.cache.set('app_list', app_list)
+    app_list = session.get('app_list')
+    if not app_list:
+        app_list = developer.get_app_list()
+        session['app_list'] = app_list
     ret_dict['app_id'] = app_id
     ret_dict['username'] = username
     ret_dict['app_list'] = app_list
@@ -30,12 +29,12 @@ def show():
     username = context_dict['username']
     app_list = context_dict['app_list']
 
-    result_dict = server.cache.get('event')
+    result_dict = session.get('event')
     if not result_dict:
         result_dict = get_query_list(app_id, 'event')
-        server.cache.set('event', result_dict, timeout=10*60)
+        session['event'] = result_dict
     event_list = [] if 'event' not in result_dict else result_dict['event']
-    event_list = map(lambda x: server.translate_context(x), event_list)
+    event_list = map(lambda x: translate_context(x), event_list)
     event_tmp = sorted(map(lambda x: (x, event_list.count(x)), set(event_list)), key=lambda item: -item[1])
     data = map(lambda x: {'rank': x/3+1, 'name': event_tmp[x-1][0]}, xrange(1, len(set(event_tmp))+1))
     event = {
@@ -57,10 +56,10 @@ def profile():
     username = context_dict['username']
     app_list = context_dict['app_list']
 
-    result_dict = server.cache.get('profile')
+    result_dict = session.get('profile')
     if not result_dict:
         result_dict = get_query_list(app_id, 'gender', 'age', 'occupation', 'field')
-        server.cache.set('profile', result_dict, timeout=10*60)
+        session['profile'] = result_dict
     gender_list = [] if 'gender' not in result_dict else result_dict['gender']
     age_list = [] if 'age' not in result_dict else result_dict['age']
     occupation_list = [] if 'occupation' not in result_dict else result_dict['occupation']
@@ -95,12 +94,12 @@ def interest():
     username = context_dict['username']
     app_list = context_dict['app_list']
 
-    result_dict = server.cache.get('interest')
+    result_dict = session.get('interest')
     if not result_dict:
         result_dict = get_query_list(app_id, 'interest')
-        server.cache.set('interest', result_dict, timeout=10*60)
+        session['interest'] = result_dict
     interest_list = [] if 'interest' not in result_dict else result_dict['interest']
-    interest_list = map(lambda x: server.translate_interest(x), interest_list)
+    interest_list = map(lambda x: translate_interest(x), interest_list)
     interest_tmp = sorted(map(lambda x: (x, interest_list.count(x)), set(interest_list)), key=lambda item: -item[1])
     if interest_tmp:
         data = map(lambda x: {'rank': x, 'name': interest_tmp[x-1][0]}, xrange(1, 9))
@@ -126,10 +125,10 @@ def marriage():
     username = context_dict['username']
     app_list = context_dict['app_list']
 
-    result_dict = server.cache.get('marriage')
+    result_dict = session.get('marriage')
     if not result_dict:
         result_dict = get_query_list(app_id, 'marriage', 'pregnant')
-        server.cache.set('marriage', result_dict, timeout=10*60)
+        session['marriage'] = result_dict
     marriage_list = [] if 'marriage' not in result_dict else result_dict['marriage']
     pregnant_list = [] if 'pregnant' not in result_dict else result_dict['pregnant']
 
@@ -157,10 +156,10 @@ def consumption():
     username = context_dict['username']
     app_list = context_dict['app_list']
 
-    result_dict = server.cache.get('consumption')
+    result_dict = session.get('consumption')
     if not result_dict:
         result_dict = get_query_list(app_id, 'consumption', 'has_car', 'has_pet')
-        server.cache.set('consumption', result_dict, timeout=10*60)
+        session['consumption'] = result_dict
     consumption_list = [] if 'consumption' not in result_dict else result_dict['consumption']
     car_list = [] if 'has_car' not in result_dict else result_dict['has_car']
     pet_list = [] if 'has_pet' not in result_dict else result_dict['has_pet']
@@ -193,10 +192,10 @@ def location():
     username = context_dict['username']
     app_list = context_dict['app_list']
 
-    # result_dict = server.cache.get('location')
-    # if not result_dict:
-    result_dict = get_query_list(app_id, 'province', 'city')
-    # server.cache.set('location', result_dict, timeout=10*60)
+    result_dict = session.get('location')
+    if not result_dict:
+        result_dict = get_query_list(app_id, 'province', 'city')
+        session['location'] = result_dict
     provice_list = [] if 'province' not in result_dict else result_dict['province']
     city_list = [] if 'city' not in result_dict else result_dict['city']
 
@@ -212,8 +211,6 @@ def location():
             'city': city
         }
     }
-    print('fuaslkdfja;lskdfj;l sjdflk; f')
-    print(province)
     return render_template('dashboard/user-location.html',
                            username=username,
                            app_id=app_id,
@@ -229,12 +226,16 @@ def motion():
     app_list = context_dict['app_list']
 
     home_office_type = ['contextAtWork', 'contextAtHome', 'contextCommutingWork', 'contextCommutingHome']
-    result_dict = get_query_list(app_id, 'home_office_status', 'event')
+    # result_dict = get_query_list(app_id, 'home_office_status', 'event')
+    result_dict = session.get('context')
+    if not result_dict:
+        result_dict = get_query_list(app_id, 'home_office_status', 'event')
+        session['context'] = result_dict
 
     home_office_list = [] if 'home_office_status' not in result_dict else result_dict['home_office_status']
     event_list = [] if 'event' not in result_dict else result_dict['event']
 
-    event_list = map(lambda x: server.translate_context(x), filter(lambda x: x not in home_office_type, event_list))
+    event_list = map(lambda x: translate_context(x), filter(lambda x: x not in home_office_type, event_list))
     event_tmp = sorted(map(lambda x: (x, event_list.count(x)), set(event_list)), key=lambda item: -item[1])
 
     home_office_tmp = map(lambda x: map(lambda y: y[1], sorted(x.items(), key=lambda key: int(key[0][6:]))), home_office_list)
@@ -280,5 +281,34 @@ def get_query_list(app_id='', *field):
     for item in field:
         ret_dict[item] = map(lambda result: result.attributes[item], result_list)
     return ret_dict
+
+
+def translate_motion(s):
+    library = {'motionCommuting': '乘车',   'motionWalking': '走路', 'motionSitting': '静坐',
+               'motionBiking': '骑车', 'motionRunning': '跑步', '': ''}
+    return library[s]
+
+
+def translate_interest(s):
+    library = {"jogging": "慢跑", "fitness": "健身", "basketball": "篮球", "football": "足球",
+               "badminton": "羽毛球", "bicycling": " 骑车", "table_tennis": "网球", 'social': "社交",
+               'online_shopping': "网络购物", 'offline_shoppng': "线下购物", 'tech_news': "教育新闻",
+               'entertainment_news': "娱乐新闻", 'current_news': "时事新闻", 'business_news': "商业新闻",
+               'sports_news': "运动新闻",  'game_news': "游戏新闻", 'study': "学霸", 'gamer': "游戏玩家",
+               'health': "健康", 'sports_show': "体育节目", 'game_show': "游戏节目", "variety_show": "综艺节目",
+               'tvseries_show': "电视剧", 'acg': "动漫", 'indoorsman': "宅男", '': ''}
+    return library[s]
+
+
+def translate_context(s):
+    library = {'contextAtHome': '在家', 'contextCommutingWork': '上班路上', 'contextAtWork': '在公司',
+               'contextCommutingHome': '回家路上', 'contextWorkingInCBD': '商圈工作中',
+               'contextStudyingInSchool': '学校上课中', 'contextWorkingInSchool': '学校工作中',
+               'contextOutdoorExercise': '户外锻炼', 'contextIndoorExercise': '室内锻炼',
+               'contextDinningOut': '在餐厅吃饭', 'contextTravelling': '旅游', 'contextShortTrip': '郊游',
+               'contextInParty': '聚会', 'contextWindowShopping': '逛街', 'contextAtCinema': '看电影',
+               'contextAtExhibition': '展览会', 'contextAtPopsConcert': '演唱会', 'contextAtTheatre': '戏剧',
+               'contextAtClassicsConcert': '音乐会', '': ''}
+    return library[s]
 
 

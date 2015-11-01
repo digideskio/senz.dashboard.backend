@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, session, request, jsonify, redirect, url_for
 from models import Developer
-import server
+
 
 settings = Blueprint('settings', __name__, template_folder='templates')
 
@@ -14,10 +14,10 @@ def show():
     developer = Developer()
     developer.session_token = session.get('session_token')
     username = developer.username()
-    app_list = server.cache.get('app_list')
-    if not app_list:
-        app_list = developer.get_app_list()
-        server.cache.set('app_list', app_list)
+    # app_list = server.cache.get('app_list')
+    # if not app_list:
+    app_list = developer.get_app_list()
+    # server.cache.set('app_list', app_list)
 
     return render_template('settings/settings.html',
                            username=username,

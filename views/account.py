@@ -4,7 +4,6 @@ from flask import Blueprint, session, render_template, request, redirect, url_fo
 from leancloud import LeanCloudError
 from models import Developer
 import datetime
-import server
 
 accounts_bp = Blueprint('accounts_bp', __name__, template_folder='templates')
 
@@ -37,7 +36,6 @@ def logout():
     developer.session_token = session.get('session_token')
     developer.logout()
     session.clear()
-    server.cache.clear()
     return redirect(url_for('index'))
 
 

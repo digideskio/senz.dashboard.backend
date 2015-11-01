@@ -1,7 +1,7 @@
 import requests
 from models import Developer
 from flask import Blueprint, render_template, request, session, redirect, url_for
-import server
+# import server
 
 panel = Blueprint('panel', __name__, template_folder='templates')
 
@@ -15,14 +15,14 @@ def show():
     developer = Developer()
     developer.session_token = session.get('session_token')
     username = developer.username()
-    app_list = server.cache.get('app_list')
-    tracker_list = server.cache.get('tracker_list')
-    if not app_list:
-        app_list = developer.get_app_list()
-        server.cache.set('app_list', app_list)
-    if not tracker_list:
-        tracker_list = developer.get_tracker_of_app(app_id)
-        server.cache.set('tracker_list', tracker_list)
+    # app_list = server.cache.get('app_list')
+    # tracker_list = server.cache.get('tracker_list')
+    # if not app_list:
+    app_list = developer.get_app_list()
+    # server.cache.set('app_list', app_list)
+    # if not tracker_list:
+    tracker_list = developer.get_tracker_of_app(app_id)
+    # server.cache.set('tracker_list', tracker_list)
 
     if request.method == 'POST':
         tracker = request.form.get('tracker')

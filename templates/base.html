@@ -36,11 +36,11 @@
    {% block main_nav %}
    <nav class="main-nav">
      <ul class="list">
-       <li class="item"><a href="{{ url_for('dashboard_bp.show') }}">统计分析</a></li>
-       <li class="item"><a href="{{ url_for('integration.show') }}">SDK集成</a></li>
-       <li class="item"><a href="{{ url_for('settings.show') }}">设置</a></li>
-       <li class="item"><a href="{{ url_for('panel.show') }}">调试</a></li>
-{#       <div class="item">#}
+       <li class="item nav-dashboard"><a href="{{ url_for('dashboard_bp.show') }}">统计分析</a></li>
+       <li class="item nav-integration"><a href="{{ url_for('integration.show') }}">SDK集成</a></li>
+       <li class="item nav-settings"><a href="{{ url_for('settings.show') }}">设置</a></li>
+       <li class="item nav-panel"><a href="{{ url_for('panel.show') }}">调试</a></li>
+       <div class="item">
 
        {% block app_list %}
         <div class="inline-block">
@@ -60,7 +60,7 @@
           </select>
        </div>
        {% endblock %}
-
+       </div>
      </ul>
    </nav>
 
