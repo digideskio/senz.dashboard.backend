@@ -46,7 +46,7 @@
    </div> 
   </div>
  <script>
- var locationData = JSON.parse({{ option | tojson }});
+ var locationData = JSON.parse({{ option | tojson |safe}});
 (function() {
     function down(x, y) {
       return (x.value < y.value) ? 1 : -1

@@ -19,7 +19,7 @@
   </div>
 
 <script>
-var profile = JSON.parse({{ option|tojson }});
+var profile = JSON.parse({{ option|tojson|safe }});
 (function(){
   require.config({
       paths: {

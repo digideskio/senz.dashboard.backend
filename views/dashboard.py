@@ -12,10 +12,10 @@ def get_app_list():
     developer = Developer()
     developer.session_token = session.get('session_token')
     username = developer.username()
-    app_list = session.get('app_list')
-    if not app_list:
-        app_list = developer.get_app_list()
-        session['app_list'] = app_list
+    # app_list = server.cache.get('app_list')
+    # if not app_list:
+    app_list = developer.get_app_list()
+    # server.cache.set('app_list', app_list)
     ret_dict['app_id'] = app_id
     ret_dict['username'] = username
     ret_dict['app_list'] = app_list
@@ -29,10 +29,10 @@ def show():
     username = context_dict['username']
     app_list = context_dict['app_list']
 
-    result_dict = session.get('event')
-    if not result_dict:
-        result_dict = get_query_list(app_id, 'event')
-        session['event'] = result_dict
+    # result_dict = server.cache.get('event')
+    # if not result_dict:
+    result_dict = get_query_list(app_id, 'event')
+    # server.cache.set('event', result_dict, timeout=10*60)
     event_list = [] if 'event' not in result_dict else result_dict['event']
     event_list = map(lambda x: translate_context(x), event_list)
     event_tmp = sorted(map(lambda x: (x, event_list.count(x)), set(event_list)), key=lambda item: -item[1])
@@ -56,10 +56,10 @@ def profile():
     username = context_dict['username']
     app_list = context_dict['app_list']
 
-    result_dict = session.get('profile')
-    if not result_dict:
-        result_dict = get_query_list(app_id, 'gender', 'age', 'occupation', 'field')
-        session['profile'] = result_dict
+    # result_dict = server.cache.get('profile')
+    # if not result_dict:
+    result_dict = get_query_list(app_id, 'gender', 'age', 'occupation', 'field')
+    # server.cache.set('profile', result_dict, timeout=10*60)
     gender_list = [] if 'gender' not in result_dict else result_dict['gender']
     age_list = [] if 'age' not in result_dict else result_dict['age']
     occupation_list = [] if 'occupation' not in result_dict else result_dict['occupation']
@@ -94,10 +94,10 @@ def interest():
     username = context_dict['username']
     app_list = context_dict['app_list']
 
-    result_dict = session.get('interest')
-    if not result_dict:
-        result_dict = get_query_list(app_id, 'interest')
-        session['interest'] = result_dict
+    # result_dict = server.cache.get('interest')
+    # if not result_dict:
+    result_dict = get_query_list(app_id, 'interest')
+    # server.cache.set('interest', result_dict, timeout=10*60)
     interest_list = [] if 'interest' not in result_dict else result_dict['interest']
     interest_list = map(lambda x: translate_interest(x), interest_list)
     interest_tmp = sorted(map(lambda x: (x, interest_list.count(x)), set(interest_list)), key=lambda item: -item[1])
@@ -125,10 +125,10 @@ def marriage():
     username = context_dict['username']
     app_list = context_dict['app_list']
 
-    result_dict = session.get('marriage')
-    if not result_dict:
-        result_dict = get_query_list(app_id, 'marriage', 'pregnant')
-        session['marriage'] = result_dict
+    # result_dict = server.cache.get('marriage')
+    # if not result_dict:
+    result_dict = get_query_list(app_id, 'marriage', 'pregnant')
+    # server.cache.set('marriage', result_dict, timeout=10*60)
     marriage_list = [] if 'marriage' not in result_dict else result_dict['marriage']
     pregnant_list = [] if 'pregnant' not in result_dict else result_dict['pregnant']
 
@@ -156,10 +156,10 @@ def consumption():
     username = context_dict['username']
     app_list = context_dict['app_list']
 
-    result_dict = session.get('consumption')
-    if not result_dict:
-        result_dict = get_query_list(app_id, 'consumption', 'has_car', 'has_pet')
-        session['consumption'] = result_dict
+    # result_dict = server.cache.get('consumption')
+    # if not result_dict:
+    result_dict = get_query_list(app_id, 'consumption', 'has_car', 'has_pet')
+    # server.cache.set('consumption', result_dict, timeout=10*60)
     consumption_list = [] if 'consumption' not in result_dict else result_dict['consumption']
     car_list = [] if 'has_car' not in result_dict else result_dict['has_car']
     pet_list = [] if 'has_pet' not in result_dict else result_dict['has_pet']
@@ -192,10 +192,10 @@ def location():
     username = context_dict['username']
     app_list = context_dict['app_list']
 
-    result_dict = session.get('location')
-    if not result_dict:
-        result_dict = get_query_list(app_id, 'province', 'city')
-        session['location'] = result_dict
+    # result_dict = server.cache.get('location')
+    # if not result_dict:
+    result_dict = get_query_list(app_id, 'province', 'city')
+    # server.cache.set('location', result_dict, timeout=10*60)
     provice_list = [] if 'province' not in result_dict else result_dict['province']
     city_list = [] if 'city' not in result_dict else result_dict['city']
 
@@ -226,11 +226,7 @@ def motion():
     app_list = context_dict['app_list']
 
     home_office_type = ['contextAtWork', 'contextAtHome', 'contextCommutingWork', 'contextCommutingHome']
-    # result_dict = get_query_list(app_id, 'home_office_status', 'event')
-    result_dict = session.get('context')
-    if not result_dict:
-        result_dict = get_query_list(app_id, 'home_office_status', 'event')
-        session['context'] = result_dict
+    result_dict = get_query_list(app_id, 'home_office_status', 'event')
 
     home_office_list = [] if 'home_office_status' not in result_dict else result_dict['home_office_status']
     event_list = [] if 'event' not in result_dict else result_dict['event']
