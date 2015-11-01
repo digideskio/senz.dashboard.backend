@@ -48,6 +48,10 @@
  <script>
  var locationData = JSON.parse({{ option | tojson }});
 (function() {
+    function down(x, y) {
+      return (x.value < y.value) ? 1 : -1
+    }
+
     $sortWrap = $("#sort-wrap");
     $mapWrap = $(".map-list");
 
@@ -65,6 +69,9 @@
             .hide()
             .eq(index).show();
     })    
+
+    var provice = locationData.data.province.sort(down);
+    var city = locationData.data.city.sort(down);
 
     var locationMapOption = {
         title : {
@@ -95,13 +102,13 @@
             // min: 0,
             // max: 20000,
             splitList: [
-                {start: 998, end: 1000, label: '广东'},
-                {start: 996, end: 998, label: '河南'},
-                {start: 994, end: 996, label: '山东'},
-                {start: 992, end: 994, label: '湖北'},
-                {start: 990, end: 992, label: '江苏'},
-                {start: 898, end: 990, label: '浙江'},
-                {start: 896, end: 898, label: '湖南'}
+                {start: provice[0].value, end: provice[0].value, label: provice[0].name },
+                {start: provice[1].value, end: provice[1].value, label: provice[1].name},
+                {start: provice[2].value, end: provice[2].value, label: provice[2].name},
+                {start: provice[3].value, end: provice[3].value, label: provice[3].name},
+                {start: provice[4].value, end: provice[4].value, label: provice[4].name},
+                {start: provice[5].value, end: provice[5].value, label: provice[5].name},
+                {start: provice[6].value, end: provice[6].value, label: provice[6].name}
             ],
             // color: ['#E0022B', '#E09107', '#A3E00B'],
             // selectedMode: 'single'
@@ -128,7 +135,7 @@
         },
         series : [
             {
-                name: '分布排名',
+                name: '分布指数',
                 type: 'map',
                 mapType: 'china',
                 roam: false,
@@ -136,7 +143,7 @@
                     normal:{label:{show:true}},
                     emphasis:{label:{show:true}}
                 },
-                data: locationData.data.province
+                data: locationData.data.province.sort(down)
             }
         ]
     };
@@ -156,28 +163,31 @@
             x:'left',
             data:['分布指数']
         },
-{#         dataRange: {#}
-{#             min: 0,#}
-{#             max: 2500,#}
-{#             x: 'left',#}
-{#             y: 'bottom',#}
-{#             text:['高','低'],           // 文本，默认为数值文本#}
-{#             calculable : true#}
-{#         },#}
+        // dataRange: {
+        //     min: 0,
+        //     max: 2500,
+        //     x: 'left',
+        //     y: 'bottom',
+        //     text:['高','低'],           // 文本，默认为数值文本
+        //     calculable : true
+        // },
         dataRange: {
             x: '85%',
             y: '45%',
             // min: 0,
             // max: 20000,
             splitList: [
-                {start: 195, end: 200, label: '广州'},
-                {start: 190, end: 195, label: '上海'},
-                {start: 185, end: 190, label: '武汉'},
-                {start: 180, end: 185, label: '天津'},
-                {start: 175, end: 180, label: '成都'},
-                {start: 170, end: 175, label: '重庆'},
-                {start: 165, end: 170, label: '深圳'}
-            ]
+                {start: city[0].value, end: city[0].value, label: city[0].name },
+                {start: city[1].value, end: city[1].value, label: city[1].name },
+                {start: city[2].value, end: city[2].value, label: city[2].name },
+                {start: city[3].value, end: city[3].value, label: city[3].name },
+                {start: city[4].value, end: city[4].value, label: city[4].name },
+                {start: city[5].value, end: city[5].value, label: city[5].name },
+                {start: city[6].value, end: city[6].value, label: city[6].name }
+            ],
+            // color: ['#E0022B', '#E09107', '#A3E00B'],
+            // selectedMode: 'single'
+            //text:['高','低']
         },
         toolbox: {
             show: true,
@@ -200,7 +210,7 @@
         },
         series : [
             {
-                name: '分布排名',
+                name: '分布指数',
                 type: 'map',
                 mapType: 'china',
                 roam: false,
@@ -208,7 +218,7 @@
                     normal:{label:{show:true}},
                     emphasis:{label:{show:true}}
                 },
-                data: locationData.data.city
+                data: locationData.data.city.sort(down)
             }
         ]
     };

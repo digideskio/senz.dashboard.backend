@@ -1,5 +1,5 @@
 # coding: utf-8
-from flask import Blueprint, render_template, json, session
+from flask import Blueprint, render_template, json, session, redirect, url_for
 from leancloud import Object, Query, LeanCloudError
 from models import Developer
 import server
@@ -9,15 +9,17 @@ dashboard_bp = Blueprint('dashboard_bp', __name__, template_folder='templates')
 
 @dashboard_bp.route('/dashboard')
 def show():
+    # if not session.get('session_token'):
+    #     return redirect(url_for('accounts_bp.login'))
     app_id = session.get('app_id', None)
-    app_list = []
-    if session.get('session_token'):
-        app_list = session.get('app_list', None)
-        if not app_list:
-            developer = Developer()
-            developer.session_token = session.get('session_token')
-            app_list = developer.get_app_list()
-            session['app_list'] = app_list
+    developer = Developer()
+    developer.session_token = session.get('session_token')
+    username = developer.username()
+    app_list = server.cache.get('app_list')
+    if not app_list:
+        app_list = developer.get_app_list()
+        server.cache.set('app_list', app_list)
+
     result_dict = server.cache.get('event')
     if not result_dict:
         result_dict = get_query_list('5621fb0f60b27457e863fabb', 'event')
@@ -32,7 +34,7 @@ def show():
         'data': data
     }
     return render_template('index.html',
-                           username=session.get('username'),
+                           username=username,
                            app_id=app_id,
                            app_list=app_list,
                            option=json.dumps(event))
@@ -40,15 +42,17 @@ def show():
 
 @dashboard_bp.route('/dashboard/profile')
 def profile():
+    # if not session.get('session_token'):
+    #     return redirect(url_for('accounts_bp.login'))
     app_id = session.get('app_id', None)
-    app_list = []
-    if session.get('session_token'):
-        app_list = session.get('app_list', None)
-        if not app_list:
-            developer = Developer()
-            developer.session_token = session.get('session_token')
-            app_list = developer.get_app_list()
-            session['app_list'] = app_list
+    developer = Developer()
+    developer.session_token = session.get('session_token')
+    username = developer.username()
+    app_list = server.cache.get('app_list')
+    if not app_list:
+        app_list = developer.get_app_list()
+        server.cache.set('app_list', app_list)
+
     result_dict = server.cache.get('profile')
     if not result_dict:
         result_dict = get_query_list('5621fb0f60b27457e863fabb', 'gender', 'age', 'occupation', 'field')
@@ -75,22 +79,24 @@ def profile():
     }
     return render_template('dashboard/user-identity.html',
                            option=json.dumps(user_profile),
-                           username=session.get('username'),
+                           username=username,
                            app_id=app_id,
                            app_list=app_list)
 
 
 @dashboard_bp.route('/dashboard/interest')
 def interest():
+    # if not session.get('session_token'):
+    #     return redirect(url_for('accounts_bp.login'))
     app_id = session.get('app_id', None)
-    app_list = []
-    if session.get('session_token'):
-        app_list = session.get('app_list', None)
-        if not app_list:
-            developer = Developer()
-            developer.session_token = session.get('session_token')
-            app_list = developer.get_app_list()
-            session['app_list'] = app_list
+    developer = Developer()
+    developer.session_token = session.get('session_token')
+    username = developer.username()
+    app_list = server.cache.get('app_list')
+    if not app_list:
+        app_list = developer.get_app_list()
+        server.cache.set('app_list', app_list)
+
     result_dict = server.cache.get('interest')
     if not result_dict:
         result_dict = get_query_list('5621fb0f60b27457e863fabb', 'interest')
@@ -107,22 +113,24 @@ def interest():
     }
     return render_template('dashboard/user-hobby.html',
                            option=json.dumps(interest),
-                           username=session.get('username'),
+                           username=username,
                            app_id=app_id,
                            app_list=app_list)
 
 
 @dashboard_bp.route('/dashboard/marriage')
 def marriage():
+    # if not session.get('session_token'):
+    #     return redirect(url_for('accounts_bp.login'))
     app_id = session.get('app_id', None)
-    app_list = []
-    if session.get('session_token'):
-        app_list = session.get('app_list', None)
-        if not app_list:
-            developer = Developer()
-            developer.session_token = session.get('session_token')
-            app_list = developer.get_app_list()
-            session['app_list'] = app_list
+    developer = Developer()
+    developer.session_token = session.get('session_token')
+    username = developer.username()
+    app_list = server.cache.get('app_list')
+    if not app_list:
+        app_list = developer.get_app_list()
+        server.cache.set('app_list', app_list)
+
     result_dict = server.cache.get('marriage')
     if not result_dict:
         result_dict = get_query_list('5621fb0f60b27457e863fabb', 'marriage', 'pregnant')
@@ -142,22 +150,23 @@ def marriage():
     }
     return render_template('dashboard/user-matrimony.html',
                            option=json.dumps(ret_json),
-                           username=session.get('username'),
+                           username=username,
                            app_id=app_id,
                            app_list=app_list)
 
 
 @dashboard_bp.route('/dashboard/consumption')
 def consumption():
+    # if not session.get('session_token'):
+    #     return redirect(url_for('accounts_bp.login'))
     app_id = session.get('app_id', None)
-    app_list = []
-    if session.get('session_token'):
-        app_list = session.get('app_list', None)
-        if not app_list:
-            developer = Developer()
-            developer.session_token = session.get('session_token')
-            app_list = developer.get_app_list()
-            session['app_list'] = app_list
+    developer = Developer()
+    developer.session_token = session.get('session_token')
+    username = developer.username()
+    app_list = server.cache.get('app_list')
+    if not app_list:
+        app_list = developer.get_app_list()
+        server.cache.set('app_list', app_list)
     result_dict = server.cache.get('consumption')
     if not result_dict:
         result_dict = get_query_list('5621fb0f60b27457e863fabb', 'consumption', 'has_car', 'has_pet')
@@ -182,22 +191,24 @@ def consumption():
     }
     return render_template('dashboard/user-consumption.html',
                            option=json.dumps(ret_json),
-                           username=session.get('username'),
+                           username=username,
                            app_id=app_id,
                            app_list=app_list)
 
 
 @dashboard_bp.route('/dashboard/location')
 def location():
+    # if not session.get('session_token'):
+    #     return redirect(url_for('accounts_bp.login'))
     app_id = session.get('app_id', None)
-    app_list = []
-    if session.get('session_token'):
-        app_list = session.get('app_list', None)
-        if not app_list:
-            developer = Developer()
-            developer.session_token = session.get('session_token')
-            app_list = developer.get_app_list()
-            session['app_list'] = app_list
+    developer = Developer()
+    developer.session_token = session.get('session_token')
+    username = developer.username()
+    app_list = server.cache.get('app_list')
+    if not app_list:
+        app_list = developer.get_app_list()
+        server.cache.set('app_list', app_list)
+
     result_dict = server.cache.get('location')
     if not result_dict:
         result_dict = get_query_list('5621fb0f60b27457e863fabb', 'province', 'city')
@@ -219,7 +230,7 @@ def location():
         }
     }
     return render_template('dashboard/user-location.html',
-                           username=session.get('username'),
+                           username=username,
                            app_id=app_id,
                            app_list=app_list,
                            option=json.dumps(location))
@@ -227,15 +238,17 @@ def location():
 
 @dashboard_bp.route('/dashboard/context')
 def motion():
+    # if not session.get('session_token'):
+    #     return redirect(url_for('accounts_bp.login'))
     app_id = session.get('app_id', None)
-    app_list = []
-    if session.get('session_token'):
-        app_list = session.get('app_list', None)
-        if not app_list:
-            developer = Developer()
-            developer.session_token = session.get('session_token')
-            app_list = developer.get_app_list()
-            session['app_list'] = app_list
+    developer = Developer()
+    developer.session_token = session.get('session_token')
+    username = developer.username()
+    app_list = server.cache.get('app_list')
+    if not app_list:
+        app_list = developer.get_app_list()
+        server.cache.set('app_list', app_list)
+
     home_office_type = ['contextAtWork', 'contextAtHome', 'contextCommutingWork', 'contextCommutingHome']
     result_dict = get_query_list('5621fb0f60b27457e863fabb', 'home_office_status', 'event')
     home_office_list = [] if 'home_office_status' not in result_dict else result_dict['home_office_status']
@@ -258,7 +271,7 @@ def motion():
     }
     return render_template('dashboard/scene.html',
                            option=json.dumps(context),
-                           username=session.get('username'),
+                           username=username,
                            app_id=app_id,
                            app_list=app_list)
 

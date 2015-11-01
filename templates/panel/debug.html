@@ -6,8 +6,6 @@
     <li class="has-sub-nav"> <a href="#">Panel设置</a>
      <ul class="sub-nav">
       <li><a href="{{ url_for('panel.show') }}">调试模式</a></li>
-{#      <li><a href="{{ url_for('panel.demo') }}">演示模式</a></li>#}
-{#      <li><a href="{{ url_for('panel.real') }}">真实模式</a></li>#}
      </ul>
     </li>
    </ul>
@@ -30,14 +28,14 @@
         <ul id="motion" class="filter-ul">
             <label><strong>动作: </strong></label><br>
             {% for key, value in motion_dict.iteritems()%}
-            <li class=""><input type="radio" name="test" value="{{value}}"/> {{key|translate_motion}}</li>
+            <li class=""><input type="radio" {% if value == 1 %} checked="checked" {% endif %} name="motion" value="{{value}}"/> {{key|translate_motion}}</li>
             {% endfor %}
         </ul>
 
         <ul id="context" class="filter-ul">
             <label><strong>情境:</strong></label><br>
-            {% for item in context_list%}
-            <li class=""><input type="radio" name="test" value="{{item}}" /> {{item|translate_context}}</li>
+            {% for item in context_list %}
+            <li class=""><input type="radio" {% if item == 'contextAtHome' %} checked="checked" {% endif %} name="context" value="{{item}}" /> {{item|translate_context}}</li>
             {% endfor %}
         </ul>
         <input class="btn" id="btn" type="button" value="Submit"/>

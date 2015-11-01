@@ -33,6 +33,12 @@ class Developer(User):
             return query.find()[0]
         return None
 
+    def username(self):
+        if self.session_token:
+            return self.become(session_token=self.session_token).get_username()
+        else:
+            return None
+
     def user_id(self):
         if self.session_token:
             return self.become(session_token=self.session_token).id

@@ -1,6 +1,6 @@
 # coding: utf-8
 
-from flask import Flask, session, request, redirect
+from flask import Flask, session, request, redirect, url_for
 from itsdangerous import Signer
 from views.panel import panel
 from views.restapi import restapi
@@ -33,9 +33,9 @@ def index():
     if request.method == 'POST':
         app_id = request.form.get('app_id')
         session['app_id'] = app_id
-        return redirect('/')
+        return redirect(url_for('dashboard_bp.show'))
     if request.method == 'GET':
-        return redirect('/dashboard')
+        return redirect(url_for('dashboard_bp.show'))
 
 
 @app.template_filter('translate_motion')
