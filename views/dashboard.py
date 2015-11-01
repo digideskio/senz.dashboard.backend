@@ -7,16 +7,28 @@ import server
 dashboard_bp = Blueprint('dashboard_bp', __name__, template_folder='templates')
 
 
-@dashboard_bp.route('/dashboard')
-def show():
+def get_app_list():
+    ret_dict = {}
     app_id = session.get('app_id')
     developer = Developer()
     developer.session_token = session.get('session_token')
     username = developer.username()
-    app_list = server.cache.get('app_list')
-    if not app_list:
-        app_list = developer.get_app_list()
-        server.cache.set('app_list', app_list)
+    # app_list = server.cache.get('app_list')
+    # if not app_list:
+    app_list = developer.get_app_list()
+    # server.cache.set('app_list', app_list)
+    ret_dict['app_id'] = app_id
+    ret_dict['username'] = username
+    ret_dict['app_list'] = app_list
+    return ret_dict
+
+
+@dashboard_bp.route('/dashboard')
+def show():
+    context_dict = get_app_list()
+    app_id = context_dict['app_id']
+    username = context_dict['username']
+    app_list = context_dict['app_list']
 
     result_dict = server.cache.get('event')
     if not result_dict:
@@ -40,14 +52,10 @@ def show():
 
 @dashboard_bp.route('/dashboard/profile')
 def profile():
-    app_id = session.get('app_id')
-    developer = Developer()
-    developer.session_token = session.get('session_token')
-    username = developer.username()
-    app_list = server.cache.get('app_list')
-    if not app_list:
-        app_list = developer.get_app_list()
-        server.cache.set('app_list', app_list)
+    context_dict = get_app_list()
+    app_id = context_dict['app_id']
+    username = context_dict['username']
+    app_list = context_dict['app_list']
 
     result_dict = server.cache.get('profile')
     if not result_dict:
@@ -82,14 +90,10 @@ def profile():
 
 @dashboard_bp.route('/dashboard/interest')
 def interest():
-    app_id = session.get('app_id')
-    developer = Developer()
-    developer.session_token = session.get('session_token')
-    username = developer.username()
-    app_list = server.cache.get('app_list')
-    if not app_list:
-        app_list = developer.get_app_list()
-        server.cache.set('app_list', app_list)
+    context_dict = get_app_list()
+    app_id = context_dict['app_id']
+    username = context_dict['username']
+    app_list = context_dict['app_list']
 
     result_dict = server.cache.get('interest')
     if not result_dict:
@@ -117,14 +121,10 @@ def interest():
 
 @dashboard_bp.route('/dashboard/marriage')
 def marriage():
-    app_id = session.get('app_id')
-    developer = Developer()
-    developer.session_token = session.get('session_token')
-    username = developer.username()
-    app_list = server.cache.get('app_list')
-    if not app_list:
-        app_list = developer.get_app_list()
-        server.cache.set('app_list', app_list)
+    context_dict = get_app_list()
+    app_id = context_dict['app_id']
+    username = context_dict['username']
+    app_list = context_dict['app_list']
 
     result_dict = server.cache.get('marriage')
     if not result_dict:
@@ -152,14 +152,11 @@ def marriage():
 
 @dashboard_bp.route('/dashboard/consumption')
 def consumption():
-    app_id = session.get('app_id')
-    developer = Developer()
-    developer.session_token = session.get('session_token')
-    username = developer.username()
-    app_list = server.cache.get('app_list')
-    if not app_list:
-        app_list = developer.get_app_list()
-        server.cache.set('app_list', app_list)
+    context_dict = get_app_list()
+    app_id = context_dict['app_id']
+    username = context_dict['username']
+    app_list = context_dict['app_list']
+
     result_dict = server.cache.get('consumption')
     if not result_dict:
         result_dict = get_query_list(app_id, 'consumption', 'has_car', 'has_pet')
@@ -191,19 +188,15 @@ def consumption():
 
 @dashboard_bp.route('/dashboard/location')
 def location():
-    app_id = session.get('app_id')
-    developer = Developer()
-    developer.session_token = session.get('session_token')
-    username = developer.username()
-    app_list = server.cache.get('app_list')
-    if not app_list:
-        app_list = developer.get_app_list()
-        server.cache.set('app_list', app_list)
+    context_dict = get_app_list()
+    app_id = context_dict['app_id']
+    username = context_dict['username']
+    app_list = context_dict['app_list']
 
-    result_dict = server.cache.get('location')
-    if not result_dict:
-        result_dict = get_query_list(app_id, 'province', 'city')
-        server.cache.set('location', result_dict, timeout=10*60)
+    # result_dict = server.cache.get('location')
+    # if not result_dict:
+    result_dict = get_query_list(app_id, 'province', 'city')
+    # server.cache.set('location', result_dict, timeout=10*60)
     provice_list = [] if 'province' not in result_dict else result_dict['province']
     city_list = [] if 'city' not in result_dict else result_dict['city']
 
@@ -219,6 +212,8 @@ def location():
             'city': city
         }
     }
+    print('fuaslkdfja;lskdfj;l sjdflk; f')
+    print(province)
     return render_template('dashboard/user-location.html',
                            username=username,
                            app_id=app_id,
@@ -228,14 +223,10 @@ def location():
 
 @dashboard_bp.route('/dashboard/context')
 def motion():
-    app_id = session.get('app_id')
-    developer = Developer()
-    developer.session_token = session.get('session_token')
-    username = developer.username()
-    app_list = server.cache.get('app_list')
-    if not app_list:
-        app_list = developer.get_app_list()
-        server.cache.set('app_list', app_list)
+    context_dict = get_app_list()
+    app_id = context_dict['app_id']
+    username = context_dict['username']
+    app_list = context_dict['app_list']
 
     home_office_type = ['contextAtWork', 'contextAtHome', 'contextCommutingWork', 'contextCommutingHome']
     result_dict = get_query_list(app_id, 'home_office_status', 'event')
@@ -270,7 +261,7 @@ def motion():
 
 def get_query_list(app_id='', *field):
     if not app_id:
-        return {}
+        app_id = '5621fb0f60b27457e863fabb'
     try:
         query_limit = 100
         query = Query(Object.extend('DashDataSource'))

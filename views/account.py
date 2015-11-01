@@ -59,3 +59,8 @@ def signup():
             print(e)
             return render_template('account/signup.html')
     return render_template('account/signup.html')
+
+
+@accounts_bp.route('/reset', methods=['GET', 'POST'])
+def reset():
+    return render_template('account/change-password.html')
