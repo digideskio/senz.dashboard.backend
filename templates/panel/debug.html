@@ -28,14 +28,14 @@
         <ul id="motion" class="filter-ul">
             <label><strong>动作: </strong></label><br>
             {% for key, value in motion_dict.iteritems()%}
-            <li class=""><input type="radio" {% if value == 1 %} checked="checked" {% endif %} name="motion" value="{{value}}"/> {{key|translate_motion}}</li>
+            <li class=""><input type="radio" {% if value == 1 %} checked="checked" {% endif %} name="motion" value="{{value}}"/> {{key|translate("motion")}}</li>
             {% endfor %}
         </ul>
 
         <ul id="context" class="filter-ul">
             <label><strong>情境:</strong></label><br>
             {% for item in context_list %}
-            <li class=""><input type="radio" {% if item == 'contextAtHome' %} checked="checked" {% endif %} name="context" value="{{item}}" /> {{item|translate_context}}</li>
+            <li class=""><input type="radio" {% if item == 'contextAtHome' %} checked="checked" {% endif %} name="context" value="{{item}}" /> {{item|translate("context")}}</li>
             {% endfor %}
         </ul>
         <input class="btn" id="btn" type="button" value="Submit"/>

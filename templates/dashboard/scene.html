@@ -13,7 +13,7 @@
    </div>
   </div>
 <script>
-var profile = JSON.parse({{ option|tojson }});
+var profile = JSON.parse({{ option|tojson|safe }});
 (function() {
     var sceneMapOption = option = {
         title : {
@@ -24,7 +24,7 @@ var profile = JSON.parse({{ option|tojson }});
             trigger: 'axis'
         },
         legend: {
-            data: profile.data.category
+            data: profile.data.home_office.category
         },
         toolbox: {
             show : true,
@@ -41,7 +41,7 @@ var profile = JSON.parse({{ option|tojson }});
             {
                 type : 'category',
                 boundaryGap : false,
-                data : profile.data.xAxis
+                data : profile.data.home_office.xAxis
             }
         ],
         yAxis : [
@@ -55,28 +55,28 @@ var profile = JSON.parse({{ option|tojson }});
                 type: 'line',
                 smooth: true,
                 itemStyle: {normal: {areaStyle: {type: 'default'}}},
-                data: profile.data.series[1]
+                data: profile.data.home_office.series[1]
             },
             {
                 name:'contextAtWork',
                 type:'line',
                 smooth:true,
                 itemStyle: {normal: {areaStyle: {type: 'default'}}},
-                data: profile.data.series[0]
+                data: profile.data.home_office.series[0]
             },
             {
                 name:'contextCommutingWork',
                 type:'line',
                 smooth:true,
                 itemStyle: {normal: {areaStyle: {type: 'default'}}},
-                data: profile.data.series[2]
+                data: profile.data.home_office.series[2]
             },
             {
                 name:'contextCommutingHome',
                 type:'line',
                 smooth:true,
                 itemStyle: {normal: {areaStyle: {type: 'default'}}},
-                data: profile.data.series[3]
+                data: profile.data.home_office.series[3]
             }
         ]
     };
@@ -133,7 +133,7 @@ var profile = JSON.parse({{ option|tojson }});
           calculable: true,
           xAxis: [{
               type: 'category',
-              data: ["商圈工作中", "学校上课中 ", "学校工作中 ", "户外锻炼", "室内锻炼", "在餐厅吃饭", "郊游 ", "逛街", "看电影", "演唱会", "聚会", "展览 ", "戏剧", "音乐会 ", "旅游"],
+              data: profile.data.event.category,
               show: true
 
           }],
@@ -146,7 +146,7 @@ var profile = JSON.parse({{ option|tojson }});
           series: [{
               name: '事件频次',
               type: 'bar',
-              data: [20, 49, 70, 232, 256, 77, 136, 162, 126, 200, 64, 33,56,78,50]
+              data: profile.data.event.series
           }]
       }
 
