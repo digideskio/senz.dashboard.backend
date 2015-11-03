@@ -1,0 +1,167 @@
+{% extends 'base.html' %}
+{% block content %}
+  <div id="container" class="container">
+   <div id="content" class="content" style="margin-top: 40px;">
+    <div class="relative" style="padding: 5px;">
+      <div id="sceneMap" style="height:600px;border:1px solid #ccc;"></div>
+    </div>
+
+    <div class="relative" style="padding: 5px;">
+      <div id="eventMap" style="height:600px;border:1px solid #ccc;"></div>
+    </div>
+
+   </div>
+  </div>
+<script>
+var profile = JSON.parse({{ option|tojson|safe }});
+(function() {
+    var sceneMapOption = option = {
+        title : {
+            text: '情景',
+            subtext: ''
+        },
+        tooltip : {
+            trigger: 'axis'
+        },
+        legend: {
+            data: profile.data.home_office.category
+        },
+        toolbox: {
+            show : true,
+            feature : {
+                mark : {show: true},
+                dataView : {show: true, readOnly: false},
+                magicType : {show: true, type: ['line', 'bar', 'stack', 'tiled']},
+                restore : {show: true},
+                saveAsImage : {show: true}
+            }
+        },
+        calculable : true,
+        xAxis : [
+            {
+                type : 'category',
+                boundaryGap : false,
+                data : profile.data.home_office.xAxis
+            }
+        ],
+        yAxis : [
+            {
+                type : 'value'
+            }
+        ],
+        series : [
+            {
+                name: 'contextAtHome',
+                type: 'line',
+                smooth: true,
+                itemStyle: {normal: {areaStyle: {type: 'default'}}},
+                data: profile.data.home_office.series[1]
+            },
+            {
+                name:'contextAtWork',
+                type:'line',
+                smooth:true,
+                itemStyle: {normal: {areaStyle: {type: 'default'}}},
+                data: profile.data.home_office.series[0]
+            },
+            {
+                name:'contextCommutingWork',
+                type:'line',
+                smooth:true,
+                itemStyle: {normal: {areaStyle: {type: 'default'}}},
+                data: profile.data.home_office.series[2]
+            },
+            {
+                name:'contextCommutingHome',
+                type:'line',
+                smooth:true,
+                itemStyle: {normal: {areaStyle: {type: 'default'}}},
+                data: profile.data.home_office.series[3]
+            }
+        ]
+    };
+
+    require(['echarts', 'echarts/chart/bar', 'echarts/chart/line', 'echarts/chart/map'],
+        function(ec) {
+
+            if(!document.getElementById('sceneMap')){
+                return;
+            }
+            var sceneMap = ec.init(document.getElementById('sceneMap'));
+            sceneMap.setOption(sceneMapOption);
+        });
+
+        require.config({
+          paths: {
+              echarts: './public/lib/echarts-2.2.7/build/dist'
+          }
+      });
+      var eventMapOption = {
+          title : {
+              text: '事件频次',
+              subtext: ''
+          },
+          tooltip: {
+              trigger: 'axis'
+          },
+          legend: {
+              show: false,
+              data: ['蒸发量']
+          },
+          toolbox: {
+              show: true,
+              feature: {
+                  mark: {
+                      show: true
+                  },
+                  dataView: {
+                      show: true,
+                      readOnly: false
+                  },
+                  magicType: {
+                      show: true,
+                      type: ['line', 'bar']
+                  },
+                  restore: {
+                      show: true
+                  },
+                  saveAsImage: {
+                      show: true
+                  }
+              }
+          },
+          calculable: true,
+          xAxis: [{
+              type: 'category',
+              data: profile.data.event.category,
+              show: true
+
+          }],
+          yAxis: [{
+              type: 'value',
+              splitArea: {
+                  show: true
+              }
+          }],
+          series: [{
+              name: '事件频次',
+              type: 'bar',
+              data: profile.data.event.series
+          }]
+      }
+
+      require(['echarts', 'echarts/chart/bar', 'echarts/chart/line', 'echarts/chart/map'],
+      function(ec) {
+          //--- 折柱 ---
+          if(!document.getElementById('eventMap')){
+              return;
+          }
+
+          var eventMap = ec.init(document.getElementById('eventMap'));
+          eventMap.setOption(eventMapOption);
+      })
+
+
+}).call(this);
+</script>
+{% endblock %}

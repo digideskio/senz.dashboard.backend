@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en">
+ <head> 
+  <meta charset="utf-8" /> 
+  <meta http-equiv="x-ua-compatible" content="ie=edge" /> 
+  <title>Dashboard</title> 
+  <meta name="description" content="" /> 
+  <meta name="description" content="" /> 
+  <meta name="keywords" content="css3, github, html5" /> 
+  <meta property="og:title" content="Dashboard" /> 
+  <meta property="og:description" content="Dashboard" /> 
+  <meta property="og:url" content="" /> 
+  <!-- <meta property="og:image" content="/images/ta.png" /> --> 
+  <meta property="og:site_name" content="Dashboard" /> 
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" /> 
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles/dashboard.css') }}">
+  <script src="{{ url_for('static', filename='lib/jquery-2.1.4.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='lib/echarts-2.2.7/build/dist/echarts.js') }}"></script>
+{#  <link rel="stylesheet" href="{{ url_for('static', filename='styles/bootstrap.min.css') }}">#}
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles/login.css') }}">
+  <script src="{{ url_for('static', filename='scripts/dashboard.js') }}"></script>
+  <script>
+      require.config({
+            paths: {
+                echarts: "{{ url_for('static', filename='lib/echarts-2.2.7/build/dist') }}"
+            }
+        });
+  </script>
+
+ </head>
+
+ <body>
+ {% block header %}
+   <div id="header" class="header">
+   <h2 class="site-title"><a href="/">Senz</a></h2>
+   {% block main_nav %}
+   <nav class="main-nav">
+     <ul class="list">
+       <li class="item nav-dashboard"><a href="{{ url_for('dashboard_bp.show') }}">统计分析</a></li>
+       <li class="item nav-integration"><a href="{{ url_for('integration.show') }}">SDK集成</a></li>
+       <li class="item nav-settings"><a href="{{ url_for('settings.show') }}">设置</a></li>
+       <li class="item nav-panel"><a href="{{ url_for('panel.show') }}">调试</a></li>
+       <div class="item">
+
+       {% block app_list %}
+        <div class="inline-block">
+          <select name="select_app" class="select_app" id="select_app" onchange="post_url()">
+              {% if app_list %}
+                  <option value='5621fb0f60b27457e863fabb' id="qfv0xYn7SjQ4W23TeyeqhsiH19A">Demo</option>
+                  {% for item in app_list %}
+                      {% if item['app_id'] == app_id %}
+                        <option value={{ item['app_id'] }} id={{ item['app_key'] }} selected="selected">{{ item['app_name'] }}</option>
+                      {% else %}
+                        <option value={{ item['app_id'] }} id={{ item['app_key'] }}>{{ item['app_name'] }}</option>
+                      {% endif %}
+                  {% endfor %}
+              {% else %}
+                  <option value='5621fb0f60b27457e863fabb' id="qfv0xYn7SjQ4W23TeyeqhsiH19A">Demo</option>
+              {% endif %}
+          </select>
+       </div>
+       {% endblock %}
+       </div>
+     </ul>
+   </nav>
+
+   <div class="main-nav main-nav-auth-wrap">
+   {% if username %}
+   <div id="account">
+     <div class="dropdown">
+          <button class="btn-default dropdown-toggle" type="button">
+            {{ username }}
+          </button>
+          <ul class="list">
+            <li class="item"><a href="{{ url_for('accounts_bp.logout') }}">注销</a></li>
+          </ul>
+        </div>
+   </div>
+   {% else %}
+    <ul class="list">
+        <li class="item"><a href="{{ url_for('accounts_bp.login') }}">登录</a></li>
+        <li class="item"><a href="{{ url_for('accounts_bp.signup') }}">注册</a></li>
+    </ul>
+   {% endif %}
+   </div>
+   {% endblock %}
+  </div>
+ {% endblock %}
+
+ {% block navigation %}
+   <div id="sidebar" class="sidebar">
+   <ul id="sidebar-nav">
+    <li class="index"><a href="{{ url_for('dashboard_bp.show') }}">概览</a></li>
+    <li class="has-sub-nav"> <a href="#">用户群体</a>
+     <ul class="sub-nav">
+      <li><a href="{{ url_for('dashboard_bp.profile') }}">用户属性</a></li>
+      <li><a href="{{ url_for('dashboard_bp.interest') }}">兴趣爱好</a></li>
+      <li><a href="{{ url_for('dashboard_bp.marriage') }}">婚育情况</a></li>
+      <li><a href="{{ url_for('dashboard_bp.consumption') }}">消费情况</a></li>
+      <li><a href="{{ url_for('dashboard_bp.location') }}">地理位置</a></li>
+     </ul>
+    </li>
+    <li class="motion"><a href="{{ url_for('dashboard_bp.motion') }}">情境</a></li>
+   </ul>
+  </div>
+ {% endblock %}
+
+ {% block content %}{% endblock %}
+
+  {% block app_select %}
+  <script>
+      var post_url = function(){
+        var obj = document.getElementById("select_app");
+        $.post("/", {app_id: obj.value});
+      };
+  </script>
+  {% endblock %}
+
+ </body>
+</html>

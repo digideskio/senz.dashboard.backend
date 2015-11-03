@@ -18,7 +18,7 @@
   <script src="{{ url_for('static', filename='lib/echarts-2.2.7/build/dist/echarts.js') }}"></script>
 {#  <link rel="stylesheet" href="{{ url_for('static', filename='styles/bootstrap.min.css') }}">#}
   <link rel="stylesheet" href="{{ url_for('static', filename='styles/login.css') }}">
-  <script src="{{ url_for('static', filename='scripts/dashboard.js') }}"></script>
+{#  <script src="{{ url_for('static', filename='scripts/dashboard.js') }}"></script>#}
   <script>
       require.config({
             paths: {
@@ -33,34 +33,31 @@
  {% block header %}
    <div id="header" class="header">
    <h2 class="site-title"><a href="/">Senz</a></h2>
+   {% block app_list %}
+    <div class="inline-block">
+      <select name="select_app" class="select_app" id="select_app" onchange="post_url()">
+          {% if app_list %}
+              {% for item in app_list %}
+                  {% if item['app_id'] == app_id %}
+                    <option value={{ item['app_id'] }} id={{ item['app_key'] }} selected="selected">{{ item['app_name'] }}</option>
+                  {% else %}
+                    <option value={{ item['app_id'] }} id={{ item['app_key'] }}>{{ item['app_name'] }}</option>
+                  {% endif %}
+              {% endfor %}
+          {% else %}
+              <option value='5621fb0f60b27457e863fabb' id="qfv0xYn7SjQ4W23TeyeqhsiH19A">Demo</option>
+          {% endif %}
+      </select>
+   </div>
+   {% endblock %}
+
    {% block main_nav %}
    <nav class="main-nav">
      <ul class="list">
-       <li class="item nav-dashboard"><a href="{{ url_for('dashboard_bp.show') }}">统计分析</a></li>
-       <li class="item nav-integration"><a href="{{ url_for('integration.show') }}">SDK集成</a></li>
-       <li class="item nav-settings"><a href="{{ url_for('settings.show') }}">设置</a></li>
-       <li class="item nav-panel"><a href="{{ url_for('panel.show') }}">调试</a></li>
-       <div class="item">
-
-       {% block app_list %}
-        <div class="inline-block">
-          <select name="select_app" class="select_app" id="select_app" onchange="post_url()">
-              {% if app_list %}
-                  <option value='5621fb0f60b27457e863fabb' id="qfv0xYn7SjQ4W23TeyeqhsiH19A">Demo</option>
-                  {% for item in app_list %}
-                      {% if item['app_id'] == app_id %}
-                        <option value={{ item['app_id'] }} id={{ item['app_key'] }} selected="selected">{{ item['app_name'] }}</option>
-                      {% else %}
-                        <option value={{ item['app_id'] }} id={{ item['app_key'] }}>{{ item['app_name'] }}</option>
-                      {% endif %}
-                  {% endfor %}
-              {% else %}
-                  <option value='5621fb0f60b27457e863fabb' id="qfv0xYn7SjQ4W23TeyeqhsiH19A">Demo</option>
-              {% endif %}
-          </select>
-       </div>
-       {% endblock %}
-       </div>
+       <li class="item"><a href="{{ url_for('dashboard_bp.show') }}">统计分析</a></li>
+       <li class="item"><a href="{{ url_for('integration.show') }}">SDK集成</a></li>
+       <li class="item"><a href="{{ url_for('settings.show') }}">设置</a></li>
+       <li class="item"><a href="{{ url_for('panel.show') }}">调试</a></li>
      </ul>
    </nav>
 
@@ -90,17 +87,18 @@
  {% block navigation %}
    <div id="sidebar" class="sidebar">
    <ul id="sidebar-nav">
-    <li class="index"><a href="{{ url_for('dashboard_bp.show') }}">概览</a></li>
+    <li class="active"><a href="{{ url_for('dashboard_bp.show') }}">概览</a></li>
     <li class="has-sub-nav"> <a href="#">用户群体</a>
      <ul class="sub-nav">
-      <li><a href="{{ url_for('dashboard_bp.profile') }}">用户属性</a></li>
+      <li class="<% (option.data.cur_page == profile ? 'cative' : '') %>">
+          <a href="{{ url_for('dashboard_bp.profile') }}">用户属性</a></li>
       <li><a href="{{ url_for('dashboard_bp.interest') }}">兴趣爱好</a></li>
       <li><a href="{{ url_for('dashboard_bp.marriage') }}">婚育情况</a></li>
       <li><a href="{{ url_for('dashboard_bp.consumption') }}">消费情况</a></li>
       <li><a href="{{ url_for('dashboard_bp.location') }}">地理位置</a></li>
      </ul>
     </li>
-    <li class="motion"><a href="{{ url_for('dashboard_bp.motion') }}">情境</a></li>
+    <li><a href="{{ url_for('dashboard_bp.motion') }}">情境</a></li>
    </ul>
   </div>
  {% endblock %}
