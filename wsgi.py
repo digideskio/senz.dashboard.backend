@@ -4,8 +4,8 @@ import os
 import sys
 import leancloud
 from wsgiref import simple_server
-from server import app
-from cloud import engine
+from application.server import app
+from application.cloud import engine
 
 
 APP_ID = os.environ['LC_APP_ID']
