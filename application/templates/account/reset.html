@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block app_list %}{% endblock %}
+{% block main_nav %}{% endblock %}
+{% block navigation %}{% endblock %}
+
+{% block content %}
+    <div id="container" class="container">
+    <div id="content" class="content single-content bg-gray" style="margin-top: 40px;">
+        <div id="formwrapper">
+            <form action="{{ url_for('accounts_bp.login') }}" method="post" name="apLogin" id="apLogin">
+                <div class="title clearfix">
+                    <span class="left">设置新密码</span>
+                </div>
+                <div class="item">
+                    <input type="text" placeholder="新密码" name="password1" id="password1" size="20" maxlength="30" />
+                    <br>
+                </div>
+                <div class="item">
+                    <input type="text" placeholder="确认密码" name="password2" id="password2" size="20" maxlength="30" />
+                    <br>
+                </div>
+
+                <div class="item">
+                    <input name="reset-submit" type="submit" class="button" value="提交" />
+                </div>
+            </form>
+        </div>
+    </div>
+    </div>
+{% endblock %}

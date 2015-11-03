@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% block content %}
+  <div id="container" class="container">
+   <div id="content" class="content" style="margin-top: 40px; padding-bottom: 50px;">
+      <div class="user-avatar-wrap clearfix">
+        <h4 class="event-cirle-title">用户和画像</h4>
+        <ul class="list">
+          <li class="item">
+            <img class="img" src="{{ url_for('static', filename='images/user1.png') }}" alt="">
+            <h2>时尚达人</h2>
+            <p>喜欢潮流、热衷社交、喜欢健身、关注时尚信息，有车无房，自由无拘束</p>
+          </li>
+          <li class="item">
+            <img class="img" src="{{ url_for('static', filename='images/user2.png') }}" alt="">
+            <h2>理工宅男</h2>
+            <p>喜欢科技、死宅、关注科技新闻和创业信息、爱玩游戏，有房无车</p>
+          </li>
+          <li class="item">
+            <img class="img" src="{{ url_for('static', filename='images/user3.png') }}" alt="">
+            <h2>干练白领</h2>
+            <p>工作能力强、生活规律有品质、养宠物、爱去星巴克、关注健康养生</p>
+          </li>
+        </ul>
+      </div>
+
+      <h4 class="event-cirle-title">情境</h4>
+      <div id="event-cirle-wrap" class="event-cirle-wrap">
+        <div class="vertical-line"></div>
+        <div class="circle1"></div>
+        <div class="circle2"></div>
+        <div class="circle3"></div>
+        <div class="circle4"></div>
+        <div class="circle5"></div>
+        <div class="main-title" data-title="天将雄师"><img src="/static/images/15.jpg" alt=""></div>
+        <!--<div class="pr2"><div class="text">完整版</div></div>
+        <div class="pr2"><div class="text">迅雷</div></div> -->
+      </div>
+
+   </div>
+  </div>
+<script>
+var rankData = JSON.parse({{ option | tojson | safe }});
+(function(){
+    function renderCircleCharts(data) {
+    var tpl = [];
+    for(var i = 0, len = data.length; i < len; i++) {
+      if(data[i].rank==1) continue;
+      tpl.push('<div class="pr '+ (data[i].rank==1 ? 'main-title' : 'pr' + data[i].rank) + '" style="left:' + (((data[i].rank-1) * 140)+(150 * Math.random()*1) ) + 'px; top:' + (430* Math.random()*1) + 'px;" title="'+ data[i].rank +'" >'+ '<div class="text">'+ data[i].name+'</div></div>')
+    }
+    return tpl.join('');
+  }
+  // $(".main-title").text(rankData[0].name);
+  $("#event-cirle-wrap").append(renderCircleCharts(rankData.data));
+}).call(this);
+</script>
+{% endblock %}

@@ -1,0 +1,336 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <div id="container" class="container">
+   <div id="content" class="content" style="margin-top: 40px;">
+    <div class="clearfix relative" style="padding: 5px;">
+      <div id="genderMap" style="width:49.5%; float: left; height:300px;border:1px solid #ccc;"></div>
+      <div id="ageMap" style="width: 49.5%; float: right; height:300px;border:1px solid #ccc;"></div>
+    </div>
+
+    <div class="relative" style="padding: 5px;">
+      <div id="jobMap" style="height:500px;border:1px solid #ccc;"></div>
+    </div>
+
+    <div class="relative" style="padding: 5px;">
+      <div id="professionMap" style="height:500px;border:1px solid #ccc;"></div>
+    </div>
+   </div>
+  </div>
+
+<script>
+var profile = JSON.parse({{ option|tojson|safe }});
+(function(){
+  require.config({
+      paths: {
+          echarts: '../../static/lib/echarts-2.2.7/build/dist'
+      }
+  });
+  var genderChartOption = {
+      title : {
+          text: '性别',
+          subtext: '',
+          x:'center'
+      },
+      tooltip : {
+          show: true,
+          trigger: 'item',
+          formatter: "{a} <br/>{b} : {c} ({d}%)"
+      },
+      legend: {
+          orient : 'vertical',
+          x : 'left',
+          y : '60',
+          data: profile.data.gender.category
+      },
+      toolbox: {
+          show : true,
+          feature : {
+              mark : {show: false},
+              dataView : {show: false, readOnly: false},
+              magicType : {
+                  show: false,
+                  type: ['pie', 'funnel'],
+                  option: {
+                      funnel: {
+                          x: '25%',
+                          width: '50%',
+                          funnelAlign: 'center',
+                          max: 1548
+                      }
+                  }
+              },
+              restore : {show: true},
+              saveAsImage : {show: true}
+          }
+      },
+      calculable : true,
+      series : [
+          {
+              name:'性别',
+              type:'pie',
+              radius : ['50%', '65%'],
+              itemStyle : {
+                  normal : {
+                      label : {
+                          show : false
+                      },
+                      labelLine : {
+                          show : false
+                      }
+                  },
+                  emphasis : {
+                      label : {
+                          show : true,
+                          position : 'center',
+                          textStyle : {
+                              fontSize : '30',
+                              fontWeight : 'bold'
+                          }
+                      }
+                  }
+              },
+              data:[
+                  {value: profile.data.gender.series[0], name: profile.data.gender.category[0]},
+                  {value: profile.data.gender.series[1], name: profile.data.gender.category[1]}
+              ]
+          }
+      ]
+  };
+
+  var ageOption = {
+      title : {
+          text: '年龄',
+          subtext: '',
+          x:'center'
+      },
+      tooltip : {
+          trigger: 'item',
+          formatter: "{a} <br/>{b} : {c} ({d}%)"
+      },
+      legend: {
+          orient : 'vertical',
+          x : 'right',
+          y : '60',
+          data: profile.data.age.category
+      },
+      toolbox: {
+          show : true,
+          feature : {
+              mark : {show: true},
+              dataView : {show: true, readOnly: false},
+              magicType : {
+                  show: true,
+                  type: ['pie', 'funnel'],
+                  option: {
+                      funnel: {
+                          x: '25%',
+                          width: '50%',
+                          funnelAlign: 'center',
+                          max: 1548
+                      }
+                  }
+              },
+              restore : {show: true},
+              saveAsImage : {show: true}
+          }
+      },
+      calculable : true,
+      series : [
+          {
+              name:'年龄',
+              type:'pie',
+              radius : ['50%', '70%'],
+              itemStyle : {
+                  normal : {
+                      label : {
+                          show : false
+                      },
+                      labelLine : {
+                          show : false
+                      }
+                  },
+                  emphasis : {
+                      label : {
+                          show : true,
+                          position : 'center',
+                          textStyle : {
+                              fontSize : '30',
+                              fontWeight : 'bold'
+                          }
+                      }
+                  }
+              },
+              data:[
+                  {value: profile.data.age.series[0], name: profile.data.age.category[0]},
+                  {value: profile.data.age.series[1], name: profile.data.age.category[1]},
+                  {value: profile.data.age.series[2], name: profile.data.age.category[2]},
+                  {value: profile.data.age.series[3], name: profile.data.age.category[3]}
+              ]
+          }
+      ]
+  };
+
+  var jobMapOption = {
+      title: {
+          x: 'center',
+          text: '职业',
+          subtext: '',
+          link: ''
+      },
+      tooltip: {
+          trigger: 'item'
+      },
+      toolbox: {
+          show: true,
+          feature: {
+              dataView: {show: true, readOnly: false},
+              restore: {show: true},
+              saveAsImage: {show: true}
+          }
+      },
+      calculable: false,
+      grid: {
+          borderWidth: 0,
+          y: 80,
+          y2: 60
+      },
+      xAxis: [
+          {
+              type: 'category',
+              show: false,
+              data: profile.data.job.category
+          }
+      ],
+      yAxis: [
+          {
+              type: 'value',
+              show: false
+          }
+      ],
+      series: [
+          {
+              name: '职业',
+              type: 'bar',
+              itemStyle: {
+                  normal: {
+                      color: function(params) {
+                          // build a color map as your need.
+                          var colorList = [
+                            '#C1232B','#B5C334','#FCCE10','#E87C25','#27727B',
+                             '#FE8463','#9BCA63','#FAD860','#F3A43B','#60C0DD',
+                             '#D7504B','#C6E579','#F4E001','#F0805A','#26C0C0'
+                          ];
+                          return colorList[params.dataIndex]
+                      },
+                      label: {
+                          show: true,
+                          position: 'top',
+                          formatter: '{b}\n{c}'
+                      }
+                  }
+              },
+              data: profile.data.job.series,
+          }
+      ]
+  };
+
+  var professionMapOption = {
+      title: {
+          x: 'center',
+          text: '专业',
+          subtext: '',
+          link: ''
+      },
+      tooltip: {
+          trigger: 'item'
+      },
+      toolbox: {
+          show: true,
+          feature: {
+              dataView: {show: true, readOnly: false},
+              restore: {show: true},
+              saveAsImage: {show: true}
+          }
+      },
+      calculable: false,
+      grid: {
+          borderWidth: 0,
+          y: 80,
+          y2: 60
+      },
+      xAxis: [
+          {
+              type: 'category',
+              show: false,
+              data: profile.data.profession.category
+          }
+      ],
+      yAxis: [
+          {
+              type: 'value',
+              show: false
+          }
+      ],
+      series: [
+          {
+              name: '专业',
+              type: 'bar',
+              itemStyle: {
+                  normal: {
+                      color: function(params) {
+                          // build a color map as your need.
+                          var colorList = [
+                            '#C1232B','#B5C334','#FCCE10','#E87C25','#27727B',
+                             '#FE8463','#9BCA63','#FAD860','#F3A43B','#60C0DD',
+                             '#D7504B','#C6E579','#F4E001','#F0805A','#26C0C0'
+                          ];
+                          return colorList[params.dataIndex]
+                      },
+                      label: {
+                          show: true,
+                          position: 'top',
+                          formatter: '{b}\n{c}'
+                      }
+                  }
+              },
+              data: profile.data.profession.series,
+          }
+      ]
+  };
+
+
+  require(['echarts', 'echarts/chart/bar', 'echarts/chart/line', 'echarts/chart/map', 'echarts/chart/pie'],
+  function(ec) {
+      // 性别信息图render
+      if(!document.getElementById('genderMap')){
+          return;
+      }
+      var genderChart = ec.init(document.getElementById('genderMap'));
+      genderChart.setOption(genderChartOption);
+
+      // 年龄信息图render
+      if(!document.getElementById('ageMap')){
+          return;
+      }
+      var ageMap = ec.init(document.getElementById('ageMap'));
+      ageMap.setOption(ageOption);
+
+      // 职业信息图render
+      if(!document.getElementById('jobMap')){
+          return;
+      }
+      var jobMap = ec.init(document.getElementById('jobMap'));
+      jobMap.setOption(jobMapOption);
+
+      // 专业信息图render
+      if(!document.getElementById('professionMap')){
+          return;
+      }
+      var professionMap = ec.init(document.getElementById('professionMap'));
+      professionMap.setOption(professionMapOption);
+  });
+
+}).call(this);
+</script>
+{% endblock %}
