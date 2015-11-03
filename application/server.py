@@ -1,33 +1,11 @@
 # coding: utf-8
 
-from flask import Flask, session, request, redirect, url_for
-from itsdangerous import Signer
-from .views.panel import panel
-from .views.restapi import restapi
-from .views.dashboard import dashboard_bp
-from .views.integration import integration
-from .views.settings import settings
-from .views.account import accounts_bp
-from datetime import timedelta
-from werkzeug.contrib.cache import SimpleCache
+from flask import session, request, redirect, url_for
 from os.path import dirname, join
 import json
 
-app = Flask(__name__)
-app.config['SECRET_KEY'] = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?RT'
-signer = Signer(app.config['SECRET_KEY'])
-app.permanent_session_lifetime = timedelta(hours=1)
-
-cache = SimpleCache()
-
-
-# 动态路由
-app.register_blueprint(panel)
-app.register_blueprint(dashboard_bp)
-app.register_blueprint(integration)
-app.register_blueprint(settings)
-app.register_blueprint(accounts_bp)
-app.register_blueprint(restapi)
+from application import make_app
+app = make_app()
 
 
 @app.route('/', methods=['GET', 'POST'])

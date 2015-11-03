@@ -1,7 +1,6 @@
 import requests
 from ..models import Developer
 from flask import Blueprint, render_template, request, session, redirect, url_for
-# import server
 
 panel = Blueprint('panel', __name__, template_folder='templates')
 
