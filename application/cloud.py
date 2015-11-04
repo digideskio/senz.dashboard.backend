@@ -9,35 +9,30 @@ engine = Engine(app)
 
 
 @engine.after_save('UserInfoLog')
-@engine.define
 def post_static_info(params):
     parse_dict = parse_static_info(params)
     return updata_backend_info(parse_dict)
 
 
 @engine.after_save('UserLocation')
-@engine.define
 def post_location_info(params):
     parse_dict = parse_location_info(params)
     return updata_backend_info(parse_dict)
 
 
 @engine.after_save('UPoiVisitLog')
-@engine.define
 def post_homeoffice_info(params):
     parse_dict = parse_home_office_info(params)
     return updata_backend_info(parse_dict)
 
 
 @engine.after_save('UserEvent')
-@engine.define
 def post_event_info(params):
     parse_dict = parse_event_info(params)
     return updata_backend_info(parse_dict)
 
 
 @engine.after_save('UserActivity')
-@engine.define
 def post_activity_info(params):
     parse_dict = parse_avtivity_info(params)
     return updata_backend_info(parse_dict)
@@ -51,7 +46,7 @@ def post_context_info(params):
 
 def parse_static_info(info_log):
     ret_dict = {}
-    user_id = info_log.get('user').get('objectId')
+    user_id = info_log.get('user').id
     ret_dict['user_id'] = user_id
     static_info = info_log.get('staticInfo') or {}
 

@@ -147,8 +147,9 @@ def consumption():
     car_list = filter(lambda x: x is not None, result_dict['has_car'])
     pet_list = filter(lambda x: x is not None, result_dict['has_pet'])
 
-    consumption_tmp = map(lambda x: list(x), zip(*map(lambda x: [x, consumption_list.count(x)], set(consumption_list))))
-    consumption = {"category": consumption_tmp[0],  "series": consumption_tmp[1]} if consumption_tmp else {}
+    consumption_tmp = map(lambda x: list(x),
+                          zip(*map(lambda x: [x, consumption_list.count(x)], set(consumption_list))))
+    consum = {"category": consumption_tmp[0],  "series": consumption_tmp[1]} if consumption_tmp else {}
     car = {'category': ['yes', 'no'], 'series': [car_list.count('yes'), car_list.count('no')]}
     pet = {'category': ['yes', 'no'], 'series': [pet_list.count('yes'), pet_list.count('no')]}
 
@@ -156,7 +157,7 @@ def consumption():
         'errcode': 0,
         'errmsg': 'ok',
         'data': {
-            'consumption': consumption,
+            'consumption': consum,
             'car': car,
             'pet': pet
         }
@@ -214,7 +215,8 @@ def motion():
     event_list = map(lambda x: translate(x, 'context'), filter(lambda x: x not in home_office_type, event_list))
     event_tmp = sorted(map(lambda x: (x, event_list.count(x)), set(event_list)), key=lambda item: -item[1])
 
-    home_office_tmp = map(lambda x: map(lambda y: y[1], sorted(x.items(), key=lambda key: int(key[0][6:]))), home_office_list)
+    home_office_tmp = map(lambda x: map(lambda y: y[1],
+                                        sorted(x.items(), key=lambda key: int(key[0][6:]))), home_office_list)
     series = map(lambda x: list(x), zip(*map(lambda x:
                                              [x.count(home_office_type[i]) for i in xrange(len(home_office_type))],
                                              zip(*home_office_tmp))))
@@ -270,16 +272,20 @@ def get_query_list(app_id='', *field):
             ret_dict[item] = map(lambda result: result.attributes.get(item), result_list)
         else:
             if item == 'event':
-                events_list = filter(lambda x: x is not None, map(lambda result: result.attributes.get(item), result_list))
+                events_list = filter(lambda x: x is not None,
+                                     map(lambda result: result.attributes.get(item), result_list))
                 ret_dict[item] = map(lambda x: x.items()[-1][1].get('event'), events_list)
             elif item == 'home_office_status':
-                status = filter(lambda x: x is not None, map(lambda result: result.attributes.get('home_office_status'), result_list))
+                status = filter(lambda x: x is not None,
+                                map(lambda result: result.attributes.get('home_office_status'), result_list))
                 ret_dict[item] = map(lambda x: x.items()[-1][1], status)
             elif item == 'province':
-                locations = filter(lambda x: x is not None, map(lambda result: result.attributes.get('location'), result_list))
+                locations = filter(lambda x: x is not None,
+                                   map(lambda result: result.attributes.get('location'), result_list))
                 ret_dict[item] = map(lambda x: x.items()[-1][1][item], locations)
             elif item == 'city':
-                locations = filter(lambda x: x is not None, map(lambda result: result.attributes.get('location'), result_list))
+                locations = filter(lambda x: x is not None,
+                                   map(lambda result: result.attributes.get('location'), result_list))
                 ret_dict[item] = map(lambda x: x.items()[-1][1][item], locations)
             else:
                 ret_dict[item] = map(lambda result: result.attributes.get(item, None), result_list)
