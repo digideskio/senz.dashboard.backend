@@ -19,7 +19,7 @@
             <div class="ng-scope">
             <form action="{{ url_for('settings.add_app') }}" method="post">
                 <div><input type="text" size="36" name="app_name" placeholder="app_name" /></div>
-                <div><input type="submit" id="create-app" value="Create Application" ></div>
+                <div><input type="submit" id="create-app" value="创建应用" ></div>
             </form>
             <br>
             <br>
@@ -32,9 +32,9 @@
                 <div><label>App Key</label><div>
                     <input id="app_key" type="text" size="36" name="app_key" value="{{ app_key }}" readonly></div></div>
                 {% if disabled %}
-                    <div><button type="submit" id="delete-app">Delete This Application</button></div>
+                    <div><button type="submit" id="delete-app">删除应用</button></div>
                 {% else %}
-                    <div><button type="submit" id="delete-app">Delete This Application</button></div>
+                    <div><button type="submit" id="delete-app">删除应用</button></div>
                 {% endif %}
             </form>
             </div>
