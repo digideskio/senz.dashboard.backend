@@ -87,7 +87,7 @@ def interest():
     app_list = context_dict['app_list']
 
     result_dict = get_query_list(app_id, 'interest')
-    interest_list = [] if 'interest' not in result_dict else result_dict['interest']
+    interest_list = filter(lambda x: x is not None, result_dict['interest'])
     interest_list = map(lambda x: translate(x, 'interest'), interest_list)
     interest_tmp = sorted(map(lambda x: (x, interest_list.count(x)), set(interest_list)), key=lambda item: -item[1])
     if interest_tmp:
@@ -115,8 +115,8 @@ def marriage():
     app_list = context_dict['app_list']
 
     result_dict = get_query_list(app_id, 'marriage', 'pregnant')
-    marriage_list = [] if 'marriage' not in result_dict else result_dict['marriage']
-    pregnant_list = [] if 'pregnant' not in result_dict else result_dict['pregnant']
+    marriage_list = filter(lambda x: x is not None, result_dict['marriage'])
+    pregnant_list = filter(lambda x: x is not None, result_dict['pregnant'])
 
     marriage = {'category': ['yes', 'no'], 'series': [marriage_list.count('yes'), marriage_list.count('no')]}
     pregnant = {'category': ['yes', 'no'], 'series': [pregnant_list.count('yes'), pregnant_list.count('no')]}
@@ -143,9 +143,9 @@ def consumption():
     app_list = context_dict['app_list']
 
     result_dict = get_query_list(app_id, 'consumption', 'has_car', 'has_pet')
-    consumption_list = [] if 'consumption' not in result_dict else result_dict['consumption']
-    car_list = [] if 'has_car' not in result_dict else result_dict['has_car']
-    pet_list = [] if 'has_pet' not in result_dict else result_dict['has_pet']
+    consumption_list = filter(lambda x: x is not None, result_dict['consumption'])
+    car_list = filter(lambda x: x is not None, result_dict['has_car'])
+    pet_list = filter(lambda x: x is not None, result_dict['has_pet'])
 
     consumption_tmp = map(lambda x: list(x), zip(*map(lambda x: [x, consumption_list.count(x)], set(consumption_list))))
     consumption = {"category": consumption_tmp[0],  "series": consumption_tmp[1]} if consumption_tmp else {}
@@ -175,12 +175,9 @@ def location():
     username = context_dict['username']
     app_list = context_dict['app_list']
 
-    # result_dict = server.cache.get('location')
-    # if not result_dict:
     result_dict = get_query_list(app_id, 'province', 'city')
-    # server.cache.set('location', result_dict, timeout=10*60)
-    provice_list = [] if 'province' not in result_dict else result_dict['province']
-    city_list = [] if 'city' not in result_dict else result_dict['city']
+    provice_list = filter(lambda x: x is not None, result_dict['province'])
+    city_list = filter(lambda x: x is not None, result_dict['city'])
 
     province = map(lambda x: {'name': x[0], 'value': x[1]},
                    sorted(map(lambda x: (x, provice_list.count(x)), set(provice_list)), key=lambda x: -x[1]))
@@ -211,8 +208,8 @@ def motion():
     home_office_type = ['contextAtWork', 'contextAtHome', 'contextCommutingWork', 'contextCommutingHome']
     result_dict = get_query_list(app_id, 'home_office_status', 'event')
 
-    home_office_list = [] if 'home_office_status' not in result_dict else result_dict['home_office_status']
-    event_list = [] if 'event' not in result_dict else result_dict['event']
+    home_office_list = filter(lambda x: x is not None, result_dict['home_office_status'])
+    event_list = filter(lambda x: x is not None, result_dict['event'])
 
     event_list = map(lambda x: translate(x, 'context'), filter(lambda x: x not in home_office_type, event_list))
     event_tmp = sorted(map(lambda x: (x, event_list.count(x)), set(event_list)), key=lambda item: -item[1])
@@ -242,10 +239,20 @@ def motion():
 def get_query_list(app_id='', *field):
     if not app_id:
         app_id = '5621fb0f60b27457e863fabb'
+
+    app_query = Query(Object.extend('Application'))
+    app_query.equal_to('app_id', app_id)
+    app = app_query.find()[0] if app_query.count() else None
+
     try:
         query_limit = 100
-        query = Query(Object.extend('DashDataSource'))
-        query.equal_to('app_id', app_id)
+        if app_id == '5621fb0f60b27457e863fabb':
+            query = Query(Object.extend('DashDataSource'))
+            query.equal_to('app_id', app_id)
+        else:
+            query = Query(Object.extend('DashboardSource'))
+            query.equal_to('app', app)
+
         total_count = query.count()
         query_times = (total_count + query_limit - 1) / query_limit
         result_list = []
@@ -256,9 +263,26 @@ def get_query_list(app_id='', *field):
     except LeanCloudError, e:
         print(e)
         return {}
+
     ret_dict = {}
     for item in field:
-        ret_dict[item] = map(lambda result: result.attributes[item], result_list)
+        if app_id == '5621fb0f60b27457e863fabb':
+            ret_dict[item] = map(lambda result: result.attributes.get(item), result_list)
+        else:
+            if item == 'event':
+                events_list = filter(lambda x: x is not None, map(lambda result: result.attributes.get(item), result_list))
+                ret_dict[item] = map(lambda x: x.items()[-1][1].get('event'), events_list)
+            elif item == 'home_office_status':
+                status = filter(lambda x: x is not None, map(lambda result: result.attributes.get('home_office_status'), result_list))
+                ret_dict[item] = map(lambda x: x.items()[-1][1], status)
+            elif item == 'province':
+                locations = filter(lambda x: x is not None, map(lambda result: result.attributes.get('location'), result_list))
+                ret_dict[item] = map(lambda x: x.items()[-1][1][item], locations)
+            elif item == 'city':
+                locations = filter(lambda x: x is not None, map(lambda result: result.attributes.get('location'), result_list))
+                ret_dict[item] = map(lambda x: x.items()[-1][1][item], locations)
+            else:
+                ret_dict[item] = map(lambda result: result.attributes.get(item, None), result_list)
     return ret_dict
 
 
