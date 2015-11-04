@@ -226,7 +226,7 @@ if __name__ == '__main__':
     # for obj in obj_list:
     #     post_static_info(obj)
     #
-    i = 0
+    i = 9
     limit = 100
     while True:
         print(i)
