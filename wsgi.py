@@ -19,7 +19,7 @@ application = engine
 
 if __name__ == '__main__':
     # 只在本地开发环境执行的代码
-    #app.debug = True
+    # app.debug = True
     server = simple_server.make_server('localhost', PORT, application)
     print("Runing at http://localhost:%d" % PORT)
     server.serve_forever()

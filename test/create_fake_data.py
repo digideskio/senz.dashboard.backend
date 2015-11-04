@@ -121,10 +121,9 @@ def set_fake_data_to_db(app_id, user_id):
     # dst_record.set('user_id', user_id)
     # dst_record.set('gender', gender_list[randrange(0, len(gender_list))])
     # dst_record.set('age', age_list[randrange(0, len(age_list))])
-    # dst_record.set('event', event_list[randrange(0, len(event_list))])
-    dst_record.set('province', province_list[randrange(0, len(province_list))])
-    dst_record.set('city', city_list[randrange(0, len(city_list))])
-    dst_record.save()
+    dst_record.set('event', event_list[randrange(0, len(event_list))])
+    # dst_record.set('province', province_list[randrange(0, len(province_list))])
+    # dst_record.set('city', city_list[randrange(0, len(city_list))])
     dst_record.save()
     return True
 
@@ -149,11 +148,11 @@ def get_tracker_of_app(app_id):
 if __name__ == '__main__':
     leancloud.init('z6fhqxvpal43l238q7xzogfdls74my214o5bapm5vkwfn4xh',
                    'rb7jufb22o15nzc9ub5b6b0lx3xt845o2ofz494oc1s9esg8')
-    # user_list = get_userid_list()
-    # for item in user_list:
-    #     print(item)
-    #     set_fake_data_to_db('demo55603e35e4b07ae45cd1e581', item)
+    user_list = get_userid_list()
+    for item in user_list:
+        print(item)
+        set_fake_data_to_db('5621fb0f60b27457e863fabb', item)
 
-    app_id = 'demo55603e35e4b07ae45cd1e581'
-    tracker_list = get_tracker_of_app(app_id)
-    print(tracker_list, len(tracker_list))
+    # app_id = 'demo55603e35e4b07ae45cd1e581'
+    # tracker_list = get_tracker_of_app(app_id)
+    # print(tracker_list, len(tracker_list))

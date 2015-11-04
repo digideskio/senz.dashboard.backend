@@ -1,5 +1,5 @@
 # coding: utf-8
-from flask import Blueprint, render_template, json, session, redirect, url_for
+from flask import Blueprint, render_template, json, session
 from leancloud import Object, Query, LeanCloudError
 from ..models import Developer
 from os.path import dirname, join
@@ -175,7 +175,10 @@ def location():
     username = context_dict['username']
     app_list = context_dict['app_list']
 
+    # result_dict = server.cache.get('location')
+    # if not result_dict:
     result_dict = get_query_list(app_id, 'province', 'city')
+    # server.cache.set('location', result_dict, timeout=10*60)
     provice_list = [] if 'province' not in result_dict else result_dict['province']
     city_list = [] if 'city' not in result_dict else result_dict['city']
 
@@ -270,7 +273,5 @@ def translate(target, arg):
         return s.get('context').get(target)
     else:
         return ''
-
-
 
 
