@@ -35,7 +35,7 @@
         <ul id="context" class="filter-ul">
             <label><strong>情境:</strong></label><br>
             {% for item in context_list %}
-            <li class=""><input type="radio" {% if item == 'contextAtHome' %} checked="checked" {% endif %} name="context" value="{{item}}" /> {{item|translate("context")}}</li>
+            <li class=""><input type="radio" {% if item == 'contextCommutingWork' %} checked="checked" {% endif %} name="context" value="{{item}}" /> {{item|translate("context")}}</li>
             {% endfor %}
         </ul>
         <input class="btn" id="btn" type="button" value="Submit"/>

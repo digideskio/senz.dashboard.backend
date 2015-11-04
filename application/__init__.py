@@ -10,24 +10,13 @@ from .views.settings import settings
 from .views.account import accounts_bp
 
 
-
-
-
-
-
-
-
-
 def make_app():
     app = Flask(__name__)
     config = load_config()
     app.config.from_object(config)
-    register_routes(app, panel, restapi,\
-                    dashboard_bp, integration,\
-                    settings, accounts_bp)
+    register_routes(app, panel, restapi, dashboard_bp,
+                    integration, settings, accounts_bp)
     return app
-
-
 
 
 def register_routes(app, *route_list):

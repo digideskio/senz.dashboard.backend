@@ -8,6 +8,13 @@ import time
 engine = Engine(app)
 
 
+@engine.define
+# @engine.after_update('Test')
+# @engine.after_save('Test')
+def test(param):
+    print(param)
+
+
 @engine.after_save('UserInfoLog')
 def post_static_info(params):
     parse_dict = parse_static_info(params)
@@ -16,6 +23,7 @@ def post_static_info(params):
 
 @engine.after_save('UserLocation')
 def post_location_info(params):
+    print('UserLocation')
     parse_dict = parse_location_info(params)
     return updata_backend_info(parse_dict)
 
@@ -86,6 +94,7 @@ def parse_location_info(location_info):
     }
     ret_dict['user_id'] = user_id
     ret_dict['location'] = location_tmp
+    print(ret_dict['user_id'])
     return ret_dict
 
 
@@ -142,6 +151,7 @@ def parse_context_info(context_info):
 
 
 def updata_backend_info(parse_dict):
+    print(parse_dict)
     user_id = parse_dict['user_id']
     # get user Object
     query = Query(Object.extend('_User'))
