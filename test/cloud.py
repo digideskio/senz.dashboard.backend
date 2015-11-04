@@ -5,7 +5,8 @@ from datetime import datetime
 import time
 
 
-query_limit = 100
+query_limit = 1000
+
 
 def get_obj_list(obj_name):
     query = Query(Object.extend(obj_name))
@@ -17,6 +18,13 @@ def get_obj_list(obj_name):
         query.skip(index * query_limit)
         ret_list.extend(query.find())
     return ret_list
+
+
+def get_huge_obj_list(obj_name, offset, limit):
+    query = Query(Object.extend(obj_name))
+    query.limit(limit)
+    query.skip(offset)
+    return query.find()
 
 
 def post_static_info(params):
@@ -53,7 +61,7 @@ def parse_static_info(info_log):
     ret_dict = {}
     user_id = info_log.get('user').id
     ret_dict['user_id'] = user_id
-    static_info = info_log.get('staticInfo')
+    static_info = info_log.get('staticInfo') or {}
 
     for key, value in static_info.items():
         if isinstance(value, dict):
@@ -74,15 +82,23 @@ def parse_location_info(location_info):
     location = location_info.get('location')
     province = location_info.get('province')
     city = location_info.get('city')
-    poiproblv1 = location_info.get('poiProbLv1')
-    poiproblv2 = location_info.get('poiProbLv2')
+    street = location_info.get('street')
+    poiproblv1 = location_info.get('poiProbLv1') or {}
+    poiproblv2 = location_info.get('poiProbLv2') or {}
+    timestamp = location_info.get('timestamp') or None
 
+    location_tmp = {
+        timestamp: {
+            'location': location,
+            'province': province,
+            'city': city,
+            'street': street,
+            'poiProbLv1': sorted(poiproblv1.items(), key=lambda value: -value[1])[0][0],
+            'poiProbLv2': sorted(poiproblv2.items(), key=lambda value: -value[1])[0][0]
+        }
+    }
     ret_dict['user_id'] = user_id
-    ret_dict['location'] = location
-    ret_dict['province'] = province
-    ret_dict['city'] = city
-    ret_dict['poiProbLv1'] = sorted(poiproblv1.items(), key=lambda value: -value[1])[0][0]
-    ret_dict['poiProbLv2'] = sorted(poiproblv2.items(), key=lambda value: -value[1])[0][0]
+    ret_dict['location'] = location_tmp
     return ret_dict
 
 
@@ -99,11 +115,12 @@ def parse_home_office_info(homeoffice_info):
 def parse_event_info(event_info):
     ret_dict = {}
     user_id = event_info.get('user').id if event_info.get('user') else None
-    events = event_info.get('event')
+    events = event_info.get('event') or {}
     startTime = event_info.get('startTime')
     endTime = event_info.get('endTime')
     ret_dict['user_id'] = user_id
-    event = sorted(events.items(), key=lambda value: -value[1])[0][0]
+    event_tmp = sorted(events.items(), key=lambda value: -value[1])
+    event = event_tmp[0][0] if event_tmp else None
     ret_dict['event'] = {
         startTime: {
             'event': event,
@@ -159,7 +176,7 @@ def updata_backend_info(parse_dict):
         query.equal_to('objectId', app_id)
         app = query.find()[0]
 
-        table_dash = Object.extend('Test')
+        table_dash = Object.extend('DashboardSource')
         query = Query(table_dash)
         query.equal_to('app', app)
         query.equal_to('user', user)
@@ -183,6 +200,11 @@ def updata_backend_info(parse_dict):
                 for k, v in parse_dict['event'].items():
                     event[k] = v
                 dst_table.set('event', event)
+            elif key is 'location':
+                location = dst_table.get('location') or {}
+                for k, v in parse_dict['location'].items():
+                    location[k] = v
+                dst_table.set('location', location)
             else:
                 dst_table.set(key, value)
 
@@ -190,21 +212,35 @@ def updata_backend_info(parse_dict):
         return True
 
 
-
 if __name__ == '__main__':
-    init('z6fhqxvpal43l238q7xzogfdls74my214o5bapm5vkwfn4xh',
-         'rb7jufb22o15nzc9ub5b6b0lx3xt845o2ofz494oc1s9esg8')
+    init('2x27tso41inyau4rkgdqts0mrao1n6rq1wfd6644vdrz2qfo',
+         '3fuabth1ar3sott9sgxy4sf8uq31c9x8bykugv3zh7eam5ll')
 
-    obj_name_list = ['UserEvent', 'UserInfoLog', 'UserLocation', 'UserMotion']
+    obj_name_list = ['UserEvent', 'UserInfoLog', 'UserLocation', 'UPoiVisitLog']
 
-    #obj_list = get_obj_list(obj_name_list[0])
-    #for obj in obj_list:
+    # obj_list = get_obj_list(obj_name_list[0])
+    # for obj in obj_list:
     #    post_event_info(obj)
 
-    obj_list = get_obj_list(obj_name_list[1])
-    for obj in obj_list:
-        post_static_info(obj)
+    # obj_list = get_obj_list(obj_name_list[1])
+    # for obj in obj_list:
+    #     post_static_info(obj)
+    #
+    i = 0
+    limit = 100
+    while True:
+        print(i)
+        obj_list = get_huge_obj_list(obj_name_list[2], i*limit, limit)
+        if not obj_list:
+            break
+        i += 1
+        for obj in obj_list:
+            post_location_info(obj)
 
-    obj_list = get_obj_list(obj_name_list[2])
-    for obj in obj_list:
-        post_location_info(obj)
+    # obj_list = get_obj_list(obj_name_list[2])
+    # for obj in obj_list:
+    #     post_location_info(obj)
+
+    # obj_list = get_obj_list(obj_name_list[3])
+    # for obj in obj_list:
+    #     post_homeoffice_info(obj)

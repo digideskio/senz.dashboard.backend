@@ -300,8 +300,8 @@
                 ...
                 NSLog("\(SZSDKVersion)") // 能够正常编译并打印SDK版本号
                 // Objective-C
-                #import <CoreLocation/CoreLocation.h>
-                #import <CoreMotion/CoreMotion.h>
+                #import &lt;CoreLocation/CoreLocation.h&gt;
+                #import &lt;CoreMotion/CoreMotion.h>
                 #import "Senz/Senz.h"
                 #import "Senz/Senz-swift.h"
 
@@ -553,8 +553,36 @@
                 事件来获知Home/Office状态变化。新的状态保存在<code>NSNotification</code>的<code>userInfo</code>属性中，
                 通过键<code>kSZHomeOfficeStatus</code>来获得<code>SZHomeOfficeStatus</code>对象。</p>
 
-            </div>
+            <h3>3.4 用户属性API</h3>
 
+            <p>用户属性API能过根据本机安装的App和其他信息来推断当前用户的特质。调用<code>getUserInfo:</code>方法来获取用户属性：</p>
+            <pre><code>
+                // Swift
+                SZSenz.sharedInstance.getUserInfo { (result, error) -> () in
+                    if let dict = result {
+                        // dict是一个包含用户特质的JSON对象
+                    }
+                }
+            </code></pre>
+            <pre><code>
+                // Objective-C
+                [senz getUserInfoWithBlock:^(NSDictionary&lt;NSString *,id&gt; * _Nullable result, NSError * _Nullable err) {
+                    if (result != nil) {
+                        // result是一个包含用户特质的JSON对象
+                    }
+                }];
+            </code></pre>
+
+            <p>用户属性的JSON对象的<code>键</code>是特质名称，<code>值</code>是特质的贴合程度。例如：</p>
+            <pre><code>
+                {
+                    "has_car":0.10048,
+                    "online_shopping":0.20056,
+                    "current_news":0.10076
+                }
+            </code></pre>
+
+            </div>
             </div>
 
 
