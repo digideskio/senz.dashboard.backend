@@ -172,7 +172,7 @@ div,p,h1,h2,h3,h4,h5,h6,ul,dl,ol,li {
 .sidebar .active > a {
     color: rgba(51, 204, 204, 1);
 }
-.active > a {
+#formwrapper .active > a, #formwrapper .title .active {
     color: rgba(51, 204, 204, 1);
 }
 .sidebar ul li {

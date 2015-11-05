@@ -5,11 +5,11 @@
 
 {% block content %}
     <div id="container" class="container">
-    <div id="content" class="content single-content bg-gray" style="margin-top: 40px;">
+    <div id="content" class="content single-content pd40 bg-gray" style="margin-top: 40px;">
         <div id="formwrapper">
             <form action="{{ url_for('accounts_bp.login') }}" method="post" name="apLogin" id="apLogin">
                 <div class="title clearfix">
-                    <span class="left">设置新密码</span>
+                    <span class="left active">设置新密码</span>
                 </div>
                 <div class="item">
                     <input type="text" placeholder="新密码" name="password1" id="password1" size="20" maxlength="30" />
