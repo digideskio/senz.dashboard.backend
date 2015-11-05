@@ -114,6 +114,9 @@ div,p,h1,h2,h3,h4,h5,h6,ul,dl,ol,li {
     border-top-left-radius: 10px;
     min-height: 678px;
 }
+.pd40 {
+  padding: 40px;
+}
 .single-content {
     margin-left: 0;
     border-radius: 0;
