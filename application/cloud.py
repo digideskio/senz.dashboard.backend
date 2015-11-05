@@ -76,14 +76,13 @@ def parse_location_info(location_info):
     timestamp = location_info.get('timestamp') or None
 
     location_tmp = {
-        timestamp: {
-            'location': location,
-            'province': province,
-            'city': city,
-            'street': street,
-            'poiProbLv1': sorted(poiproblv1.items(), key=lambda value: -value[1])[0][0],
-            'poiProbLv2': sorted(poiproblv2.items(), key=lambda value: -value[1])[0][0]
-        }
+        'timestamp': timestamp,
+        'location': location,
+        'province': province,
+        'city': city,
+        'street': street,
+        'poiProbLv1': sorted(poiproblv1.items(), key=lambda value: -value[1])[0][0],
+        'poiProbLv2': sorted(poiproblv2.items(), key=lambda value: -value[1])[0][0]
     }
     ret_dict['user_id'] = user_id
     ret_dict['location'] = location_tmp
@@ -139,6 +138,7 @@ def parse_avtivity_info(activity_info):
 
 
 def updata_backend_info(parse_dict):
+    print(parse_dict)
     user_id = parse_dict['user_id']
     # get user Object
     query = Query(Object.extend('_User'))
@@ -183,11 +183,6 @@ def updata_backend_info(parse_dict):
                 for k, v in parse_dict['event'].items():
                     event[k] = v
                 dst_table.set('event', event)
-            elif key is 'location':
-                location = dst_table.get('location') or {}
-                for k, v in parse_dict['location'].items():
-                    location[k] = v
-                dst_table.set('location', location)
             else:
                 dst_table.set(key, value)
         dst_table.save()

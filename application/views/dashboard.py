@@ -288,11 +288,11 @@ def get_query_list(app_id='', *field):
             elif item == 'province':
                 locations = filter(lambda x: x is not None,
                                    map(lambda result: result.attributes.get('location'), result_list))
-                ret_dict[item] = map(lambda x: x.items()[-1][1][item], locations)
+                ret_dict[item] = map(lambda x: x.get(item), locations)
             elif item == 'city':
                 locations = filter(lambda x: x is not None,
                                    map(lambda result: result.attributes.get('location'), result_list))
-                ret_dict[item] = map(lambda x: x.items()[-1][1][item], locations)
+                ret_dict[item] = map(lambda x: x.get(item), locations)
             else:
                 ret_dict[item] = map(lambda result: result.attributes.get(item, None), result_list)
     return ret_dict
