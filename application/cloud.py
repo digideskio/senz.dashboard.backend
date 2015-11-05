@@ -9,58 +9,49 @@ engine = Engine(app)
 
 
 @engine.define
-# @engine.after_update('Test')
-# @engine.after_save('Test')
-def test(param):
-    print(param)
-
-
-@engine.after_save('UserInfoLog')
-def post_static_info(params):
-    parse_dict = parse_static_info(params)
+def post_obj_from_timeline(name, obj):
+    if name == 'UserLocation':
+        parse_dict = parse_location_info(obj)
+    elif name == 'UPoiVisitLog':
+        parse_dict = parse_home_office_info(obj)
+    elif name == 'UserInfoLog':
+        parse_dict = parse_static_info(obj)
+    elif name == 'UserMotion':
+        parse_dict = parse_motion_info(obj)
+    elif name == 'UserEvent':
+        parse_dict = parse_event_info(obj)
+    elif name == 'UserActivity':
+        parse_dict = parse_avtivity_info(obj)
+    else:
+        parse_dict = {}
     return updata_backend_info(parse_dict)
 
 
-@engine.after_save('UserLocation')
-def post_location_info(params):
-    print('UserLocation')
-    parse_dict = parse_location_info(params)
-    return updata_backend_info(parse_dict)
-
-
-@engine.after_save('UPoiVisitLog')
-def post_homeoffice_info(params):
-    parse_dict = parse_home_office_info(params)
-    return updata_backend_info(parse_dict)
-
-
-@engine.after_save('UserEvent')
-def post_event_info(params):
-    parse_dict = parse_event_info(params)
-    return updata_backend_info(parse_dict)
-
-
-@engine.after_save('UserActivity')
-def post_activity_info(params):
-    parse_dict = parse_avtivity_info(params)
-    return updata_backend_info(parse_dict)
-
-
-# @engine.define
-def post_context_info(params):
-    parse_dict = parse_context_info(params)
-    return updata_backend_info(parse_dict)
+def parse_motion_info(motion_obj):
+    ret_dict = {}
+    user_id = motion_obj.get('user').get('objectId')
+    ret_dict['user_id'] = user_id
+    timestamp = motion_obj.get('timestamp') or None
+    motion_prob = motion_obj.get('motionProb') or {}
+    motion = sorted(filter(lambda x: x is not None, motion_prob.items()),
+                    key=lambda v: -v[1])[0][0]
+    ret_dict['motion'] = {
+        timestamp: {
+            'motion': motion
+        }
+    }
+    return ret_dict
 
 
 def parse_static_info(info_log):
     ret_dict = {}
-    user_id = info_log.get('user').id
+    user_id = info_log.get('user').get('objectId')
     ret_dict['user_id'] = user_id
     static_info = info_log.get('staticInfo') or {}
 
     for key, value in static_info.items():
         if isinstance(value, dict):
-            ret_dict[key] = sorted(value.items(), key=lambda value: -value[1])[0][0]
+            ret_dict[key] = sorted(value.items(), key=lambda v: -v[1])[0][0]
         elif isinstance(value, float):
             if len(key.split('-')) > 1:
                 ret_dict[key.split('-')[0]] = key.split('-')[1]
@@ -73,7 +64,7 @@ def parse_static_info(info_log):
 
 def parse_location_info(location_info):
     ret_dict = {}
-    user_id = location_info.get('user').id
+    user_id = location_info.get('user').get('objectId')
     location = location_info.get('location')
     province = location_info.get('province')
     city = location_info.get('city')
@@ -100,7 +91,7 @@ def parse_location_info(location_info):
 
 def parse_home_office_info(homeoffice_info):
     ret_dict = {}
-    user_id = homeoffice_info.get('user').id
+    user_id = homeoffice_info.get('user').get('objectId')
     status = homeoffice_info.get('home_office_label')
     visit_time = homeoffice_info.get('visit_time')
     ret_dict['user_id'] = user_id
@@ -110,17 +101,17 @@ def parse_home_office_info(homeoffice_info):
 
 def parse_event_info(event_info):
     ret_dict = {}
-    user_id = event_info.get('user').id if event_info.get('user') else None
+    user_id = event_info.get('user').get('objectId') if event_info.get('user') else None
     events = event_info.get('event') or {}
-    startTime = event_info.get('startTime')
-    endTime = event_info.get('endTime')
+    start_time = event_info.get('startTime')
+    end_time = event_info.get('endTime')
     ret_dict['user_id'] = user_id
     event_tmp = sorted(events.items(), key=lambda value: -value[1])
     event = event_tmp[0][0] if event_tmp else None
     ret_dict['event'] = {
-        startTime: {
+        start_time: {
             'event': event,
-            'endTime': endTime
+            'endTime': end_time
         }
     }
     return ret_dict
@@ -139,13 +130,6 @@ def parse_avtivity_info(activity_info):
     ret_dict['activity'] = {'category': activity,
                             'time_range_start': int(time_range_start*1000),
                             'time_range_end': int(time_range_end*1000)}
-    ret_dict['user_id'] = user_id
-    return ret_dict
-
-
-def parse_context_info(context_info):
-    ret_dict = {}
-    user_id = context_info.get('user').id
     ret_dict['user_id'] = user_id
     return ret_dict
 
