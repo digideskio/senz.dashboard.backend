@@ -41,7 +41,7 @@ def parse_motion_info(motion_obj):
             'motion': motion
         }
     }
-    post_panel_data(tracker=user_id, motion_type='motion', context_val=motion)
+    post_panel_data(tracker=user_id, motion_type='motion', motion_val=motion)
     return ret_dict
 
 
