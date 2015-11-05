@@ -1,8 +1,9 @@
 # coding: utf-8
 
 from leancloud import Engine, Query, Object
-from server import app
 from datetime import datetime
+from application.views.panel import post_panel_data
+from server import app
 import time
 
 engine = Engine(app)
@@ -40,6 +41,7 @@ def parse_motion_info(motion_obj):
             'motion': motion
         }
     }
+    post_panel_data(tracker=user_id, motion_type='motion', context_val=motion)
     return ret_dict
 
 
@@ -96,6 +98,7 @@ def parse_home_office_info(homeoffice_info):
     visit_time = homeoffice_info.get('visit_time')
     ret_dict['user_id'] = user_id
     ret_dict['home_office_status'] = {visit_time: status}
+    post_panel_data(tracker=user_id, context_type='context', context_val=status)
     return ret_dict
 
 
@@ -114,6 +117,7 @@ def parse_event_info(event_info):
             'endTime': end_time
         }
     }
+    post_panel_data(tracker=user_id, context_type='context', context_val=event)
     return ret_dict
 
 
@@ -131,6 +135,7 @@ def parse_avtivity_info(activity_info):
                             'time_range_start': int(time_range_start*1000),
                             'time_range_end': int(time_range_end*1000)}
     ret_dict['user_id'] = user_id
+    post_panel_data(tracker=user_id, context_type='context', context_val=activity)
     return ret_dict
 
 

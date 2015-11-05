@@ -13,7 +13,7 @@ $(document).ready(function(){
             }
         }
         for(i=0; i<contextObjs.length; ++i){
-            if(motionObjs[i].checked){
+            if(contextObjs[i].checked){
                 var contextType = contextObjs[i].parentNode.parentNode.getAttribute("id");
                 var contextVal = contextObjs[i].value;
                 break;

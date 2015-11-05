@@ -30,13 +30,12 @@ def show():
                         motion_val=motion_val,
                         context_type=context_type,
                         context_val=context_val)
-
-    motion_dict = {'motionSitting': 0, 'motionWalking': 3, 'motionRunning': 4, 'motionBiking': 2, 'motionCommuting': 1}
+    motion_list = ['motionSitting', 'motionWalking', 'motionRunning', 'motionBiking', 'motionCommuting']
     f = file(join(dirname(dirname(__file__)), 'translate.json'))
     context_list = filter(lambda x: str(x) != '', json.load(f).get('context').keys())
     return render_template('panel/debug.html',
                            username=username,
-                           motion_dict=motion_dict,
+                           motion_list=motion_list,
                            context_list=context_list,
                            tracker_list=tracker_list,
                            app_id=app_id,
@@ -51,13 +50,20 @@ def post_panel_data(**param):
     context_type = param.get('context_type')
     context_val = param.get('context_val')
 
+    home_office_type = ['contextAtWork', 'contextAtHome', 'contextCommutingWork', 'contextCommutingHome']
+
     if tracker != 'all':
         tracker_list = [tracker]
     headers = {"X-AVOSCloud-Application-Id": "wsbz6p3ouef94ubvsdqk2jfty769wkyed3qsry5hebi2va2h",
                "X-AVOSCloud-Application-Key": "6z6n0w3dopxmt32oi2eam2dt0orh8rxnqc8lgpf2hqnar4tr"}
     for item in tracker_list:
-        payload = {"userId": item, "type": motion_type, "val": motion_val}
+        if motion_type:
+            payload = {"userId": item, "type": motion_type, "val": motion_val}
+            requests.post("https://leancloud.cn/1.1/functions/notify_new_details",  headers=headers, data=payload)
+        if context_type and context_val and context_val in home_office_type:
+            payload = {"userId": item, "type": "home_office_status", "val": context_val}
+        elif context_type and context_val and context_val not in home_office_type:
+            payload = {"userId": item, "type": "event", "val": context_val}
+        else:
+            payload = {}
         requests.post("https://leancloud.cn/1.1/functions/notify_new_details",  headers=headers, data=payload)
-        payload = {"userId": item, "type": context_type, "val": context_val}
-        requests.post("https://leancloud.cn/1.1/functions/notify_new_details",  headers=headers, data=payload)
-

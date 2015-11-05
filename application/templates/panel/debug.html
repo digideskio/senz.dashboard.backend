@@ -27,8 +27,8 @@
 
         <ul id="motion" class="filter-ul">
             <label><strong>动作: </strong></label><br>
-            {% for key, value in motion_dict.iteritems()%}
-            <li class=""><input type="radio" {% if value == 1 %} checked="checked" {% endif %} name="motion" value="{{value}}"/> {{key|translate("motion")}}</li>
+            {% for item in motion_list %}
+            <li class=""><input type="radio" {% if item == 'motionSitting' %} checked="checked" {% endif %} name="motion" value="{{item}}"/> {{item|translate("motion")}}</li>
             {% endfor %}
         </ul>
 
