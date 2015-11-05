@@ -51,28 +51,28 @@ var profile = JSON.parse({{ option|tojson|safe }});
         ],
         series : [
             {
-                name: 'contextAtHome',
+                name: profile.data.home_office.category[1],
                 type: 'line',
                 smooth: true,
                 itemStyle: {normal: {areaStyle: {type: 'default'}}},
                 data: profile.data.home_office.series[1]
             },
             {
-                name:'contextAtWork',
+                name: profile.data.home_office.category[0],
                 type:'line',
                 smooth:true,
                 itemStyle: {normal: {areaStyle: {type: 'default'}}},
                 data: profile.data.home_office.series[0]
             },
             {
-                name:'contextCommutingWork',
+                name: profile.data.home_office.category[2],
                 type:'line',
                 smooth:true,
                 itemStyle: {normal: {areaStyle: {type: 'default'}}},
                 data: profile.data.home_office.series[2]
             },
             {
-                name:'contextCommutingHome',
+                name: profile.data.home_office.category[3],
                 type:'line',
                 smooth:true,
                 itemStyle: {normal: {areaStyle: {type: 'default'}}},
@@ -106,7 +106,7 @@ var profile = JSON.parse({{ option|tojson|safe }});
           },
           legend: {
               show: false,
-              data: ['蒸发量']
+              data: ['']
           },
           toolbox: {
               show: true,

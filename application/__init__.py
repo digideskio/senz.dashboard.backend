@@ -1,6 +1,7 @@
 # coding: utf-8
 
 from flask import Flask
+from datetime import timedelta
 from config import load_config
 from .views.panel import panel
 from .views.restapi import restapi
@@ -14,6 +15,7 @@ def make_app():
     app = Flask(__name__)
     config = load_config()
     app.config.from_object(config)
+    app.permanent_session_lifetime = timedelta(hours=1)
     register_routes(app, panel, restapi, dashboard_bp,
                     integration, settings, accounts_bp)
     return app

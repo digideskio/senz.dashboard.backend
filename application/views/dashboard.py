@@ -57,15 +57,20 @@ def profile():
     occupation_list = [] if 'occupation' not in result_dict else result_dict['occupation']
     field_list = [] if 'field' not in result_dict else result_dict['field']
 
-    gender = {'category': ['male', 'female'], 'series': [gender_list.count('male'), gender_list.count('female')]}
-    age = {"category": ["55up", "35to55", "16to35", "16down"],
+    gender = {'category': ['男', '女'], 'series': [gender_list.count('male'), gender_list.count('female')]}
+    age = {"category": ["55以上", "35到55", "16到35", "16以下"],
            "series": [age_list.count('55up'), age_list.count('35to55'),
                       age_list.count('16to35'), age_list.count('16down')]}
-    occupation_tmp = map(lambda x: list(x), zip(*map(lambda x: [x, occupation_list.count(x)], set(occupation_list))))
-    occupation = {"category": occupation_tmp[0], "series": occupation_tmp[1]} if occupation_tmp else {}
-    field_tmp = map(lambda x: list(x), zip(*map(lambda x: [x, field_list.count(x)], set(field_list))))
-    field = {"category": field_tmp[0], "series": field_tmp[1]} if field_tmp else {}
+    occupation_tmp = map(lambda x: list(x), zip(*map(lambda x: [x, occupation_list.count(x)],
+                                                     filter(lambda x: str(x) != '', set(occupation_list)))))
+    occupation = {"category": map(lambda x: translate(x, 'occupation'), occupation_tmp[0]),
+                  "series": occupation_tmp[1]} if occupation_tmp else {"category": [], "series": []}
+    field_tmp = map(lambda x: list(x), zip(*map(lambda x: [x, field_list.count(x)],
+                                                filter(lambda x: str(x) != '', set(field_list)))))
+    field = {"category": map(lambda x: translate(x, 'field'), field_tmp[0]),
+             "series": field_tmp[1]} if field_tmp else {"category": [], "series": []}
 
+    print(field)
     data = {'gender': gender, 'age': age, 'job': occupation, 'profession': field}
     user_profile = {
         'errcode': 0,
@@ -118,8 +123,8 @@ def marriage():
     marriage_list = filter(lambda x: x is not None, result_dict['marriage'])
     pregnant_list = filter(lambda x: x is not None, result_dict['pregnant'])
 
-    marriage = {'category': ['yes', 'no'], 'series': [marriage_list.count('yes'), marriage_list.count('no')]}
-    pregnant = {'category': ['yes', 'no'], 'series': [pregnant_list.count('yes'), pregnant_list.count('no')]}
+    marriage = {'category': ['已婚', '未婚'], 'series': [marriage_list.count('yes'), marriage_list.count('no')]}
+    pregnant = {'category': ['怀孕', '未孕'], 'series': [pregnant_list.count('yes'), pregnant_list.count('no')]}
     ret_json = {
         'errcode': 0,
         'errmsg': 'ok',
@@ -149,9 +154,10 @@ def consumption():
 
     consumption_tmp = map(lambda x: list(x),
                           zip(*map(lambda x: [x, consumption_list.count(x)], set(consumption_list))))
-    consum = {"category": consumption_tmp[0],  "series": consumption_tmp[1]} if consumption_tmp else {}
-    car = {'category': ['yes', 'no'], 'series': [car_list.count('yes'), car_list.count('no')]}
-    pet = {'category': ['yes', 'no'], 'series': [pet_list.count('yes'), pet_list.count('no')]}
+    consum = {"category": map(lambda x: translate(x, 'consumption'), consumption_tmp[0]),
+              "series": consumption_tmp[1]} if consumption_tmp else {}
+    car = {'category': ['有', '无'], 'series': [car_list.count('yes'), car_list.count('no')]}
+    pet = {'category': ['有', '无'], 'series': [pet_list.count('yes'), pet_list.count('no')]}
 
     ret_json = {
         'errcode': 0,
@@ -211,16 +217,16 @@ def motion():
 
     home_office_list = filter(lambda x: x is not None, result_dict['home_office_status'])
     event_list = filter(lambda x: x is not None, result_dict['event'])
-
     event_list = map(lambda x: translate(x, 'context'), filter(lambda x: x not in home_office_type, event_list))
-    event_tmp = sorted(map(lambda x: (x, event_list.count(x)), set(event_list)), key=lambda item: -item[1])
 
+    event_tmp = sorted(map(lambda x: (x, event_list.count(x)), set(event_list)), key=lambda item: -item[1])
     home_office_tmp = map(lambda x: map(lambda y: y[1],
                                         sorted(x.items(), key=lambda key: int(key[0][6:]))), home_office_list)
-    series = map(lambda x: list(x), zip(*map(lambda x:
-                                             [x.count(home_office_type[i]) for i in xrange(len(home_office_type))],
-                                             zip(*home_office_tmp))))
-    home_office = {"category": home_office_type, "xAxis": list(range(24)), "series": series}
+    home_office_series = map(lambda x: list(x),
+                             zip(*map(lambda x: [x.count(home_office_type[i])
+                                                 for i in xrange(len(home_office_type))], zip(*home_office_tmp))))
+    home_office = {"category": map(lambda x: translate(x, 'home_office_status'), home_office_type),
+                   "xAxis": list(range(24)), "series": home_office_series}
     event = {"category": list(zip(*event_tmp)[0]), "series": list(zip(*event_tmp)[1])} \
         if event_tmp else {"category": [], "series": []}
     context = {
@@ -295,13 +301,6 @@ def get_query_list(app_id='', *field):
 def translate(target, arg):
     f = file(join(dirname(dirname(__file__)), 'translate.json'))
     s = json.load(f)
-    if arg == 'motion':
-        return s.get('motion').get(target)
-    elif arg == 'interest':
-        return s.get('interest').get(target)
-    elif arg == 'context':
-        return s.get('context').get(target)
-    else:
-        return ''
+    return s.get(arg).get(target) or ''
 
 
