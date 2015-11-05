@@ -87,7 +87,6 @@ def parse_location_info(location_info):
     }
     ret_dict['user_id'] = user_id
     ret_dict['location'] = location_tmp
-    print(ret_dict['user_id'])
     return ret_dict
 
 
@@ -140,7 +139,6 @@ def parse_avtivity_info(activity_info):
 
 
 def updata_backend_info(parse_dict):
-    print(parse_dict)
     user_id = parse_dict['user_id']
     # get user Object
     query = Query(Object.extend('_User'))
