@@ -22,40 +22,52 @@ if __name__ == '__main__':
     # user_id = "55b3ccd940ac21f9f969680a"
     tracker_list = get_userid_list()
     config = {
-        "period": 30,
-        "collector": {
-            "sensor": {
-                "isActive": True
+        "sensor": {
+            "collector": {
+                "isActive": True,
+                "period": 30
             },
-            "location": {
-                "isActive": True
-            },
-            "sound": {
-                "isActive": False
-            },
-            "calendar": {
-                "isActive": True
+            "uploader": {
+                "isActive": True,
+                "strategy": "network",
+                "period": 30
             }
         },
-        "uploader": {
-            "sensor": {
+        "location": {
+            "collector": {
                 "isActive": True,
-                "strategy": "network"
+                "period": 30
             },
-            "location": {
+            "uploader": {
                 "isActive": True,
-                "strategy": "network"
-            },
-            "sound": {
+                "strategy": "network",
+                "period": 30
+            }
+        },
+        "sound": {
+            "collector": {
                 "isActive": False,
-                "strategy": "wifi"
+                "period": 30
             },
-            "calendar": {
+            "uploader": {
+                "isActive": False,
+                "strategy": "wifi",
+                "period": 30
+            }
+        },
+        "calendar": {
+            "collector": {
                 "isActive": True,
-                "strategy": "wifi"
+                "period": 30
+            },
+            "uploader": {
+                "isActive": True,
+                "strategy": "wifi",
+                "period": 30
             }
         }
     }
+
     for user_id in tracker_list:
         print(user_id)
         post_panel_data(user_id=user_id, config=config)

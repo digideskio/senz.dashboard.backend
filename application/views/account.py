@@ -4,6 +4,7 @@ from flask import Blueprint, session, render_template, request, redirect, url_fo
 from leancloud import LeanCloudError
 from ..models import Developer
 import datetime
+import leancloud
 
 accounts_bp = Blueprint('accounts_bp', __name__, template_folder='templates')
 
@@ -18,7 +19,6 @@ def login():
         return redirect(url_for('index'))
     if request.method == 'POST':
         user = Developer()
-        print(user.get_session_token())
         username = request.form['username']
         password = request.form['password']
         try:
@@ -61,4 +61,18 @@ def signup():
 
 @accounts_bp.route('/reset', methods=['GET', 'POST'])
 def reset():
-    return render_template('account/change-password.html')
+    if request.method == 'GET':
+        return render_template('account/reset.html')
+    user = Developer()
+    if session.get('session_token'):
+        user.session_token = session.get('session_token')
+        user.logout()
+    email = request.form['email_phone']
+    print(email)
+    user.request_password_reset(email=email)
+    return render_template('account/notify.html')
+
+
+@accounts_bp.route('/forget', methods=['GET'])
+def forget():
+    return render_template('account/forget.html')

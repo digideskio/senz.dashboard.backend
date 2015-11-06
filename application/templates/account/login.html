@@ -22,7 +22,7 @@
                 </div>
                 <div class="item cookiechk">
                     <label><input class="checkbox" type="checkbox" name="remember" id="remember" value="1" />记住我</label>
-                    <a href="">忘记密码？</a>
+                    <a href="{{ url_for('accounts_bp.forget') }}">忘记密码？</a>
                 </div>
                 <div class="item">
                     <input name="register-submit" type="submit" class="button" value="提交" /> 
