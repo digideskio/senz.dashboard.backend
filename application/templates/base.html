@@ -40,8 +40,8 @@
        <li class="item nav-integration"><a href="{{ url_for('integration.show') }}">SDK集成</a></li>
        <li class="item nav-settings"><a href="{{ url_for('settings.show') }}">设置</a></li>
        <li class="item nav-panel"><a href="{{ url_for('panel.show') }}">调试</a></li>
-       <div class="item">
 
+       <div class="item">
        {% block app_list %}
         <div class="inline-block">
           <select name="select_app" class="select_app" id="select_app" onchange="post_url()">
