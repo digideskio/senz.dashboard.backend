@@ -15,11 +15,10 @@ def post_panel_data(**param):
     rep = requests.post("https://leancloud.cn/1.1/functions/notify_new_config",  headers=headers, json=payload)
     print(rep.content)
 
+
 if __name__ == '__main__':
     init('2x27tso41inyau4rkgdqts0mrao1n6rq1wfd6644vdrz2qfo',
          '3fuabth1ar3sott9sgxy4sf8uq31c9x8bykugv3zh7eam5ll')
-
-    # user_id = "55b3ccd940ac21f9f969680a"
     tracker_list = get_userid_list()
     config = {
         "sensor": {
