@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block navigation %}
+<div id="sidebar" class="sidebar">
+   <ul id="sidebar-nav">
+    <li class="has-sub-nav"> <a href="{{ url_for('settings.add_app') }}">添加应用</a></li>
+    <li class="has-sub-nav"> <a href="{{ url_for('settings.manage_app') }}">管理页面</a></li>
+   </ul>
+  </div>
+{% endblock %}
+
+
+{%  block content %}
+<div id="container" class="container">
+    <div id="content" class="content pd40" style="min-height: 678px; margin-top: 40px;">
+        <div id="settings">
+            <div class="ng-scope">
+            <form action="{{ url_for('settings.add_app') }}" method="post">
+                <div>
+                    <label>应用名称: <input type="text" size="36" name="app_name" placeholder="app_name" /></label>
+                </div>
+                <div>
+                    <label>应用类型: <select name="app_type">
+                        <option>Android</option>
+                        <option>IOS</option>
+                    </select></label>
+                </div>
+                <div><input type="submit" id="create-app" value="提交并获取APP KEY" ></div>
+            </form>
+            </div>
+        </div>
+    </div>
+</div>
+{%  endblock %}
+
+{% block app_select %}
+<script>
+ var post_url = function(){
+    var obj = document.getElementById("select_app");
+    document.getElementById("app_name").value = obj.options[obj.selectedIndex].text;
+    document.getElementById("app_id").value = obj.value;
+    document.getElementById("app_key").value = obj.options[obj.selectedIndex].id;
+    $.post("/", {app_id: obj.value});
+  };
+ post_url();
+</script>
+{% endblock %}
+
