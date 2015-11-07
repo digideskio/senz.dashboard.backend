@@ -27,4 +27,11 @@ $(function(){
     } else if (path.indexOf("panel") > 0) {
         $(".nav-panel").addClass("active"); 
     }
+
+    $(".j-auto-jump").on("click", "li a", function(e){
+        e.preventDefault();
+        var $this = $(this);
+        $("html,body").animate({scrollTop:$($this.attr("href")).offset().top - 50 },1000);
+    })
+
 });

@@ -3,6 +3,9 @@ a {
     text-decoration: none;
     color: inherit;
 }
+a:hover {
+  text-decoration: none;
+}
 ul { list-style: none;}
 body {
     font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
@@ -113,6 +116,63 @@ div,p,h1,h2,h3,h4,h5,h6,ul,dl,ol,li {
     position: relative;
     border-top-left-radius: 10px;
     min-height: 678px;
+    line-height: 1.5;
+    box-sizing:border-box;
+    -moz-box-sizing:border-box; /* Firefox */
+    -webkit-box-sizing:border-box; /* Safari */
+}
+.content pre {
+  background: #f0f0f0;
+  padding: 10px 0;
+  margin: 10px auto;
+  border-radius: 3px;
+}
+.content p {
+  line-height: 1.5;
+}
+.content h1 {
+  color: rgba(51, 204, 204, 1);
+  font-size: 22px;
+  line-height: 2;
+  font-weight: normal;
+}
+
+.content h2 {
+  font-size: 18px;
+  color: #444;
+  font-weight: normal;
+  line-height: 2;
+}
+.content h3 {
+  line-height: 2;
+}
+
+.content h4, .content h5 {
+  line-height: 2;
+  font-size: 14px;
+}
+
+#settings .ng-scope input[type=text] {
+  border: 1px solid rgba(51, 204, 204, 1);
+  height: 30px;
+  padding: 0 10px;
+  font-size: 14px;
+  outline: none;
+  border-radius: 3px;
+}
+
+#settings .ng-scope .f-item {
+  margin-top: 10px;
+}
+
+#delete-app, #create-app {
+  border: none;
+  cursor: pointer;
+  background: rgba(51, 204, 204, 1);
+  color: #fff;
+  padding: 5px 10px;
+  border-radius: 3px;
+  height: 30px;
 }
 .pd40 {
   padding: 40px;
@@ -172,6 +232,11 @@ div,p,h1,h2,h3,h4,h5,h6,ul,dl,ol,li {
 .sidebar .active > a {
     color: rgba(51, 204, 204, 1);
 }
+
+.active > a {
+    color: rgba(51, 204, 204, 1)!important;
+}
+
 #formwrapper .active > a, #formwrapper .title .active {
     color: rgba(51, 204, 204, 1);
 }
@@ -426,8 +491,5 @@ div,p,h1,h2,h3,h4,h5,h6,ul,dl,ol,li {
   width: 15px;
   height: 15px;
   background: #999;
-}
-.active > a {
-    color: rgba(51, 204, 204, 1)!important;
 }
 

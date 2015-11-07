@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% block navigation %}
  <div id="sidebar" class="sidebar">
-   <ul class="sub-nav">
+   <ul class="sub-nav j-auto-jump">
     <li class="android"><a href="#senz-sdk-android">Android配置</a></li>
     <li class="ios"><a href="#senz-sdk-ios">IOS配置</a></li>
    </ul>
@@ -13,7 +13,7 @@
     <div id="content" class="content pd40" style="min-height: 678px;margin-top: 40px;">
 
         <div id="readme" class="blob instapaper_body">
-        <a name="senz-sdk-android"><h1>Senz SDK for Android 用户手册</h1></a>
+        <a name="senz-sdk-android" id="senz-sdk-android"><h1>Senz SDK for Android 用户手册</h1></a>
         <h2>1、 Android studio 中引用</h2>
         <p>在工程目录 <em>build.gradle</em> 文件中添加如下内容：</p>
         <pre><code>
@@ -38,8 +38,12 @@
         <h3>2.1 初始化</h3>
         <p>在MainActivity 的 onCreate()中（必须在UI主线程中调用），调用：</p>
 
-        <div><pre><span>//please register on senz server to get your own appId
-        Senz.initialize(MainActivity.this,appId);</span></pre></div>
+        <div>
+            <pre><span>
+            //please register on senz server to get your own appId
+            Senz.initialize(MainActivity.this,appId);
+            </span></pre>
+        </div>
 
         <h3>2.2 Senz核心api接口</h3>
         <h4>2.2.1 用户属性UserInfo类</h4>
@@ -272,7 +276,7 @@
 
 
         <div id="wiki-content">
-            <a name="senz-sdk-ios"><h1>Senz SDK for iOS 用户手册</h1></a>
+            <a name="senz-sdk-ios" id="senz-sdk-ios"><h1>Senz SDK for iOS 用户手册</h1></a>
             <div class="markdown-body">
             <h2>1. 项目配置</h2>
             <h3>1.1 导入SDK</h3>
