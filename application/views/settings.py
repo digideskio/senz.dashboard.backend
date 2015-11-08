@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, session, request, jsonify, redirect, url_for
+from flask import Blueprint, render_template, session, request, redirect, url_for
 from ..models import Developer
 
 
