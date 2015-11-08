@@ -5,13 +5,13 @@
     <div id="content" class="content pd40" style="min-height: 678px; margin-top: 40px;">
         <div id="settings">
             <div class="ng-scope">
-            <form action="{{ url_for('settings.add_app') }}" method="post">
-                <div><input type="text" size="36" name="app_name" placeholder="app_name" /></div>
-                <div><input type="submit" id="create-app" value="创建应用" ></div>
-            </form>
-            <br>
-            <br>
-            <br>
+{#            <form action="{{ url_for('settings.add_app') }}" method="post">#}
+{#                <div><input type="text" size="36" name="app_name" placeholder="app_name" /></div>#}
+{#                <div><input type="submit" id="create-app" value="创建应用" ></div>#}
+{#            </form>#}
+{#            <br>#}
+{#            <br>#}
+{#            <br>#}
             <form action="{{ url_for('settings.manage_app') }}" method="post">
                 <div><label>App Name</label><div>
                     <input id="app_name" type="text" size="36" name="app_name" value="{{ app_name }}" readonly></div></div>

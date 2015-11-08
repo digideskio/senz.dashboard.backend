@@ -2,9 +2,9 @@
 
 {% block navigation %}
 <div id="sidebar" class="sidebar">
-   <ul id="sidebar-nav">
-    <li class="has-sub-nav"> <a href="{{ url_for('settings.add_app') }}">添加应用</a></li>
-    <li class="has-sub-nav"> <a href="{{ url_for('settings.manage_app') }}">管理页面</a></li>
+   <ul class="sub-nav">
+    <li> <a href="{{ url_for('settings.add_app') }}">添加应用</a></li>
+    <li> <a href="{{ url_for('settings.manage_app') }}">管理页面</a></li>
    </ul>
   </div>
 {% endblock %}
@@ -17,7 +17,7 @@
             <div class="ng-scope">
             <form action="{{ url_for('settings.add_app') }}" method="post">
                 <div>
-                    <label>应用名称: <input type="text" size="36" name="app_name" placeholder="app_name" /></label>
+                    <label>应用名称: <input type="text" size="36" name="app_name" placeholder="app_name" required/></label>
                 </div>
                 <div>
                     <label>应用类型: <select name="app_type">
