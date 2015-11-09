@@ -3,8 +3,6 @@ from flask import Blueprint, render_template, json, session
 from leancloud import Object, Query, LeanCloudError
 from ..models import Developer
 from os.path import dirname, join
-import time
-import math
 
 dashboard_bp = Blueprint('dashboard_bp', __name__, template_folder='templates')
 
@@ -31,7 +29,7 @@ def show():
 
     result_dict = get_query_list(app_id, 'event')
     event_list = filter(lambda x: x is not None, result_dict['event'])
-    event_list = map(lambda x: translate(x, 'context'), event_list)
+    event_list = map(lambda x: translate(translate(x, 'event_old'), 'context'), event_list)
     event_tmp = sorted(map(lambda x: (x, event_list.count(x)), set(event_list)), key=lambda item: -item[1])
     data = map(lambda x: {'rank': x/3+1, 'name': event_tmp[x-1][0]}, xrange(1, len(set(event_tmp))+1))
     event = {
@@ -52,6 +50,7 @@ def profile():
     app_id = context_dict['app_id']
     username = context_dict['username']
     app_list = context_dict['app_list']
+    print(app_id)
 
     result_dict = get_query_list(app_id, 'gender', 'age', 'occupation', 'field')
     gender_list = [] if 'gender' not in result_dict else result_dict['gender']
@@ -63,12 +62,11 @@ def profile():
     age = {"category": ["55以上", "35到55", "16到35", "16以下"],
            "series": [age_list.count('55up'), age_list.count('35to55'),
                       age_list.count('16to35'), age_list.count('16down')]}
+
     occupation_tmp = map(lambda x: list(x), zip(*map(lambda x: [x, occupation_list.count(x)],
                                                      filter(lambda x: str(x) != '', set(occupation_list)))))
-    print(occupation_tmp[0])
     occupation = {"category": map(lambda x: translate(x, 'occupation') or '', occupation_tmp[0]),
                   "series": occupation_tmp[1]} if occupation_tmp else {"category": [], "series": []}
-    print(occupation)
     field_tmp = map(lambda x: list(x), zip(*map(lambda x: [x, field_list.count(x)],
                                                 filter(lambda x: str(x) != '', set(field_list)))))
     field = {"category": map(lambda x: translate(x, 'field') or '', field_tmp[0]),
@@ -80,7 +78,6 @@ def profile():
         'errmsg': 'ok',
         'data': data
     }
-    print(data)
     return render_template('dashboard/user-identity.html',
                            option=json.dumps(user_profile),
                            username=username,
@@ -274,8 +271,7 @@ def get_query_list(app_id='', *field):
             query.limit(query_limit)
             query.skip(index * query_limit)
             result_list.extend(query.find())
-    except LeanCloudError, e:
-        print(e)
+    except LeanCloudError:
         return {}
 
     ret_dict = {}

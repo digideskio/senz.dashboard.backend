@@ -90,10 +90,7 @@
     },
     "home_office_status": {
         "contextAtWork": "在公司",
-        "work_in_office": "在公司",
-        "office": "在公司",
         "contextAtHome": "在家",
-        "home": "在家",
         "contextCommutingWork": "上班路上",
         "contextCommutingHome": "回家路上"
     },
