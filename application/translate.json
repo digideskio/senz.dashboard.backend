@@ -97,16 +97,27 @@
         "contextCommutingWork": "上班路上",
         "contextCommutingHome": "回家路上"
     },
-    "event": {
-        "attend_concert": "contextAtClassicsConcert",
-        "go_outing": "",
+     "home_office_status_old": {
+        "office": "contextAtWork",
+        "home": "contextAtHome"
+    },
+    "event_old": {
+        "attend_concert": "contextAtPopsConcert",
+        "go_outing": "contextShortTrip",
         "dining_in_restaurant": "contextDinningOut",
         "watch_movie": "contextAtCinema",
-        "study_in_class": "",
-        "visit_sights": "",
-        "work_in_office": "contextAtWork",
+        "study_in_class": "contextStudyingInSchool",
+        "visit_sights": "contextShortTrip",
+        "work_in_office": "contextWorkingInCBD",
         "exercise_outdoor": "contextOutdoorExercise",
         "shopping_in_mall": "contextWindowShopping",
         "exercise_indoor": "contextIndoorExercise"
+    },
+    "motion_old": {
+        "sitting": "motionSitting",
+        "walking": "motionWalking",
+        "running": "motionRunning",
+        "riding": "motionBiking",
+        "driving": "motionCommuting"
     }
 }

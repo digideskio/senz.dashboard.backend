@@ -50,10 +50,7 @@ def post_panel_data(**param):
     context_type = param.get('context_type')
     context_val = param.get('context_val')
 
-    home_office_type = ['contextAtWork', 'contextAtHome', 'contextCommutingWork',
-                        'contextCommutingHome', 'office', 'home']
-    motion_map = {'sitting': 'motionSitting',  'walking': 'motionWalking', 'running': 'motionRunning',
-                  'riding': 'motionBiking', 'driving': 'motionCommuting'}
+    home_office_type = ['contextAtWork', 'contextAtHome', 'contextCommutingWork', 'contextCommutingHome']
 
     if tracker != 'all':
         tracker_list = [tracker]
@@ -61,7 +58,7 @@ def post_panel_data(**param):
                "X-AVOSCloud-Application-Key": "6z6n0w3dopxmt32oi2eam2dt0orh8rxnqc8lgpf2hqnar4tr"}
     for item in tracker_list:
         if motion_type:
-            payload = {"userId": item, "type": motion_type, "val": motion_map.get(motion_val) or motion_val}
+            payload = {"userId": item, "type": motion_type, "val": motion_val}
             requests.post("https://leancloud.cn/1.1/functions/notify_new_details",  headers=headers, data=payload)
         if context_type and context_val and context_val in home_office_type:
             payload = {"userId": item, "type": "home_office_status", "val": context_val}

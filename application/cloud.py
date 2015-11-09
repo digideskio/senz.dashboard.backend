@@ -35,8 +35,8 @@ def parse_motion_info(motion_obj):
     ret_dict['user_id'] = user_id
     timestamp = motion_obj.get('timestamp') or None
     motion_prob = motion_obj.get('motionProb') or {}
-    motion = sorted(filter(lambda x: x is not None, motion_prob.items()),
-                    key=lambda v: -v[1])[0][0]
+    motion = translate(sorted(filter(lambda x: x is not None, motion_prob.items()),
+                              key=lambda v: -v[1])[0][0], 'motion_old')
     ret_dict['motion'] = {
         timestamp: {
             'motion': motion
@@ -93,7 +93,7 @@ def parse_location_info(location_info):
 def parse_home_office_info(homeoffice_info):
     ret_dict = {}
     user_id = homeoffice_info.get('user').get('objectId')
-    status = homeoffice_info.get('home_office_label')
+    status = translate(homeoffice_info.get('home_office_label'), 'home_office_status_old')
     visit_time = homeoffice_info.get('visit_time')
     ret_dict['user_id'] = user_id
     ret_dict['home_office_status'] = {visit_time: status}
@@ -109,7 +109,7 @@ def parse_event_info(event_info):
     end_time = event_info.get('endTime')
     ret_dict['user_id'] = user_id
     event_tmp = sorted(events.items(), key=lambda value: -value[1])
-    event = translate(event_tmp[0][0], 'event') if event_tmp else None
+    event = translate(event_tmp[0][0], 'event_old') if event_tmp else None
     ret_dict['event'] = {
         start_time: {
             'event': event,
