@@ -65,11 +65,13 @@ def profile():
                       age_list.count('16to35'), age_list.count('16down')]}
     occupation_tmp = map(lambda x: list(x), zip(*map(lambda x: [x, occupation_list.count(x)],
                                                      filter(lambda x: str(x) != '', set(occupation_list)))))
-    occupation = {"category": map(lambda x: translate(x, 'occupation'), occupation_tmp[0]),
+    print(occupation_tmp[0])
+    occupation = {"category": map(lambda x: translate(x, 'occupation') or '', occupation_tmp[0]),
                   "series": occupation_tmp[1]} if occupation_tmp else {"category": [], "series": []}
+    print(occupation)
     field_tmp = map(lambda x: list(x), zip(*map(lambda x: [x, field_list.count(x)],
                                                 filter(lambda x: str(x) != '', set(field_list)))))
-    field = {"category": map(lambda x: translate(x, 'field'), field_tmp[0]),
+    field = {"category": map(lambda x: translate(x, 'field') or '', field_tmp[0]),
              "series": field_tmp[1]} if field_tmp else {"category": [], "series": []}
 
     data = {'gender': gender, 'age': age, 'job': occupation, 'profession': field}
@@ -78,6 +80,7 @@ def profile():
         'errmsg': 'ok',
         'data': data
     }
+    print(data)
     return render_template('dashboard/user-identity.html',
                            option=json.dumps(user_profile),
                            username=username,
@@ -277,10 +280,8 @@ def get_query_list(app_id='', *field):
 
     ret_dict = {}
     for item in field:
-        print(item)
         if app_id == '5621fb0f60b27457e863fabb':
             ret_dict[item] = map(lambda result: result.attributes.get(item), result_list)
-            print(ret_dict[item])
         else:
             if item == 'event':
                 events_list = filter(lambda x: x is not None,
@@ -318,6 +319,6 @@ def get_query_list(app_id='', *field):
 def translate(target, arg):
     f = file(join(dirname(dirname(__file__)), 'translate.json'))
     s = json.load(f)
-    return s.get(arg).get(target) or ''
+    return s.get(arg).get(target) or target
 
 

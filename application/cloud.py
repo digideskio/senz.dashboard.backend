@@ -3,6 +3,7 @@
 from leancloud import Engine, Query, Object
 from datetime import datetime
 from application.views.panel import post_panel_data
+from application.views.dashboard import translate
 from server import app
 import time
 
@@ -108,7 +109,7 @@ def parse_event_info(event_info):
     end_time = event_info.get('endTime')
     ret_dict['user_id'] = user_id
     event_tmp = sorted(events.items(), key=lambda value: -value[1])
-    event = event_tmp[0][0] if event_tmp else None
+    event = translate(event_tmp[0][0], 'event') if event_tmp else None
     ret_dict['event'] = {
         start_time: {
             'event': event,

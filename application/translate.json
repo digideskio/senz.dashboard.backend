@@ -98,6 +98,15 @@
         "contextCommutingHome": "回家路上"
     },
     "event": {
-
+        "attend_concert": "contextAtClassicsConcert",
+        "go_outing": "",
+        "dining_in_restaurant": "contextDinningOut",
+        "watch_movie": "contextAtCinema",
+        "study_in_class": "",
+        "visit_sights": "",
+        "work_in_office": "contextAtWork",
+        "exercise_outdoor": "contextOutdoorExercise",
+        "shopping_in_mall": "contextWindowShopping",
+        "exercise_indoor": "contextIndoorExercise"
     }
 }
