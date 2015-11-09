@@ -3,6 +3,8 @@ from flask import Blueprint, render_template, json, session
 from leancloud import Object, Query, LeanCloudError
 from ..models import Developer
 from os.path import dirname, join
+import time
+import math
 
 dashboard_bp = Blueprint('dashboard_bp', __name__, template_folder='templates')
 
@@ -70,7 +72,6 @@ def profile():
     field = {"category": map(lambda x: translate(x, 'field'), field_tmp[0]),
              "series": field_tmp[1]} if field_tmp else {"category": [], "series": []}
 
-    print(field)
     data = {'gender': gender, 'age': age, 'job': occupation, 'profession': field}
     user_profile = {
         'errcode': 0,
@@ -212,16 +213,16 @@ def motion():
     username = context_dict['username']
     app_list = context_dict['app_list']
 
-    home_office_type = ['contextAtWork', 'contextAtHome', 'contextCommutingWork', 'contextCommutingHome']
-    result_dict = get_query_list(app_id, 'home_office_status', 'event')
+    s = json.load(file(join(dirname(dirname(__file__)), 'translate.json')))
+    home_office_type = s.get('home_office_status').keys()
 
+    result_dict = get_query_list(app_id, 'home_office_status', 'event')
     home_office_list = filter(lambda x: x is not None, result_dict['home_office_status'])
     event_list = filter(lambda x: x is not None, result_dict['event'])
     event_list = map(lambda x: translate(x, 'context'), filter(lambda x: x not in home_office_type, event_list))
 
     event_tmp = sorted(map(lambda x: (x, event_list.count(x)), set(event_list)), key=lambda item: -item[1])
-    home_office_tmp = map(lambda x: map(lambda y: y[1],
-                                        sorted(x.items(), key=lambda key: int(key[0][6:]))), home_office_list)
+    home_office_tmp = map(lambda x: map(lambda y: y[1], sorted(x.items(), key=lambda key: int(key[0][6:]))), home_office_list)
     home_office_series = map(lambda x: list(x),
                              zip(*map(lambda x: [x.count(home_office_type[i])
                                                  for i in xrange(len(home_office_type))], zip(*home_office_tmp))))
@@ -229,6 +230,7 @@ def motion():
                    "xAxis": list(range(24)), "series": home_office_series}
     event = {"category": list(zip(*event_tmp)[0]), "series": list(zip(*event_tmp)[1])} \
         if event_tmp else {"category": [], "series": []}
+
     context = {
         'errcode': 0,
         'errmsg': 'ok',
@@ -274,8 +276,10 @@ def get_query_list(app_id='', *field):
 
     ret_dict = {}
     for item in field:
+        print(item)
         if app_id == '5621fb0f60b27457e863fabb':
             ret_dict[item] = map(lambda result: result.attributes.get(item), result_list)
+            print(ret_dict[item])
         else:
             if item == 'event':
                 events_list = filter(lambda x: x is not None,
@@ -284,7 +288,19 @@ def get_query_list(app_id='', *field):
             elif item == 'home_office_status':
                 status = filter(lambda x: x is not None,
                                 map(lambda result: result.attributes.get('home_office_status'), result_list))
-                ret_dict[item] = map(lambda x: x.items()[-1][1], status)
+                ret_dict[item] = status
+                # now = time.localtime()[:]
+                # yesterday = time.mktime((now[0], now[1], now[2]-1, 0, 0, 0, 0, 0, 0))
+                # for s in status:
+                #     for k in s.keys():
+                #         for t in xrange(0, 24):
+                #             cur_time = int(yesterday) + t * 3600
+                #             if math.fabs(cur_time - int(k)) < 30 * 60:
+                #                 s['status' + str(t)] = s[k]
+                #                 s[k] = None
+                #     print s
+                # ret_dict[item] = status
+
             elif item == 'province':
                 locations = filter(lambda x: x is not None,
                                    map(lambda result: result.attributes.get('location'), result_list))

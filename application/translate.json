@@ -53,6 +53,8 @@
         "contextAtPopsConcert": "演唱会",
         "contextAtTheatre": "戏剧",
         "contextAtClassicsConcert": "音乐会",
+        "shopping_in_mall": "逛街",
+        "dining_in_restaurant": "在餐厅吃饭",
         "": ""},
     "occupation": {
         "supervisor": "管理",
@@ -88,7 +90,10 @@
     },
     "home_office_status": {
         "contextAtWork": "在公司",
+        "work_in_office": "在公司",
+        "office": "在公司",
         "contextAtHome": "在家",
+        "home": "在家",
         "contextCommutingWork": "上班路上",
         "contextCommutingHome": "回家路上"
     }
