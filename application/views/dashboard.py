@@ -30,7 +30,7 @@ def show():
     app_list = context_dict['app_list']
 
     result_dict = get_query_list(app_id, 'event')
-    event_list = [] if 'event' not in result_dict else result_dict['event']
+    event_list = filter(lambda x: x is not None, result_dict['event'])
     event_list = map(lambda x: translate(x, 'context'), event_list)
     event_tmp = sorted(map(lambda x: (x, event_list.count(x)), set(event_list)), key=lambda item: -item[1])
     data = map(lambda x: {'rank': x/3+1, 'name': event_tmp[x-1][0]}, xrange(1, len(set(event_tmp))+1))
@@ -222,7 +222,8 @@ def motion():
     event_list = map(lambda x: translate(x, 'context'), filter(lambda x: x not in home_office_type, event_list))
 
     event_tmp = sorted(map(lambda x: (x, event_list.count(x)), set(event_list)), key=lambda item: -item[1])
-    home_office_tmp = map(lambda x: map(lambda y: y[1], sorted(x.items(), key=lambda key: int(key[0][6:]))), home_office_list)
+    home_office_tmp = map(lambda x: map(lambda y: y[1], sorted(x.items(),
+                                                               key=lambda key: int(key[0][6:]))), home_office_list)
     home_office_series = map(lambda x: list(x),
                              zip(*map(lambda x: [x.count(home_office_type[i])
                                                  for i in xrange(len(home_office_type))], zip(*home_office_tmp))))

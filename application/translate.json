@@ -96,5 +96,8 @@
         "home": "在家",
         "contextCommutingWork": "上班路上",
         "contextCommutingHome": "回家路上"
+    },
+    "event": {
+
     }
 }
