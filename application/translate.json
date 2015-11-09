@@ -107,7 +107,7 @@
         "dining_in_restaurant": "contextDinningOut",
         "watch_movie": "contextAtCinema",
         "study_in_class": "contextStudyingInSchool",
-        "visit_sights": "contextShortTrip",
+        "visit_sights": "contextTravelling",
         "work_in_office": "contextWorkingInCBD",
         "exercise_outdoor": "contextOutdoorExercise",
         "shopping_in_mall": "contextWindowShopping",

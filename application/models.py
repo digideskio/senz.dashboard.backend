@@ -1,8 +1,7 @@
 # coding: utf-8
 
 from leancloud import User, Object, Query, LeanCloudError
-#from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
-from itsdangerous import Signer, SignatureExpired, BadSignature
+from itsdangerous import Signer
 
 
 class Developer(User):
@@ -12,25 +11,6 @@ class Developer(User):
         self.app_dict = {}
         self.session_token = None
         User.__init__(self)
-
-    #def generate_auth_token(self, expiration=60):
-    #    s = Serializer(server.app.config['SECRET_KEY'], expires_in=expiration)
-    #    return s.dumps({'id': self.id})
-
-    #@staticmethod
-    #def verify_auth_token(token):
-    #    s = Serializer(server.app.config['SECRET_KEY'])
-    #    try:
-    #        data = s.loads(token)
-    #    except SignatureExpired:
-    #        return None  # valid token, but expired
-    #    except BadSignature:
-    #        return None  # invalid token
-    #    query = Query(Object.extend('User'))
-    #    query.equal_to('objectId', data['id'])
-    #    if query.count():
-    #        return query.find()[0]
-    #    return None
 
     def username(self):
         if self.session_token:
@@ -63,8 +43,8 @@ class Developer(User):
             app.set('app_id', app_id)
             app.set('app_key', app_key)
             app.save()
-            return True
-        return False
+            return app_name, app_key, app_id
+        return None
 
     def delete_app(self, app_id=None):
         try:

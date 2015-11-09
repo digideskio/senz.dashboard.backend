@@ -28,8 +28,10 @@ def add_app():
         app_name = request.form['app_name']
         user = Developer()
         user.session_token = session.get('session_token')
-        if user.create_new_app(app_name):
-            return redirect(url_for('settings.show'))
+        app = user.create_new_app(app_name)
+        if app:
+            return render_template('settings/appkey.html',
+                                   app_key=app[1])
         else:
             return redirect(url_for('settings.show'))
 
@@ -51,6 +53,6 @@ def manage_app():
         user = Developer()
         user.session_token = session.get('session_token')
         if user.delete_app(app_id):
-            return redirect(url_for('settings.show'))
+            return redirect(url_for('settings.manage_app'))
         else:
             return redirect(url_for('settings.show'))
