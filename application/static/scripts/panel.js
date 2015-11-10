@@ -26,7 +26,8 @@ $(document).ready(function(){
             motionType: motionType,
             contextType: contextType,
             motionVal: motionVal,
-            contextVal: contextVal
+            contextVal: contextVal,
+            source: "panel"
         });
     });
 });
