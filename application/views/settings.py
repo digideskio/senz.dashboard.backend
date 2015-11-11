@@ -50,9 +50,8 @@ def manage_app():
                                app_list=app_list)
     if request.method == 'POST':
         app_id = request.form.get('app_id')
-        user = Developer()
-        user.session_token = session.get('session_token')
-        if user.delete_app(app_id):
-            return redirect(url_for('settings.manage_app'))
-        else:
-            return redirect(url_for('settings.show'))
+        if app_id != '5621fb0f60b27457e863fabb':
+            user = Developer()
+            user.session_token = session.get('session_token')
+            user.delete_app(app_id)
+        return redirect(url_for('settings.manage_app'))

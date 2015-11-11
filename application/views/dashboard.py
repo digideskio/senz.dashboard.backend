@@ -191,12 +191,13 @@ def location():
                    sorted(map(lambda x: (x, provice_list.count(x)), set(provice_list)), key=lambda x: -x[1]))
     city = map(lambda x: {'name': x[0], 'value': x[1]},
                sorted(map(lambda x: (x, city_list.count(x)), set(city_list)), key=lambda x: -x[1]))
+    print province[:6]
     location = {
         'errcode': 0,
         'errmsg': 'ok',
         'data': {
-            'province': province,
-            'city': city
+            'province': province[:6],
+            'city': city[:6]
         }
     }
     return render_template('dashboard/user-location.html',

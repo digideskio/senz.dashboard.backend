@@ -14,7 +14,7 @@ engine = Engine(app)
 def post_obj_from_timeline(name, obj):
     if name == 'UserLocation':
         parse_dict = parse_location_info(obj)
-    elif name == 'UPoiVisitLog':
+    elif name == 'HomeOfficeStatus':
         parse_dict = parse_home_office_info(obj)
     elif name == 'UserInfoLog':
         parse_dict = parse_static_info(obj)
@@ -93,8 +93,8 @@ def parse_location_info(location_info):
 def parse_home_office_info(homeoffice_info):
     ret_dict = {}
     user_id = homeoffice_info.get('user').get('objectId')
-    status = translate(homeoffice_info.get('home_office_label'), 'home_office_status_old')
-    visit_time = homeoffice_info.get('visit_time')
+    status = translate(homeoffice_info.get('status'), 'home_office_status_old')
+    visit_time = homeoffice_info.get('timestamp')
     ret_dict['user_id'] = user_id
     ret_dict['home_office_status'] = {visit_time: status}
     post_panel_data(tracker=user_id, context_type='context', context_val=status)

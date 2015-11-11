@@ -59,8 +59,7 @@ class Developer(User):
                 return True
             else:
                 return False
-        except LookupError, e:
-            print(e)
+        except LeanCloudError:
             return False
 
     def get_app_list(self):
@@ -70,8 +69,7 @@ class Developer(User):
             query.equal_to('user', user)
             query.limit(1000)
             result = query.find()
-        except LeanCloudError, e:
-            print(e)
+        except LeanCloudError:
             return []
 
         self.app_list = map(lambda x: {'app_id': x.attributes['app_id'],
@@ -92,8 +90,7 @@ class Developer(User):
             query.equal_to('application', the_app)
             query.select('user')
             installation_list = query.find()
-        except LookupError, e:
-            print(e)
+        except LeanCloudError:
             return []
         if not installation_list:
             self.tracker_list = []

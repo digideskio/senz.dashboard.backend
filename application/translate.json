@@ -93,8 +93,15 @@
         "contextCommutingHome": "回家路上"
     },
      "home_office_status_old": {
-        "office": "contextAtWork",
-        "home": "contextAtHome"
+        "at_office": "contextAtWork",
+        "at_home": "contextAtHome",
+        "leaving_home": "",
+        "leaving_office": "",
+        "arriving_home": "",
+        "arriving_office": "",
+        "unknown_status": "",
+        "going_office": "contextCommutingWork",
+        "going_home": "contextCommutingHome"
     },
     "event_old": {
         "attend_concert": "contextAtPopsConcert",
