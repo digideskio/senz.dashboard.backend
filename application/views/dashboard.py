@@ -51,7 +51,6 @@ def profile():
     app_id = context_dict['app_id']
     username = context_dict['username']
     app_list = context_dict['app_list']
-    print(app_id)
 
     result_dict = get_query_list(app_id, 'gender', 'age', 'occupation', 'field')
     gender_list = [] if 'gender' not in result_dict else result_dict['gender']
@@ -192,7 +191,6 @@ def location():
                    sorted(map(lambda x: (x, provice_list.count(x)), set(provice_list)), key=lambda x: -x[1]))
     city = map(lambda x: {'name': x[0], 'value': x[1]},
                sorted(map(lambda x: (x, city_list.count(x)), set(city_list)), key=lambda x: -x[1]))
-    print province[:6]
     location = {
         'errcode': 0,
         'errmsg': 'ok',
@@ -289,7 +287,6 @@ def get_query_list(app_id='', *field):
                 status = filter(lambda x: x is not None,
                                 map(lambda result: result.attributes.get('home_office_status'), result_list))
                 ret_dict[item] = status
-                print(status)
                 # now = time.localtime()[:]
                 # yesterday = time.mktime((now[0], now[1], now[2]-1, 0, 0, 0, 0, 0, 0))
                 # for s in status:

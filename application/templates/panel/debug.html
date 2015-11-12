@@ -38,7 +38,10 @@
             <li class=""><input type="radio" {% if loop.index0 == 0 %} checked="checked" {% endif %} name="context" value="{{v}}" /> {{v|translate("context")}}</li>
             {% endfor %}
         </ul>
-        <input class="btn" id="btn" type="button" value="Submit"/>
+        <input class="btn" id="btn" type="button" value="提交"/>
+        <div class="alert" style="display:none; color: red; margin-left: 40px" id="error">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+        </div>
     </div>
 </div>
 {%  endblock %}

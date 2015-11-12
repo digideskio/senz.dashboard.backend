@@ -111,11 +111,7 @@ def parse_event_info(event_info):
     ret_dict['user_id'] = user_id
     event_tmp = sorted(events.items(), key=lambda value: -value[1])
     event = translate(event_tmp[0][0], 'event_old') if event_tmp else None
-    ret_dict['event'] = {
-        timestamp: {
-            'event': event
-        }
-    }
+    ret_dict['event'] = {timestamp: event}
     post_panel_data(tracker=user_id, context_type='context', context_val=event, timestamp=timestamp)
     return ret_dict
 
@@ -176,11 +172,21 @@ def updata_backend_info(parse_dict):
                 dst_table.set('user', user)
             elif key is 'home_office_status':
                 home_office_status = dst_table.get('home_office_status') or {}
+                home_office_status_tmp = filter(lambda x: x[0] > time.time() - 24 * 3600, home_office_status.items())
+
+                home_office_status = {}
+                for item in home_office_status_tmp:
+                    home_office_status[item[0]] = item[1]
+
                 for k, v in parse_dict['home_office_status'].items():
                     home_office_status[k] = v
                 dst_table.set('home_office_status', home_office_status)
             elif key is 'event':
-                event = dst_table.get('event') or {}
+                event_tmp = dst_table.get('event') or {}
+                event_tmp = filter(lambda x: x[0] > time.time() - 24 * 3600, event_tmp.items())
+                event = {}
+                for item in event_tmp:
+                    event[item[0]] = item[1]
                 for k, v in parse_dict['event'].items():
                     event[k] = v
                 dst_table.set('event', event)

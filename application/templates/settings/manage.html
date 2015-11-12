@@ -5,7 +5,7 @@
     <div id="content" class="content pd40" style="min-height: 678px; margin-top: 40px;">
         <div id="settings">
             <div class="ng-scope">
-            <form action="{{ url_for('settings.manage_app') }}" method="post">
+            <form action="{{ url_for('settings.manage_app') }}" method="post" onsubmit="return confirm('确定删除该应用?');">
                 <div><label>App Name</label><div>
                     <input id="app_name" type="text" size="36" name="app_name" value="{{ app_name }}" readonly></div></div>
                 <div><label>App ID</label><div>
@@ -15,6 +15,25 @@
 
                     <div><button type="submit" id="delete-app">删除应用</button></div>
             </form>
+
+                <table border="1" cellpadding="10">
+                    <tr>
+                        <th>应用名</th>
+                        <th>appkey</th>
+                        <th>应用类型</th>
+                        <th>创建时间</th>
+                        <th>编辑应用</th>
+                    </tr>
+                    {% for app in app_list %}
+                    <tr>
+                        <td>{{ app.get('app_name') }}</td>
+                        <td>{{ app.get('app_key') }}</td>
+                        <td>{{ app.get('app_type') }}</td>
+                        <td>{{ app.get('createdAt') }}</td>
+                        <td><a href="#">b</a> <a href="#">a</a></td>
+                    </tr>
+                    {% endfor %}
+                </table>
             </div>
         </div>
     </div>

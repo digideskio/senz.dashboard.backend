@@ -72,9 +72,11 @@ class Developer(User):
         except LeanCloudError:
             return []
 
-        self.app_list = map(lambda x: {'app_id': x.attributes['app_id'],
-                                       'app_key': x.attributes['app_key'],
-                                       'app_name': x.attributes['app_name']}, result)
+        self.app_list = map(lambda x: {'app_id': x.attributes.get('app_id'),
+                                       'app_key': x.attributes.get('app_key'),
+                                       'app_type': x.attributes.get('type'),
+                                       'createdAt': x.attributes.get('createdAt'),
+                                       'app_name': x.attributes.get('app_name')}, result)
         return self.app_list
 
     def get_tracker_of_app(self, app_id=''):
