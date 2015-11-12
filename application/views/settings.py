@@ -14,6 +14,8 @@ def show():
 
 @settings.route('/create', methods=['GET', 'POST'])
 def add_app():
+    if not session.get('session_token'):
+        return redirect(url_for('accounts_bp.login'))
     if request.method == 'GET':
         app_id = session.get('app_id', None)
         developer = Developer()
@@ -38,6 +40,8 @@ def add_app():
 
 @settings.route('/manage', methods=['GET', 'POST'])
 def manage_app():
+    if not session.get('session_token'):
+        return redirect(url_for('accounts_bp.login'))
     if request.method == 'GET':
         app_id = session.get('app_id', None)
         developer = Developer()
