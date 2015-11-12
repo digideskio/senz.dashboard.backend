@@ -121,5 +121,17 @@
         "running": "motionRunning",
         "riding": "motionBiking",
         "driving": "motionCommuting"
+    },
+    "avtivity_old": {
+        "party": "contextInParty",
+        "music": "contextAtClassicsConcert",
+        "exhibition": "contextAtExhibition",
+        "travel": "contextTravelling",
+        "opera": "contextAtTheatre",
+        "film": "contextAtCinema",
+        "sport": "",
+        "other": "",
+        "lecture": "",
+        "public": ""
     }
 }

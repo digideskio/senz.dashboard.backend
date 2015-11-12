@@ -29,7 +29,8 @@ def show():
 
     result_dict = get_query_list(app_id, 'event')
     event_list = filter(lambda x: x is not None, result_dict['event'])
-    event_list = map(lambda x: translate(translate(x, 'event_old'), 'context'), event_list)
+    event_list = filter(lambda y: y is not None,
+                        map(lambda x: translate(translate(x, 'event_old'), 'context'), event_list))
     event_tmp = sorted(map(lambda x: (x, event_list.count(x)), set(event_list)), key=lambda item: -item[1])
     data = map(lambda x: {'rank': x/3+1, 'name': event_tmp[x-1][0]}, xrange(1, len(set(event_tmp))+1))
     event = {
@@ -288,6 +289,7 @@ def get_query_list(app_id='', *field):
                 status = filter(lambda x: x is not None,
                                 map(lambda result: result.attributes.get('home_office_status'), result_list))
                 ret_dict[item] = status
+                print(status)
                 # now = time.localtime()[:]
                 # yesterday = time.mktime((now[0], now[1], now[2]-1, 0, 0, 0, 0, 0, 0))
                 # for s in status:

@@ -42,7 +42,7 @@ def parse_motion_info(motion_obj):
             'motion': motion
         }
     }
-    post_panel_data(tracker=user_id, motion_type='motion', motion_val=motion)
+    post_panel_data(tracker=user_id, motion_type='motion', motion_val=motion, timestamp=timestamp)
     return ret_dict
 
 
@@ -94,10 +94,10 @@ def parse_home_office_info(homeoffice_info):
     ret_dict = {}
     user_id = homeoffice_info.get('user').get('objectId')
     status = translate(homeoffice_info.get('status'), 'home_office_status_old')
-    visit_time = homeoffice_info.get('timestamp')
+    timestamp = homeoffice_info.get('timestamp')
     ret_dict['user_id'] = user_id
-    ret_dict['home_office_status'] = {visit_time: status}
-    post_panel_data(tracker=user_id, context_type='context', context_val=status)
+    ret_dict['home_office_status'] = {timestamp: status}
+    post_panel_data(tracker=user_id, context_type='context', context_val=status, timestamp=timestamp)
     return ret_dict
 
 
@@ -107,16 +107,16 @@ def parse_event_info(event_info):
     events = event_info.get('event') or {}
     start_time = event_info.get('startTime')
     end_time = event_info.get('endTime')
+    timestamp = (start_time+end_time)/2
     ret_dict['user_id'] = user_id
     event_tmp = sorted(events.items(), key=lambda value: -value[1])
     event = translate(event_tmp[0][0], 'event_old') if event_tmp else None
     ret_dict['event'] = {
-        start_time: {
-            'event': event,
-            'endTime': end_time
+        timestamp: {
+            'event': event
         }
     }
-    post_panel_data(tracker=user_id, context_type='context', context_val=event)
+    post_panel_data(tracker=user_id, context_type='context', context_val=event, timestamp=timestamp)
     return ret_dict
 
 
@@ -127,14 +127,14 @@ def parse_avtivity_info(activity_info):
     time_range_end = activity_info.get('time_range_end') or None
     time_range_start = time.mktime(datetime.strptime(time_range_start['iso'], '%Y-%m-%dT%H:%M:%S.000Z').timetuple())
     time_range_end = time.mktime(datetime.strptime(time_range_end['iso'], '%Y-%m-%dT%H:%M:%S.000Z').timetuple())
+    timestamp = (int(time_range_start*1000) + int(time_range_end*1000)) / 2
     activities = activity_info.get('matched_activities')
     activities = activities[0] if activities else {}
     activity = activities.get('category')
     ret_dict['activity'] = {'category': activity,
-                            'time_range_start': int(time_range_start*1000),
-                            'time_range_end': int(time_range_end*1000)}
+                            'timestamp': timestamp}
     ret_dict['user_id'] = user_id
-    post_panel_data(tracker=user_id, context_type='context', context_val=activity)
+    post_panel_data(tracker=user_id, context_type='context', context_val=activity, timestamp=timestamp)
     return ret_dict
 
 
