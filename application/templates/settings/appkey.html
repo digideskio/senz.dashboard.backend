@@ -11,28 +11,6 @@
                 你可以查看指引或者按照下面的<a href="{{ url_for('integration.show') }}">集成文档</a>集成SDK，
                 或返回<a href="{{ url_for('settings.manage_app') }}">App列表</a>
             </p>
-{#            <div class="ng-scope">#}
-{#            <form action="{{ url_for('settings.add_app') }}" method="post">#}
-{#                <div><input type="text" size="36" name="app_name" placeholder="app_name" /></div>#}
-{#                <div><input type="submit" id="create-app" value="创建应用" ></div>#}
-{#            </form>#}
-{#            <br>#}
-{#            <br>#}
-{#            <br>#}
-{#            <form action="{{ url_for('settings.delete_app') }}" method="post">#}
-{#                <div><label>App Name</label><div>#}
-{#                    <input id="app_name" type="text" size="36" name="app_name" value="{{ app_name }}" readonly></div></div>#}
-{#                <div><label>App ID</label><div>#}
-{#                    <input id="app_id" type="text" size="36" name="app_id" value="{{ app_id }}" readonly></div></div>#}
-{#                <div><label>App Key</label><div>#}
-{#                    <input id="app_key" type="text" size="36" name="app_key" value="{{ app_key }}" readonly></div></div>#}
-{#                {% if disabled %}#}
-{#                    <div><button type="submit" id="delete-app">删除应用</button></div>#}
-{#                {% else %}#}
-{#                    <div><button type="submit" id="delete-app">删除应用</button></div>#}
-{#                {% endif %}#}
-{#            </form>#}
-{#            </div>#}
         </div>
     </div>
 </div>
@@ -40,13 +18,16 @@
 
 {% block app_select %}
 <script>
- var post_url = function(){
+var post_url = function(){
     var obj = document.getElementById("select_app");
     document.getElementById("app_name").value = obj.options[obj.selectedIndex].text;
     document.getElementById("app_id").value = obj.value;
     document.getElementById("app_key").value = obj.options[obj.selectedIndex].id;
-    $.post("/", {app_id: obj.value});
-  };
+    var cur_url = window.location.href;
+    $.post("/", {app_id: obj.value}, function () {
+        window.location.href = cur_url;
+    });
+};
  post_url();
 </script>
 {% endblock %}

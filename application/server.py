@@ -1,6 +1,6 @@
 # coding: utf-8
 
-from flask import session, request, redirect, url_for
+from flask import session, request, redirect, url_for, make_response
 from os.path import dirname, join
 import json
 
@@ -13,7 +13,7 @@ def index():
     if request.method == 'POST':
         app_id = request.form.get('app_id')
         session['app_id'] = app_id
-        return redirect(url_for('dashboard_bp.show'))
+        return make_response(app_id)
     if request.method == 'GET':
         return redirect(url_for('dashboard_bp.show'))
 

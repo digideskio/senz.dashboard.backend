@@ -45,13 +45,16 @@
 
 {% block app_select %}
 <script>
- var post_url = function(){
+var post_url = function(){
     var obj = document.getElementById("select_app");
     document.getElementById("app_name").value = obj.options[obj.selectedIndex].text;
     document.getElementById("app_id").value = obj.value;
     document.getElementById("app_key").value = obj.options[obj.selectedIndex].id;
-    $.post("/", {app_id: obj.value});
-  };
+    var cur_url = window.location.href;
+    $.post("/", {app_id: obj.value}, function () {
+        window.location.href = cur_url;
+    });
+};
  post_url();
 </script>
 {% endblock %}

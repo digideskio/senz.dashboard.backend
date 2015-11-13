@@ -97,7 +97,8 @@ def parse_home_office_info(homeoffice_info):
     timestamp = homeoffice_info.get('timestamp')
     ret_dict['user_id'] = user_id
     ret_dict['home_office_status'] = {timestamp: status}
-    post_panel_data(tracker=user_id, context_type='context', context_val=status, timestamp=timestamp)
+    if time.time()*1000 - timestamp < 300:
+        post_panel_data(tracker=user_id, context_type='context', context_val=status, timestamp=timestamp)
     return ret_dict
 
 
@@ -172,7 +173,7 @@ def updata_backend_info(parse_dict):
                 dst_table.set('user', user)
             elif key is 'home_office_status':
                 home_office_status = dst_table.get('home_office_status') or {}
-                home_office_status_tmp = filter(lambda x: x[0] > time.time() - 24 * 3600, home_office_status.items())
+                home_office_status_tmp = filter(lambda x: x[0] > (time.time()*1000 - 24 * 3600), home_office_status.items())
 
                 home_office_status = {}
                 for item in home_office_status_tmp:
@@ -183,7 +184,7 @@ def updata_backend_info(parse_dict):
                 dst_table.set('home_office_status', home_office_status)
             elif key is 'event':
                 event_tmp = dst_table.get('event') or {}
-                event_tmp = filter(lambda x: x[0] > time.time() - 24 * 3600, event_tmp.items())
+                event_tmp = filter(lambda x: x[0] > time.time()*1000 - 24 * 3600, event_tmp.items())
                 event = {}
                 for item in event_tmp:
                     event[item[0]] = item[1]

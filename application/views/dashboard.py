@@ -22,6 +22,7 @@ def get_app_list():
 
 @dashboard_bp.route('/dashboard')
 def show():
+    print('c', session.get('app_id'))
     context_dict = get_app_list()
     app_id = context_dict['app_id']
     username = context_dict['username']

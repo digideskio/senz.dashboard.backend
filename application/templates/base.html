@@ -109,8 +109,11 @@
   {% block app_select %}
   <script>
       var post_url = function(){
-        var obj = document.getElementById("select_app");
-        $.post("/", {app_id: obj.value});
+          var obj = document.getElementById("select_app");
+          var cur_url = window.location.href;
+          $.post("/", {app_id: obj.value}, function () {
+              window.location.href = cur_url;
+          });
       };
   </script>
   {% endblock %}
