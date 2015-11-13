@@ -59,3 +59,8 @@ def manage_app():
             user.session_token = session.get('session_token')
             user.delete_app(app_id)
         return redirect(url_for('settings.manage_app'))
+
+
+@settings.route('/modify')
+def modify_app():
+    pass
