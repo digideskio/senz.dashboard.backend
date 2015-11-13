@@ -153,10 +153,11 @@ def updata_backend_info(parse_dict):
     app_id_list = list(app_set)
 
     for app_id in app_id_list:
+        print("app_id: ", app_id)
         query = Query(Object.extend('Application'))
-        query.equal_to('app_id', app_id)
+        query.equal_to('objectId', app_id)
         app = query.find()[0] if query.count() else None
-
+        print(app)
         table_dash = Object.extend('DashboardSource')
         query = Query(table_dash)
         query.equal_to('app', app)

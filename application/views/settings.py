@@ -7,7 +7,6 @@ settings = Blueprint('settings', __name__, template_folder='templates')
 
 @settings.route('/settings')
 def show():
-    print("endpoint: ", request.endpoint)
     if not session.get('session_token'):
         return redirect(url_for('accounts_bp.login'))
     return redirect(url_for('settings.add_app'))
@@ -15,7 +14,6 @@ def show():
 
 @settings.route('/create', methods=['GET', 'POST'])
 def add_app():
-    print("endpoint: ", request.endpoint)
     if not session.get('session_token'):
         return redirect(url_for('accounts_bp.login'))
     if request.method == 'GET':
@@ -42,7 +40,6 @@ def add_app():
 
 @settings.route('/manage', methods=['GET', 'POST'])
 def manage_app():
-    print("endpoint: ", request.endpoint)
     if not session.get('session_token'):
         return redirect(url_for('accounts_bp.login'))
     if request.method == 'GET':
