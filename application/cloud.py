@@ -185,6 +185,7 @@ def updata_backend_info(parse_dict):
                 dst_table.set('home_office_status', home_office_status)
             elif key is 'event':
                 event_tmp = dst_table.get('event') or {}
+                print(event_tmp.keys())
                 event_tmp = filter(lambda x: x[0] > time.time()*1000 - 24 * 3600, event_tmp.items())
                 event = {}
                 for item in event_tmp:

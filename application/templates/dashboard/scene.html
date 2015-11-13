@@ -148,7 +148,7 @@ var profile = JSON.parse({{ option|tojson|safe }});
               type: 'bar',
               data: profile.data.event.series
           }]
-      }
+      };
 
       require(['echarts', 'echarts/chart/bar', 'echarts/chart/line', 'echarts/chart/map'],
       function(ec) {
@@ -156,7 +156,6 @@ var profile = JSON.parse({{ option|tojson|safe }});
           if(!document.getElementById('eventMap')){
               return;
           }
-
           var eventMap = ec.init(document.getElementById('eventMap'));
           eventMap.setOption(eventMapOption);
       })

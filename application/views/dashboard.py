@@ -3,6 +3,7 @@ from flask import Blueprint, render_template, json, session
 from leancloud import Object, Query, LeanCloudError
 from ..models import Developer
 from os.path import dirname, join
+import time
 
 dashboard_bp = Blueprint('dashboard_bp', __name__, template_folder='templates')
 
@@ -22,7 +23,6 @@ def get_app_list():
 
 @dashboard_bp.route('/dashboard')
 def show():
-    print('c', session.get('app_id'))
     context_dict = get_app_list()
     app_id = context_dict['app_id']
     username = context_dict['username']
@@ -30,6 +30,8 @@ def show():
 
     result_dict = get_query_list(app_id, 'event')
     event_list = filter(lambda x: x is not None, result_dict['event'])
+    print(event_list)
+    print('a;sldkjf;alksdjf;')
     event_list = filter(lambda y: y is not None,
                         map(lambda x: translate(translate(x, 'event_old'), 'context'), event_list))
     event_tmp = sorted(map(lambda x: (x, event_list.count(x)), set(event_list)), key=lambda item: -item[1])
@@ -219,10 +221,13 @@ def motion():
 
     result_dict = get_query_list(app_id, 'home_office_status', 'event')
     home_office_list = filter(lambda x: x is not None, result_dict['home_office_status'])
-    event_list = filter(lambda x: x is not None, result_dict['event'])
-    event_list = map(lambda x: translate(translate(x, 'event_old'), 'context'), filter(lambda x: x not in home_office_type, event_list))
 
-    event_tmp = sorted(map(lambda x: (x, event_list.count(x)), set(event_list)), key=lambda item: -item[1])
+    # filled all the status* field
+    for home_office in home_office_list:
+        for k in range(0, 24):
+            if 'status' + str(k) not in home_office.keys():
+                home_office['status' + str(k)] = None
+
     home_office_tmp = map(lambda x: map(lambda y: y[1], sorted(x.items(),
                                                                key=lambda key: int(key[0][6:]))), home_office_list)
     home_office_series = map(lambda x: list(x),
@@ -230,6 +235,10 @@ def motion():
                                                  for i in xrange(len(home_office_type))], zip(*home_office_tmp))))
     home_office = {"category": map(lambda x: translate(x, 'home_office_status'), home_office_type),
                    "xAxis": list(range(24)), "series": home_office_series}
+
+    event_list = filter(lambda x: x is not None, result_dict['event'])
+    event_list = map(lambda x: translate(translate(x, 'event_old'), 'context'), filter(lambda x: x not in home_office_type, event_list))
+    event_tmp = sorted(map(lambda x: (x, event_list.count(x)), set(event_list)), key=lambda item: -item[1])
     event = {"category": list(zip(*event_tmp)[0]), "series": list(zip(*event_tmp)[1])} \
         if event_tmp else {"category": [], "series": []}
 
@@ -281,13 +290,24 @@ def get_query_list(app_id='', *field):
             ret_dict[item] = map(lambda result: result.attributes.get(item), result_list)
         else:
             if item == 'event':
-                events_list = filter(lambda x: x is not None,
+                events_list = filter(lambda x: x,
                                      map(lambda result: result.attributes.get(item), result_list))
-                ret_dict[item] = map(lambda x: x.items()[-1][1].get('event'), events_list)
+                ret_dict[item] = []
+                for event in events_list:
+                    ret_dict[item] += event.values()
             elif item == 'home_office_status':
                 status = filter(lambda x: x is not None,
                                 map(lambda result: result.attributes.get('home_office_status'), result_list))
-                ret_dict[item] = status
+                ret_dict[item] = map(lambda x:
+                                     dict(map(lambda y: ('status' + str(time.localtime(int(y[0])/1000)[3]), y[1]),
+                                              x.items())), status)
+                # print(ret_dict[item])
+                # for item in status:
+                #     tmp = {}
+                #     for k, v in item:
+                #         # if int(k)
+                #         tmp[k] = v
+                # print(status)
                 # now = time.localtime()[:]
                 # yesterday = time.mktime((now[0], now[1], now[2]-1, 0, 0, 0, 0, 0, 0))
                 # for s in status:
