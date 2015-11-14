@@ -180,6 +180,7 @@ def updata_backend_info(parse_dict):
             elif key is 'event':
                 event_tmp = dst_table.get('event') or {}
                 event = {}
+                print event_tmp
                 for item in filter(lambda x: x is not None, event_tmp):
                     event[item[0]] = item[1]
                 for k, v in parse_dict['event'].items():
