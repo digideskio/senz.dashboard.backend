@@ -32,3 +32,13 @@
     </div>
     </div>
 {% endblock %}
+
+{% block change_action %}
+    window.onload = function(){
+          var next = GetUrlArgNext();
+          var login = document.getElementsByTagName('form')[0];
+          if(login){
+            login.setAttribute('action', "{{ url_for('accounts_bp.login') }}?next=" + next);
+          }
+      };
+{% endblock %}

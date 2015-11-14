@@ -30,8 +30,6 @@ def show():
 
     result_dict = get_query_list(app_id, 'event')
     event_list = filter(lambda x: x is not None, result_dict['event'])
-    print(event_list)
-    print('a;sldkjf;alksdjf;')
     event_list = filter(lambda y: y is not None,
                         map(lambda x: translate(translate(x, 'event_old'), 'context'), event_list))
     event_tmp = sorted(map(lambda x: (x, event_list.count(x)), set(event_list)), key=lambda item: -item[1])
@@ -88,7 +86,7 @@ def profile():
                            app_list=app_list)
 
 
-@dashboard_bp.route('/dashboard/interest')
+@dashboard_bp.route('/dashboard/interest/')
 def interest():
     context_dict = get_app_list()
     app_id = context_dict['app_id']
@@ -284,6 +282,18 @@ def get_query_list(app_id='', *field):
     except LeanCloudError:
         return {}
 
+    # check all record in DashboardSource and ignore app_id simultaneous
+    # select in front end
+    if app_id == 'all':
+        query = Query(Object.extend('DashboardSource'))
+        total_count = query.count()
+        query_times = (total_count + query_limit - 1) / query_limit
+        result_list = []
+        for index in xrange(query_times):
+            query.limit(query_limit)
+            query.skip(index * query_limit)
+            result_list.extend(query.find())
+
     ret_dict = {}
     for item in field:
         if app_id == '5621fb0f60b27457e863fabb':
@@ -301,25 +311,6 @@ def get_query_list(app_id='', *field):
                 ret_dict[item] = map(lambda x:
                                      dict(map(lambda y: ('status' + str(time.localtime(int(y[0])/1000)[3]), y[1]),
                                               x.items())), status)
-                # print(ret_dict[item])
-                # for item in status:
-                #     tmp = {}
-                #     for k, v in item:
-                #         # if int(k)
-                #         tmp[k] = v
-                # print(status)
-                # now = time.localtime()[:]
-                # yesterday = time.mktime((now[0], now[1], now[2]-1, 0, 0, 0, 0, 0, 0))
-                # for s in status:
-                #     for k in s.keys():
-                #         for t in xrange(0, 24):
-                #             cur_time = int(yesterday) + t * 3600
-                #             if math.fabs(cur_time - int(k)) < 30 * 60:
-                #                 s['status' + str(t)] = s[k]
-                #                 s[k] = None
-                #     print s
-                # ret_dict[item] = status
-
             elif item == 'province':
                 locations = filter(lambda x: x is not None,
                                    map(lambda result: result.attributes.get('location'), result_list))

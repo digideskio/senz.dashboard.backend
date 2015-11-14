@@ -16,27 +16,27 @@
                     <div><button type="submit" id="delete-app">删除应用</button></div>
             </form>
 
-                <table border="1" cellpadding="10">
-                    {% if app_list %}
-                    <tr>
-                        <th>应用名</th>
-                        <th>appkey</th>
-                        <th>应用类型</th>
-                        <th>创建时间</th>
-                        <th>编辑应用</th>
-                    </tr>
-                    {% endif %}
-
-                    {% for app in app_list %}
-                    <tr>
-                        <td>{{ app.get('app_name') }}</td>
-                        <td>{{ app.get('app_key') }}</td>
-                        <td>{{ app.get('app_type') }}</td>
-                        <td>{{ app.get('createdAt') }}</td>
-                        <td><a href="#">b</a> <a href="#">a</a></td>
-                    </tr>
-                    {% endfor %}
-                </table>
+{#                <table border="1" cellpadding="10">#}
+{#                    {% if app_list %}#}
+{#                    <tr>#}
+{#                        <th>应用名</th>#}
+{#                        <th>appkey</th>#}
+{#                        <th>应用类型</th>#}
+{#                        <th>创建时间</th>#}
+{#                        <th>编辑应用</th>#}
+{#                    </tr>#}
+{#                    {% endif %}#}
+{##}
+{#                    {% for app in app_list %}#}
+{#                    <tr>#}
+{#                        <td>{{ app.get('app_name') }}</td>#}
+{#                        <td>{{ app.get('app_key') }}</td>#}
+{#                        <td>{{ app.get('app_type') }}</td>#}
+{#                        <td>{{ app.get('createdAt') }}</td>#}
+{#                        <td><a href="#">b</a> <a href="#">a</a></td>#}
+{#                    </tr>#}
+{#                    {% endfor %}#}
+{#                </table>#}
             </div>
         </div>
     </div>
@@ -45,17 +45,16 @@
 
 {% block app_select %}
 <script>
-var post_url = function(){
-    var obj = document.getElementById("select_app");
-    document.getElementById("app_name").value = obj.options[obj.selectedIndex].text;
-    document.getElementById("app_id").value = obj.value;
-    document.getElementById("app_key").value = obj.options[obj.selectedIndex].id;
-    var cur_url = window.location.href;
-    $.post("/", {app_id: obj.value}, function () {
-        window.location.href = cur_url;
-    });
-};
- post_url();
+    var post_url = function(){
+        var obj = document.getElementById("select_app");
+        document.getElementById("app_name").value = obj.options[obj.selectedIndex].text;
+        document.getElementById("app_id").value = obj.value;
+        document.getElementById("app_key").value = obj.options[obj.selectedIndex].id;
+
+        $.post("/", {app_id: obj.value}, function () {});
+    };
+
+    post_url.apply(this);
 </script>
 {% endblock %}
 

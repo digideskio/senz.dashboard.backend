@@ -161,19 +161,14 @@ def updata_backend_info(parse_dict):
         query = Query(table_dash)
         query.equal_to('app', app)
         query.equal_to('user', user)
-        dst_table = query.find()
-        if not dst_table:
-            dst_table = table_dash()
-        else:
-            dst_table = dst_table[0]
+        dst_table = query.find()[0] if query.count() else table_dash()
 
         dst_table.set('app', app)
         for key, value in parse_dict.items():
             if key is 'user_id':
                 dst_table.set('user', user)
             elif key is 'home_office_status':
-                home_office_status = dst_table.get('home_office_status') or {}
-                home_office_status_tmp = filter(lambda x: x[0] > (time.time()*1000 - 24 * 3600), home_office_status.items())
+                home_office_status_tmp = dst_table.get('home_office_status') or {}
 
                 home_office_status = {}
                 for item in home_office_status_tmp:
@@ -184,8 +179,6 @@ def updata_backend_info(parse_dict):
                 dst_table.set('home_office_status', home_office_status)
             elif key is 'event':
                 event_tmp = dst_table.get('event') or {}
-                print(event_tmp.keys())
-                event_tmp = filter(lambda x: x[0] > time.time()*1000 - 24 * 3600, event_tmp.items())
                 event = {}
                 for item in event_tmp:
                     event[item[0]] = item[1]

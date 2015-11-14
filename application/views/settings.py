@@ -54,7 +54,8 @@ def manage_app():
                                app_list=app_list)
     if request.method == 'POST':
         app_id = request.form.get('app_id')
-        if app_id != '5621fb0f60b27457e863fabb':
+        if app_id is not '5621fb0f60b27457e863fabb' and app_id is not 'all':
+            print "delete", '<', app_id, '>'
             user = Developer()
             user.session_token = session.get('session_token')
             user.delete_app(app_id)

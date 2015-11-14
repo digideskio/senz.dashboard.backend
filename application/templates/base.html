@@ -45,16 +45,22 @@
         <div class="inline-block">
           <select name="select_app" class="select_app" id="select_app" onchange="post_url()">
               {% if app_list %}
-                  <option value='5621fb0f60b27457e863fabb' id="qfv0xYn7SjQ4W23TeyeqhsiH19A">Demo</option>
-                  {% for item in app_list %}
-                      {% if item['app_id'] == app_id %}
-                        <option value={{ item['app_id'] }} id={{ item['app_key'] }} selected="selected">{{ item['app_name'] }}</option>
-                      {% else %}
-                        <option value={{ item['app_id'] }} id={{ item['app_key'] }}>{{ item['app_name'] }}</option>
-                      {% endif %}
-                  {% endfor %}
+                    <option value='5621fb0f60b27457e863fabb' {% if app_id == '5621fb0f60b27457e863fabb' %}
+                            selected="selected" {% endif %} id="qfv0xYn7SjQ4W23TeyeqhsiH19A">DemoFake(假数据)
+                    </option>
+
+                    <option value='all' {% if app_id == 'all' %} selected="selected"
+                            {% endif %} id="all">DemoAll(所有数据)
+                    </option>
+
+                    {% for item in app_list %}
+                    <option value={{ item['app_id'] }} id={{ item['app_key'] }} {% if app_id == item['app_id'] %} selected="selected" {% endif %}>{{ item['app_name'] }}</option>
+                    {% endfor %}
               {% else %}
-                  <option value='5621fb0f60b27457e863fabb' id="qfv0xYn7SjQ4W23TeyeqhsiH19A">Demo</option>
+                    <option value='5621fb0f60b27457e863fabb'
+                      {% if app_id == '5621fb0f60b27457e863fabb' %} selected="selected"
+                      {% endif %} id="qfv0xYn7SjQ4W23TeyeqhsiH19A">DemoFake(假数据)
+                    </option>
               {% endif %}
           </select>
        </div>
@@ -71,14 +77,14 @@
             {{ username }}
           </button>
           <ul class="list">
-            <li class="item"><a href="{{ url_for('accounts_bp.logout') }}">注销</a></li>
+            <li class="item" ><a id="logout" href="#">注销</a></li>
           </ul>
         </div>
    </div>
    {% else %}
     <ul class="list">
-        <li class="item"><a href="{{ url_for('accounts_bp.login') }}">登录</a></li>
-        <li class="item"><a href="{{ url_for('accounts_bp.signup') }}">注册</a></li>
+        <li class="item"><a id="login" href="#">登录</a></li>
+        <li class="item"><a id="signup" href="#">注册</a></li>
     </ul>
    {% endif %}
    </div>
@@ -111,10 +117,48 @@
       var post_url = function(){
           var obj = document.getElementById("select_app");
           var cur_url = window.location.href;
-          $.post("/", {app_id: obj.value}, function () {
+          $.post("/", {app_id: obj.value}, function (rep) {
               window.location.href = cur_url;
+              console.log(rep);
           });
       };
+      {% block change_action %}
+      window.onload = function(){
+          var next = GetUrlRelativePath();
+          var login = document.getElementById('login');
+          var logout = document.getElementById('logout');
+          var signup = document.getElementById('signup');
+          if(login){
+            login.href = "{{ url_for('accounts_bp.login') }}?next=" + next;
+          }
+          if(logout){
+            logout.href = "{{ url_for('accounts_bp.logout') }}?next=" + next;
+          }
+          if(signup){
+            signup.href = "{{ url_for('accounts_bp.signup') }}?next=" + next;
+          }
+      };
+      {% endblock %}
+    var GetUrlRelativePath = function (){
+　　　　var url = document.location.toString();
+　　　　var arrUrl = url.split("//");
+　　　　var start = arrUrl[1].indexOf("/");
+　　　　var relUrl = arrUrl[1].substring(start);
+　　　　if(relUrl.indexOf("?") != -1){
+　　　　　　relUrl = relUrl.split("?")[0];
+　　　　}
+　　　　return relUrl;
+　　};
+  var GetUrlArgNext = function (){
+　　　　var url = document.location.toString();
+　　　　var arrUrl = url.split("//");
+　　　　var start = arrUrl[1].indexOf("/");
+　　　　var relUrl = arrUrl[1].substring(start);
+　　　　if(relUrl.indexOf("?") != -1){
+　　　　　　relUrl = relUrl.split("?")[1];
+　　　　}
+　　　　return relUrl.split("=")[1];
+　　};
   </script>
   {% endblock %}
 
