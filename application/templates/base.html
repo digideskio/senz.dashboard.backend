@@ -124,7 +124,7 @@
       };
       {% block change_action %}
       window.onload = function(){
-          var next = GetUrlRelativePath();
+          var next = GetUrlRelativePath() || '/';
           var login = document.getElementById('login');
           var logout = document.getElementById('logout');
           var signup = document.getElementById('signup');
