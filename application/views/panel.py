@@ -10,7 +10,7 @@ panel = Blueprint('panel', __name__, template_folder='templates')
 @panel.route('/panel/debug', methods=['GET', 'POST'])
 def show():
     if not session.get('session_token'):
-        next_url = request.args.get('next') or url_for('index')
+        next_url = '/panel/debug'
         return redirect(url_for('accounts_bp.login') + '?next=' + next_url)
 
     app_id = session.get('app_id', None)
