@@ -42,8 +42,8 @@
 </div>
 {%  endblock %}
 
-{% block app_select %}
 <script>
+{% block app_select %}
 var post_url = function(){
     var obj = document.getElementById("select_app");
     var cur_url = window.location.href;
@@ -51,7 +51,6 @@ var post_url = function(){
         window.location.href = cur_url;
     });
 };
-{# post_url();#}
-</script>
 {% endblock %}
+</script>
 

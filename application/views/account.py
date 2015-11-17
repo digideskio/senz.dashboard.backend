@@ -16,7 +16,6 @@ def get_expiration():
 @accounts_bp.route('/login', methods=['GET', 'POST'])
 def login():
     next_url = request.args.get('next') or url_for('index')
-    print(next_url)
     if session.get('session_token'):
         return redirect(url_for('index'))
     if request.method == 'POST':
@@ -34,7 +33,7 @@ def login():
 
 @accounts_bp.route('/logout', methods=['GET', 'POST'])
 def logout():
-    next_url = request.args.get('next') or url_for('index')
+    next_url = '/'
     developer = Developer()
     developer.session_token = session.get('session_token')
     session.clear()

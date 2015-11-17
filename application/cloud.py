@@ -95,10 +95,12 @@ def parse_home_office_info(homeoffice_info):
     user_id = homeoffice_info.get('user').get('objectId')
     status = translate(homeoffice_info.get('status'), 'home_office_status_old')
     timestamp = homeoffice_info.get('timestamp')
+    expire = homeoffice_info.get('expire')
+    expire = (int(expire) - int(timestamp)) / 1000
     ret_dict['user_id'] = user_id
     ret_dict['home_office_status'] = {timestamp: status}
     if time.time()*1000 - timestamp < 300:
-        post_panel_data(tracker=user_id, context_type='context', context_val=status, timestamp=timestamp)
+        post_panel_data(tracker=user_id, context_type='context', context_val=status, timestamp=timestamp, expire=expire)
     return ret_dict
 
 
@@ -180,8 +182,7 @@ def updata_backend_info(parse_dict):
             elif key is 'event':
                 event_tmp = dst_table.get('event') or {}
                 event = {}
-                print event_tmp
-                for item in filter(lambda x: x is not None, event_tmp):
+                for item in filter(lambda x: x[0] > str(1416200315), event_tmp.items()):
                     event[item[0]] = item[1]
                 for k, v in parse_dict['event'].items():
                     event[k] = v

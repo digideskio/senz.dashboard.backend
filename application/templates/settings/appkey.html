@@ -16,8 +16,8 @@
 </div>
 {%  endblock %}
 
-{% block app_select %}
 <script>
+{% block app_select %}
 var post_url = function(){
     var obj = document.getElementById("select_app");
     document.getElementById("app_name").value = obj.options[obj.selectedIndex].text;
@@ -28,6 +28,6 @@ var post_url = function(){
         window.location.href = cur_url;
     });
 };
-</script>
 {% endblock %}
+</script>
 

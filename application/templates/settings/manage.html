@@ -43,8 +43,8 @@
 </div>
 {%  endblock %}
 
-{% block app_select %}
 <script>
+{% block app_select %}
     var post_url = function(){
         var obj = document.getElementById("select_app");
         document.getElementById("app_name").value = obj.options[obj.selectedIndex].text;
@@ -55,6 +55,6 @@
     };
 
     post_url.apply(this);
-</script>
 {% endblock %}
+</script>
 

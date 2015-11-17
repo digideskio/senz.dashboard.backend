@@ -55,8 +55,7 @@ def post_panel_data(**param):
     context_val = param.get('context_val')
     source = param.get('source')
     timestamp = param.get('timestamp') or int(time.time()*1000)
-
-    # home_office_type = ['contextAtWork', 'contextAtHome', 'contextCommutingWork', 'contextCommutingHome']
+    expire = param.get('expire')
 
     s = json.load(file(join(dirname(dirname(__file__)), 'translate.json')))
     home_office_type = s.get("home_office_status").keys() + s.get("home_office_status_old").keys()
@@ -74,7 +73,8 @@ def post_panel_data(**param):
         if context_type and context_val and context_val in home_office_type:
             payload["type"] = "home_office_status"
             payload["val"] = context_val
-            requests.post("https://leancloud.cn/1.1/functions/notify_new_details",  headers=headers, data=payload)
+            requests.post("https://leancloud.cn/1.1/functions/notify_new_details",
+                          headers=headers, data=payload, expire=expire)
         elif context_type and context_val and context_val not in home_office_type:
             payload["type"] = "event"
             payload["val"] = context_val

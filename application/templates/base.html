@@ -112,8 +112,8 @@
 
  {% block content %}{% endblock %}
 
-  {% block app_select %}
   <script>
+  {% block app_select %}
       var post_url = function(){
           var obj = document.getElementById("select_app");
           var cur_url = window.location.href;
@@ -122,6 +122,8 @@
               console.log(rep);
           });
       };
+      {% endblock %}
+
       {% block change_action %}
       window.onload = function(){
           var next = GetUrlRelativePath() || '/';
@@ -138,7 +140,7 @@
             signup.href = "{{ url_for('accounts_bp.signup') }}?next=" + next;
           }
       };
-      {% endblock %}
+  {% endblock %}
     var GetUrlRelativePath = function (){
 　　　　var url = document.location.toString();
 　　　　var arrUrl = url.split("//");
@@ -160,7 +162,6 @@
 　　　　return relUrl.split("=")[1];
 　　};
   </script>
-  {% endblock %}
 
  </body>
 </html>
