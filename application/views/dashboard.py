@@ -1,5 +1,5 @@
 # coding: utf-8
-from flask import Blueprint, render_template, json, session
+from flask import Blueprint, render_template, json, session, request
 from leancloud import Object, Query, LeanCloudError
 from ..models import Developer
 from os.path import dirname, join
@@ -209,6 +209,11 @@ def location():
 
 @dashboard_bp.route('/dashboard/context')
 def motion():
+    # filter by timestamp
+    h_start = request.args.get('h_start') or 0
+    h_end = request.args.get('h_end') or int(time.time())
+    e_start = request.args.get('e_start') or 0
+    e_end = request.args.get('e_end') or int(time.time())
     context_dict = get_app_list()
     app_id = context_dict['app_id']
     username = context_dict['username']
@@ -217,8 +222,26 @@ def motion():
     s = json.load(file(join(dirname(dirname(__file__)), 'translate.json')))
     home_office_type = s.get('home_office_status').keys()
 
+    # get data from leancloud#DashboardSource
     result_dict = get_query_list(app_id, 'home_office_status', 'event')
     home_office_list = filter(lambda x: x is not None, result_dict['home_office_status'])
+    event_list = filter(lambda x: x is not None, result_dict['event'])
+
+    # filter by timestamp
+    if app_id and app_id != '5621fb0f60b27457e863fabb':  # 非DemoFake 假数据
+        home_office_list_tmp = map(lambda item:
+                                   dict(map(lambda x: (x, item[x]),
+                                            filter(lambda y: str(h_start) <= str(y) <= str(h_end),  # filter
+                                                   item.keys()))), home_office_list)
+        home_office_list = map(lambda x:
+                               dict(map(lambda y: ('status' + str(time.localtime(int(y[0])/1000)[3]), y[1]),
+                                        x.items())), home_office_list_tmp)
+
+        event_list_tmp = map(lambda item: map(lambda x: item[x],
+                                              filter(lambda y: str(e_start) <= str(y) <= str(e_end),  # filter
+                                                     item.keys())), event_list)
+        event_list = [i for row in event_list_tmp for i in row]
+        # print event_list
 
     # filled all the status* field
     for home_office in home_office_list:
@@ -226,16 +249,16 @@ def motion():
             if 'status' + str(k) not in home_office.keys():
                 home_office['status' + str(k)] = None
 
-    home_office_tmp = map(lambda x: map(lambda y: y[1], sorted(x.items(),
-                                                               key=lambda key: int(key[0][6:]))), home_office_list)
+    home_office_tmp = map(lambda x: map(lambda y: y[1],
+                                        sorted(x.items(), key=lambda key: int(key[0][6:]))), home_office_list)
     home_office_series = map(lambda x: list(x),
                              zip(*map(lambda x: [x.count(home_office_type[i])
                                                  for i in xrange(len(home_office_type))], zip(*home_office_tmp))))
     home_office = {"category": map(lambda x: translate(x, 'home_office_status'), home_office_type),
                    "xAxis": list(range(24)), "series": home_office_series}
 
-    event_list = filter(lambda x: x is not None, result_dict['event'])
-    event_list = map(lambda x: translate(translate(x, 'event_old'), 'context'), filter(lambda x: x not in home_office_type, event_list))
+    event_list = map(lambda x: translate(translate(x, 'event_old'), 'context'),
+                     filter(lambda x: x not in home_office_type, event_list))
     event_tmp = sorted(map(lambda x: (x, event_list.count(x)), set(event_list)), key=lambda item: -item[1])
     event = {"category": list(zip(*event_tmp)[0]), "series": list(zip(*event_tmp)[1])} \
         if event_tmp else {"category": [], "series": []}
@@ -302,15 +325,11 @@ def get_query_list(app_id='', *field):
             if item == 'event':
                 events_list = filter(lambda x: x,
                                      map(lambda result: result.attributes.get(item), result_list))
-                ret_dict[item] = []
-                for event in events_list:
-                    ret_dict[item] += event.values()
+                ret_dict[item] = events_list
             elif item == 'home_office_status':
                 status = filter(lambda x: x is not None,
-                                map(lambda result: result.attributes.get('home_office_status'), result_list))
-                ret_dict[item] = map(lambda x:
-                                     dict(map(lambda y: ('status' + str(time.localtime(int(y[0])/1000)[3]), y[1]),
-                                              x.items())), status)
+                                map(lambda result: result.attributes.get(item), result_list))
+                ret_dict[item] = status
             elif item == 'province':
                 locations = filter(lambda x: x is not None,
                                    map(lambda result: result.attributes.get('location'), result_list))
