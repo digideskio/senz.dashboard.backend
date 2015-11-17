@@ -30,7 +30,7 @@ def show():
 
     result_dict = get_query_list(app_id, 'event')
     event_list = filter(lambda x: x is not None, result_dict['event'])
-    if app_id != '5621fb0f60b27457e863fabb':
+    if app_id and app_id != '5621fb0f60b27457e863fabb':
         event_list_tmp = map(lambda item: map(lambda x: item[x],  item.keys()), event_list)
         event_list = [i for row in event_list_tmp for i in row]
     event_list = filter(lambda y: y is not None,

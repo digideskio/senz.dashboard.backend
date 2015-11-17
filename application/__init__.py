@@ -9,11 +9,20 @@ from .views.dashboard import dashboard_bp
 from .views.integration import integration
 from .views.settings import settings
 from .views.account import accounts_bp
+from os.path import dirname
+import bugsnag
+from bugsnag.flask import handle_exceptions
+
+bugsnag.configure(
+    api_key="A0Zr98j/3yX R~XHH!jmN]LWX/,?RT",
+    project_root=dirname(dirname(__file__)),
+)
 
 
 def make_app():
     app = Flask(__name__)
     config = load_config()
+    handle_exceptions(app)
     app.config.from_object(config)
     app.permanent_session_lifetime = timedelta(hours=1)
     register_routes(app, panel, restapi, dashboard_bp,
