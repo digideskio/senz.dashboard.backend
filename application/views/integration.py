@@ -1,5 +1,5 @@
 from ..models import Developer
-from flask import Blueprint, render_template, session, redirect, url_for
+from flask import Blueprint, render_template, session, redirect, url_for, request
 
 integration = Blueprint('integration', __name__, template_folder='templates')
 
@@ -7,7 +7,8 @@ integration = Blueprint('integration', __name__, template_folder='templates')
 @integration.route('/integration')
 def show():
     if not session.get('session_token'):
-        return redirect(url_for('accounts_bp.login'))
+        next_url = request.args.get('next') or url_for('index')
+        return redirect(url_for('accounts_bp.login') + '?next=' + next_url)
 
     app_id = session.get('app_id', None)
     developer = Developer()

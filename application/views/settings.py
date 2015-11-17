@@ -8,7 +8,8 @@ settings = Blueprint('settings', __name__, template_folder='templates')
 @settings.route('/settings')
 def show():
     if not session.get('session_token'):
-        return redirect(url_for('accounts_bp.login'))
+        next_url = request.args.get('next') or url_for('index')
+        return redirect(url_for('accounts_bp.login') + '?next=' + next_url)
     return redirect(url_for('settings.add_app'))
 
 
