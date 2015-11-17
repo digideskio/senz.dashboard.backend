@@ -73,8 +73,8 @@ def post_panel_data(**param):
         if context_type and context_val and context_val in home_office_type:
             payload["type"] = "home_office_status"
             payload["val"] = context_val
-            requests.post("https://leancloud.cn/1.1/functions/notify_new_details",
-                          headers=headers, data=payload, expire=expire)
+            payload["expire"] = expire
+            requests.post("https://leancloud.cn/1.1/functions/notify_new_details", headers=headers, data=payload)
         elif context_type and context_val and context_val not in home_office_type:
             payload["type"] = "event"
             payload["val"] = context_val
