@@ -36,9 +36,9 @@
    <nav class="main-nav">
      <ul class="list">
        <li class="item nav-dashboard"><a id="dashboard" href="{{ url_for('dashboard_bp.show') }}">统计分析</a></li>
-       <li class="item nav-integration"><a id="integration" href="#">SDK集成</a></li>
-       <li class="item nav-settings"><a id="settings" href="#">管理</a></li>
-       <li class="item nav-panel"><a id="panel" href="#">调试</a></li>
+       <li class="item nav-integration"><a id="integration" href="{{ url_for('integration.show') }}">SDK集成</a></li>
+       <li class="item nav-settings"><a id="settings" href="{{ url_for('settings.show') }}">管理</a></li>
+       <li class="item nav-panel"><a id="panel" href="{{ url_for('panel.show') }}">调试</a></li>
 
        <div class="item">
        {% block app_list %}
@@ -137,9 +137,6 @@
           if(signup){
             signup.href = "{{ url_for('accounts_bp.signup') }}?next=" + next;
           }
-          document.getElementById('integration').href = "{{ url_for('integration.show') }}?next=" + next;
-          document.getElementById('settings').href = "{{ url_for('settings.show') }}?next=" + next;
-          document.getElementById('panel').href = "{{ url_for('panel.show') }}?next=" + next;
       };
       {% endblock %}
     var GetUrlRelativePath = function (){
