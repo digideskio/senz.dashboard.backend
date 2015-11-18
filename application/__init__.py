@@ -4,7 +4,6 @@ from flask import Flask
 from datetime import timedelta
 from config import load_config
 from .views.panel import panel
-from .views.restapi import restapi
 from .views.dashboard import dashboard_bp
 from .views.integration import integration
 from .views.settings import settings
@@ -25,8 +24,7 @@ def make_app():
     handle_exceptions(app)
     app.config.from_object(config)
     app.permanent_session_lifetime = timedelta(hours=1)
-    register_routes(app, panel, restapi, dashboard_bp,
-                    integration, settings, accounts_bp)
+    register_routes(app, panel, dashboard_bp, integration, settings, accounts_bp)
     return app
 
 
