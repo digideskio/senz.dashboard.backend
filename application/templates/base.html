@@ -14,10 +14,11 @@
   <meta property="og:site_name" content="Dashboard" /> 
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" /> 
   <link rel="stylesheet" href="{{ url_for('static', filename='styles/dashboard.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='lib/jquery-ui-1.11.4/themes/base/jquery-ui.min.css') }}">
   <script src="{{ url_for('static', filename='lib/jquery-2.1.4.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='lib/jquery-ui-1.11.4/jquery-ui.min.js') }}"></script>
   <script src="{{ url_for('static', filename='lib/echarts-2.2.7/build/dist/echarts.js') }}"></script>
   <link rel="stylesheet" href="{{ url_for('static', filename='styles/login.css') }}">
-  <script src="{{ url_for('static', filename='scripts/dashboard.js') }}"></script>
   <script>
       require.config({
             paths: {
@@ -113,7 +114,7 @@
  {% block content %}{% endblock %}
 
   <script>
-  {% block app_select %}
+      {% block app_select %}
       var post_url = function(){
           var obj = document.getElementById("select_app");
           var cur_url = window.location.href;
@@ -140,18 +141,19 @@
             signup.href = "{{ url_for('accounts_bp.signup') }}?next=" + next;
           }
       };
-  {% endblock %}
-    var GetUrlRelativePath = function (){
-　　　　var url = document.location.toString();
-　　　　var arrUrl = url.split("//");
-　　　　var start = arrUrl[1].indexOf("/");
-　　　　var relUrl = arrUrl[1].substring(start);
-　　　　if(relUrl.indexOf("?") != -1){
-　　　　　　relUrl = relUrl.split("?")[0];
-　　　　}
-　　　　return relUrl;
-　　};
-  var GetUrlArgNext = function (){
+      {% endblock %}
+
+      var GetUrlRelativePath = function (){
+    　　　　var url = document.location.toString();
+    　　　　var arrUrl = url.split("//");
+    　　　　var start = arrUrl[1].indexOf("/");
+    　　　　var relUrl = arrUrl[1].substring(start);
+    　　　　if(relUrl.indexOf("?") != -1){
+    　　　　　　relUrl = relUrl.split("?")[0];
+    　　　　}
+    　　　　return relUrl;
+    　　};
+        var GetUrlArgNext = function (){
 　　　　var url = document.location.toString();
 　　　　var arrUrl = url.split("//");
 　　　　var start = arrUrl[1].indexOf("/");
@@ -162,6 +164,6 @@
 　　　　return relUrl.split("=")[1];
 　　};
   </script>
-
+<script src="{{ url_for('static', filename='scripts/dashboard.js') }}"></script>
  </body>
 </html>

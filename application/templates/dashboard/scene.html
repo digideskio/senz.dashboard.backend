@@ -2,11 +2,17 @@
 {% block content %}
   <div id="container" class="container">
    <div id="content" class="content" style="margin-top: 40px;">
-    <div class="relative" style="padding: 5px;">
+    <div class="relative" style="padding: 5px;position: relative;">
       <div id="sceneMap" style="height:600px;border:1px solid #ccc;"></div>
+      <div class="date-filter-wrap">
+        <p>
+          <input type="text" id="j-filter-start-at">至
+          <input type="text" id="j-filter-end-at">
+        </p>
+      </div>
     </div>
 
-    <div class="relative" style="padding: 5px;">
+    <div class="relative" style="padding: 5px; position: relative;">
       <div id="eventMap" style="height:600px;border:1px solid #ccc;"></div>
     </div>
 

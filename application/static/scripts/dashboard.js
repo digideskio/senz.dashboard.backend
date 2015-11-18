@@ -37,3 +37,16 @@ $(function(){
     })
 
 });
+
+$(document).ready(function(){
+    console.log(3333333);
+    $("#j-filter-start-at").datepicker({
+      changeMonth: true,
+      changeYear: true
+    });
+
+    $("#j-filter-end-at").datepicker({
+      changeMonth: true,
+      changeYear: true
+    })
+});
