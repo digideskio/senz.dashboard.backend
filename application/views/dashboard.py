@@ -188,10 +188,11 @@ def location():
     app_list = context_dict['app_list']
 
     result_dict = get_query_list(app_id, 'province', 'city')
-    provice_list = filter(lambda x: x is not None, result_dict['province'])
+    provice_list = map(lambda y: y if y[-1] not in ['省', '市'] else y[0:-1],
+                       filter(lambda x: x is not None, result_dict['province']))
     city_list = filter(lambda x: x is not None, result_dict['city'])
 
-    province = map(lambda x: {'name': x[0][0:-1], 'value': x[1]},
+    province = map(lambda x: {'name': x[0], 'value': x[1]},
                    sorted(map(lambda x: (x, provice_list.count(x)), set(provice_list)), key=lambda x: -x[1]))
     city = map(lambda x: {'name': x[0], 'value': x[1]},
                sorted(map(lambda x: (x, city_list.count(x)), set(city_list)), key=lambda x: -x[1]))
