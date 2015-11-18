@@ -8,20 +8,29 @@
         <p>
           <input type="text" id="j-filter-start-at">至
           <input type="text" id="j-filter-end-at">
+          <input type="button" id="home_office_status" class="button" value="确定">
         </p>
       </div>
     </div>
 
     <div class="relative" style="padding: 5px; position: relative;">
       <div id="eventMap" style="height:600px;border:1px solid #ccc;"></div>
+      <div class="date-filter-wrap">
+        <p>
+          <input type="text" id="j-filter-start-at-e">至
+          <input type="text" id="j-filter-end-at-e">
+          <input type="button" id="context" class="button" value="确定">
+        </p>
+      </div>
     </div>
 
    </div>
   </div>
 <script>
 var profile = JSON.parse({{ option|tojson|safe }});
-(function() {
-    var sceneMapOption = option = {
+
+var render_home_office = function(profile){
+   var sceneMapOption = option = {
         title : {
             text: '家-工作地点状态',
             subtext: ''
@@ -102,7 +111,10 @@ var profile = JSON.parse({{ option|tojson|safe }});
               echarts: './public/lib/echarts-2.2.7/build/dist'
           }
       });
-      var eventMapOption = {
+};
+
+var render_context = function(profile){
+     var eventMapOption = {
           title : {
               text: '事件频次',
               subtext: ''
@@ -165,8 +177,60 @@ var profile = JSON.parse({{ option|tojson|safe }});
           var eventMap = ec.init(document.getElementById('eventMap'));
           eventMap.setOption(eventMapOption);
       })
+};
+render_home_office(profile);
+render_context(profile);
 
 
-}).call(this);
+$(".button").click(function(){
+    var h_start_obj = $('#j-filter-start-at'), h_end_obj = $('#j-filter-end-at');
+    var e_start_obj = $('#j-filter-start-at-e'), e_end_obj = $('#j-filter-end-at-e');
+    var h_end = new Date(h_end_obj.val()).getTime() + new Date().getHours()*60*60*1000 || (new Date().getTime()),
+            h_start = new Date(h_start_obj.val()).getTime() + new Date().getHours()*60*60*1000 || (h_end - 30*24*60*60*1000);
+    var e_end = new Date(e_end_obj.val()).getTime() + new Date().getHours()*60*60*1000 || (new Date().getTime()),
+            e_start = new Date(e_start_obj.val()).getTime() + new Date().getHours()*60*60*1000 || (e_end - 30*24*60*60*1000);
+
+
+    var url = "{{ url_for('dashboard_bp.motion') }}";
+    var data = {
+        name: this.id,
+        h_start: h_start,
+        h_end: h_end,
+        e_start: e_start,
+        e_end: e_end
+    };
+    $.ajax({
+        type : "post",
+        async : true,
+        url : url,
+        data : data,
+        success:function(option){
+            if(data.name == 'home_office_status'){
+                render_home_office(JSON.parse(option));
+            }else if(data.name == 'context'){
+                render_context(JSON.parse(option));
+            }
+        },
+        error: function() {
+           alert("获取内容失败，请稍后再试！");
+        }
+    });
+});
+
+
+var jump_with_filter = function(){
+    var h_start_obj = $('#j-filter-start-at'), h_end_obj = $('#j-filter-end-at');
+    var e_start_obj = $('#j-filter-start-at-e'), e_end_obj = $('#j-filter-end-at-e');
+
+    var h_end = new Date(h_end_obj.val()).getTime() + new Date().getHours()*60*60*1000 || (new Date().getTime()),
+            h_start = new Date(h_start_obj.val()).getTime() + new Date().getHours()*60*60*1000 || (h_end - 30*24*60*60*1000);
+    var e_end = new Date(e_end_obj.val()).getTime() + new Date().getHours()*60*60*1000 || (new Date().getTime()),
+            e_start = new Date(e_start_obj.val()).getTime() + new Date().getHours()*60*60*1000 || (e_end - 30*24*60*60*1000);
+
+    var href = GetUrlRelativePath()
+            + "?h_start=" + h_start + "&h_end=" + h_end
+            + "&e_start=" + e_start + "&e_end=" + e_end;
+    window.location.replace(href);
+}
 </script>
 {% endblock %}

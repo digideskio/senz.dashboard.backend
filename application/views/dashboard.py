@@ -1,5 +1,5 @@
 # coding: utf-8
-from flask import Blueprint, render_template, json, session, request
+from flask import Blueprint, render_template, json, session, request, make_response
 from leancloud import Object, Query, LeanCloudError
 from ..models import Developer
 from os.path import dirname, join
@@ -210,13 +210,14 @@ def location():
                            option=json.dumps(location))
 
 
-@dashboard_bp.route('/dashboard/context')
+@dashboard_bp.route('/dashboard/context', methods=['GET', 'POST'])
 def motion():
     # filter by timestamp
-    h_start = request.args.get('h_start') or 0
-    h_end = request.args.get('h_end') or int(time.time())
-    e_start = request.args.get('e_start') or 0
-    e_end = request.args.get('e_end') or int(time.time())
+    h_start = request.form.get('h_start') or request.args.get('h_start') or int(time.time()) - 30*24*60*60
+    h_end = request.form.get('h_end') or request.args.get('h_end') or int(time.time())
+    e_start = request.form.get('e_start') or request.args.get('e_start') or int(time.time()) - 30*24*60*60
+    e_end = request.form.get('e_end') or request.args.get('e_end') or int(time.time())
+
     context_dict = get_app_list()
     app_id = context_dict['app_id']
     username = context_dict['username']
@@ -274,6 +275,8 @@ def motion():
             'event': event
         }
     }
+    if request.method == 'POST':
+        return json.dumps(context)
     return render_template('dashboard/scene.html',
                            option=json.dumps(context),
                            username=username,
