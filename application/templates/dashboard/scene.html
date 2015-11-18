@@ -190,7 +190,6 @@ $(".button").click(function(){
     var e_end = new Date(e_end_obj.val()).getTime() + new Date().getHours()*60*60*1000 || (new Date().getTime()),
             e_start = new Date(e_start_obj.val()).getTime() + new Date().getHours()*60*60*1000 || (e_end - 30*24*60*60*1000);
 
-
     var url = "{{ url_for('dashboard_bp.motion') }}";
     var data = {
         name: this.id,
