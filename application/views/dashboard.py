@@ -191,7 +191,7 @@ def location():
     provice_list = filter(lambda x: x is not None, result_dict['province'])
     city_list = filter(lambda x: x is not None, result_dict['city'])
 
-    province = map(lambda x: {'name': x[0], 'value': x[1]},
+    province = map(lambda x: {'name': x[0][0:-1], 'value': x[1]},
                    sorted(map(lambda x: (x, provice_list.count(x)), set(provice_list)), key=lambda x: -x[1]))
     city = map(lambda x: {'name': x[0], 'value': x[1]},
                sorted(map(lambda x: (x, city_list.count(x)), set(city_list)), key=lambda x: -x[1]))

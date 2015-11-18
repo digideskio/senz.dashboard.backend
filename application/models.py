@@ -97,7 +97,7 @@ class Developer(User):
         if not installation_list:
             self.tracker_list = []
         else:
-            self.tracker_list = list(set(map(lambda x: x.attributes['user'].id, installation_list)))
+            self.tracker_list = sorted(list(set(map(lambda x: x.attributes['user'].id, installation_list))))
         return self.tracker_list
 
 Developer._class_name = '_User'
