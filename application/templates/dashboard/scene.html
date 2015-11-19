@@ -246,8 +246,8 @@ $(document).ready(function(){
             var url = "{{ url_for('dashboard_bp.motion') }}";
             var data = {
                 name: "context",
-                h_start: (+new Date($("#j-e-filter-start-at").val())) || null,
-                h_end: (+new Date($("#j-e-filter-end-at").val())) || null,
+                e_start: (+new Date($("#j-e-filter-start-at").val())) || null,
+                e_end: (+new Date($("#j-e-filter-end-at").val())) || null
             };
 
             $.ajax({

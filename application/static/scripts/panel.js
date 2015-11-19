@@ -29,12 +29,9 @@ $(document).ready(function(){
             contextVal: contextVal,
             source: "panel"
         });
-        var error = document.getElementById("error");
-        error.show();
-        error.text("提交成功");
+        $("#error").show().text("提交成功");
         setTimeout(function(){
-            error.hide();
-            error.text("");
+            $("#error").hide().text("");
         }, 1000);
     });
 });

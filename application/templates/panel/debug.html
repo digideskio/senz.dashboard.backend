@@ -13,9 +13,6 @@
 {% endblock %}
 
 {%  block content %}
-<script src="{{ url_for('static', filename='scripts/panel.js') }}"></script>
-<link rel="stylesheet" href="{{ url_for('static', filename='styles/panel.css') }}">
-
 <div id="container" class="container">
     <div id="content" class="content pd40" style="min-height: 678px; margin-top: 40px;">
         <select id="select_tracker" class="filter-sl">
@@ -44,6 +41,8 @@
         </div>
     </div>
 </div>
+<script src="{{ url_for('static', filename='scripts/panel.js') }}"></script>
+<link rel="stylesheet" href="{{ url_for('static', filename='styles/panel.css') }}">
 {%  endblock %}
 
 
