@@ -495,6 +495,42 @@ div,p,h1,h2,h3,h4,h5,h6,ul,dl,ol,li {
 
 .date-filter-wrap {
   position: absolute;
-  top: 33px;
-  left: 300px;
+  top: 15px;
+  right: 20px;
+}
+.date-filter-wrap .date-wrap {
+  display: none;
+}
+.date-filter-wrap .filter-by-day {
+  margin-bottom: 10px;
+}
+.date-filter-wrap .filter-by-day a {
+  color: #fff;
+  border: 1px solid rgba(51, 204, 204, 1);
+  background: rgba(51, 204, 204, 1);
+  border-radius: 2px;
+  padding: 3px 6px;
+  font-size: 12px;
+}
+.date-filter-wrap .filter-by-day input {
+  color: #fff;
+  border: 1px solid rgba(51, 204, 204, 1);
+  background: rgba(51, 204, 204, 1);
+  border-radius: 2px;
+  padding: 3px 6px;
+  font-size: 12px;
+}
+
+.date-filter-wrap .filter-by-day a:hover {
+  text-decoration: none;
+  color: #e9e9e9;
+}
+
+.date-filter-wrap .hasDatepicker {
+  padding: 4px;
+  border: 1px solid rgba(51, 204, 204, 1);
+  border-radius: 2px;
+  width: 90px;
+  outline: none;
+  cursor: pointer;
 }

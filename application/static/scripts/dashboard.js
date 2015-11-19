@@ -38,9 +38,3 @@ $(function(){
 
 });
 
-$(document).ready(function(){
-    $("#j-filter-start-at").datepicker({dateFormat: 'yy/mm/dd'}).val(new Date(new Date().getTime() - 30*24*60*60*1000).toLocaleDateString());
-    $("#j-filter-end-at").datepicker({dateFormat: 'yy/mm/dd'}).val(new Date().toLocaleDateString());
-    $("#j-filter-start-at-e").datepicker({dateFormat: 'yy/mm/dd'}).val(new Date(new Date().getTime() - 30*24*60*60*1000).toLocaleDateString());
-    $("#j-filter-end-at-e").datepicker({dateFormat: 'yy/mm/dd'}).val(new Date().toLocaleDateString());
-});
