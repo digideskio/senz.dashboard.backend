@@ -290,6 +290,7 @@
             <li>查看“Build Settings”页，将“Build Option”中的“Enable Bitcode”一项设置为<code>NO</code>；点击“Editor”菜单，选择“Add Build Setting” -&gt; “Add User-Defined Setting”，名字设置为<code>STRIP_BITCODE_FROM_COPIED_FILES</code>，值填写<code>NO</code>。</li>
             <li>仍在“Build Settings”页，将“Build Option”中<code>EMBEDDED_CONTENT_CONTAINS_SWIFT</code>一项设置为<code>YES</code>。</li>
             <li>编辑工程的<code>Info.plist</code>文件，加入<code>NSAppTransportSecurity</code>键，设为Dictionary类型；在其中增加子项<code>NSAllowsArbitraryLoads</code>，设为Boolean值<code>YES</code>。</li>
+            <li>（可选）如果要使用SDK的用户属性分析API（<code>getUserInfo:</code>），需要额外在<code>Info.plist</code>文件中配置<code>LSApplicationQueriesSchemes</code>键值对，以便SDK能够通过iOS提供的<code>canOpenUrl:</code>方法来检测用户设备上安装的特征App。完整的配置内容参考文档：<a href="https://github.com/petchat/senz.sdk/wiki/iOS-SDK-URL-Scheme%E9%85%8D%E7%BD%AE">https://github.com/petchat/senz.sdk/wiki/iOS-SDK-URL-Scheme配置</a></li>
             </ol>
 
             <p>检查是否正常导入了SDK：</p>
