@@ -1,0 +1,77 @@
+{
+  "home_office_status": {
+    "contextAtWork": [5,2,1,1,1,1,4,43,160,280,510,758,789,800,800,800,792,750,698,288,112,29,17,8],
+    "contextAtHome": [795,796,797,799,799,793,754,635,413,125,37,8,2,1,1,1,1,9,48,135,600,687,755,790],
+    "contextCommutingWork": [0,0,0,0,0,5,42,120,325,470,150,25,8,0,0,0,0,0,0,0,0,0,0,0],
+    "contextCommutingHome": [3,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,8,47,98,447,126,85,13,5]
+  },
+  "context":  {
+    "contextWorkingInCBD": 3500,
+    "contextStudyingInSchool": 2400,
+    "contextWorkingInSchool": 1530,
+    "contextOutdoorExercise": 1500,
+    "contextIndoorExercise": 1730,
+    "contextDinningOut": 1450,
+    "contextTravelling": 80,
+    "contextShortTrip": 170,
+    "contextInParty": 220,
+    "contextWindowShopping": 879,
+    "contextAtCinema": 773,
+    "contextAtExhibition": 129,
+    "contextAtPopsConcert": 55,
+    "contextAtTheatre": 20,
+    "contextAtClassicsConcert": 120,
+    "contextRelaxing": 1500
+  },
+  "static_info": {
+    "gender": {
+      "male": 357,
+      "female": 293,
+      "unknown": 150
+    },
+    "age": {
+      "16down": 80,
+      "16to35": 470,
+      "35to55": 235,
+      "55up": 15,
+      "unknown": 86
+    },
+    "marriage":{
+      "yes": 200,
+      "no": 278,
+      "unknown": 322
+    },
+    "pregnant":{
+      "yes": 32,
+      "no": 412,
+      "unknown": 356
+    },
+    "occupation": {
+      "supervisor": 25,
+      "freelancer": 13,
+      "official": 85,
+      "soldier": 9,
+      "student": 120,
+      "salesman": 38,
+      "teacher": 80,
+      "engineer": 55,
+      "unknown": 375
+      },
+    "field": {
+      "human_resource": 70,
+      "commerce": 36,
+      "financial": 58,
+      "service": 19,
+      "humanities": 126,
+      "medical": 56,
+      "infotech": 76,
+      "manufacture": 25,
+      "architecture": 47,
+      "natural": 117,
+      "law": 55,
+      "agriculture": 12,
+      "athlete": 28,
+      "unknown": 75
+    }
+  }
+}

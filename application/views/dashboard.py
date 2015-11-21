@@ -28,14 +28,19 @@ def show():
     username = context_dict['username']
     app_list = context_dict['app_list']
 
-    result_dict = get_query_list(app_id, 'event')
-    event_list = filter(lambda x: x is not None, result_dict['event'])
-    if app_id and app_id != '5621fb0f60b27457e863fabb':
+    if not app_id or app_id == '5621fb0f60b27457e863fabb':  # Demo App
+        fake_data = json.load(file(join(dirname(dirname(__file__)), 'fake_data.json')))
+        context_fake = fake_data.get('context')
+        event_tmp = sorted(map(lambda x: (translate(translate(x, 'event_old'), 'context'), context_fake[x]),
+                               context_fake.keys()), key=lambda item: -item[1])
+    else:
+        result_dict = get_query_list(app_id, 'event')
+        event_list = filter(lambda x: x is not None, result_dict['event'])
         event_list_tmp = map(lambda item: map(lambda x: item[x],  item.keys()), event_list)
         event_list = [i for row in event_list_tmp for i in row]
-    event_list = filter(lambda y: y is not None,
-                        map(lambda x: translate(translate(x, 'event_old'), 'context'), event_list))
-    event_tmp = sorted(map(lambda x: (x, event_list.count(x)), set(event_list)), key=lambda item: -item[1])
+        event_list = filter(lambda y: y is not None,
+                            map(lambda x: translate(translate(x, 'event_old'), 'context'), event_list))
+        event_tmp = sorted(map(lambda x: (x, event_list.count(x)), set(event_list)), key=lambda item: -item[1])
     data = map(lambda x: {'rank': x/3+1, 'name': event_tmp[x-1][0]}, xrange(1, len(set(event_tmp))+1))
     event = {
         'errcode': 0,
@@ -56,25 +61,43 @@ def profile():
     username = context_dict['username']
     app_list = context_dict['app_list']
 
-    result_dict = get_query_list(app_id, 'gender', 'age', 'occupation', 'field')
-    gender_list = [] if 'gender' not in result_dict else result_dict['gender']
-    age_list = [] if 'age' not in result_dict else result_dict['age']
-    occupation_list = [] if 'occupation' not in result_dict else result_dict['occupation']
-    field_list = [] if 'field' not in result_dict else result_dict['field']
+    if not app_id or app_id == '5621fb0f60b27457e863fabb':  # Demo App
+        fake_data = json.load(file(join(dirname(dirname(__file__)), 'fake_data.json')))
+        static_info = fake_data.get('static_info')
+        gender_obj = static_info.get('gender')
+        gender = {'category': map(lambda x: translate(x, 'gender'), gender_obj.keys()),
+                  'series': map(lambda x: gender_obj.get(x), gender_obj.keys())}
 
-    gender = {'category': ['男', '女'], 'series': [gender_list.count('male'), gender_list.count('female')]}
-    age = {"category": ["55以上", "35到55", "16到35", "16以下"],
-           "series": [age_list.count('55up'), age_list.count('35to55'),
-                      age_list.count('16to35'), age_list.count('16down')]}
+        age_obj = static_info.get('age')
+        age = {'category': map(lambda x: translate(x, 'age'), age_obj.keys()),
+               'series': map(lambda x: age_obj.get(x), age_obj.keys())}
 
-    occupation_tmp = map(lambda x: list(x), zip(*map(lambda x: [x, occupation_list.count(x)],
-                                                     filter(lambda x: str(x) != '', set(occupation_list)))))
-    occupation = {"category": map(lambda x: translate(x, 'occupation') or '', occupation_tmp[0]),
-                  "series": occupation_tmp[1]} if occupation_tmp else {"category": [], "series": []}
-    field_tmp = map(lambda x: list(x), zip(*map(lambda x: [x, field_list.count(x)],
-                                                filter(lambda x: str(x) != '', set(field_list)))))
-    field = {"category": map(lambda x: translate(x, 'field') or '', field_tmp[0]),
-             "series": field_tmp[1]} if field_tmp else {"category": [], "series": []}
+        occupation_obj = static_info.get('occupation')
+        occupation = {"category": map(lambda x: translate(x, 'occupation'), occupation_obj.keys()),
+                      "series": map(lambda x: occupation_obj.get(x), occupation_obj.keys())}
+
+        field_obj = static_info.get('field')
+        field = {"category": map(lambda x: translate(x, 'field'), field_obj.keys()),
+                 "series": map(lambda x: field_obj.get(x), field_obj.keys())}
+    else:
+        result_dict = get_query_list(app_id, 'gender', 'age', 'occupation', 'field')
+        gender_list = filter(lambda x: x, result_dict.get('gender'))
+        age_list = filter(lambda x: x, result_dict.get('age'))
+        occupation_list = filter(lambda x: x, result_dict.get('occupation'))
+        field_list = filter(lambda x: x, result_dict.get('field'))
+        gender = {'category': map(lambda x: translate(x, 'gender'), list(set(gender_list))),
+                  'series': map(lambda x: gender_list.count(x), list(set(gender_list)))}
+        age = {'category': map(lambda x: translate(x, 'age'), list(set(age_list))),
+               'series': map(lambda x: age_list.count(x), list(set(age_list)))}
+
+        occupation_tmp = map(lambda x: list(x), zip(*map(lambda x: [x, occupation_list.count(x)],
+                                                         filter(lambda x: str(x) != '', set(occupation_list)))))
+        occupation = {"category": map(lambda x: translate(x, 'occupation') or '', occupation_tmp[0]),
+                      "series": occupation_tmp[1]} if occupation_tmp else {"category": [], "series": []}
+        field_tmp = map(lambda x: list(x), zip(*map(lambda x: [x, field_list.count(x)],
+                                                    filter(lambda x: str(x) != '', set(field_list)))))
+        field = {"category": map(lambda x: translate(x, 'field') or '', field_tmp[0]),
+                 "series": field_tmp[1]} if field_tmp else {"category": [], "series": []}
 
     data = {'gender': gender, 'age': age, 'job': occupation, 'profession': field}
     user_profile = {
@@ -124,12 +147,21 @@ def marriage():
     username = context_dict['username']
     app_list = context_dict['app_list']
 
-    result_dict = get_query_list(app_id, 'marriage', 'pregnant')
-    marriage_list = filter(lambda x: x is not None, result_dict['marriage'])
-    pregnant_list = filter(lambda x: x is not None, result_dict['pregnant'])
-
-    marriage = {'category': ['已婚', '未婚'], 'series': [marriage_list.count('yes'), marriage_list.count('no')]}
-    pregnant = {'category': ['怀孕', '未孕'], 'series': [pregnant_list.count('yes'), pregnant_list.count('no')]}
+    if not app_id or app_id == '5621fb0f60b27457e863fabb':  # Demo App
+        fake_data = json.load(file(join(dirname(dirname(__file__)), 'fake_data.json')))
+        static_info = fake_data.get('static_info')
+        marriage_obj = static_info.get('marriage')
+        pregnant_obj = static_info.get('pregnant')
+        marriage = {'category': map(lambda x: translate(x, 'marriage'), marriage_obj.keys()),
+                    'series': map(lambda x: marriage_obj.get(x), marriage_obj.keys())}
+        pregnant = {'category': map(lambda x: translate(x, 'pregnant'), pregnant_obj.keys()),
+                    'series': map(lambda x: pregnant_obj.get(x), pregnant_obj.keys())}
+    else:
+        result_dict = get_query_list(app_id, 'marriage', 'pregnant')
+        marriage_list = filter(lambda x: x is not None, result_dict['marriage'])
+        pregnant_list = filter(lambda x: x is not None, result_dict['pregnant'])
+        marriage = {'category': ['已婚', '未婚'], 'series': [marriage_list.count('yes'), marriage_list.count('no')]}
+        pregnant = {'category': ['怀孕', '未孕'], 'series': [pregnant_list.count('yes'), pregnant_list.count('no')]}
     ret_json = {
         'errcode': 0,
         'errmsg': 'ok',
@@ -227,13 +259,24 @@ def motion():
     s = json.load(file(join(dirname(dirname(__file__)), 'translate.json')))
     home_office_type = s.get('home_office_status').keys()
 
-    # get data from leancloud#DashboardSource
-    result_dict = get_query_list(app_id, 'home_office_status', 'event')
-    home_office_list = filter(lambda x: x is not None, result_dict['home_office_status'])
-    event_list = filter(lambda x: x is not None, result_dict['event'])
+    if not app_id or app_id == '5621fb0f60b27457e863fabb':  # Demo App
+        fake_data = json.load(file(join(dirname(dirname(__file__)), 'fake_data.json')))
+        home_office_status = fake_data.get('home_office_status')
+        home_office = {'category': map(lambda x: translate(x, 'home_office_status'), home_office_status.keys()),
+                       'series': map(lambda x: home_office_status[x], home_office_status.keys()),
+                       "xAxis": list(range(24))}
 
-    # filter by timestamp
-    if app_id and app_id != '5621fb0f60b27457e863fabb':  # 非DemoFake 假数据
+        context_fake = fake_data.get('context')
+        event = {'category': map(lambda x: translate(x, 'context'), context_fake.keys()),
+                 'series': map(lambda x: context_fake[x], context_fake.keys())}
+    else:
+        # get data from leancloud#DashboardSource
+        result_dict = get_query_list(app_id, 'home_office_status', 'event')
+        home_office_list = filter(lambda x: x, result_dict['home_office_status'])
+        event_list = filter(lambda x: x, result_dict['event'])
+
+        # filter by timestamp
+        # if app_id and app_id != '5621fb0f60b27457e863fabb':  # 非DemoFake 假数据
         home_office_list_tmp = map(lambda item:
                                    dict(map(lambda x: (x, item[x]),
                                             filter(lambda y: str(h_start) <= str(y) <= str(h_end),  # filter
@@ -248,25 +291,25 @@ def motion():
         event_list = [i for row in event_list_tmp for i in row]
         # print event_list
 
-    # filled all the status* field
-    for home_office in home_office_list:
-        for k in range(0, 24):
-            if 'status' + str(k) not in home_office.keys():
-                home_office['status' + str(k)] = None
+        # filled all the status* field
+        for home_office in home_office_list:
+            for k in range(0, 24):
+                if 'status' + str(k) not in home_office.keys():
+                    home_office['status' + str(k)] = None
 
-    home_office_tmp = map(lambda x: map(lambda y: y[1],
-                                        sorted(x.items(), key=lambda key: int(key[0][6:]))), home_office_list)
-    home_office_series = map(lambda x: list(x),
-                             zip(*map(lambda x: [x.count(home_office_type[i])
-                                                 for i in xrange(len(home_office_type))], zip(*home_office_tmp))))
-    home_office = {"category": map(lambda x: translate(x, 'home_office_status'), home_office_type),
-                   "xAxis": list(range(24)), "series": home_office_series}
+        home_office_tmp = map(lambda x: map(lambda y: y[1],
+                                            sorted(x.items(), key=lambda key: int(key[0][6:]))), home_office_list)
+        home_office_series = map(lambda x: list(x),
+                                 zip(*map(lambda x: [x.count(home_office_type[y])
+                                                     for y in xrange(len(home_office_type))], zip(*home_office_tmp))))
+        home_office = {"category": map(lambda x: translate(x, 'home_office_status'), home_office_type),
+                       "xAxis": list(range(24)), "series": home_office_series}
 
-    event_list = map(lambda x: translate(translate(x, 'event_old'), 'context'),
-                     filter(lambda x: x not in home_office_type, event_list))
-    event_tmp = sorted(map(lambda x: (x, event_list.count(x)), set(event_list)), key=lambda item: -item[1])
-    event = {"category": list(zip(*event_tmp)[0]), "series": list(zip(*event_tmp)[1])} \
-        if event_tmp else {"category": [], "series": []}
+        event_list = map(lambda x: translate(translate(x, 'event_old'), 'context'),
+                         filter(lambda x: x not in home_office_type, event_list))
+        event_tmp = sorted(map(lambda x: (x, event_list.count(x)), set(event_list)), key=lambda item: -item[1])
+        event = {"category": list(zip(*event_tmp)[0]), "series": list(zip(*event_tmp)[1])} \
+            if event_tmp else {"category": [], "series": []}
 
     context = {
         'errcode': 0,
@@ -278,11 +321,8 @@ def motion():
     }
     if request.method == 'POST':
         return json.dumps(context)
-    return render_template('dashboard/scene.html',
-                           option=json.dumps(context),
-                           username=username,
-                           app_id=app_id,
-                           app_list=app_list)
+    return render_template('dashboard/scene.html', option=json.dumps(context), username=username,
+                           app_id=app_id, app_list=app_list)
 
 
 def get_query_list(app_id='', *field):
@@ -301,7 +341,6 @@ def get_query_list(app_id='', *field):
         else:
             query = Query(Object.extend('DashboardSource'))
             query.equal_to('app', app)
-
         total_count = query.count()
         query_times = (total_count + query_limit - 1) / query_limit
         result_list = []
@@ -311,7 +350,6 @@ def get_query_list(app_id='', *field):
             result_list.extend(query.find())
     except LeanCloudError:
         return {}
-
     # check all record in DashboardSource and ignore app_id simultaneous
     # select in front end
     if app_id == 'all':

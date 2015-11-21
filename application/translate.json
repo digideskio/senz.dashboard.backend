@@ -52,7 +52,8 @@
         "contextAtExhibition": "展览会",
         "contextAtPopsConcert": "演唱会",
         "contextAtTheatre": "戏剧",
-        "contextAtClassicsConcert": "音乐会"
+        "contextAtClassicsConcert": "音乐会",
+        "contextRelaxing": "休息"
         },
     "occupation": {
         "supervisor": "管理",
@@ -60,25 +61,27 @@
         "official": "公务员",
         "soldier": "军人",
         "student": "学生",
-        "others": "其他",
         "salesman": "销售",
         "teacher": "教师",
-        "engineer": "工程师"
+        "engineer": "工程师",
+        "others": "未知",
+        "unknown": "未知"
         },
     "field": {
         "human_resource": "人力资源",
-        "commerce": "商业",
+        "commerce": "贸易",
         "financial": "金融",
         "service": "服务",
         "humanities": "人文学科",
-        "medical": "医疗",
-        "infotech": "信息技术",
+        "medical": "医务",
+        "infotech": "IT",
         "manufacture": "制造业",
         "architecture": "建筑",
-        "natural": "自然",
+        "natural": "自然科学",
         "law": "法律",
         "agriculture": "农业",
-        "athlete": "体育"
+        "athlete": "体育",
+        "unknown": "未知"
     },
     "consumption": {
         "5000down": "5K以下",
@@ -91,6 +94,28 @@
         "contextAtHome": "在家",
         "contextCommutingWork": "上班路上",
         "contextCommutingHome": "回家路上"
+    },
+    "age": {
+      "16down": "16以下",
+      "16to35": "16到35",
+      "35to55": "35到55",
+      "55up": "55以上",
+      "unknown": "未知"
+    },
+    "gender": {
+      "male": "男",
+      "female": "女",
+      "unknown": "未知"
+    },
+    "marriage": {
+        "yes": "已婚",
+        "no": "未婚",
+        "unknown": "未知"
+    },
+    "pregnant":{
+        "yes": "怀孕",
+        "no": "未孕",
+        "unknown": "未知"
     },
      "home_office_status_old": {
         "at_office": "contextAtWork",
@@ -113,7 +138,9 @@
         "work_in_office": "contextWorkingInCBD",
         "exercise_outdoor": "contextOutdoorExercise",
         "shopping_in_mall": "contextWindowShopping",
-        "exercise_indoor": "contextIndoorExercise"
+        "exercise_indoor": "contextIndoorExercise",
+        "relaxing": "contextRelaxing",
+        "unknown": "未知"
     },
     "motion_old": {
         "sitting": "motionSitting",

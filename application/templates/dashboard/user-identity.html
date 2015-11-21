@@ -92,7 +92,8 @@ var profile = JSON.parse({{ option|tojson|safe }});
               },
               data:[
                   {value: profile.data.gender.series[0], name: profile.data.gender.category[0]},
-                  {value: profile.data.gender.series[1], name: profile.data.gender.category[1]}
+                  {value: profile.data.gender.series[1], name: profile.data.gender.category[1]},
+                  {value: profile.data.gender.series[2], name: profile.data.gender.category[2]}
               ]
           }
       ]
@@ -165,7 +166,8 @@ var profile = JSON.parse({{ option|tojson|safe }});
                   {value: profile.data.age.series[0], name: profile.data.age.category[0]},
                   {value: profile.data.age.series[1], name: profile.data.age.category[1]},
                   {value: profile.data.age.series[2], name: profile.data.age.category[2]},
-                  {value: profile.data.age.series[3], name: profile.data.age.category[3]}
+                  {value: profile.data.age.series[3], name: profile.data.age.category[3]},
+                  {value: profile.data.age.series[4], name: profile.data.age.category[4]}
               ]
           }
       ]
