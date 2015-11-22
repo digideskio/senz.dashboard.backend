@@ -3,35 +3,59 @@
   <div id="container" class="container">
    <div id="content" class="content" style="margin-top: 40px;">
     <div class="relative" style="padding: 5px;position: relative;">
-      <div id="sceneMap" style="height:600px;border:1px solid #ccc;padding-top: 80px;"></div>
-      <div id="date-filter-wrap" class="date-filter-wrap" >
-        <div class="filter-by-day" style="text-align: right;">
-          <a class="today" href="javascript:;">今日</a>
-          <a class="yestoday" href="javascript:;">昨日</a>
-          <a class="lastweek" href="javascript:;">最近一周</a>
-          <a class="lastmouth" href="javascript:;">最近一月</a>
-          <input type="button" class="more" value="更多">
-        </div>
-        <div class="date-wrap">
-          <input id="j-filter-start-at">至
-          <input id="j-filter-end-at">
+      <div id="sceneMap" style="height:600px;border:1px solid #ccc;padding-top: 50px;"></div>
+      <div id="date-filter-wrap" class="date-filter-wrap clearfix" >
+        <div class="h-date-wrap j-h-date-wrap">
+          <div class="inner-wrap">
+            <span class="j-h-startat"></span>
+            <span> 至 </span>
+            <span class="j-h-endat"></span>
+            <span class="arrow">▾</span>
+          </div>
+        </div>  
+        <div class="more-wrap" >
+          <div class="filter-by-day" style="">
+            <a class="today" href="javascript:;">今日</a>
+            <a class="yestoday" href="javascript:;">昨日</a>
+            <a class="lastweek" href="javascript:;">最近一周</a>
+            <a class="lastmouth" href="javascript:;">最近一月</a>
+          </div>
+          <div class="date-wrap">
+            <span class="time-input">
+              <input id="j-filter-start-at">
+              <span class="dropdown-caret"></span>
+            </span>
+            <span class="arave">至</span>
+            <span class="time-input">
+              <input id="j-filter-end-at">
+               <span class="dropdown-caret"></span>
+            </span>
+          </div>
+          <div class="confirm-btn-wrap">
+            <a id="confirm-btn" class="confirm-btn" href="#">确认</a>
+          </div>
         </div>
       </div>
     </div>
 
     <div class="relative" style="padding: 5px; position: relative;">
-      <div id="eventMap" style="height:600px;border:1px solid #ccc;padding-top: 80px;"></div>
-      <div id="e-date-filter-wrap" class="date-filter-wrap" >
+      <div id="eventMap" style="height:600px;border:1px solid #ccc;"></div>
+      <div id="e-date-filter-wrap" class="date-filter-wrap" style="display: none;" >
         <div class="filter-by-day" style="text-align: right;">
           <a class="today" href="javascript:;">今日</a>
           <a class="yestoday" href="javascript:;">昨日</a>
           <a class="lastweek" href="javascript:;">最近一周</a>
           <a class="lastmouth" href="javascript:;">最近一月</a>
-          <input type="button" class="more" value="更多">
         </div>
         <div class="date-wrap">
-          <input id="j-e-filter-start-at">至
-          <input id="j-e-filter-end-at">
+          <span clss="time-input">
+            <input id="j-e-filter-start-at">
+            <span class="dropdown-caret"></span>
+          </span>至
+          <span class="time-input">
+            <input id="j-e-filter-end-at">
+            <span class="dropdown-caret"></span>
+          </span>
         </div>
       </div>
     </div>
@@ -194,9 +218,12 @@ render_home_office(profile);
 render_context(profile);
 
 $(document).ready(function(){
-    $(".date-filter-wrap").on("click", ".more", function(e){
+    $(".j-h-startat").text( new Date((new Date() - 86400000*30)).toISOString().slice(0,10) );
+    $(".j-h-endat").text( (new Date()).toISOString().slice(0,10) );
+
+    $(".date-filter-wrap").on("click", ".j-h-date-wrap", function(e){
         $(this)
-          .closest(".filter-by-day")
+          .closest(".j-h-date-wrap")
           .next()
           .slideToggle(200);
     });
@@ -204,87 +231,54 @@ $(document).ready(function(){
     var now = new Date();
     $("#j-filter-start-at").datepicker({
         dateFormat: "yy-mm-dd",
-        defaultDate: now
+        defaultDate: now,
+        onClose: function (selectedDate){
+            $(".j-h-startat").text(selectedDate)
+        }
     });
 
     $("#j-filter-end-at").datepicker({
         dateFormat: "yy-mm-dd",
         defaultDate: now,
-        onClose: function(selectedDate){
-            var url = "{{ url_for('dashboard_bp.motion') }}";
-            var data = {
-                name: "home_office_status",
-                h_start: (+new Date($("#j-filter-start-at").val())) || null,
-                h_end: (+new Date($("#j-filter-end-at").val())) || null
-            };
-
-            $.ajax({
-                type: "post",
-                async: true,
-                url: url,
-                data: data,
-                success: function (option) {
-                    render_home_office(JSON.parse(option));
-                },
-                error: function () {
-                    alert("获取内容失败，请稍后再试！");
-                }
-            });
+        onClose: function (selectedDate){
+            $(".j-h-endat").text(selectedDate)
         }
     });
-
-    $("#j-e-filter-start-at").datepicker({
-        dateFormat: "yy-mm-dd",
-        defaultDate: now
-    });
-
-    $("#j-e-filter-end-at").datepicker({
-
-        dateFormat: "yy-mm-dd",
-        defaultDate: now,
-        onClose: function(selectedDate){
-            var url = "{{ url_for('dashboard_bp.motion') }}";
-            var data = {
-                name: "context",
-                e_start: (+new Date($("#j-e-filter-start-at").val())) || null,
-                e_end: (+new Date($("#j-e-filter-end-at").val())) || null
-            };
-
-            $.ajax({
-                type: "post",
-                async: true,
-                url: url,
-                data: data,
-                success: function (option) {
-                    render_context(JSON.parse(option));
-                },
-                error: function () {
-                    alert("获取内容失败，请稍后再试！");
-                }
-            });
-        }
-    })
 });
 
-$(".date-filter-wrap a").on("click", function(){
+$(".more-wrap a").on("click", function(){
     var _today = (+new Date());
     var h_start = (_today - (86400000*30)) || null;
     var e_start = (_today - (86400000*30)) || null;
+    var h_end = _today;
+    var e_end = _today;
+
+    var j_start_obj = $(".j-h-startat");
+    var j_end_obj = $(".j-h-endat");
 
     switch ($(this).attr('class')) {
         case 'today':
-            h_start = _today || null;
-            e_start = _today || null;
+            h_start = e_start = _today || null;
+            j_start_obj.text( new Date().toISOString().slice(0,10) );
+            j_end_obj.text( new Date().toISOString().slice(0,10) );
             break;
         case 'yestoday':
-            h_start = (_today - 86400000) || null;
-            e_start = (_today - 86400000) || null;
+            h_start = e_start =(_today - 86400000) || null;
+            j_start_obj.text( new Date((new Date() - 86400000)).toISOString().slice(0,10) );
+            j_end_obj.text( new Date().toISOString().slice(0,10) );
             break;
         case 'lastweek':
-            h_start = (_today - (86400000*7)) || null;
-            e_start = (_today - (86400000*7)) || null;
+            h_start = e_start =(_today - (86400000*7)) || null;
+            j_start_obj.text( new Date((new Date() - 86400000*7)).toISOString().slice(0,10) );
+            j_end_obj.text( new Date().toISOString().slice(0,10) );
+            break;
+        case 'confirm-btn':
+            h_start = e_start = (+new Date($("#j-filter-start-at").val())) || null;
+            h_end = e_end = (+new Date($("#j-filter-end-at").val())) || null;
             break;
         case 'lastmouth':
+            j_start_obj.text( new Date((new Date() - 86400000*30)).toISOString().slice(0,10) );
+            j_end_obj.text( new Date().toISOString().slice(0,10) );
             break;
         default :
             break;
@@ -294,9 +288,9 @@ $(".date-filter-wrap a").on("click", function(){
         name: $(this).parent().parent().attr('id') == "date-filter-wrap"
                 ? "home_office_status": "context",
         h_start: h_start,
-        h_end: _today || null,
+        h_end: h_end,
         e_start: e_start,
-        e_end: _today || null
+        e_end: e_end
     };
 
     $.ajax({
@@ -305,11 +299,8 @@ $(".date-filter-wrap a").on("click", function(){
         url: url,
         data: data,
         success: function (option) {
-            if (data.name == 'home_office_status') {
-                render_home_office(JSON.parse(option));
-            } else if (data.name == 'context') {
-                render_context(JSON.parse(option));
-            }
+            render_home_office(JSON.parse(option));
+            render_context(JSON.parse(option));
         },
         error: function () {
             alert("获取内容失败，请稍后再试！");

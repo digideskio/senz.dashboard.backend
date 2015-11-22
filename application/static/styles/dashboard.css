@@ -498,21 +498,20 @@ div,p,h1,h2,h3,h4,h5,h6,ul,dl,ol,li {
   top: 15px;
   right: 20px;
 }
-.date-filter-wrap .date-wrap {
+
+.date-filter-wrap .more-wrap {
   display: none;
+  border: 1px solid #ddd;
+  padding: 8px 5px;
+  margin-top: 2px;
+  border-radius: 2px;
+  background: #fff;
 }
+
 .date-filter-wrap .filter-by-day {
   margin-bottom: 10px;
 }
 .date-filter-wrap .filter-by-day a {
-  color: #fff;
-  border: 1px solid rgba(51, 204, 204, 1);
-  background: rgba(51, 204, 204, 1);
-  border-radius: 2px;
-  padding: 3px 6px;
-  font-size: 12px;
-}
-.date-filter-wrap .filter-by-day input {
   color: #fff;
   border: 1px solid rgba(51, 204, 204, 1);
   background: rgba(51, 204, 204, 1);
@@ -533,4 +532,54 @@ div,p,h1,h2,h3,h4,h5,h6,ul,dl,ol,li {
   width: 90px;
   outline: none;
   cursor: pointer;
+}
+
+.h-date-wrap {
+  min-width: 260px;
+}
+
+.h-date-wrap .inner-wrap {
+  border: 1px solid #ddd;
+  display: inline-block;
+  padding: 2px 4px;
+  cursor: pointer;
+  min-width: 175px;
+  background: #fff;
+}
+
+.time-input {
+  position: relative;
+}
+
+.dropdown-caret {
+    display: inline-block;
+    width: 0;
+    height: 0;
+    content: "";
+    vertical-align: -2px;
+    border: 4px solid;
+    border-right-color: transparent;
+    border-left-color: transparent;
+    border-bottom-color: transparent;
+    margin-left: -22px;
+}
+
+.arave {
+  display: inline-block;
+  padding-left: 10px;
+}
+
+.confirm-btn-wrap {
+  padding-top: 6px;
+  text-align: right;
+}
+
+#confirm-btn {
+  color: #fff;
+  border: 1px solid rgba(51, 204, 204, 1);
+  background: rgba(51, 204, 204, 1);
+  border-radius: 2px;
+  padding: 3px 6px;
+  font-size: 12px;
+  margin-right: 22px;
 }

@@ -1,0 +1,298 @@
+<div id="wiki-body" class="gollum-markdown-content instapaper_body">
+    <div class="markdown-body">
+      <h2>
+<a id="user-content-1-项目配置" class="anchor" href="#1-%E9%A1%B9%E7%9B%AE%E9%85%8D%E7%BD%AE" aria-hidden="true"><span class="octicon octicon-link"></span></a>1. 项目配置</h2>
+
+<h3>
+<a id="user-content-11-导入sdk" class="anchor" href="#11-%E5%AF%BC%E5%85%A5sdk" aria-hidden="true"><span class="octicon octicon-link"></span></a>1.1 导入SDK</h3>
+
+<p><em>以下配置过程适用Xcode 7.0新建的默认iOS工程，iOS版本为8.0或更高，语言推荐使用Swift</em></p>
+
+<ol>
+<li>将下载的<code>Senz.framework</code>文件拖到Xcode左侧边栏的工程目录中。（注意勾选“Copy items if needed”）</li>
+<li>在Xcode左侧边栏中选中工程，查看“General”页，在“Embedded Binaries”中添加<code>Senz.framework</code>，并确保“Linked Frameworks and Libraries”中也有<code>Senz.framework</code>。</li>
+<li>确保“Linked Frameworks and Libraries”中添加了<code>CoreLocation</code>和<code>CoreMotion</code>两个标准框架。</li>
+<li>查看“Capabilities”页，确保“Background Modes”打开，并勾选里面的“Location Updates”。</li>
+<li>查看“Build Settings”页，将“Build Option”中的“Enable Bitcode”一项设置为<code>NO</code>；点击“Editor”菜单，选择“Add Build Setting” -&gt; “Add User-Defined Setting”，名字设置为<code>STRIP_BITCODE_FROM_COPIED_FILES</code>，值填写<code>NO</code>。</li>
+<li>仍在“Build Settings”页，将“Build Option”中<code>EMBEDDED_CONTENT_CONTAINS_SWIFT</code>一项设置为<code>YES</code>。</li>
+<li>编辑工程的<code>Info.plist</code>文件，加入<code>NSAppTransportSecurity</code>键，设为Dictionary类型；在其中增加子项<code>NSAllowsArbitraryLoads</code>，设为Boolean值<code>YES</code>。</li>
+<li>（可选）如果要使用SDK的用户属性分析API（<code>getUserInfo:</code>），需要额外在<code>Info.plist</code>文件中配置<code>LSApplicationQueriesSchemes</code>键值对，以便SDK能够通过iOS提供的<code>canOpenUrl:</code>方法来检测用户设备上安装的特征App。完整的配置内容参考文档：<a href="https://github.com/petchat/senz.sdk/wiki/iOS-SDK-URL-Scheme%E9%85%8D%E7%BD%AE">https://github.com/petchat/senz.sdk/wiki/iOS-SDK-URL-Scheme配置</a>
+</li>
+</ol>
+
+<p>检查是否正常导入了SDK：</p>
+
+<div class="highlight highlight-source-swift"><pre><span class="pl-c">// Swift</span>
+<span class="pl-k">import</span> <span class="pl-c1">CoreLocation</span>
+<span class="pl-k">import</span> <span class="pl-c1">CoreMotion</span>
+<span class="pl-k">import</span> <span class="pl-c1">Senz</span>
+<span class="pl-k">...</span>
+NSLog(<span class="pl-s"><span class="pl-pds">"</span><span class="pl-pse">\(</span><span class="pl-s1">SZSDKVersion</span><span class="pl-pse">)</span><span class="pl-pds">"</span></span>) <span class="pl-c">// 能够正常编译并打印SDK版本号</span></pre></div>
+
+<div class="highlight highlight-source-objc"><pre><span class="pl-c">// Objective-C</span>
+#<span class="pl-k">import</span> <span class="pl-s"><span class="pl-pds">&lt;</span>CoreLocation/CoreLocation.h<span class="pl-pds">&gt;</span></span>
+#<span class="pl-k">import</span> <span class="pl-s"><span class="pl-pds">&lt;</span>CoreMotion/CoreMotion.h<span class="pl-pds">&gt;</span></span>
+#<span class="pl-k">import</span> <span class="pl-s"><span class="pl-pds">"</span>Senz/Senz.h<span class="pl-pds">"</span></span>
+
+...
+<span class="pl-c1">NSLog</span>(<span class="pl-s"><span class="pl-pds">@"</span><span class="pl-c1">%@</span><span class="pl-pds">"</span></span>, SZConstants.sdkVersion); <span class="pl-c">// 能够正常编译并打印SDK版本号</span></pre></div>
+
+<h3>
+<a id="user-content-12-获取地理位置权限" class="anchor" href="#12-%E8%8E%B7%E5%8F%96%E5%9C%B0%E7%90%86%E4%BD%8D%E7%BD%AE%E6%9D%83%E9%99%90" aria-hidden="true"><span class="octicon octicon-link"></span></a>1.2 获取地理位置权限</h3>
+
+<p><em>SDK的正常运行依赖地理位置权限（<code>CLLocationManager</code>的<code>AlwaysAuthorization</code>权限），获取这一权限是客户App的职责。</em></p>
+
+<p>在工程的Info.plist文件中，加入<code>NSLocationAlwaysUsageDescription</code>键，值填写向最终用户展示的提示文字；并在代码中通过<code>CLLocationMananger</code>来获取<code>CLAuthorizationStatus.AuthorizedAlways</code>权限：</p>
+
+<div class="highlight highlight-source-swift"><pre><span class="pl-c">// Swift</span>
+<span class="pl-k">if</span> CLLocationManager<span class="pl-k">.</span>authorizationStatus() <span class="pl-k">==</span> <span class="pl-k">.</span>NotDetermined {
+    <span class="pl-k">self</span><span class="pl-k">.</span>locationManager<span class="pl-k">.</span>requestAlwaysAuthorization()
+}</pre></div>
+
+<div class="highlight highlight-source-objc"><pre><span class="pl-c">// Objective-C</span>
+<span class="pl-k">if</span> ([CLLocationManager <span class="pl-c1">authorizationStatus</span>] == <span class="pl-c1">kCLAuthorizationStatusNotDetermined</span>) {
+    [<span class="pl-v">self</span>.locationManager <span class="pl-c1">requestAlwaysAuthorization</span>];
+}</pre></div>
+
+<h3>
+<a id="user-content-13-线程安全" class="anchor" href="#13-%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8" aria-hidden="true"><span class="octicon octicon-link"></span></a>1.3 线程安全</h3>
+
+<p>Senz SDK中所有的类、方法、属性和其它成员都<strong>只能在主线程调用</strong>，Senz SDK提供的所有回调接口也都是<strong>在主线程执行</strong>的。</p>
+
+<h2>
+<a id="user-content-2-准备工作" class="anchor" href="#2-%E5%87%86%E5%A4%87%E5%B7%A5%E4%BD%9C" aria-hidden="true"><span class="octicon octicon-link"></span></a>2. 准备工作</h2>
+
+<h3>
+<a id="user-content-21-注册设备" class="anchor" href="#21-%E6%B3%A8%E5%86%8C%E8%AE%BE%E5%A4%87" aria-hidden="true"><span class="octicon octicon-link"></span></a>2.1 注册设备</h3>
+
+<p>首次调用Senz SDK的服务之前，需要先进行注册，将客户端的App ID（在<a href="http://dashboard.avosapps.com/">Senz开发者网站</a>申请）和设备ID（自动生成）告知Senz服务器。注册方法是异步执行的，客户端App无须了解注册流程何时完成，也无需检查网络状况，SDK会保证设备信息能够及时注册到Senz服务器。</p>
+
+<div class="highlight highlight-source-swift"><pre><span class="pl-c">// Swift</span>
+<span class="pl-k">if</span> SZSenz<span class="pl-k">.</span>isRegistered {
+    <span class="pl-c">// 已经注册过</span>
+} <span class="pl-k">else</span> {
+    <span class="pl-c">// 在Senz服务器上注册设备</span>
+    SZSenz<span class="pl-k">.</span>registerDevice(appID: <span class="pl-s"><span class="pl-pds">"</span>5650125a60b2ed3620977c25<span class="pl-pds">"</span></span>)
+}</pre></div>
+
+<div class="highlight highlight-source-objc"><pre><span class="pl-c">// Objective-C</span>
+<span class="pl-k">if</span> (SZSenz.isRegistered) {
+    <span class="pl-c">// 已经注册过</span>
+} <span class="pl-k">else</span> {
+    <span class="pl-c">// 在Senz服务器上注册设备</span>
+    [SZSenz <span class="pl-c1">registerDeviceWithDeviceID:</span><span class="pl-c1">nil</span> <span class="pl-c1">appID:</span> <span class="pl-s"><span class="pl-pds">@"</span>5650125a60b2ed3620977c25<span class="pl-pds">"</span></span>];
+}</pre></div>
+
+<p>Senz SDK将注册信息保存在<code>NSUserDefaults</code>中。</p>
+
+<h3>
+<a id="user-content-22-启动和停止服务" class="anchor" href="#22-%E5%90%AF%E5%8A%A8%E5%92%8C%E5%81%9C%E6%AD%A2%E6%9C%8D%E5%8A%A1" aria-hidden="true"><span class="octicon octicon-link"></span></a>2.2 启动和停止服务</h3>
+
+<p><code>SZSenz</code>类是一个单例类，它提供了Senz服务的主要接口。获取<code>SZSenz</code>单例：</p>
+
+<div class="highlight highlight-source-swift"><pre><span class="pl-c">// Swift</span>
+<span class="pl-k">let</span> senz <span class="pl-k">=</span> SZSenz<span class="pl-k">.</span>sharedInstance</pre></div>
+
+<div class="highlight highlight-source-objc"><pre><span class="pl-c">// Objective-C</span>
+SZSenz *senz = SZSenz.sharedInstance;</pre></div>
+
+<p>默认情况下Senz服务是停止状态的，除占用少量内存外，不消耗其他系统资源。启动和停止Senz服务：</p>
+
+<div class="highlight highlight-source-swift"><pre><span class="pl-c">// Swift</span>
+senz<span class="pl-k">.</span>startService() <span class="pl-c">// 启动服务</span>
+<span class="pl-k">...</span>
+senz<span class="pl-k">.</span>stopService()  <span class="pl-c">// 停止服务</span></pre></div>
+
+<div class="highlight highlight-source-objc"><pre><span class="pl-c">// Objective-C</span>
+[senz <span class="pl-c1">startService</span>]; <span class="pl-c">// 启动服务</span>
+...
+[senz <span class="pl-c1">stopService</span>];  <span class="pl-c">// 停止服务</span></pre></div>
+
+<p>Senz服务启动后，客户端程序即便进入系统后台，程序代码仍然可以在后台继续维持执行。</p>
+
+<h2>
+<a id="user-content-3-使用服务" class="anchor" href="#3-%E4%BD%BF%E7%94%A8%E6%9C%8D%E5%8A%A1" aria-hidden="true"><span class="octicon octicon-link"></span></a>3. 使用服务</h2>
+
+<h3>
+<a id="user-content-31-获取地理位置" class="anchor" href="#31-%E8%8E%B7%E5%8F%96%E5%9C%B0%E7%90%86%E4%BD%8D%E7%BD%AE" aria-hidden="true"><span class="octicon octicon-link"></span></a>3.1 获取地理位置</h3>
+
+<p>Senz SDK能够周期性获取用户的地理位置，客户应用通常不再需要从<code>CoreLocation</code>自行获取位置信息。Senz SDK能够根据用户当前状态，动态调整位置获取的频率，从而在精确度和省电之间取得平衡。从Senz SDK获取最近的地理位置：</p>
+
+<div class="highlight highlight-source-swift"><pre><span class="pl-c">// Swift</span>
+<span class="pl-k">if</span> <span class="pl-k">let</span> location <span class="pl-k">=</span> senz<span class="pl-k">.</span>dataCollector<span class="pl-k">.</span>latestLocation {
+    <span class="pl-c">// location是最近一次更新的地理位置</span>
+}</pre></div>
+
+<div class="highlight highlight-source-objc"><pre><span class="pl-c">// Objective-C</span>
+CLLocation *location = senz.dataCollector.latestLocation;
+<span class="pl-k">if</span> (location != <span class="pl-c1">nil</span>) {
+    <span class="pl-c">// location是最近一次更新的地理位置</span>
+}</pre></div>
+
+<p>可以通过监听<code>SZDidCollectLocationData</code>通知来获知地理位置数据更新：</p>
+
+<div class="highlight highlight-source-swift"><pre><span class="pl-c">// Swift</span>
+<span class="pl-k">let</span> center <span class="pl-k">=</span> NSNotificationCenter<span class="pl-k">.</span>defaultCenter()
+<span class="pl-k">let</span> queue <span class="pl-k">=</span> NSOperationQueue<span class="pl-k">.</span>mainQueue()
+center<span class="pl-k">.</span>addObserverForName(SZDidCollectLocationData, object: <span class="pl-c1">nil</span>, queue: queue) { note <span class="pl-k">in</span>
+    <span class="pl-k">let</span> location <span class="pl-k">=</span> note<span class="pl-k">.</span>userInfo<span class="pl-k">!</span>[kSZLocationData] <span class="pl-k">as!</span> SZLocationData
+    <span class="pl-c">// 收到地理位置更新：location</span>
+}</pre></div>
+
+<div class="highlight highlight-source-objc"><pre><span class="pl-c">// Objective-C</span>
+<span class="pl-c1">NSNotificationCenter</span> *center = [<span class="pl-c1">NSNotificationCenter</span> <span class="pl-c1">defaultCenter</span>];
+<span class="pl-c1">NSOperationQueue</span> *queue = [<span class="pl-c1">NSOperationQueue</span> <span class="pl-c1">mainQueue</span>];
+[center <span class="pl-c1">addObserverForName:</span>SZDidCollectLocationData <span class="pl-c1">object:</span><span class="pl-c1">nil</span> <span class="pl-c1">queue:</span>queue <span class="pl-c1">usingBlock:</span>^(<span class="pl-c1">NSNotification</span> * _Nonnull note) {
+    SZLocationData *location = (SZLocationData *) note.<span class="pl-smi">userInfo</span>[<span class="pl-c1">kSZLocationData</span>];
+    <span class="pl-c">// 收到地理位置更新：location</span>
+}];</pre></div>
+
+<h3>
+<a id="user-content-32-监听senz事件senz-event" class="anchor" href="#32-%E7%9B%91%E5%90%ACsenz%E4%BA%8B%E4%BB%B6senz-event" aria-hidden="true"><span class="octicon octicon-link"></span></a>3.2 监听Senz事件（Senz Event）</h3>
+
+<p>Senz事件指用户发生的事件，如某个时间点，用户来到电影院看电影，或到商场消费。Senz事件的类型定义在枚举<code>SZSenzEventType</code>中，枚举有以下取值：</p>
+
+<ul>
+<li>商圈工作中 - WorkingInCBD</li>
+<li>学校上课中 - StudyingInSchool</li>
+<li>学校工作中 - WorkingInSchool</li>
+<li>户外锻炼 - OutdoorExercise</li>
+<li>室内锻炼 - IndoorExercise</li>
+<li>在餐厅吃饭 - DinningOut</li>
+<li>旅游 - Travelling</li>
+<li>郊游 - ShortTrip</li>
+<li>聚会 - InParty</li>
+<li>逛街 - WindowShopping</li>
+<li>看电影 - AtCinema</li>
+<li>展览会 - AtExhibition</li>
+<li>演唱会 - AtPopsConcert</li>
+<li>戏剧 - AtTheatre</li>
+<li>音乐会 - AtClassicsConcert</li>
+</ul>
+
+<p><code>SZSenzEvent</code>类的结构：</p>
+
+<div class="highlight highlight-source-swift"><pre><span class="pl-c">// Swift and Objective-C</span>
+<span class="pl-k">public</span> <span class="pl-k">final</span> <span class="pl-k">class</span> SZSenzEvent {
+    <span class="pl-k">public</span> <span class="pl-k">let</span> timestamp: NSDate       <span class="pl-c">// 事件发生时间</span>
+    <span class="pl-k">public</span> <span class="pl-k">let</span> type: SZSenzEventType   <span class="pl-c">// 事件类型</span>
+    <span class="pl-k">public</span> <span class="pl-k">let</span> typeName: <span class="pl-c1">String</span>        <span class="pl-c">// 事件类型的名词（仅用于Objective-C）</span>
+    <span class="pl-k">public</span> <span class="pl-k">let</span> probability: <span class="pl-c1">Double</span>?    <span class="pl-c">// 可能性，取值0.0-1.0</span>
+}</pre></div>
+
+<p>当Senz服务开启时，可以通过下面的接口来监听Senz事件：</p>
+
+<div class="highlight highlight-source-swift"><pre><span class="pl-c">// Swift</span>
+senz<span class="pl-k">.</span>senzEvent <span class="pl-k">+=</span> { event <span class="pl-k">in</span>
+    <span class="pl-c">// 收到新事件</span>
+}</pre></div>
+
+<div class="highlight highlight-source-objc"><pre><span class="pl-c">// Objective-C</span>
+<span class="pl-c">// 开始监听</span>
+[[<span class="pl-c1">NSNotificationCenter</span> <span class="pl-c1">defaultCenter</span>] <span class="pl-c1">addObserverForName:</span>[SZConstants <span class="pl-c1">didReceiveSenzEvent</span>] <span class="pl-c1">object:</span><span class="pl-c1">nil</span> <span class="pl-c1">queue:</span><span class="pl-c1">nil</span> <span class="pl-c1">usingBlock:</span>^(<span class="pl-c1">NSNotification</span> * _Nonnull note) {
+    SZSenzEvent *event = note.<span class="pl-smi">userInfo</span>[SZConstants.<span class="pl-c1">kSenzEvent</span>];
+    <span class="pl-c">// 收到新事件</span>
+}];</pre></div>
+
+<h3>
+<a id="user-content-33-监听居家办公homeoffice状态" class="anchor" href="#33-%E7%9B%91%E5%90%AC%E5%B1%85%E5%AE%B6%E5%8A%9E%E5%85%AChomeoffice%E7%8A%B6%E6%80%81" aria-hidden="true"><span class="octicon octicon-link"></span></a>3.3 监听“居家／办公”（Home/Office）状态</h3>
+
+<p>“居家／办公”状态有四种情况，在枚举<code>SZHomeOfficeStatusType</code>中定义：</p>
+
+<ul>
+<li>在家 - AtHome</li>
+<li>上班路上 - CommutingWork</li>
+<li>在公司 - AtWork</li>
+<li>回家路上 - CommutingHome</li>
+</ul>
+
+<p><code>SZHomeOfficeStatus</code>类的结构：</p>
+
+<div class="highlight highlight-source-swift"><pre><span class="pl-c">// Swift and Objective-C</span>
+<span class="pl-k">public</span> <span class="pl-k">final</span> <span class="pl-k">class</span> SZHomeOfficeStatus {
+    <span class="pl-k">public</span> <span class="pl-k">let</span> timestamp: NSDate       <span class="pl-c">// 状态改变发生时间</span>
+    <span class="pl-k">public</span> <span class="pl-k">let</span> type: SZHomeOfficeStatusType   <span class="pl-c">// 状态类型</span>
+    <span class="pl-k">public</span> <span class="pl-k">let</span> typeName: <span class="pl-c1">String</span>        <span class="pl-c">// 状态的名词（仅用于Objective-C）</span>
+    <span class="pl-k">public</span> <span class="pl-k">let</span> probability: <span class="pl-c1">Double</span>?    <span class="pl-c">// 可能性，取值0.0-1.0</span>
+}</pre></div>
+
+<p>当Senz服务开启时，可以通过下面的接口来监听Home/Office状态变化：</p>
+
+<div class="highlight highlight-source-swift"><pre><span class="pl-c">// Swift</span>
+senz<span class="pl-k">.</span>homeOfficeEvent <span class="pl-k">+=</span> { event <span class="pl-k">in</span>
+    <span class="pl-c">// 收到新状态</span>
+}</pre></div>
+
+<div class="highlight highlight-source-objc"><pre><span class="pl-c">// Objective-C</span>
+<span class="pl-c">// 开始监听</span>
+[[<span class="pl-c1">NSNotificationCenter</span> <span class="pl-c1">defaultCenter</span>] <span class="pl-c1">addObserverForName:</span>[SZConstants <span class="pl-c1">didReceiveHomeOfficeStatus</span>] <span class="pl-c1">object:</span><span class="pl-c1">nil</span> <span class="pl-c1">queue:</span><span class="pl-c1">nil</span> <span class="pl-c1">usingBlock:</span>^(<span class="pl-c1">NSNotification</span> * _Nonnull note) {
+    SZHomeOfficeStatus *status = note.<span class="pl-smi">userInfo</span>[SZConstants.<span class="pl-c1">kHomeOfficeStatus</span>];
+    <span class="pl-c">// 收到新状态</span>
+}];</pre></div>
+
+<h3>
+<a id="user-content-34-监听运动状态" class="anchor" href="#34-%E7%9B%91%E5%90%AC%E8%BF%90%E5%8A%A8%E7%8A%B6%E6%80%81" aria-hidden="true"><span class="octicon octicon-link"></span></a>3.4 监听运动状态</h3>
+
+<p>Senz SDK共定义五种已知运动状态，在枚举<code>SZMotionStatusType</code>中定义如下：</p>
+
+<ul>
+<li>走路 - Walking</li>
+<li>跑步 - Running</li>
+<li>静坐 - Sitting</li>
+<li>骑车 - Biking</li>
+<li>乘车 - Commuting</li>
+</ul>
+
+<p><code>SZMotionStatus</code>类的结构：</p>
+
+<div class="highlight highlight-source-swift"><pre><span class="pl-c">// Swift and Objective-C</span>
+<span class="pl-k">public</span> <span class="pl-k">final</span> <span class="pl-k">class</span> SZMotionStatus {
+    <span class="pl-k">public</span> <span class="pl-k">let</span> timestamp: NSDate       <span class="pl-c">// 状态改变发生时间</span>
+    <span class="pl-k">public</span> <span class="pl-k">let</span> type: SZMotionStatusType   <span class="pl-c">// 状态类型</span>
+    <span class="pl-k">public</span> <span class="pl-k">let</span> typeName: <span class="pl-c1">String</span>        <span class="pl-c">// 状态的名词（仅用于Objective-C）</span>
+    <span class="pl-k">public</span> <span class="pl-k">let</span> probability: <span class="pl-c1">Double</span>?    <span class="pl-c">// 可能性，取值0.0-1.0</span>
+}</pre></div>
+
+<p>当Senz服务开启时，可以通过下面的接口来监听运动状态变化：</p>
+
+<div class="highlight highlight-source-swift"><pre><span class="pl-c">// Swift</span>
+senz<span class="pl-k">.</span>motionEvent <span class="pl-k">+=</span> { event <span class="pl-k">in</span>
+    <span class="pl-c">// 收到新状态</span>
+}</pre></div>
+
+<div class="highlight highlight-source-objc"><pre><span class="pl-c">// Objective-C</span>
+<span class="pl-c">// 开始监听</span>
+[[<span class="pl-c1">NSNotificationCenter</span> <span class="pl-c1">defaultCenter</span>] <span class="pl-c1">addObserverForName:</span>[SZConstants <span class="pl-c1">didReceiveMotionStatus</span>] <span class="pl-c1">object:</span><span class="pl-c1">nil</span> <span class="pl-c1">queue:</span><span class="pl-c1">nil</span> <span class="pl-c1">usingBlock:</span>^(<span class="pl-c1">NSNotification</span> * _Nonnull note) {
+    SZMotionStatus *status = note.<span class="pl-smi">userInfo</span>[SZConstants.<span class="pl-c1">kMotionStatus</span>];
+    <span class="pl-c">// 收到新状态</span>
+}];</pre></div>
+
+<h3>
+<a id="user-content-35-用户属性api" class="anchor" href="#35-%E7%94%A8%E6%88%B7%E5%B1%9E%E6%80%A7api" aria-hidden="true"><span class="octicon octicon-link"></span></a>3.5 用户属性API</h3>
+
+<p>用户属性API能过根据本机安装的App和其他信息来推断当前用户的特质。调用<code>getUserInfo:</code>方法来获取用户属性：</p>
+
+<div class="highlight highlight-source-swift"><pre><span class="pl-c">// Swift</span>
+SZSenz<span class="pl-k">.</span>sharedInstance<span class="pl-k">.</span>getUserInfo { (result, error) <span class="pl-k">-&gt;</span> () <span class="pl-k">in</span>
+    <span class="pl-k">if</span> <span class="pl-k">let</span> dict <span class="pl-k">=</span> result {
+        <span class="pl-c">// dict是一个包含用户特质的JSON对象</span>
+    }
+}</pre></div>
+
+<div class="highlight highlight-source-objc"><pre><span class="pl-c">// Objective-C</span>
+[senz <span class="pl-c1">getUserInfoWithBlock:</span>^(<span class="pl-c1">NSDictionary</span>&lt;<span class="pl-c1">NSString</span> *,<span class="pl-k">id</span>&gt; * _Nullable result, <span class="pl-c1">NSError</span> * _Nullable err) {
+    <span class="pl-k">if</span> (result != <span class="pl-c1">nil</span>) {
+        <span class="pl-c">// result是一个包含用户特质的JSON对象</span>
+    }
+}];</pre></div>
+
+<p>用户属性的JSON对象的<code>Key</code>是特质名称，<code>Value</code>是特质的贴合程度。如：</p>
+
+<div class="highlight highlight-source-json"><pre>{
+    <span class="pl-s"><span class="pl-pds">"</span>has_car<span class="pl-pds">"</span></span>:<span class="pl-c1">0.10048</span>,
+    <span class="pl-s"><span class="pl-pds">"</span>online_shopping<span class="pl-pds">"</span></span>:<span class="pl-c1">0.20056</span>,
+    <span class="pl-s"><span class="pl-pds">"</span>current_news<span class="pl-pds">"</span></span>:<span class="pl-c1">0.10076</span>
+}</pre></div>
+
+    </div>
+</div>
