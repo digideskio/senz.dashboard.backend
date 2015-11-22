@@ -2,8 +2,6 @@ Flask>=0.10.1
 itsdangerous
 requests
 leancloud-sdk>=1.0.9
-# flask-httpauth
 flask-login
-# werkzeug
 bugsnag
 blinker
