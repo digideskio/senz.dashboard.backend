@@ -4,7 +4,8 @@
         "motionWalking": "走路",
         "motionSitting": "静坐",
         "motionBiking": "骑车",
-        "motionRunning": "跑步"
+        "motionRunning": "跑步",
+        "unknown": "未知"
         },
     "interest":  {
         "jogging": "慢跑",
@@ -21,7 +22,7 @@
         "entertainment_news": "娱乐新闻",
         "current_news": "时事新闻",
         "business_news": "商业新闻",
-        "sports_news": "运动新闻",
+        "sports_news": "体育新闻",
         "game_news": "游戏新闻",
         "study": "学霸",
         "gamer": "游戏玩家",
@@ -53,7 +54,8 @@
         "contextAtPopsConcert": "演唱会",
         "contextAtTheatre": "戏剧",
         "contextAtClassicsConcert": "音乐会",
-        "contextRelaxing": "休息"
+        "contextRelaxing": "休息",
+        "unknown": "未知"
         },
     "occupation": {
         "supervisor": "管理",
@@ -140,14 +142,15 @@
         "shopping_in_mall": "contextWindowShopping",
         "exercise_indoor": "contextIndoorExercise",
         "relaxing": "contextRelaxing",
-        "unknown": "未知"
+        "unknown": "unknown"
     },
     "motion_old": {
         "sitting": "motionSitting",
         "walking": "motionWalking",
         "running": "motionRunning",
         "riding": "motionBiking",
-        "driving": "motionCommuting"
+        "driving": "motionCommuting",
+        "unknown": "unknown"
     },
     "avtivity_old": {
         "party": "contextInParty",
