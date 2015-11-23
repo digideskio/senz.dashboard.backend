@@ -34,7 +34,7 @@
 #hobbyMap .center-avatar img {
     width: 100%;
 }
-.rank1 {
+#rank1 {
     position: absolute;
     width: 160px;
     height: 160px;
@@ -47,7 +47,7 @@
     margin-left: -155px;
     background: rgba(121,204,296,1);
 }
-.rank2 {
+#rank2 {
     position: absolute;
     width: 135px;
     height: 135px;
@@ -60,7 +60,7 @@
     margin-left: -280px;
     background: rgba(121,204,296,1);
 }
-.rank3 {
+#rank3 {
     position: absolute;
     width: 135px;
     height: 135px;
@@ -73,7 +73,7 @@
     margin-left: -257px;
     background: rgba(121,204,296,1);
 }
-.rank4 {
+#rank4 {
     position: absolute;
     width: 130px;
     height: 130px;
@@ -86,7 +86,7 @@
     margin-left: -132px;
     background: rgba(121,204,296,1);
 }
-.rank5 {
+#rank5 {
     position: absolute;
     width: 105px;
     height: 105px;
@@ -99,7 +99,7 @@
     margin-left: 20px;
     background: rgba(121,204,296,1);
 }
-.rank6 {
+#rank6 {
     position: absolute;
     width: 95px;
     height: 95px;
@@ -112,7 +112,7 @@
     margin-left: 116px;
     background: rgba(121,204,296,1);
 }
-.rank7 {
+#rank7 {
     position: absolute;
     width: 80px;
     height: 80px;
@@ -125,7 +125,7 @@
     margin-left: 149px;
     background: rgba(121,204,296,1);
 }
-.rank8 {
+#rank8 {
     position: absolute;
     width: 70px;
     height: 70px;
@@ -134,11 +134,11 @@
     border-radius: 50%;
     top: 50%;
     left: 50%;
-    margin-top: -156px;
-    margin-left: 119px;
+    margin-top: -150px;
+    margin-left: 130px;
     background: rgba(121,204,296,1);
 }
-.rank9 {
+#rank9 {
     position: absolute;
     width: 55px;
     height: 55px;
@@ -147,8 +147,8 @@
     border-radius: 50%;
     top: 50%;
     left: 50%;
-    margin-top: -176px;
-    margin-left: 95px;
+    margin-top: -220px;
+    margin-left: 80px;
     background: rgba(121,204,296,1);
 }
 </style>
@@ -158,11 +158,24 @@ var hobbyData = JSON.parse({{ option | tojson | safe }});
 function renderHobbyCharts(data) {
     var tpl = [];
     for(var i = 0, len = data.length; i < len; i++) {
-        tpl.push('<div class="rank' + i + '">' + data[i].name + '</div>');
+        tpl.push('<div class="rank" id="rank' + (i+1) + '">' + data[i].name + '</div>');
     }
     return tpl.join('');
 }
 $("#hobbyMap").append(renderHobbyCharts(hobbyData.data));
 }).call(this);
+
+$(function(){
+    $( document ).tooltip({
+      track: true
+    });
+});
+
+$(".rank").each(function(i){
+    $(this).mouseover(function(){
+        $(this).attr("title", hobbyData.data[i].value);
+    });
+});
+
 </script>
 {% endblock %}

@@ -129,21 +129,21 @@ def set_fake_data_to_db(app_id, user_id):
 
 
 def get_tracker_of_app(app_id):
-        query = Query(Object.extend('Application'))
-        query.equal_to('app_id', app_id)
-        app_list = query.find()
-        if not app_list:
-            return []
-        the_app = app_list[0]
+    query = Query(Object.extend('Application'))
+    query.equal_to('app_id', app_id)
+    app_list = query.find()
+    if not app_list:
+        return []
+    the_app = app_list[0]
 
-        query = Query(Object.extend('BindingInstallation'))
-        query.equal_to('application', the_app)
-        query.select('user')
-        installation_list = query.find()
-        user_set = set()
-        for installation in installation_list:
-            user_set.add(installation.attributes['user'].id)
-        return list(user_set)
+    query = Query(Object.extend('BindingInstallation'))
+    query.equal_to('application', the_app)
+    query.select('user')
+    installation_list = query.find()
+    user_set = set()
+    for installation in installation_list:
+        user_set.add(installation.attributes['user'].id)
+    return list(user_set)
 
 if __name__ == '__main__':
     leancloud.init('z6fhqxvpal43l238q7xzogfdls74my214o5bapm5vkwfn4xh',

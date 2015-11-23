@@ -14,25 +14,25 @@
         "football": "足球",
         "badminton": "羽毛球",
         "bicycling": " 骑车",
-        "table_tennis": "网球",
+        "table_tennis": "乒乓球",
         "social": "社交",
-        "online_shopping": "网络购物",
-        "offline_shoppng": "线下购物",
-        "tech_news": "教育新闻",
+        "online_shopping": "线上购物",
+        "offline_shopping": "线下购物",
+        "tech_news": "科技新闻",
         "entertainment_news": "娱乐新闻",
         "current_news": "时事新闻",
         "business_news": "商业新闻",
         "sports_news": "体育新闻",
         "game_news": "游戏新闻",
-        "study": "学霸",
+        "study": "学习",
         "gamer": "游戏玩家",
-        "health": "健康",
+        "health": "关注健康",
         "sports_show": "体育节目",
         "game_show": "游戏节目",
         "variety_show": "综艺节目",
         "tvseries_show": "电视剧",
-        "acg": "动漫",
-        "indoorsman": "宅男"
+        "ACG": "动漫",
+        "indoorsman": "宅"
     },
     "context":  {
         "contextAtHome": "在家",
@@ -89,7 +89,18 @@
         "5000down": "5K以下",
         "5000to10000": "5到10K",
         "10000to20000": "10到20K",
-        "20000up": "20K以上"
+        "20000up": "20K以上",
+        "unknown": "未知"
+    },
+    "has_car":{
+        "yes": "有",
+        "no": "无",
+        "unknown": "未知"
+    },
+    "has_pet":{
+        "yes": "有",
+        "no": "无",
+        "unknown": "未知"
     },
     "home_office_status": {
         "contextAtWork": "在公司",

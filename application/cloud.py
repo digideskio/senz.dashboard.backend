@@ -4,6 +4,8 @@ from leancloud import Engine, Query, Object
 from datetime import datetime
 from application.views.panel import post_panel_data
 from application.views.dashboard import translate
+from flask import json
+from os.path import dirname, join
 from server import app
 import time
 
@@ -51,9 +53,16 @@ def parse_static_info(info_log):
     user_id = info_log.get('user').get('objectId')
     ret_dict['user_id'] = user_id
     static_info = info_log.get('staticInfo') or {}
+    translation = json.load(file(join(dirname(__file__), 'translate.json')))
 
+    interest = []
     for key, value in static_info.items():
-        if isinstance(value, dict):
+        if key == 'sport' or key in translation.get('interest').keys():
+            if key == 'sport':
+                interest += value.keys()
+            else:
+                interest.append(key)
+        elif isinstance(value, dict):
             ret_dict[key] = sorted(value.items(), key=lambda v: -v[1])[0][0]
         elif isinstance(value, float):
             if len(key.split('-')) > 1:
@@ -62,6 +71,7 @@ def parse_static_info(info_log):
                 ret_dict[key] = 'male' if value > 0 else 'female'
             else:
                 ret_dict[key] = 'yes' if value > 0 else 'no'
+    ret_dict['interest'] = list(set(interest))
     return ret_dict
 
 

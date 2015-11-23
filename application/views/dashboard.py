@@ -47,11 +47,8 @@ def show():
         'errmsg': 'ok',
         'data': data
     }
-    return render_template('index.html',
-                           username=username,
-                           app_id=app_id,
-                           app_list=app_list,
-                           option=json.dumps(event))
+    return render_template('index.html', username=username, app_id=app_id,
+                           app_list=app_list, option=json.dumps(event))
 
 
 @dashboard_bp.route('/dashboard/profile')
@@ -105,39 +102,37 @@ def profile():
         'errmsg': 'ok',
         'data': data
     }
-    return render_template('dashboard/user-identity.html',
-                           option=json.dumps(user_profile),
-                           username=username,
-                           app_id=app_id,
-                           app_list=app_list)
+    return render_template('dashboard/user-identity.html', option=json.dumps(user_profile),
+                           username=username, app_id=app_id, app_list=app_list)
 
 
-@dashboard_bp.route('/dashboard/interest/')
+@dashboard_bp.route('/dashboard/interest')
 def interest():
     context_dict = get_app_list()
     app_id = context_dict['app_id']
     username = context_dict['username']
     app_list = context_dict['app_list']
-
-    result_dict = get_query_list(app_id, 'interest')
-    interest_list = filter(lambda x: x is not None, result_dict['interest'])
-    interest_list = map(lambda x: translate(x, 'interest'), interest_list)
-    interest_tmp = sorted(map(lambda x: (x, interest_list.count(x)), set(interest_list)), key=lambda item: -item[1])
-    if interest_tmp:
-        data = map(lambda x: {'rank': x, 'name': interest_tmp[x-1][0]}, xrange(1, 9))
-        data.append({'rank': 9, 'name': '...'})
+    if not app_id or app_id == '5621fb0f60b27457e863fabb':  # Demo App
+        fake_data = json.load(file(join(dirname(dirname(__file__)), 'fake_data.json')))
+        interest_obj = fake_data.get('interest')
+        interest_tmp = sorted(interest_obj.items(), key=lambda y: -y[1])
+        # print interest_tmp
     else:
-        data = []
-    interest = {
+        result_dict = get_query_list(app_id, 'interest')
+        interest_list = filter(lambda x: x is not None, result_dict['interest'])
+        interest_tmp = [x for y in interest_list for x in y]
+        interest_tmp = sorted(map(lambda x: (x, interest_tmp.count(x)), list(set(interest_tmp))), key=lambda y: -y[1])
+    data = map(lambda x: {'rank': x, 'name': translate(interest_tmp[x][0], 'interest'), 'value': interest_tmp[x][1]},
+               xrange(0, len(list(set(interest_tmp))[:8])))
+    if len(list(set(interest_tmp))) > 8:
+        data.append({'rank': len(list(set(interest_tmp))[:8]), 'name': '...'})
+    interest_data = {
         'errcode': 0,
         'errmsg': 'ok',
         'data': data
     }
-    return render_template('dashboard/user-hobby.html',
-                           option=json.dumps(interest),
-                           username=username,
-                           app_id=app_id,
-                           app_list=app_list)
+    return render_template('dashboard/user-hobby.html', option=json.dumps(interest_data),
+                           username=username, app_id=app_id, app_list=app_list)
 
 
 @dashboard_bp.route('/dashboard/marriage')
@@ -160,8 +155,10 @@ def marriage():
         result_dict = get_query_list(app_id, 'marriage', 'pregnant')
         marriage_list = filter(lambda x: x is not None, result_dict['marriage'])
         pregnant_list = filter(lambda x: x is not None, result_dict['pregnant'])
-        marriage = {'category': ['已婚', '未婚'], 'series': [marriage_list.count('yes'), marriage_list.count('no')]}
-        pregnant = {'category': ['怀孕', '未孕'], 'series': [pregnant_list.count('yes'), pregnant_list.count('no')]}
+        marriage = {'category': map(lambda x: translate(x, 'marriage'), list(set(marriage_list))),
+                    'series': map(lambda x: marriage_list.count(x), list(set(marriage_list)))}
+        pregnant = {'category': map(lambda x: translate(x, 'pregnant'), list(set(pregnant_list))),
+                    'series': map(lambda x: pregnant_list.count(x), list(set(pregnant_list)))}
     ret_json = {
         'errcode': 0,
         'errmsg': 'ok',
@@ -170,11 +167,8 @@ def marriage():
             'pregnant': pregnant
         }
     }
-    return render_template('dashboard/user-matrimony.html',
-                           option=json.dumps(ret_json),
-                           username=username,
-                           app_id=app_id,
-                           app_list=app_list)
+    return render_template('dashboard/user-matrimony.html', option=json.dumps(ret_json),
+                           username=username, app_id=app_id, app_list=app_list)
 
 
 @dashboard_bp.route('/dashboard/consumption')
@@ -184,17 +178,31 @@ def consumption():
     username = context_dict['username']
     app_list = context_dict['app_list']
 
-    result_dict = get_query_list(app_id, 'consumption', 'has_car', 'has_pet')
-    consumption_list = filter(lambda x: x is not None, result_dict['consumption'])
-    car_list = filter(lambda x: x is not None, result_dict['has_car'])
-    pet_list = filter(lambda x: x is not None, result_dict['has_pet'])
-
-    consumption_tmp = map(lambda x: list(x),
-                          zip(*map(lambda x: [x, consumption_list.count(x)], set(consumption_list))))
-    consum = {"category": map(lambda x: translate(x, 'consumption'), consumption_tmp[0]),
-              "series": consumption_tmp[1]} if consumption_tmp else {}
-    car = {'category': ['有', '无'], 'series': [car_list.count('yes'), car_list.count('no')]}
-    pet = {'category': ['有', '无'], 'series': [pet_list.count('yes'), pet_list.count('no')]}
+    if not app_id or app_id == '5621fb0f60b27457e863fabb':  # Demo App
+        fake_data = json.load(file(join(dirname(dirname(__file__)), 'fake_data.json')))
+        static_info = fake_data.get('static_info')
+        consumption_obj = static_info.get('consumption')
+        hascar_obj = static_info.get('has_car')
+        haspet_obj = static_info.get('has_pet')
+        consum = {'category': map(lambda x: translate(x, 'consumption'), consumption_obj.keys()),
+                  'series': map(lambda x: consumption_obj.get(x), consumption_obj.keys())}
+        car = {'category': map(lambda x: translate(x, 'has_car'), hascar_obj.keys()),
+               'series': map(lambda x: hascar_obj.get(x), hascar_obj.keys())}
+        pet = {'category': map(lambda x: translate(x, 'has_pet'), haspet_obj.keys()),
+               'series': map(lambda x: haspet_obj.get(x), haspet_obj.keys())}
+    else:
+        result_dict = get_query_list(app_id, 'consumption', 'has_car', 'has_pet')
+        consumption_list = filter(lambda x: x is not None, result_dict['consumption'])
+        car_list = filter(lambda x: x is not None, result_dict['has_car'])
+        pet_list = filter(lambda x: x is not None, result_dict['has_pet'])
+        consumption_tmp = map(lambda x: list(x),
+                              zip(*map(lambda x: [x, consumption_list.count(x)], set(consumption_list))))
+        consum = {"category": map(lambda x: translate(x, 'consumption'), consumption_tmp[0]),
+                  "series": consumption_tmp[1]} if consumption_tmp else {}
+        car = {'category': map(lambda x: translate(x, 'has_car'), list(set(car_list))),
+               'series': map(lambda x: car_list.count(x), list(set(car_list)))}
+        pet = {'category': map(lambda x: translate(x, 'has_pet'), list(set(pet_list))),
+               'series': map(lambda x: pet_list.count(x), list(set(pet_list)))}
 
     ret_json = {
         'errcode': 0,
@@ -205,11 +213,8 @@ def consumption():
             'pet': pet
         }
     }
-    return render_template('dashboard/user-consumption.html',
-                           option=json.dumps(ret_json),
-                           username=username,
-                           app_id=app_id,
-                           app_list=app_list)
+    return render_template('dashboard/user-consumption.html', option=json.dumps(ret_json),
+                           username=username, app_id=app_id, app_list=app_list)
 
 
 @dashboard_bp.route('/dashboard/location')
@@ -236,11 +241,8 @@ def location():
             'city': city[:6]
         }
     }
-    return render_template('dashboard/user-location.html',
-                           username=username,
-                           app_id=app_id,
-                           app_list=app_list,
-                           option=json.dumps(location))
+    return render_template('dashboard/user-location.html', option=json.dumps(location),
+                           app_id=app_id, app_list=app_list, username=username)
 
 
 @dashboard_bp.route('/dashboard/context', methods=['GET', 'POST'])
@@ -321,8 +323,8 @@ def motion():
     }
     if request.method == 'POST':
         return json.dumps(context)
-    return render_template('dashboard/scene.html', option=json.dumps(context), username=username,
-                           app_id=app_id, app_list=app_list)
+    return render_template('dashboard/scene.html', option=json.dumps(context),
+                           username=username, app_id=app_id, app_list=app_list)
 
 
 def get_query_list(app_id='', *field):

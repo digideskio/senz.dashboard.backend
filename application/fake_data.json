@@ -23,6 +23,33 @@
     "contextAtClassicsConcert": 120,
     "contextRelaxing": 1500
   },
+  "interest":  {
+    "jogging": 250,
+    "fitness": 180,
+    "basketball": 58,
+    "football": 28,
+    "badminton": 25,
+    "bicycling": 79,
+    "table_tennis": 65,
+    "social": 376,
+    "online_shopping": 652,
+    "offline_shopping": 715,
+    "tech_news": 175,
+    "entertainment_news": 485,
+    "current_news": 522,
+    "business_news": 256,
+    "sports_news": 188,
+    "game_news": 153,
+    "study": 120,
+    "gamer": 120,
+    "health": 55,
+    "sports_show": 159,
+    "game_show": 138,
+    "variety_show": 268,
+    "tvseries_show": 325,
+    "acg": 113,
+    "indoorsman": 267
+  },
   "static_info": {
     "gender": {
       "male": 357,
@@ -72,6 +99,23 @@
       "agriculture": 12,
       "athlete": 28,
       "unknown": 75
+    },
+    "consumption": {
+      "5000down": 220,
+      "5000to10000": 231,
+      "10000to20000": 130,
+      "20000up": 32,
+      "unknown": 187
+    },
+    "has_car":{
+      "yes": 241,
+      "no": 473,
+      "unknown": 86
+    },
+    "has_pet":{
+      "yes": 135,
+      "no": 378,
+      "unknown": 287
     }
   }
 }
