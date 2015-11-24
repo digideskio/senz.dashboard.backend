@@ -2,7 +2,6 @@ import leancloud
 from flask import json
 from os.path import dirname, join
 from leancloud import Object, Query
-from create_fake_data import get_tracker_of_app
 
 
 src_list = []

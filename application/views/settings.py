@@ -29,11 +29,14 @@ def add_app():
                                app_list=app_list)
     if request.method == 'POST':
         app_name = request.form['app_name']
+        app_type = request.form['app_type']
+        print app_type
         user = Developer()
         user.session_token = session.get('session_token')
-        app = user.create_new_app(app_name)
+        app = user.create_new_app(app_name, app_type)
         if app:
             return render_template('settings/appkey.html',
+                                   app_id=app[2],
                                    app_key=app[1])
         else:
             return redirect(url_for('settings.show'))
@@ -63,6 +66,17 @@ def manage_app():
         return redirect(url_for('settings.manage_app'))
 
 
-@settings.route('/modify')
+@settings.route('/modify', methods=['POST'])
 def modify_app():
-    pass
+    if not session.get('session_token'):
+        return redirect(url_for('accounts_bp.login'))
+    if request.method == 'POST':
+        app_id = request.form.get('app_id')
+        app_name = request.form.get('app_name')
+        app_type = request.form.get('app_type')
+        if app_id is not '5621fb0f60b27457e863fabb' and app_id is not 'all':
+            print "modify", '<', app_id, '>'
+            user = Developer()
+            user.session_token = session.get('session_token')
+            user.modify_app(app_id, app_name, app_type)
+        return redirect(url_for('settings.manage_app'))

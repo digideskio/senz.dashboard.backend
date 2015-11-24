@@ -24,7 +24,7 @@ class Developer(User):
         else:
             return None
 
-    def create_new_app(self, app_name):
+    def create_new_app(self, app_name, app_type=None):
         if not app_name:
             return False
         user = self.become(session_token=self.session_token)
@@ -35,6 +35,7 @@ class Developer(User):
         query.equal_to('app_name', app_name)
         if not query.find():
             app.set('app_name', app_name)
+            app.set('type', app_type)
             app.set('user', user)
             app.save()
             app_id = app.id
@@ -62,6 +63,25 @@ class Developer(User):
         except LeanCloudError:
             return False
 
+    def modify_app(self, app_id=None, app_name=None, app_type=None):
+        try:
+            user = self.become(session_token=self.session_token)
+            application = Object.extend('Application')
+            query = Query(application)
+            query.equal_to('user', user)
+            query.equal_to('app_id', app_id)
+            app = query.find()[0] if query.count() else None
+            if app:
+                if app_name:
+                    app.set('app_name', app_name)
+                if app_type:
+                    app.set('type', app_type)
+                app.save()
+                return True
+            return False
+        except LeanCloudError:
+            return False
+
     def get_app_list(self):
         try:
             user = self.become(session_token=self.session_token)
@@ -75,7 +95,7 @@ class Developer(User):
         self.app_list = map(lambda x: {'app_id': x.attributes.get('app_id'),
                                        'app_key': x.attributes.get('app_key'),
                                        'app_type': x.attributes.get('type'),
-                                       'createdAt': x.attributes.get('createdAt'),
+                                       'createdAt': x.created_at.strftime("%Y-%m-%d"),
                                        'app_name': x.attributes.get('app_name')}, result)
         return self.app_list
 

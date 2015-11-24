@@ -1,42 +1,90 @@
 {% extends 'settings/create.html' %}
 
 {%  block content %}
+<style>
+    table {
+        border-collapse: collapse;
+        border-spacing: 0;
+        border-left: 1px solid #888;
+        border-top: 1px solid #888;
+    }
+    th, td {
+        border-right: 1px solid #888;
+        border-bottom: 1px solid #888;
+        padding: 5px 15px;
+    }
+    th {
+        font-weight: bold;
+    }
+    #content {
+        text-align: center;
+        width: 100%;
+        height: 300px;
+    }
+    .hide {
+        display: none;
+    }
+    .edit_btn,
+    .del_btn {
+        width: 30px;
+        height: 30px;
+    }
+</style>
 <div id="container" class="container">
     <div id="content" class="content pd40" style="min-height: 678px; margin-top: 40px;">
         <div id="settings">
             <div class="ng-scope">
-            <form action="{{ url_for('settings.manage_app') }}" method="post" onsubmit="return confirm('确定删除该应用?');">
-                <div><label>App Name</label><div>
-                    <input id="app_name" type="text" size="36" name="app_name" value="{{ app_name }}" readonly></div></div>
-                <div><label>App ID</label><div>
-                    <input id="app_id" type="text" size="36" name="app_id" value="{{ app_id }}" readonly></div></div>
-                <div><label>App Key</label><div>
-                    <input id="app_key" type="text" size="36" name="app_key" value="{{ app_key }}" readonly></div></div>
+            <table id="table" align="center">
+				<tr>
+					<th style="width: 200px;">应用名</th>
+					<th>AppId</th>
+					<th>AppKey</th>
+					<th style="width: 200px;">应用类型</th>
+					<th>创建时间</th>
+					<th>编辑应用</th>
+				</tr>
+                {% for app in app_list %}
+                    <tr id={{ app['app_id'] }}>
+                        <td>
+                            <input type="text" name="app_name" class="hide" value={{ app['app_name'] }} />
+                            <label for="app_name">{{ app['app_name'] }}</label>
+                        </td>
+                        <td>
+                            <input type="text" name="app_id" class="hide" value={{ app['app_id'] }} />
+                            <label for="app_id">{{ app['app_id'] }}</label>
+                        </td>
+                        <td>
+                            <input type="text" name="app_key" class="hide" value={{ app['app_key'] }} />
+                            <label for="app_key">{{ app['app_key'] }}</label>
+                        </td>
+                        <td>
+                            <select name="app_type" class="hide">
+                                <option>社交应用</option>
+                                <option>地图导航</option>
+                                <option>网购支付</option>
+                                <option>通话通讯</option>
+                                <option>生活消费类</option>
+                                <option>查询工具</option>
+                                <option>拍摄美化</option>
+                                <option>影音播放</option>
+                                <option>图书阅读</option>
+                                <option>浏览器</option>
+                                <option>新闻资讯</option>
+                            </select>
+                            <label for="app_type">{{ app['app_type'] }}</label>
+                        </td>
+                        <td>
+                            <input type="text" name="createdAt" class="hide" value={{ app['createdAt'] }} />
+                            <label for="createdAt">{{ app['createdAt'] }}</label>
+                        </td>
+                        <td>
+                            <img src="{{ url_for('static', filename='images/iconfont-edit.png') }}" class="edit_btn"> </img>
+			                <img src="{{ url_for('static', filename='images/iconfont-delete.png') }}" class="del_btn"> </img>
+                        </td>
+                    </tr>
+                {% endfor %}
+			</table>
 
-                    <div><button type="submit" id="delete-app">删除应用</button></div>
-            </form>
-
-{#                <table border="1" cellpadding="10">#}
-{#                    {% if app_list %}#}
-{#                    <tr>#}
-{#                        <th>应用名</th>#}
-{#                        <th>appkey</th>#}
-{#                        <th>应用类型</th>#}
-{#                        <th>创建时间</th>#}
-{#                        <th>编辑应用</th>#}
-{#                    </tr>#}
-{#                    {% endif %}#}
-{##}
-{#                    {% for app in app_list %}#}
-{#                    <tr>#}
-{#                        <td>{{ app.get('app_name') }}</td>#}
-{#                        <td>{{ app.get('app_key') }}</td>#}
-{#                        <td>{{ app.get('app_type') }}</td>#}
-{#                        <td>{{ app.get('createdAt') }}</td>#}
-{#                        <td><a href="#">b</a> <a href="#">a</a></td>#}
-{#                    </tr>#}
-{#                    {% endfor %}#}
-{#                </table>#}
             </div>
         </div>
     </div>
@@ -45,16 +93,48 @@
 
 <script>
 {% block app_select %}
+    $(".edit_btn").click(function() {
+        var id = $(this).closest('tr').attr('id');
+        var edit_obj = $('#' + id);
+        edit_obj.find("label[for='app_name']").hide();
+        edit_obj.find("input[name='app_name']").show();
+        edit_obj.find("label[for='app_type']").hide();
+        edit_obj.find("select[name='app_type']").show();
+    });
+
+    $(".del_btn").click(function() {
+        var id = $(this).closest('tr').attr('id');
+        if (confirm("确认删除改应用？")) {
+            $.post("/manage", {app_id: id}, function(){
+                $('#' + id).remove();
+            });
+        }
+    });
+    $(".hide").blur(function() {
+        var that = this;
+        var id = $(this).closest('tr').attr('id');
+        if($(this).attr('name') == 'app_name'){
+            $.post("/modify", {app_id: id, app_name: $(this).val()}, function () {
+                console.log('modify app_name success');
+                var edit_obj = $('#' + id);
+                edit_obj.find("input[name='app_name']").hide();
+                edit_obj.find("label[for='app_name']").text($(that).val());
+                edit_obj.find("label[for='app_name']").show();
+            });
+        }
+        if($(this).attr('name') == 'app_type'){
+            $.post("/modify", {app_id: id, app_type: $(this).val()}, function () {
+                console.log('modify app_type success');
+                var edit_obj = $('#' + id);
+                edit_obj.find("select[name='app_type']").hide();
+                edit_obj.find("label[for='app_type']").text($(that).val());
+                edit_obj.find("label[for='app_type']").show();
+            });
+        }
+    });
     var post_url = function(){
-        var obj = document.getElementById("select_app");
-        document.getElementById("app_name").value = obj.options[obj.selectedIndex].text;
-        document.getElementById("app_id").value = obj.value;
-        document.getElementById("app_key").value = obj.options[obj.selectedIndex].id;
-
-        $.post("/", {app_id: obj.value}, function () {});
+        $.post("/", {app_id: $('#select_app').val()}, function () {});
     };
-
-    post_url.apply(this);
 {% endblock %}
 </script>
 

@@ -1,4 +1,6 @@
 from leancloud import Object, Query, init
+import time
+from datetime import datetime
 
 if __name__ == '__main__':
     init('pin72fr1iaxb7sus6newp250a4pl2n5i36032ubrck4bej81',
@@ -9,9 +11,12 @@ if __name__ == '__main__':
     result_list = query.find()
     event_obj = result_list[0]
 
-    event = event_table()
-    event.set('user', event_obj.get('user'))
-    event.set('event', event_obj.get('event'))
-    event.set('startTime', event_obj.get('startTime'))
-    event.set('endTime', event_obj.get('endTime'))
-    event.save()
+    time = event_obj.created_at
+    print time.strftime("%d-%m-%y")
+
+    # event = event_table()
+    # event.set('user', event_obj.get('user'))
+    # event.set('event', event_obj.get('event'))
+    # event.set('startTime', event_obj.get('startTime'))
+    # event.set('endTime', event_obj.get('endTime'))
+    # event.save()

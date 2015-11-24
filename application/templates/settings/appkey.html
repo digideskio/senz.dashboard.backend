@@ -4,13 +4,13 @@
 <div id="container" class="container">
     <div id="content" class="content pd40" style="min-height: 678px; margin-top: 40px;">
         <div id="settings">
-            <h3>该应用的appkey为：</h3>
+            <h3>该应用的app_key为：</h3>
             <input type="text" size="36" name="app_key" value="{{ app_key }}" readonly />
-            <p>
-                每个应用对应的APPKEY是唯一的，请在集成SDK时将此APPKEY添加到代码中。
-                你可以查看指引或者按照下面的<a href="{{ url_for('integration.show') }}">集成文档</a>集成SDK，
-                或返回<a href="{{ url_for('settings.manage_app') }}">App列表</a>
-            </p>
+            <h3>该应用的app_id为：</h3>
+            <input type="text" size="36" name="app_id" value="{{ app_id }}" readonly />
+            <p>每个应用对应的APPKEY是唯一的，请在集成SDK时将此APPKEY添加到代码中。</p>
+            <p>你可以查看指引或者按照下面的<a href="{{ url_for('integration.show') }}">集成文档</a>集成SDK，
+                或返回<a href="{{ url_for('settings.manage_app') }}">App列表</a></p>
         </div>
     </div>
 </div>
