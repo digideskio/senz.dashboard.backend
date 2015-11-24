@@ -32,8 +32,6 @@
         <div class="circle4"></div>
         <div class="circle5"></div>
         <div class="main-title" data-title="天将雄师"><img src="/static/images/head.png" alt=""></div>
-        <!--<div class="pr2"><div class="text">完整版</div></div>
-        <div class="pr2"><div class="text">迅雷</div></div> -->
       </div>
 
    </div>
@@ -41,15 +39,18 @@
 <script>
 var rankData = JSON.parse({{ option | tojson | safe }});
 (function(){
+    $( document ).tooltip();
     function renderCircleCharts(data) {
     var tpl = [];
     for(var i = 0, len = data.length; i < len; i++) {
       if(data[i].rank==1) continue;
-      tpl.push('<div class="pr '+ (data[i].rank==1 ? 'main-title' : 'pr' + data[i].rank) + '" style="left:' + (((data[i].rank-1) * 140)+(150 * Math.random()*1) ) + 'px; top:' + (430* Math.random()*1) + 'px;" title="'+ data[i].rank +'" >'+ '<div class="text">'+ data[i].name+'</div></div>')
+      tpl.push('<div class="pr '+ (data[i].rank==1 ? 'main-title' : 'pr' + data[i].rank) + '" ' +
+              'style="left:' + (((data[i].rank-1) * 140)+(150 * Math.random()*1) ) + 'px; ' +
+              'top:' + (430* Math.random()*1) + 'px;" title="'+ data[i].rank +'" >'+
+              '<div class="text">'+ data[i].name+'</div></div>')
     }
     return tpl.join('');
   }
-  // $(".main-title").text(rankData[0].name);
   $("#event-cirle-wrap").append(renderCircleCharts(rankData.data));
 }).call(this);
 </script>

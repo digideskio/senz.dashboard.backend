@@ -116,7 +116,6 @@ def interest():
         fake_data = json.load(file(join(dirname(dirname(__file__)), 'fake_data.json')))
         interest_obj = fake_data.get('interest')
         interest_tmp = sorted(interest_obj.items(), key=lambda y: -y[1])
-        # print interest_tmp
     else:
         result_dict = get_query_list(app_id, 'interest')
         interest_list = filter(lambda x: x is not None, result_dict['interest'])
@@ -291,7 +290,6 @@ def motion():
                                               filter(lambda y: str(e_start) <= str(y) <= str(e_end),  # filter
                                                      item.keys())), event_list)
         event_list = [i for row in event_list_tmp for i in row]
-        # print event_list
 
         # filled all the status* field
         for home_office in home_office_list:

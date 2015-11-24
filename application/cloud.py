@@ -187,7 +187,6 @@ def updata_backend_info(parse_dict):
 
                 for k, v in parse_dict['home_office_status'].items():
                     home_office_status[k] = v
-                print(home_office_status)
                 dst_table.set('home_office_status', home_office_status)
             elif key is 'event':
                 event_tmp = dst_table.get('event') or {}
