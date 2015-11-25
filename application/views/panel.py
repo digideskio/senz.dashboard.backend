@@ -79,4 +79,5 @@ def post_panel_data(**param):
             payload["type"] = "event"
             payload["val"] = context_val
             requests.post("https://leancloud.cn/1.1/functions/notify_new_details",  headers=headers, data=payload)
+        print payload
 

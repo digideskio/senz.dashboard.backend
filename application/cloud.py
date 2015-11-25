@@ -148,7 +148,6 @@ def parse_avtivity_info(activity_info):
 
 
 def updata_backend_info(parse_dict):
-    print(parse_dict)
     user_id = parse_dict['user_id']
     # get user Object
     query = Query(Object.extend('_User'))
@@ -165,7 +164,6 @@ def updata_backend_info(parse_dict):
     app_id_list = list(app_set)
 
     for app_id in app_id_list:
-        print "app_id: ", app_id
         query = Query(Object.extend('Application'))
         query.equal_to('objectId', app_id)
         app = query.find()[0] if query.count() else None
