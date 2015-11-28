@@ -268,7 +268,7 @@ def motion():
                        "xAxis": list(range(24))}
 
         context_fake = fake_data.get('context')
-        event = {'category': map(lambda x: translate(x, 'context'), context_fake.keys()),
+        event = {'category': map(lambda x: translate(translate(x, 'event_old'), 'context'), context_fake.keys()),
                  'series': map(lambda x: context_fake[x], context_fake.keys())}
     else:
         # get data from leancloud#DashboardSource
