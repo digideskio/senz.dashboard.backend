@@ -1,17 +1,76 @@
 {% extends 'settings/create.html' %}
 
 {%  block content %}
+<style type="text/css">
+    * {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+    /*容器div*/
+
+    #settings {
+        position: relative;
+        width: 100%;
+        margin-top: 50px;
+        margin-left: 40px;
+        color: #3a3a3a;
+        font-size: 16px;
+        font-family: "Microsoft YaHei" ! important;
+    }
+    .info {
+        color: #686868;
+    }
+    #app_id_div {
+        margin-top: 10px;
+    }
+    #app_key,
+    #app_id {
+        border-style: solid;
+        border-width: 1px;
+        border-color: rgb(202, 202, 202);
+        border-radius: 6px;
+        background-color: rgb(247, 247, 247);
+        outline: none;
+        font-size: 100%;
+        color: #999999;
+        width: 300px;
+        height: 30px;
+        padding-left: 10px;
+    }
+    #app_key {
+        margin-left: 10px;
+    }
+    #app_id {
+        margin-left: 23px;
+    }
+    #remark_div {
+        margin-top: 15px;
+        line-height: 25px;
+    }
+    .link {
+        text-decoration: none;
+        color: #00ACC1;
+    }
+</style>
 <div id="container" class="container">
     <div id="content" class="content pd40" style="min-height: 678px; margin-top: 40px;">
         <div id="settings">
-            <h3>该应用的app_key为：</h3>
-            <input type="text" size="36" name="app_key" value="{{ app_key }}" readonly />
-            <h3>该应用的app_id为：</h3>
-            <input type="text" size="36" name="app_id" value="{{ app_id }}" readonly />
-            <p>每个应用对应的APPKEY是唯一的，请在集成SDK时将此APPKEY添加到代码中。</p>
-            <p>你可以查看指引或者按照下面的<a href="{{ url_for('integration.show') }}">集成文档</a>集成SDK，
-                或返回<a href="{{ url_for('settings.manage_app') }}">App列表</a></p>
-        </div>
+			<div id="app_key_div">
+				<span class="info">该应用的 App Key 为:</span>
+				<input type="text" readonly="readonly" id="app_key" value="{{ app_key }}" />
+			</div>
+
+			<div id="app_id_div">
+				<span class="info">该应用的 App Id 为:</span>
+				<input type="text" readonly="readonly" id="app_id" value="{{ app_id }}" />
+			</div>
+			<div id="remark_div">
+				* 每个应用对应的 APP Key 是唯一的，请在集成 SDK 时将此 App Key 添加到代码中。
+				<br/> 你可以查看引导或者按照下面的 <a class="link" href="{{ url_for('integration.show') }}">集成文档</a>集成 SDK，
+                或返回 <a class="link" href="{{ url_for('settings.manage_app') }}">APP 列表</a>
+			</div>
+		</div>
     </div>
 </div>
 {%  endblock %}

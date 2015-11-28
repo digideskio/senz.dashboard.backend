@@ -46,7 +46,7 @@
         "contextIndoorExercise": "室内锻炼",
         "contextDinningOut": "在餐厅吃饭",
         "contextTravelling": "旅游",
-        "contextCommuting": "出行",
+        "contextGoingOut": "出行",
         "contextInParty": "聚会",
         "contextWindowShopping": "逛街",
         "contextAtCinema": "看电影",
@@ -143,7 +143,7 @@
     },
     "event_old": {
         "attend_concert": "contextAtPopsConcert",
-        "going_out": "ContextCommuting",
+        "going_out": "contextGoingOut",
         "dining_in_restaurant": "contextDinningOut",
         "watch_movie": "contextAtCinema",
         "study_in_class": "contextStudyingInSchool",
@@ -153,6 +153,9 @@
         "shopping_in_mall": "contextWindowShopping",
         "exercise_indoor": "contextIndoorExercise",
         "relaxing": "contextRelaxing",
+        "contextShortTrip": "contextGoingOut",
+        "ContextCommuting": "contextGoingOut",
+        "contextCommuting": "contextGoingOut",
         "unknown": "unknown"
     },
     "motion_old": {

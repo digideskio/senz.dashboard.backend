@@ -30,7 +30,6 @@ def add_app():
     if request.method == 'POST':
         app_name = request.form['app_name']
         app_type = request.form['app_type']
-        print app_type
         user = Developer()
         user.session_token = session.get('session_token')
         app = user.create_new_app(app_name, app_type)

@@ -319,6 +319,7 @@ def motion():
             'event': event
         }
     }
+    print event
     if request.method == 'POST':
         return json.dumps(context)
     return render_template('dashboard/scene.html', option=json.dumps(context),
