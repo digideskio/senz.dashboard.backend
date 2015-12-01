@@ -301,7 +301,6 @@ var profile = JSON.parse({{ option|tojson|safe }});
       ]
   };
 
-
   require(['echarts', 'echarts/chart/bar', 'echarts/chart/line', 'echarts/chart/map', 'echarts/chart/pie'],
   function(ec) {
       // 性别信息图render
@@ -331,6 +330,13 @@ var profile = JSON.parse({{ option|tojson|safe }});
       }
       var professionMap = ec.init(document.getElementById('professionMap'));
       professionMap.setOption(professionMapOption);
+
+     $(window).resize(function () {
+        genderChart.resize();
+        ageMap.resize();
+        jobMap.resize();
+        professionMap.resize();
+     });
   });
 
 }).call(this);

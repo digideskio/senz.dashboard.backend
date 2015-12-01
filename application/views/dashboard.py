@@ -107,7 +107,7 @@ def profile():
                            username=username, app_id=app_id, app_list=app_list)
 
 
-@dashboard_bp.route('/dashboard/interest')
+@dashboard_bp.route('/dashboard/interest', methods=['GET', 'POST'])
 def interest():
     context_dict = get_app_list()
     app_id = context_dict['app_id']
@@ -116,17 +116,53 @@ def interest():
     if not app_id or app_id == '5621fb0f60b27457e863fabb':  # Demo App
         fake_data = json.load(file(join(dirname(dirname(__file__)), 'fake_data.json')))
         interest_obj = fake_data.get('interest')
-        interest_tmp = sorted(interest_obj.items(), key=lambda y: -y[1])
+        interest_tmp = interest_obj.items()
     else:
         result_dict = get_query_list(app_id, 'interest')
         interest_list = filter(lambda x: x is not None, result_dict['interest'])
         interest_tmp = [x for y in interest_list for x in y]
-        interest_tmp = sorted(map(lambda x: (x, interest_tmp.count(x)), list(set(interest_tmp))), key=lambda y: -y[1])
+        interest_tmp = map(lambda x: (x, interest_tmp.count(x)), list(set(interest_tmp)))
+    # map(lambda x: x, interest_tmp)
+    sport_type = ["jogging", "fitness", "basketball", "football",
+                  "badminton", "bicycling", "table_tennis"]
+    shopping_type = ['online_shopping', 'offline_shopping']
+    news_type = ["tech_news", "entertainment_news", "current_news",
+                 "business_news", "sports_news", "game_news"]
+    show_type = ["sports_show", "game_show", "variety_show", "tvseries_show"]
+    interest_dict = {}
+    for interest in interest_tmp:
+        if interest[0] in sport_type:
+            if not interest_dict.get('sport'):
+                interest_dict['sport'] = {}
+            interest_dict['sport'][interest[0]] = interest[1]
+        elif interest[0] in shopping_type:
+            if not interest_dict.get('shopping'):
+                interest_dict['shopping'] = {}
+            interest_dict['shopping'][interest[0]] = interest[1]
+        elif interest[0] in news_type:
+            if not interest_dict.get('news'):
+                interest_dict['news'] = {}
+            interest_dict['news'][interest[0]] = interest[1]
+        elif interest[0] in show_type:
+            if not interest_dict.get('show'):
+                interest_dict['show'] = {}
+            interest_dict['show'][interest[0]] = interest[1]
+        else:
+            interest_dict[interest[0]] = interest[1]
     color_list = ['#c9c5ea', '#97f3da', '#7fd6e0', '#f7cdcf', '#7fbfff',
                   '#aef3ee', '#7fe7e0', '#84d4ed', '#a1c4e4', '#fbda95']
+
     data = map(lambda x: {'color': color_list[randrange(0, len(color_list), 1)],
                           'name': translate(x[0], 'interest'),
-                          'value': x[1], 'node': []}, interest_tmp)
+                          'value': x[1], 'node': []},
+               filter(lambda y: not isinstance(y[1], dict), interest_dict.items()))
+    data += map(lambda x: {'color': color_list[randrange(0, len(color_list), 1)],
+                           'name': translate(x[0], 'interest'),
+                           'value': sum(x[1].values()),
+                           'node': map(lambda z: {'name': translate(z[0], 'interest'),
+                                                  "value": z[1]}, x[1].items())},
+                filter(lambda y: isinstance(y[1], dict), interest_dict.items()))
+
     interest_data = {
         'errcode': 0,
         'errmsg': 'ok',
@@ -255,6 +291,7 @@ def motion():
     h_end = request.form.get('h_end') or request.args.get('h_end') or int(time.time())
     e_start = request.form.get('e_start') or request.args.get('e_start') or int(time.time()) - 30*24*60*60
     e_end = request.form.get('e_end') or request.args.get('e_end') or int(time.time())
+    workday = request.form.get('workday') or request.args.get('workday') or "workday"
 
     context_dict = get_app_list()
     app_id = context_dict['app_id']

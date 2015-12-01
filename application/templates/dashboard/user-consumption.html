@@ -230,6 +230,12 @@ var profile = JSON.parse({{ option|tojson|safe }});
         }
         var petMap = ec.init(document.getElementById('petMap'));
         petMap.setOption(petMapOption);
+
+        $(window).resize(function () {
+            consumerAbilityMap.resize();
+            carMap.resize();
+            petMap.resize();
+        });
     });
 }).call(this);
 </script>

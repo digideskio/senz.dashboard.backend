@@ -8,6 +8,7 @@
         "unknown": "未知"
         },
     "interest":  {
+        "sport": "运动",
         "jogging": "慢跑",
         "fitness": "健身",
         "basketball": "篮球",
@@ -16,8 +17,10 @@
         "bicycling": " 骑车",
         "table_tennis": "乒乓球",
         "social": "社交",
+        "shopping":"购物",
         "online_shopping": "线上购物",
         "offline_shopping": "线下购物",
+        "news": "新闻",
         "tech_news": "科技新闻",
         "entertainment_news": "娱乐新闻",
         "current_news": "时事新闻",
@@ -27,11 +30,13 @@
         "study": "学习",
         "gamer": "游戏玩家",
         "health": "关注健康",
+        "show": "影视",
         "sports_show": "体育节目",
         "game_show": "游戏节目",
         "variety_show": "综艺节目",
         "tvseries_show": "电视剧",
         "ACG": "动漫",
+        "acg": "动漫",
         "indoorsman": "宅"
     },
     "context":  {

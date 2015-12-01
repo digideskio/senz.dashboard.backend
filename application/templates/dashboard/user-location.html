@@ -181,6 +181,9 @@
         }
         var locationMap = ec.init(document.getElementById('locationMap'));
         locationMap.setOption(locationMapOption);
+        $(window).resize(function () {
+            locationMap.resize();
+        });
 
 {#        var locationMap2 = ec.init(document.getElementById('Map2'));#}
 {#        locationMap2.setOption(locationMapOption2);#}

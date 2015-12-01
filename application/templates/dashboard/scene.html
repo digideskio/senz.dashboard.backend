@@ -12,7 +12,13 @@
             <span class="j-h-endat"></span>
             <span class="arrow">▾</span>
           </div>
-        </div>  
+          <div style="float: right">
+            <select>
+                <option>工作日</option>
+                <option>周末</option>
+            </select>
+          </div>
+        </div>
         <div class="more-wrap" >
           <div class="filter-by-day" style="">
             <a class="today" href="javascript:;">今日</a>
@@ -66,7 +72,7 @@
 var profile = JSON.parse({{ option|tojson|safe }});
 
 var render_home_office = function(profile){
-   var sceneMapOption = option = {
+    var sceneMapOption = option = {
         title : {
             text: '家-工作地点状态',
             subtext: ''
@@ -134,19 +140,21 @@ var render_home_office = function(profile){
 
     require(['echarts', 'echarts/chart/bar', 'echarts/chart/line', 'echarts/chart/map'],
         function(ec) {
-
             if(!document.getElementById('sceneMap')){
                 return;
             }
             var sceneMap = ec.init(document.getElementById('sceneMap'));
             sceneMap.setOption(sceneMapOption);
+            $(window).resize(function () {
+                sceneMap.resize();
+            });
         });
 
         require.config({
           paths: {
               echarts: './public/lib/echarts-2.2.7/build/dist'
           }
-      });
+        });
 };
 
 var render_context = function(profile){
@@ -204,15 +212,17 @@ var render_context = function(profile){
           }]
       };
 
-      require(['echarts', 'echarts/chart/bar', 'echarts/chart/line', 'echarts/chart/map'],
-      function(ec) {
-          //--- 折柱 ---
-          if(!document.getElementById('eventMap')){
-              return;
-          }
-          var eventMap = ec.init(document.getElementById('eventMap'));
-          eventMap.setOption(eventMapOption);
-      })
+    require(['echarts', 'echarts/chart/bar', 'echarts/chart/line', 'echarts/chart/map'],
+    function(ec) {
+        if(!document.getElementById('eventMap')){
+          return;
+        }
+        var eventMap = ec.init(document.getElementById('eventMap'));
+        eventMap.setOption(eventMapOption);
+        $(window).resize(function () {
+            eventMap.resize();
+        });
+    })
 };
 render_home_office(profile);
 render_context(profile);
@@ -221,7 +231,7 @@ $(document).ready(function(){
     $(".j-h-startat").text( new Date((new Date() - 86400000*30)).toISOString().slice(0,10) );
     $(".j-h-endat").text( (new Date()).toISOString().slice(0,10) );
 
-    $(".date-filter-wrap").on("click", ".j-h-date-wrap", function(e){
+    $(".date-filter-wrap").on("click", ".inner-wrap", function(e){
         $(this)
           .closest(".j-h-date-wrap")
           .next()
@@ -284,13 +294,15 @@ $(".more-wrap a").on("click", function(){
             break;
     }
     var url = "{{ url_for('dashboard_bp.motion') }}";
+    var workday = $('.h-date-wrap select').val() == "工作日" ? "workday": "weekend";
     var data = {
         name: $(this).parent().parent().attr('id') == "date-filter-wrap"
                 ? "home_office_status": "context",
         h_start: h_start,
         h_end: h_end,
         e_start: e_start,
-        e_end: e_end
+        e_end: e_end,
+        workday: workday
     };
 
     $.ajax({

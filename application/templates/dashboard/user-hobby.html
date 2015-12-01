@@ -1,197 +1,188 @@
 {% extends 'base.html' %}
 {% block content %}
-    <div id="container" class="container">
-        <div id="content" class="content" style="margin-top: 40px;">
-            <div class="relative" style="padding: 5px;">
-                <div id="main" style="height:600px"></div>
-            </div>
+<div id="container" class="container">
+    <div id="content" class="content" style="margin-top: 40px;">
+        <div class="relative" style="padding: 5px;">
+            <div id="main" style="height:600px"></div>
         </div>
     </div>
+</div>
 
-    <script type="text/javascript">
-        // TODO 假数据
-        var profile = JSON.parse({{ option|tojson|safe }});
-        var datas = profile.data;
-        // 初始化
-        var myChart;
-        var legend_data = [];
-        var node_colors = [];
-        var series_categories = [];
-        var nodes = [];
-        var links = [];
-        for (var i = 0; i < datas.length; i++) {
-            // legend_data
-            legend_data.push(datas[i].name);
-            // node_colors
-            node_colors.push(datas[i].color);
-            // category
-            var category = {};
-            var itemStyle = {};
-            var normal = {};
-            normal.color = node_colors[i]; // 填充颜色
-            itemStyle.normal = normal;
-            category.name = legend_data[i]; // 名称
-            category.itemStyle = itemStyle; // 样式
-            series_categories[i] = category;
-            // node parent
-            var parent = {};
-            parent.category = i; // 分类
-            parent.name = 'No.' + i; // 名称
-            parent.value = datas[i].value; // 值
-            parent.label = legend_data[i]; // 显示名称
-            nodes.push(parent);
-            // node children and link
-            for (var j = 0; j < datas[i].node.length; j++) {
-                // node
-                var children = {};
-                children.category = i; // 分类
-                children.name = 'No.' + i + '-' + j; // 名称
-                children.value = datas[i].node[j].value; // 值
-                children.label = datas[i].node[j].name; // 显示名称
-                nodes.push(children);
-                // link
-                var link = {};
-                link.source = 'No.' + i + '-' + j; // 来源
-                link.target = 'No.' + i; // 指向
-                link.weight = 10 + Math.floor(Math.random() * 5); // 随机权重
-                link.value = datas[i].node[j].value; // 值
-                links.push(link);
-            }
-        };
-        // 自适应
-        $(window).resize(function() {
-            myChart.resize();
-        });
-    </script>
-    <script type="text/javascript">
-        // 路径配置
-        require.config({
-            paths: {
-                echarts: '../../static/lib/echarts-2.2.7/build/dist'
-            }
-        });
-        // 使用
-        require(
-            [
-                'echarts',
-                'echarts/chart/force',
-                'echarts/chart/chord'
-            ],
-            function(ec) {
-                // 基于准备好的dom，初始化echarts图表
-                myChart = ec.init(document.getElementById('main'));
-                option = {
-                    title: {
-                        text: '兴趣爱好统计',
-                        x: 'right',
-                        y: 'bottom'
-                    },
-                    tooltip: {
-                        show: true,
-                        trigger: 'item',
-                        formatter: '{c}',
-                        showDelay: 50,
-                        hideDelay: 50,
-                        backgroundColor: 'rgba(127,127,127,0.65)',
-                        borderRadius: 6,
-                        textStyle: {
-                            color: '#ffffff'
+<script type="text/javascript">
+    var profile = JSON.parse({{ option|tojson|safe }});
+    var datas = profile.data;
+    // 初始化
+    var myChart;
+    var legend_data = [];
+    var node_colors = [];
+    var series_categories = [];
+    var nodes = [];
+    var links = [];
+    for (var i = 0; i < datas.length; i++) {
+        // legend_data
+        legend_data.push(datas[i].name);
+        // node_colors
+        node_colors.push(datas[i].color);
+        // category
+        var category = {};
+        var itemStyle = {};
+        var normal = {};
+        normal.color = node_colors[i]; // 填充颜色
+        itemStyle.normal = normal;
+        category.name = legend_data[i]; // 名称
+        category.itemStyle = itemStyle; // 样式
+        series_categories[i] = category;
+        // node parent
+        var parent = {};
+        parent.category = i; // 分类
+        parent.name = 'No.' + i; // 名称
+        parent.value = datas[i].value; // 值
+        parent.label = legend_data[i]; // 显示名称
+        nodes.push(parent);
+        // node children and link
+        for (var j = 0; j < datas[i].node.length; j++) {
+            // node
+            var children = {};
+            children.category = i; // 分类
+            children.name = 'No.' + i + '-' + j; // 名称
+            children.value = datas[i].node[j].value; // 值
+            children.label = datas[i].node[j].name; // 显示名称
+            nodes.push(children);
+            // link
+            var link = {};
+            link.source = 'No.' + i + '-' + j; // 来源
+            link.target = 'No.' + i; // 指向
+            link.weight = 10 + Math.floor(Math.random() * 5); // 随机权重
+            link.value = datas[i].node[j].value; // 值
+            links.push(link);
+        }
+    }
+    // 自适应
+    $(window).resize(function () {
+        myChart.resize();
+    });
+    require(
+        [
+            'echarts',
+            'echarts/chart/force',
+            'echarts/chart/chord'
+        ],
+        function (ec) {
+            // 基于准备好的dom，初始化echarts图表
+            myChart = ec.init(document.getElementById('main'));
+            option = {
+                title: {
+                    text: '兴趣爱好统计',
+                    x: 'right',
+                    y: 'bottom'
+                },
+                tooltip: {
+                    show: true,
+                    trigger: 'item',
+                    formatter: '{c}',
+                    showDelay: 50,
+                    hideDelay: 50,
+                    backgroundColor: 'rgba(127,127,127,0.65)',
+                    borderRadius: 6,
+                    textStyle: {
+                        color: '#ffffff'
+                    }
+                },
+                toolbox: {
+                    show: false,
+                    feature: {
+                        restore: {
+                            show: true
+                        },
+                        magicType: {
+                            show: false,
+                            type: ['force', 'chord']
+                        },
+                        saveAsImage: {
+                            show: true
                         }
-                    },
-                    toolbox: {
-                        show: false,
-                        feature: {
-                            restore: {
-                                show: true
-                            },
-                            magicType: {
-                                show: false,
-                                type: ['force', 'chord']
-                            },
-                            saveAsImage: {
-                                show: true
-                            }
-                        }
-                    },
-                    legend: {
-                        x: 'left',
-                        data: legend_data
-                    },
-                    series: [{
-                        type: 'force',
-                        name: "兴趣爱好统计",
-                        ribbonType: false,
-                        categories: series_categories,
-                        itemStyle: {
-                            normal: {
-                                label: {
-                                    show: true,
-                                    textStyle: {
-                                        color: '#686868'
-                                    }
-                                },
-                                nodeStyle: {
-                                    borderColor: 'rgba(0,0,0,0)',
-                                    borderWidth: 1
-                                },
-                                linkStyle: {
-                                    type: 'line'
+                    }
+                },
+                legend: {
+                    x: 'left',
+                    data: legend_data
+                },
+                series: [{
+                    type: 'force',
+                    name: "兴趣爱好统计",
+                    ribbonType: false,
+                    categories: series_categories,
+                    itemStyle: {
+                        normal: {
+                            label: {
+                                show: true,
+                                textStyle: {
+                                    color: '#686868'
                                 }
                             },
-                            emphasis: {
-                                label: {
-                                    show: true,
-                                    textStyle: {
-                                        color: '#686868'
-                                    }
-                                },
-                                nodeStyle: {
-                                    borderColor: 'rgba(0,0,0,0)',
-                                    borderWidth: 1
-                                },
-                                linkStyle: {
-                                    type: 'line'
-                                }
+                            nodeStyle: {
+                                borderColor: 'rgba(0,0,0,0)',
+                                borderWidth: 1
+                            },
+                            linkStyle: {
+                                type: 'line'
                             }
                         },
-                        useWorker: false,
-                        minRadius: 20,
-                        maxRadius: 30,
-                        gravity: 1,
-                        scaling: 1,
-                        draggable: false,
-                        roam: false,
-                        nodes: nodes,
-                        links: links
-                    }]
-                };
-                var ecConfig = require('echarts/config');
+                        emphasis: {
+                            label: {
+                                show: true,
+                                textStyle: {
+                                    color: '#686868'
+                                }
+                            },
+                            nodeStyle: {
+                                borderColor: 'rgba(0,0,0,0)',
+                                borderWidth: 1
+                            },
+                            linkStyle: {
+                                type: 'line'
+                            }
+                        }
+                    },
+                    useWorker: false,
+                    minRadius: 20,
+                    maxRadius: 40,
+                    gravity: 2,
+                    scaling: 1.5,
+                    draggable: true,
+                    roam: false,
+                    nodes: nodes,
+                    links: links
+                }]
+            };
+            var ecConfig = require('echarts/config');
 
-                function focus(param) {
-                    var data = param.data;
-                    var links = option.series[0].links;
-                    var nodes = option.series[0].nodes;
-                    if (
+            function focus(param) {
+                var data = param.data;
+                {#                    var links = option.series[0].links;#}
+                var nodes = option.series[0].nodes;
+                if (
                         data.source !== undefined && data.target !== undefined
-                    ) { //点击的是边
-                        var sourceNode = nodes.filter(function(n) {
-                            return n.name == data.source
-                        })[0];
-                        var targetNode = nodes.filter(function(n) {
-                            return n.name == data.target
-                        })[0];
-                        console.log("选中了边 " + sourceNode.name + ' -> ' + targetNode.name + ' (' + data.weight + ')');
-                    } else { // 点击的是点
-                        console.log("选中了" + data.name + '(' + data.value + ')');
-                    }
+                ) { //点击的是边
+                    var sourceNode = nodes.filter(function (n) {
+                        return n.name == data.source
+                    })[0];
+                    var targetNode = nodes.filter(function (n) {
+                        return n.name == data.target
+                    })[0];
+                    console.log("选中了边 " + sourceNode.name + ' -> ' + targetNode.name + ' (' + data.weight + ')');
+                } else { // 点击的是点
+                    console.log("选中了" + data.name + '(' + data.value + ')');
                 }
-                myChart.on(ecConfig.EVENT.CLICK, focus);
-                myChart.on(ecConfig.EVENT.FORCE_LAYOUT_END, function() {
-                    console.log(myChart.chart.force.getPosition());
-                });
-                // 为echarts对象加载数据
-                myChart.setOption(option);
             }
-        );
-    </script>
+
+            myChart.on(ecConfig.EVENT.CLICK, focus);
+            myChart.on(ecConfig.EVENT.FORCE_LAYOUT_END, function () {
+                console.log(myChart.chart.force.getPosition());
+            });
+            // 为echarts对象加载数据
+            myChart.setOption(option);
+        }
+    );
+</script>
 {% endblock %}
