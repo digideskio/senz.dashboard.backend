@@ -149,15 +149,15 @@ def interest():
             interest_dict['show'][interest[0]] = interest[1]
         else:
             interest_dict[interest[0]] = interest[1]
-    color_list = ['#c9c5ea', '#97f3da', '#7fd6e0', '#f7cdcf', '#7fbfff',
-                  '#aef3ee', '#7fe7e0', '#84d4ed', '#a1c4e4', '#fbda95']
 
-    data = map(lambda x: {'color': color_list[randrange(0, len(color_list), 1)],
-                          'name': translate(x[0], 'interest'),
+    color_dict = {'sport': "#7fd6e0", 'shopping': "#c9c5ea", "health": "#97f3da",
+                  "social": "#f7cdcf", "news": "7fbfff", "show": "7fe7e0",
+                  "gamer": "aef3ee", "indoorsman": "fbda95", "study": "84d4ed", "acg": "a1c4e4"}
+
+    data = map(lambda x: {'color': color_dict.get(x[0]), 'name': translate(x[0], 'interest'),
                           'value': x[1], 'node': []},
                filter(lambda y: not isinstance(y[1], dict), interest_dict.items()))
-    data += map(lambda x: {'color': color_list[randrange(0, len(color_list), 1)],
-                           'name': translate(x[0], 'interest'),
+    data += map(lambda x: {'color': color_dict.get(x[0]), 'name': translate(x[0], 'interest'),
                            'value': sum(x[1].values()),
                            'node': map(lambda z: {'name': translate(z[0], 'interest'),
                                                   "value": z[1]}, x[1].items())},
