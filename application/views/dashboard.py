@@ -3,6 +3,7 @@ from flask import Blueprint, render_template, json, session, request, make_respo
 from leancloud import Object, Query, LeanCloudError
 from ..models import Developer
 from os.path import dirname, join
+from random import randrange
 import time
 
 dashboard_bp = Blueprint('dashboard_bp', __name__, template_folder='templates')
@@ -121,15 +122,18 @@ def interest():
         interest_list = filter(lambda x: x is not None, result_dict['interest'])
         interest_tmp = [x for y in interest_list for x in y]
         interest_tmp = sorted(map(lambda x: (x, interest_tmp.count(x)), list(set(interest_tmp))), key=lambda y: -y[1])
-    data = map(lambda x: {'rank': x, 'name': translate(interest_tmp[x][0], 'interest'), 'value': interest_tmp[x][1]},
-               xrange(0, len(list(set(interest_tmp))[:8])))
-    if len(list(set(interest_tmp))) > 8:
-        data.append({'rank': len(list(set(interest_tmp))[:8]), 'name': '...'})
+    color_list = ['#c9c5ea', '#97f3da', '#7fd6e0', '#f7cdcf', '#7fbfff',
+                  '#aef3ee', '#7fe7e0', '#84d4ed', '#a1c4e4', '#fbda95']
+    data = map(lambda x: {'color': color_list[randrange(0, len(color_list), 1)],
+                          'name': translate(x[0], 'interest'),
+                          'value': x[1], 'node': []}, interest_tmp)
     interest_data = {
         'errcode': 0,
         'errmsg': 'ok',
         'data': data
     }
+    if request.method == 'POST':
+        return json.dumps(interest_data)
     return render_template('dashboard/user-hobby.html', option=json.dumps(interest_data),
                            username=username, app_id=app_id, app_list=app_list)
 
@@ -319,7 +323,6 @@ def motion():
             'event': event
         }
     }
-    print event
     if request.method == 'POST':
         return json.dumps(context)
     return render_template('dashboard/scene.html', option=json.dumps(context),

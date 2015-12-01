@@ -1,181 +1,197 @@
 {% extends 'base.html' %}
 {% block content %}
-  <div id="container" class="container"> 
-   <div id="content" class="content" style="margin-top: 40px;"> 
-    <div class="relative" style="padding: 5px;">
-      <div id="hobbyMap" style="height:700px;border:1px solid #ccc; position: relative;">
-          <h2 class="hobby-title">兴趣爱好</h2>
-          <div class="center-avatar">
-              <img src="/static/images/head.png" alt="">
-          </div>
-      </div>
+    <div id="container" class="container">
+        <div id="content" class="content" style="margin-top: 40px;">
+            <div class="relative" style="padding: 5px;">
+                <div id="main" style="height:600px"></div>
+            </div>
+        </div>
     </div>
-   </div> 
-  </div>
-<style>
-#hobbyMap .center-avatar {
-    width: 230px;
-    height: 230px;
-    border-radius: 50%;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    margin-top: -115px;
-    margin-left: -115px;
-}
-#hobbyMap {
-    font-size: 16px;
-    color: #fff;
-}
-#hobbyMap .hobby-title {
-    color: #444;
-    font-size: 16px;
-}
-#hobbyMap .center-avatar img {
-    width: 100%;
-}
-#rank1 {
-    position: absolute;
-    width: 160px;
-    height: 160px;
-    line-height: 160px;
-    text-align: center;
-    border-radius: 50%;
-    top: 50%;
-    left: 50%;
-    margin-top: -295px;
-    margin-left: -155px;
-    background: rgba(121,204,296,1);
-}
-#rank2 {
-    position: absolute;
-    width: 135px;
-    height: 135px;
-    line-height: 130px;
-    text-align: center;
-    border-radius: 50%;
-    top: 50%;
-    left: 50%;
-    margin-top: -115px;
-    margin-left: -280px;
-    background: rgba(121,204,296,1);
-}
-#rank3 {
-    position: absolute;
-    width: 135px;
-    height: 135px;
-    line-height: 135px;
-    text-align: center;
-    border-radius: 50%;
-    top: 50%;
-    left: 50%;
-    margin-top: 40px;
-    margin-left: -257px;
-    background: rgba(121,204,296,1);
-}
-#rank4 {
-    position: absolute;
-    width: 130px;
-    height: 130px;
-    line-height: 130px;
-    text-align: center;
-    border-radius: 50%;
-    top: 50%;
-    left: 50%;
-    margin-top: 142px;
-    margin-left: -132px;
-    background: rgba(121,204,296,1);
-}
-#rank5 {
-    position: absolute;
-    width: 105px;
-    height: 105px;
-    line-height: 105px;
-    text-align: center;
-    border-radius: 50%;
-    top: 50%;
-    left: 50%;
-    margin-top: 138px;
-    margin-left: 20px;
-    background: rgba(121,204,296,1);
-}
-#rank6 {
-    position: absolute;
-    width: 95px;
-    height: 95px;
-    line-height: 95px;
-    text-align: center;
-    border-radius: 50%;
-    top: 50%;
-    left: 50%;
-    margin-top: 57px;
-    margin-left: 116px;
-    background: rgba(121,204,296,1);
-}
-#rank7 {
-    position: absolute;
-    width: 80px;
-    height: 80px;
-    line-height: 80px;
-    text-align: center;
-    border-radius: 50%;
-    top: 50%;
-    left: 50%;
-    margin-top: -50px;
-    margin-left: 149px;
-    background: rgba(121,204,296,1);
-}
-#rank8 {
-    position: absolute;
-    width: 70px;
-    height: 70px;
-    line-height: 70px;
-    text-align: center;
-    border-radius: 50%;
-    top: 50%;
-    left: 50%;
-    margin-top: -150px;
-    margin-left: 130px;
-    background: rgba(121,204,296,1);
-}
-#rank9 {
-    position: absolute;
-    width: 55px;
-    height: 55px;
-    line-height: 55px;
-    text-align: center;
-    border-radius: 50%;
-    top: 50%;
-    left: 50%;
-    margin-top: -220px;
-    margin-left: 80px;
-    background: rgba(121,204,296,1);
-}
-</style>
-<script>
-var hobbyData = JSON.parse({{ option | tojson | safe }});
-(function() {
-function renderHobbyCharts(data) {
-    var tpl = [];
-    for(var i = 0, len = data.length; i < len; i++) {
-        tpl.push('<div class="rank" id="rank' + (i+1) + '">' + data[i].name + '</div>');
-    }
-    return tpl.join('');
-}
-$("#hobbyMap").append(renderHobbyCharts(hobbyData.data));
-}).call(this);
 
-$(function(){
-    $(document).tooltip({
-      track: true
-    });
-});
+    <script type="text/javascript">
+        // TODO 假数据
+        var profile = JSON.parse({{ option|tojson|safe }});
+        var datas = profile.data;
+        // 初始化
+        var myChart;
+        var legend_data = [];
+        var node_colors = [];
+        var series_categories = [];
+        var nodes = [];
+        var links = [];
+        for (var i = 0; i < datas.length; i++) {
+            // legend_data
+            legend_data.push(datas[i].name);
+            // node_colors
+            node_colors.push(datas[i].color);
+            // category
+            var category = {};
+            var itemStyle = {};
+            var normal = {};
+            normal.color = node_colors[i]; // 填充颜色
+            itemStyle.normal = normal;
+            category.name = legend_data[i]; // 名称
+            category.itemStyle = itemStyle; // 样式
+            series_categories[i] = category;
+            // node parent
+            var parent = {};
+            parent.category = i; // 分类
+            parent.name = 'No.' + i; // 名称
+            parent.value = datas[i].value; // 值
+            parent.label = legend_data[i]; // 显示名称
+            nodes.push(parent);
+            // node children and link
+            for (var j = 0; j < datas[i].node.length; j++) {
+                // node
+                var children = {};
+                children.category = i; // 分类
+                children.name = 'No.' + i + '-' + j; // 名称
+                children.value = datas[i].node[j].value; // 值
+                children.label = datas[i].node[j].name; // 显示名称
+                nodes.push(children);
+                // link
+                var link = {};
+                link.source = 'No.' + i + '-' + j; // 来源
+                link.target = 'No.' + i; // 指向
+                link.weight = 10 + Math.floor(Math.random() * 5); // 随机权重
+                link.value = datas[i].node[j].value; // 值
+                links.push(link);
+            }
+        };
+        // 自适应
+        $(window).resize(function() {
+            myChart.resize();
+        });
+    </script>
+    <script type="text/javascript">
+        // 路径配置
+        require.config({
+            paths: {
+                echarts: '../../static/lib/echarts-2.2.7/build/dist'
+            }
+        });
+        // 使用
+        require(
+            [
+                'echarts',
+                'echarts/chart/force',
+                'echarts/chart/chord'
+            ],
+            function(ec) {
+                // 基于准备好的dom，初始化echarts图表
+                myChart = ec.init(document.getElementById('main'));
+                option = {
+                    title: {
+                        text: '兴趣爱好统计',
+                        x: 'right',
+                        y: 'bottom'
+                    },
+                    tooltip: {
+                        show: true,
+                        trigger: 'item',
+                        formatter: '{c}',
+                        showDelay: 50,
+                        hideDelay: 50,
+                        backgroundColor: 'rgba(127,127,127,0.65)',
+                        borderRadius: 6,
+                        textStyle: {
+                            color: '#ffffff'
+                        }
+                    },
+                    toolbox: {
+                        show: false,
+                        feature: {
+                            restore: {
+                                show: true
+                            },
+                            magicType: {
+                                show: false,
+                                type: ['force', 'chord']
+                            },
+                            saveAsImage: {
+                                show: true
+                            }
+                        }
+                    },
+                    legend: {
+                        x: 'left',
+                        data: legend_data
+                    },
+                    series: [{
+                        type: 'force',
+                        name: "兴趣爱好统计",
+                        ribbonType: false,
+                        categories: series_categories,
+                        itemStyle: {
+                            normal: {
+                                label: {
+                                    show: true,
+                                    textStyle: {
+                                        color: '#686868'
+                                    }
+                                },
+                                nodeStyle: {
+                                    borderColor: 'rgba(0,0,0,0)',
+                                    borderWidth: 1
+                                },
+                                linkStyle: {
+                                    type: 'line'
+                                }
+                            },
+                            emphasis: {
+                                label: {
+                                    show: true,
+                                    textStyle: {
+                                        color: '#686868'
+                                    }
+                                },
+                                nodeStyle: {
+                                    borderColor: 'rgba(0,0,0,0)',
+                                    borderWidth: 1
+                                },
+                                linkStyle: {
+                                    type: 'line'
+                                }
+                            }
+                        },
+                        useWorker: false,
+                        minRadius: 20,
+                        maxRadius: 30,
+                        gravity: 1,
+                        scaling: 1,
+                        draggable: false,
+                        roam: false,
+                        nodes: nodes,
+                        links: links
+                    }]
+                };
+                var ecConfig = require('echarts/config');
 
-$(".rank").each(function(i){
-    $(this).mouseover(function(){
-        $(this).attr("title", hobbyData.data[i].value);
-    });
-});
-
-</script>
+                function focus(param) {
+                    var data = param.data;
+                    var links = option.series[0].links;
+                    var nodes = option.series[0].nodes;
+                    if (
+                        data.source !== undefined && data.target !== undefined
+                    ) { //点击的是边
+                        var sourceNode = nodes.filter(function(n) {
+                            return n.name == data.source
+                        })[0];
+                        var targetNode = nodes.filter(function(n) {
+                            return n.name == data.target
+                        })[0];
+                        console.log("选中了边 " + sourceNode.name + ' -> ' + targetNode.name + ' (' + data.weight + ')');
+                    } else { // 点击的是点
+                        console.log("选中了" + data.name + '(' + data.value + ')');
+                    }
+                }
+                myChart.on(ecConfig.EVENT.CLICK, focus);
+                myChart.on(ecConfig.EVENT.FORCE_LAYOUT_END, function() {
+                    console.log(myChart.chart.force.getPosition());
+                });
+                // 为echarts对象加载数据
+                myChart.setOption(option);
+            }
+        );
+    </script>
 {% endblock %}

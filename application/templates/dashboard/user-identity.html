@@ -44,7 +44,7 @@ var profile = JSON.parse({{ option|tojson|safe }});
           data: profile.data.gender.category
       },
       toolbox: {
-          show : true,
+          show : false,
           feature : {
               mark : {show: false},
               dataView : {show: false, readOnly: false},
@@ -116,7 +116,7 @@ var profile = JSON.parse({{ option|tojson|safe }});
           data: profile.data.age.category
       },
       toolbox: {
-          show : true,
+          show : false,
           feature : {
               mark : {show: true},
               dataView : {show: true, readOnly: false},
@@ -184,7 +184,7 @@ var profile = JSON.parse({{ option|tojson|safe }});
           trigger: 'item'
       },
       toolbox: {
-          show: true,
+          show: false,
           feature: {
               dataView: {show: true, readOnly: false},
               restore: {show: true},
@@ -248,7 +248,7 @@ var profile = JSON.parse({{ option|tojson|safe }});
           trigger: 'item'
       },
       toolbox: {
-          show: true,
+          show: false,
           feature: {
               dataView: {show: true, readOnly: false},
               restore: {show: true},

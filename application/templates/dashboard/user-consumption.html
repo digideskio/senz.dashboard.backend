@@ -30,7 +30,7 @@ var profile = JSON.parse({{ option|tojson|safe }});
             data:['2011年']
         },
         toolbox: {
-            show : true,
+            show : false,
             feature : {
                 mark : {show: true},
                 dataView : {show: true, readOnly: false},
@@ -79,7 +79,7 @@ var profile = JSON.parse({{ option|tojson|safe }});
             data: profile.data.car.category
         },
         toolbox: {
-            show : true,
+            show : false,
             feature : {
                 mark : {show: false},
                 dataView : {show: false, readOnly: false},
@@ -152,7 +152,7 @@ var profile = JSON.parse({{ option|tojson|safe }});
             data: profile.data.pet.category
         },
         toolbox: {
-            show : true,
+            show : false,
             feature : {
                 mark : {show: false},
                 dataView : {show: false, readOnly: false},
