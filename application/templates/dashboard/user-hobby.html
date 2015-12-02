@@ -24,36 +24,69 @@
         // node_colors
         node_colors.push(datas[i].color);
         // category
-        var category = {};
-        var itemStyle = {};
-        var normal = {};
-        normal.color = node_colors[i]; // 填充颜色
-        itemStyle.normal = normal;
-        category.name = legend_data[i]; // 名称
-        category.itemStyle = itemStyle; // 样式
-        series_categories[i] = category;
+				series_categories[i] = {
+					name: legend_data[i], // 名称
+					itemStyle: {
+						normal: {
+							color: node_colors[i], // 填充颜色
+						},
+						emphasis: {
+							color: node_colors[i], // 填充颜色
+						},
+					},
+				};
         // node parent
-        var parent = {};
-        parent.category = i; // 分类
-        parent.name = 'No.' + i; // 名称
-        parent.value = datas[i].value; // 值
-        parent.label = legend_data[i]; // 显示名称
+				var parent = {
+					category: i, // 分类
+					name: 'No.' + i, // 名称
+					value: datas[i].value, // 值
+					label: legend_data[i], // 显示名称
+					itemStyle: {
+						normal: {
+							color: node_colors[i],
+						},
+						emphasis: {
+							color: node_colors[i],
+						},
+					},
+				};
         nodes.push(parent);
         // node children and link
         for (var j = 0; j < datas[i].node.length; j++) {
             // node
-            var children = {};
-            children.category = i; // 分类
-            children.name = 'No.' + i + '-' + j; // 名称
-            children.value = datas[i].node[j].value; // 值
-            children.label = datas[i].node[j].name; // 显示名称
+					var children = {
+						category: i, // 分类
+						name: 'No.' + i + '-' + j, // 名称
+						value: datas[i].node[j].value, // 值
+						label: datas[i].node[j].name, // 显示名称
+						itemStyle: {
+							normal: {
+								color: node_colors[i],
+							},
+							emphasis: {
+								color: node_colors[i],
+							},
+						},
+					};
             nodes.push(children);
             // link
-            var link = {};
-            link.source = 'No.' + i + '-' + j; // 来源
-            link.target = 'No.' + i; // 指向
-            link.weight = 10 + Math.floor(Math.random() * 5); // 随机权重
-            link.value = datas[i].node[j].value; // 值
+					var link = {
+						source: 'No.' + i + '-' + j, // 来源
+						target: 'No.' + i, // 指向
+						//						weight: 10 + Math.floor(Math.random() * 5), // 随机权重
+						weight: (1 / datas[i].node[j].value), // 权重
+						value: datas[i].node[j].value, // 值
+						itemStyle: {
+							normal: {
+								color: node_colors[i],
+								width: 2,
+							},
+							emphasis: {
+								color: node_colors[i],
+								width: 2,
+							},
+						},
+					};
             links.push(link);
         }
     }
@@ -73,8 +106,8 @@
             option = {
                 title: {
                     text: '兴趣爱好统计',
-                    x: 'right',
-                    y: 'bottom'
+							x: 'left',
+							y: 'top',
                 },
                 tooltip: {
                     show: true,
@@ -82,7 +115,7 @@
                     formatter: '{c}',
                     showDelay: 50,
                     hideDelay: 50,
-                    backgroundColor: 'rgba(127,127,127,0.65)',
+							backgroundColor: 'rgba(127,127,127,0.7)',
                     borderRadius: 6,
                     textStyle: {
                         color: '#ffffff'
@@ -104,7 +137,9 @@
                     }
                 },
                 legend: {
-                    x: 'left',
+							x: 'center',
+							y: 'bottom',
+							zlevel: 10,
                     data: legend_data
                 },
                 series: [{
@@ -146,10 +181,10 @@
                     },
                     useWorker: false,
                     minRadius: 20,
-                    maxRadius: 40,
-                    gravity: 2,
-                    scaling: 1.5,
-                    draggable: true,
+							maxRadius: 35,
+							gravity: 1.1,
+							scaling: 1.1,
+							draggable: true,
                     roam: false,
                     nodes: nodes,
                     links: links
