@@ -352,6 +352,8 @@ def motion():
         event = {"category": list(zip(*event_tmp)[0]), "series": list(zip(*event_tmp)[1])} \
             if event_tmp else {"category": [], "series": []}
 
+    print home_office['series']
+
     context = {
         'errcode': 0,
         'errmsg': 'ok',
