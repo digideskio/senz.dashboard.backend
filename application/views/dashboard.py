@@ -287,11 +287,13 @@ def location():
 @dashboard_bp.route('/dashboard/context', methods=['GET', 'POST'])
 def motion():
     # filter by timestamp
-    h_start = request.form.get('h_start') or request.args.get('h_start') or int(time.time()) - 30*24*60*60
-    h_end = request.form.get('h_end') or request.args.get('h_end') or int(time.time())
-    e_start = request.form.get('e_start') or request.args.get('e_start') or int(time.time()) - 30*24*60*60
-    e_end = request.form.get('e_end') or request.args.get('e_end') or int(time.time())
+    h_start = request.form.get('h_start') or request.args.get('h_start') or (int(time.time()) - 30*24*60*60)*1000
+    h_end = request.form.get('h_end') or request.args.get('h_end') or int(time.time())*1000
+    e_start = request.form.get('e_start') or request.args.get('e_start') or (int(time.time()) - 30*24*60*60)*1000
+    e_end = request.form.get('e_end') or request.args.get('e_end') or int(time.time())*1000
     workday = request.form.get('workday') or request.args.get('workday') or "workday"
+
+    print h_start, h_end, e_start, e_end, workday
 
     context_dict = get_app_list()
     app_id = context_dict['app_id']
@@ -321,7 +323,9 @@ def motion():
         # if app_id and app_id != '5621fb0f60b27457e863fabb':  # 非DemoFake 假数据
         home_office_list_tmp = map(lambda item:
                                    dict(map(lambda x: (x, item[x]),
-                                            filter(lambda y: str(h_start) <= str(y) <= str(h_end),  # filter
+                                            filter(lambda y: str(h_start) <= str(y) <= str(h_end)
+                                                             and time.localtime(int(str(y)[10]))[6] < 5
+                                            if workday == 'workday' else time.localtime(int(str(y)[10]))[6] > 4,
                                                    item.keys()))), home_office_list)
         home_office_list = map(lambda x:
                                dict(map(lambda y: ('status' + str(time.localtime(int(y[0])/1000)[3]), y[1]),

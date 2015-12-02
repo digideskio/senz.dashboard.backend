@@ -38,7 +38,7 @@
             </span>
           </div>
           <div class="confirm-btn-wrap">
-            <a id="confirm-btn" class="confirm-btn" href="">确认</a>
+            <a id="confirm-btn" class="confirm-btn" href="#">确认</a>
           </div>
         </div>
       </div>
@@ -257,7 +257,7 @@ $(document).ready(function(){
 });
 
 $(".more-wrap a").on("click", function(){
-    var _today = (+new Date());
+     var _today = (+new Date());
     var h_start = (_today - (86400000*30)) || null;
     var e_start = (_today - (86400000*30)) || null;
     var h_end = _today;
@@ -269,26 +269,26 @@ $(".more-wrap a").on("click", function(){
     switch ($(this).attr('class')) {
         case 'today':
             h_start = e_start = _today || null;
-            j_start_obj.text( new Date().toISOString().slice(0,10) );
-            j_end_obj.text( new Date().toISOString().slice(0,10) );
+            j_start_obj.text( new Date().toISOString().slice(0,13) );
+            j_end_obj.text( new Date().toISOString().slice(0,13) );
             break;
         case 'yestoday':
             h_start = e_start =(_today - 86400000) || null;
-            j_start_obj.text( new Date((new Date() - 86400000)).toISOString().slice(0,10) );
-            j_end_obj.text( new Date().toISOString().slice(0,10) );
+            j_start_obj.text( new Date((new Date() - 86400000)).toISOString().slice(0,13) );
+            j_end_obj.text( new Date().toISOString().slice(0,13) );
             break;
         case 'lastweek':
             h_start = e_start =(_today - (86400000*7)) || null;
-            j_start_obj.text( new Date((new Date() - 86400000*7)).toISOString().slice(0,10) );
-            j_end_obj.text( new Date().toISOString().slice(0,10) );
+            j_start_obj.text( new Date((new Date() - 86400000*7)).toISOString().slice(0,13) );
+            j_end_obj.text( new Date().toISOString().slice(0,13) );
             break;
         case 'confirm-btn':
             h_start = e_start = (+new Date($("#j-filter-start-at").val())) || null;
             h_end = e_end = (+new Date($("#j-filter-end-at").val())) || null;
             break;
         case 'lastmouth':
-            j_start_obj.text( new Date((new Date() - 86400000*30)).toISOString().slice(0,10) );
-            j_end_obj.text( new Date().toISOString().slice(0,10) );
+            j_start_obj.text( new Date((new Date() - 86400000*30)).toISOString().slice(0,13) );
+            j_end_obj.text( new Date().toISOString().slice(0,13) );
             break;
         default :
             break;
@@ -319,6 +319,40 @@ $(".more-wrap a").on("click", function(){
         }
     });
 });
+$('.h-date-wrap select').on('change', function(){
+    var h_start = $(".j-h-startat").text() || new Date() - 86400000*30;
+    var h_end = $(".j-h-endat").text() || new Date();
+
+    var e_start = h_start = new Date(h_start).getTime();
+    var e_end = h_end = new Date(h_end).getTime();
+
+    var url = "{{ url_for('dashboard_bp.motion') }}";
+    var workday = $('.h-date-wrap select').val() == "工作日" ? "workday": "weekend";
+    var data = {
+        name: $(this).parent().parent().attr('id') == "date-filter-wrap"
+                ? "home_office_status": "context",
+        h_start: h_start,
+        h_end: h_end,
+        e_start: e_start,
+        e_end: e_end,
+        workday: workday
+    };
+
+    $.ajax({
+        type: "post",
+        async: true,
+        url: url,
+        data: data,
+        success: function (option) {
+            render_home_office(JSON.parse(option));
+            render_context(JSON.parse(option));
+        },
+        error: function () {
+            alert("获取内容失败，请稍后再试！");
+        }
+    });
+});
+
 
 </script>
 {% endblock %}
