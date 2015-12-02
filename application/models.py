@@ -85,6 +85,8 @@ class Developer(User):
     def get_app_list(self):
         try:
             user = self.become(session_token=self.session_token)
+            print user.get_email()
+            print user.id
             query = Query(Object.extend('Application'))
             query.equal_to('user', user)
             query.limit(1000)

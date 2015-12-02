@@ -151,8 +151,8 @@ def interest():
             interest_dict[interest[0]] = interest[1]
 
     color_dict = {'sport': "#7fd6e0", 'shopping': "#c9c5ea", "health": "#97f3da",
-                  "social": "#f7cdcf", "news": "7fbfff", "show": "7fe7e0",
-                  "gamer": "aef3ee", "indoorsman": "fbda95", "study": "84d4ed", "acg": "a1c4e4"}
+                  "social": "#f7cdcf", "news": "#7fbfff", "show": "#7fe7e0",
+                  "gamer": "#aef3ee", "indoorsman": "#fbda95", "study": "#84d4ed", "acg": "#a1c4e4"}
 
     data = map(lambda x: {'color': color_dict.get(x[0]), 'name': translate(x[0], 'interest'),
                           'value': x[1], 'node': []},
