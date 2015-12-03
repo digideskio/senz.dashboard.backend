@@ -324,15 +324,17 @@ def motion():
         home_office_list_tmp = map(lambda item:
                                    dict(map(lambda x: (x, item[x]),
                                             filter(lambda y: str(h_start) <= str(y) <= str(h_end)
-                                                             and time.localtime(int(str(y)[10]))[6] < 5
-                                            if workday == 'workday' else time.localtime(int(str(y)[10]))[6] > 4,
+                                                             and time.localtime(int(str(y)[:10]))[6] < 5
+                                            if workday == 'workday' else time.localtime(int(str(y)[:10]))[6] > 4,
                                                    item.keys()))), home_office_list)
         home_office_list = map(lambda x:
                                dict(map(lambda y: ('status' + str(time.localtime(int(y[0])/1000)[3]), y[1]),
                                         x.items())), home_office_list_tmp)
 
         event_list_tmp = map(lambda item: map(lambda x: item[x],
-                                              filter(lambda y: str(e_start) <= str(y) <= str(e_end),  # filter
+                                              filter(lambda y: str(e_start) <= str(y) <= str(e_end)
+                                                               and time.localtime(int(str(y)[:10]))[6] < 5
+                                              if workday == 'workday' else time.localtime(int(str(y)[:10]))[6] > 4,
                                                      item.keys())), event_list)
         event_list = [i for row in event_list_tmp for i in row]
 
