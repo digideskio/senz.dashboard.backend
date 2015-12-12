@@ -377,8 +377,11 @@ def single():
     app_id = context_dict['app_id']
     developer = Developer()
     developer.session_token = session.get('session_token')
-    userNames = developer.get_tracker_of_app(app_id)
-    userLabels = []
+    if request.method == 'POST':
+        uid = request.form.get('uid')
+        user_attr = get_attr_of_user(uid)
+        user_attr['userNames'] = developer.get_tracker_of_app(app_id)
+        return json.dumps(user_attr)
     return render_template('dashboard/single-user-motion.html')
 
 
@@ -393,10 +396,9 @@ def get_attr_of_user(uid):
     query = Query(Object.extend('DashboardSource'))
     query.equal_to('user', user)
     attrs = query.find()[0] if query.count() else {}
-
-    for attr in type_list:
-        attrs.attributes.get(attr)
-
+    labels = filter(lambda y: y, map(lambda x: attrs.attributes.get(x), type_list)) if attrs else []
+    user_labels = [y for x in labels for y in x if isinstance(x, list)]
+    return {'userLabels': user_labels}
 
 
 def get_query_list(app_id='', *field):

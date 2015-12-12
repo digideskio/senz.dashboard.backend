@@ -40,9 +40,7 @@ def parse_motion_info(motion_obj):
     motion = translate(sorted(filter(lambda x: x is not None, motion_prob.items()),
                               key=lambda v: -v[1])[0][0], 'motion_old')
     ret_dict['motion'] = {
-        timestamp: {
-            'motion': motion
-        }
+        timestamp:  motion
     }
     post_panel_data(tracker=user_id, motion_type='motion', motion_val=motion, timestamp=timestamp)
     return ret_dict
@@ -147,12 +145,32 @@ def parse_avtivity_info(activity_info):
     return ret_dict
 
 
+def to_lean_user(uid):
+    user = {
+        "__type": "Pointer",
+        "className": "_User",
+        "objectId": uid
+    }
+    return user
+
+
+def to_lean_app(app_id):
+    app = {
+        "__type": "Pointer",
+        "className": "Application",
+        "objectId": app_id
+    }
+    return app
+
+
 def updata_backend_info(parse_dict):
     user_id = parse_dict['user_id']
     # get user Object
-    query = Query(Object.extend('_User'))
-    query.equal_to('objectId', user_id)
-    user = query.find()[0] if query.count() else None
+    # query = Query(Object.extend('_User'))
+    # query.equal_to('objectId', user_id)
+    # user = query.find()[0] if query.count() else None
+
+    user = to_lean_user(user_id)
 
     # get app Object
     query = Query(Object.extend('BindingInstallation'))
@@ -164,9 +182,10 @@ def updata_backend_info(parse_dict):
     app_id_list = list(app_set)
 
     for app_id in app_id_list:
-        query = Query(Object.extend('Application'))
-        query.equal_to('objectId', app_id)
-        app = query.find()[0] if query.count() else None
+        # query = Query(Object.extend('Application'))
+        # query.equal_to('objectId', app_id)
+        # app = query.find()[0] if query.count() else None
+        app = to_lean_app(app_id)
         table_dash = Object.extend('DashboardSource')
         query = Query(table_dash)
         query.equal_to('app', app)
@@ -194,6 +213,15 @@ def updata_backend_info(parse_dict):
                 for k, v in parse_dict['event'].items():
                     event[k] = v
                 dst_table.set('event', event)
+            elif key is 'motion':
+                motion_tmp = dst_table.get('motion') or {}
+                motion = {}
+                for item in filter(lambda x: x[0] > str(1416200315), motion_tmp.items()):
+                    if isinstance(item[1], unicode):
+                        motion[item[0]] = item[1]
+                for k, v in parse_dict['motion'].items():
+                    motion[k] = v
+                dst_table.set('motion', motion)
             else:
                 dst_table.set(key, value)
         dst_table.save()
