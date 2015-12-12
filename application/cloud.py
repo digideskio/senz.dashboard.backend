@@ -102,7 +102,7 @@ def parse_location_info(location_info):
 
 def parse_home_office_info(homeoffice_info):
     ret_dict = {}
-    user_id = homeoffice_info.get('user').get('objectId')
+    user_id = homeoffice_info.get('user_id')
     status = translate(homeoffice_info.get('status'), 'home_office_status_old')
     timestamp = homeoffice_info.get('timestamp')
     expire = homeoffice_info.get('expire')

@@ -3,7 +3,6 @@ from flask import Blueprint, render_template, json, session, request, make_respo
 from leancloud import Object, Query, LeanCloudError
 from ..models import Developer
 from os.path import dirname, join
-from random import randrange
 import time
 
 dashboard_bp = Blueprint('dashboard_bp', __name__, template_folder='templates')
@@ -370,6 +369,34 @@ def motion():
         return json.dumps(context)
     return render_template('dashboard/scene.html', option=json.dumps(context),
                            username=username, app_id=app_id, app_list=app_list)
+
+
+@dashboard_bp.route('/dashboard/single', methods=['GET', 'POST'])
+def single():
+    context_dict = get_app_list()
+    app_id = context_dict['app_id']
+    developer = Developer()
+    developer.session_token = session.get('session_token')
+    userNames = developer.get_tracker_of_app(app_id)
+    userLabels = []
+    return render_template('dashboard/single-user-motion.html')
+
+
+def get_attr_of_user(uid):
+    user = {
+        "__type": "Pointer",
+        "className": "_User",
+        "objectId": uid
+    }
+    type_list = ['gender', 'age', 'field', 'occupation', 'interest',
+                 'marriage', 'pregnant', 'consumption', 'has_car', 'has_pet']
+    query = Query(Object.extend('DashboardSource'))
+    query.equal_to('user', user)
+    attrs = query.find()[0] if query.count() else {}
+
+    for attr in type_list:
+        attrs.attributes.get(attr)
+
 
 
 def get_query_list(app_id='', *field):

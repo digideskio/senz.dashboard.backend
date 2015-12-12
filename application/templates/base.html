@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en">
+{% block head %}
  <head> 
   <meta charset="utf-8" /> 
   <meta http-equiv="x-ua-compatible" content="ie=edge" /> 
@@ -26,8 +27,8 @@
             }
         });
   </script>
-
  </head>
+{% endblock %}
 
  <body>
  {% block header %}
@@ -107,6 +108,7 @@
      </ul>
     </li>
     <li class="motion"><a href="{{ url_for('dashboard_bp.motion') }}">情境</a></li>
+    <li class="motion"><a href="{{ url_for('dashboard_bp.single') }}">用户档案</a></li>
    </ul>
   </div>
  {% endblock %}
