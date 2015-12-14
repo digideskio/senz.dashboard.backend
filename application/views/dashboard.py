@@ -292,8 +292,6 @@ def motion():
     e_end = request.form.get('e_end') or request.args.get('e_end') or int(time.time())*1000
     workday = request.form.get('workday') or request.args.get('workday') or "workday"
 
-    print h_start, h_end, e_start, e_end, workday
-
     context_dict = get_app_list()
     app_id = context_dict['app_id']
     username = context_dict['username']
@@ -377,15 +375,19 @@ def single():
     app_id = context_dict['app_id']
     developer = Developer()
     developer.session_token = session.get('session_token')
+
     if request.method == 'POST':
         uid = request.form.get('uid')
         user_attr = get_attr_of_user(uid)
         user_attr['userNames'] = developer.get_tracker_of_app(app_id)
-        return json.dumps(user_attr)
+        ret_dict = get_attr_of_user(uid)
+        ret_dict['userNames'] = user_attr
+        return json.dumps(ret_dict)
     return render_template('dashboard/single-user-motion.html')
 
 
 def get_attr_of_user(uid):
+    ret_dcit = {}
     user = {
         "__type": "Pointer",
         "className": "_User",
@@ -396,9 +398,50 @@ def get_attr_of_user(uid):
     query = Query(Object.extend('DashboardSource'))
     query.equal_to('user', user)
     attrs = query.find()[0] if query.count() else {}
+
     labels = filter(lambda y: y, map(lambda x: attrs.attributes.get(x), type_list)) if attrs else []
     user_labels = [y for x in labels for y in x if isinstance(x, list)]
-    return {'userLabels': user_labels}
+    ret_dcit['userLabels'] = user_labels
+
+    event = attrs.attributes.get('event')
+    event_data = {
+        "category": list(set(event.values())),
+        "data": map(lambda x: event.values().count(x), list(set(event.values())))
+    }
+    ret_dcit['eventData'] = event_data
+
+    motion = attrs.attributes.get('motion')
+    avtion_data = {
+        "category": list(set(motion.values())),
+        "data": map(lambda x: motion.values().count(x), list(set(motion.values())))
+    }
+    ret_dcit['actionData'] = avtion_data
+
+    home_office = attrs.attributes.get('home_office_status')
+    home_office_data = {
+        "category": [i for i in xrange(0, 24)],
+        "atHomeData": map(lambda x: home_office.values().count(x),
+                          filter(lambda x: x is u"at_home" or u"contextAtHome",
+                                 list(set(home_office.values())))),
+        "atOfficeData": map(lambda x: home_office.values().count(x),
+                            filter(lambda x: x is u"at_office" or u"contextAtWork",
+                                   list(set(home_office.values())))),
+        "toHomeData": map(lambda x: home_office.values().count(x),
+                          filter(lambda x: x is u"going_home" or u"contextCommutingHome",
+                                 list(set(home_office.values())))),
+        "toOfficeData": map(lambda x: home_office.values().count(x),
+                            filter(lambda x: x is u"going_office" or u"contextCommutingWork",
+                                   list(set(home_office.values()))))
+    }
+    ret_dcit['homeOfficeData'] = home_office_data
+
+    location = attrs.attributes.get('location')
+    location_data = {
+        "mapType": "北京",
+        "data": []
+    }
+    ret_dcit['locationData'] = location_data
+    return ret_dcit
 
 
 def get_query_list(app_id='', *field):

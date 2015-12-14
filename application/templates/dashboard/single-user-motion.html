@@ -175,6 +175,20 @@
 			data: heatData
 		};
 		// TODO 假数据 end
+
+        var url = "{{ url_for('dashboard_bp.single') }}";
+        $.ajax({
+            type: "post",
+            async: true,
+            url: url,
+            data: {uid: "560388c100b09b53b59504d21"},
+            success: function (option) {
+                console.log(option);
+            },
+            error: function () {
+                alert("获取内容失败，请稍后再试！");
+            }
+        });
 		// 定义图表
 		var eventChart, homeOfficeChart, actionChart, locationChart;
 		// 当前选中

@@ -165,11 +165,6 @@ def to_lean_app(app_id):
 
 def updata_backend_info(parse_dict):
     user_id = parse_dict['user_id']
-    # get user Object
-    # query = Query(Object.extend('_User'))
-    # query.equal_to('objectId', user_id)
-    # user = query.find()[0] if query.count() else None
-
     user = to_lean_user(user_id)
 
     # get app Object
@@ -182,9 +177,6 @@ def updata_backend_info(parse_dict):
     app_id_list = list(app_set)
 
     for app_id in app_id_list:
-        # query = Query(Object.extend('Application'))
-        # query.equal_to('objectId', app_id)
-        # app = query.find()[0] if query.count() else None
         app = to_lean_app(app_id)
         table_dash = Object.extend('DashboardSource')
         query = Query(table_dash)
