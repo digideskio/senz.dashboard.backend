@@ -105,14 +105,8 @@
 						</div>
 					</div>
 					<br />
-					<!--<ul id="pageMenu" class="nav nav-pills nav-justified" style="margin-top: 20px;">
-						<li class="active"><a href="#">事件</a></li>
-						<li><a href="#">上下班</a></li>
-						<li><a href="#">动作状态</a></li>
-						<li><a href="#">常去地点</a></li>
-					</ul>-->
 					<ul id="pageMenu" class="nav nav-tabs nav-justified" style="margin-top: 20px;">
-						<li class="active"><a href="#" style="color: #00ACC1;">事件</a></li>
+						<li class="active default"><a href="#" style="color: #00ACC1;">事件</a></li>
 						<li><a href="#" style="color: #00ACC1;">上下班</a></li>
 						<li><a href="#" style="color: #00ACC1;">动作状态</a></li>
 						<li><a href="#" style="color: #00ACC1;">常去地点</a></li>
@@ -123,7 +117,20 @@
 						</div>
 
 						<div id="上下班" class="page hidden">
-							<div id="homeOfficeChart" style="height:600px"></div>
+							<div id="homeOfficeChart" style="height:400px"></div>
+							<div style="margin-left: 90px;margin-right: 90px;height:100px;border: 1px solid #CCCCCC;">
+								<div style="float: left;margin-left: 30px;margin-top: 20px;">
+									<img style="width: 15px; height: 15px" src="{{ url_for('static', filename='images/single-user-motion-schedule.png') }}"/>
+										<p style="margin-left: 5px;display: inline-block;">去上班时间 : <span>8:20 - 9:10</span></p>
+										<p style="margin-left: 22px;">上班时长 : <span>50 min</span></p>
+										<p style="margin-left: 22px;">下班时间 : <span>7:10 - 8:00</span></p>
+								</div>
+								<div style="margin-left: 50%;margin-top: 20px;">
+									<img style="width: 15px; height: 20px;" src="{{ url_for('static', filename='images/single-user-motion-map.png') }}"/>
+										<p style="margin-left: 5px;display: inline-block;">家庭地址 : <span>北京市天通西苑一区 34#</span></p>
+										<p style="margin-left: 22px;">公司地址 : <span>北京市海淀南路苏州街纽约客公寓</span></p>
+								</div>
+							</div>
 						</div>
 
 						<div id="动作状态" class="page hidden">
@@ -178,20 +185,6 @@
 			data: heatData
 		};
 		// TODO 假数据 end
-		// 请求数据
-        var url = "{{ url_for('dashboard_bp.single') }}";
-        $.ajax({
-            type: "post",
-            async: true,
-            url: url,
-            data: {uid: "560388c100b09b53b59504d21"},
-            success: function (option) {
-                console.log(option);
-            },
-            error: function () {
-                alert("获取内容失败，请稍后再试！");
-            }
-        });
 		// 定义图表
 		var eventChart, homeOfficeChart, actionChart, locationChart;
 		// 当前选中
@@ -316,31 +309,47 @@
 					$('#content').addClass('hidden');
 					$('#mask').removeClass('hidden');
 					// TODO 换人业务逻辑执行中
-					$.ajax({
-						type:'post',
-						url:url,
-						async:true,
-						data:{uid:'560388c100b09b53b59504d21'},
-						success:function(option){
-							console.log(option);
-						},
-						error:function(){
-							alert('获取内容失败，请稍后再试！');
-						},
-					});
-					setTimeout(function() {
-						// 换人业务逻辑完成后
-						$('#mask').addClass('hidden');
-						$('#content').removeClass('hidden');
-						// 加载用户内容
-						initUserContent();
-					}, 2000);
+					// 请求数据
+			        var url = "{{ url_for('dashboard_bp.single') }}";
+			        $.ajax({
+			            type: "post",
+			            async: true,
+			            url: url,
+			            // TODO
+			            data: {uid: "560388c100b09b53b59504d2"},
+			            success: function (option) {
+//			                console.log(option);
+			                var obj = JSON.parse(option);
+			                actionData = obj.actionData;
+			                eventData = obj.eventData;
+			                homeOfficeData = obj.homeOfficeData;
+			                locationData = obj.locationData;
+			                userNames = obj.userNames;
+			                userLabels = obj.userLabels;
+			                // 换人业务逻辑完成后
+							$('#mask').addClass('hidden');
+							$('#content').removeClass('hidden');
+							// 加载用户内容
+							initUserContent();
+			            },
+			            error: function () {
+			                alert("获取内容失败，请稍后再试！");
+			            }
+			        });
 				});
 				$('#userNameNull').before(item);
 			};
 		}
 		// 加载用户内容
 		function initUserContent() {
+			// 切换到默认标签
+			$('#pageMenu li').removeClass('active');
+			$('#pageMenu .default').addClass('active');
+			var currPage = $('#事件');
+			$('#pageContainer .page').removeClass('show');
+			$('#pageContainer .page').addClass('hidden');
+			currPage.removeClass('hidden');
+			currPage.addClass('show');
 			// 加载默认图表
 			loadEventChart();
 			// 判断是否显示
