@@ -113,6 +113,7 @@ div,p,h1,h2,h3,h4,h5,h6,ul,dl,ol,li {
 }
 .content {
     background: #fff;
+    /*left nav width*/
     margin-left: 200px;
     position: relative;
     border-top-left-radius: 10px;
@@ -242,6 +243,7 @@ div,p,h1,h2,h3,h4,h5,h6,ul,dl,ol,li {
     height: 100%;
     position: fixed;
     margin-top: 40px;
+    /*left nav width*/
     width: 200px;
     color: #e2e4f6;
     float: left;
@@ -277,6 +279,9 @@ div,p,h1,h2,h3,h4,h5,h6,ul,dl,ol,li {
 .sidebar ul.sub-nav li {
     border: none;
     border-top: 1px solid #545567;
+}
+.sidebar ul.sub-nav .sub-nav-last-item{
+	padding-bottom: 0;
 }
 .sidebar ul li a {
     text-decoration: none;
@@ -564,6 +569,8 @@ div,p,h1,h2,h3,h4,h5,h6,ul,dl,ol,li {
   cursor: pointer;
   min-width: 175px;
   background: #fff;
+  border:1px solid rgba(51, 204, 204, 1);
+  border-radius: 3px;
 }
 
 .time-input {

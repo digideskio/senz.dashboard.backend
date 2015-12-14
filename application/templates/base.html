@@ -98,13 +98,13 @@
    <div id="sidebar" class="sidebar">
    <ul id="sidebar-nav">
     <li class="index"><a href="{{ url_for('dashboard_bp.show') }}">概览</a></li>
-    <li class="has-sub-nav"> <a href="#">用户群体</a>
-     <ul class="sub-nav">
+    <li> <a id="userGroupNav" href="#">用户群体</a>
+     <ul id="userGroupSubNav" class="sub-nav" style="display: none;">
       <li><a href="{{ url_for('dashboard_bp.profile') }}">用户属性</a></li>
       <li><a href="{{ url_for('dashboard_bp.interest') }}">兴趣爱好</a></li>
       <li><a href="{{ url_for('dashboard_bp.marriage') }}">婚育情况</a></li>
       <li><a href="{{ url_for('dashboard_bp.consumption') }}">消费情况</a></li>
-      <li><a href="{{ url_for('dashboard_bp.location') }}">地理位置</a></li>
+      <li class="sub-nav-last-item"><a href="{{ url_for('dashboard_bp.location') }}">地理位置</a></li>
      </ul>
     </li>
     <li class="motion"><a href="{{ url_for('dashboard_bp.motion') }}">情境</a></li>
@@ -142,6 +142,19 @@
           if(signup){
             signup.href = "{{ url_for('accounts_bp.signup') }}?next=" + next;
           }
+          // 用户分组收起展开
+          var flag = false;
+          $('#userGroupNav').click(function(){
+          	console.log('click');
+          	if(flag){
+          		// 展开状态
+          		$('#userGroupSubNav').css('display','none');
+          	}else{
+          		// 收起状态
+          		$('#userGroupSubNav').css('display','block');
+          	}
+          	flag = !flag;
+          });
       };
       {% endblock %}
 

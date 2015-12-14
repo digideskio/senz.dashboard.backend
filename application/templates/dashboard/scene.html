@@ -218,46 +218,70 @@ var render_context = function(profile){
           return;
         }
         var eventMap = ec.init(document.getElementById('eventMap'));
-        eventMap.setOption(eventMapOption);
-        $(window).resize(function () {
-            eventMap.resize();
-        });
-    })
+eventMap.setOption(eventMapOption);
+$(window).resize(function() {
+eventMap.resize();
+});
+})
 };
 render_home_office(profile);
 render_context(profile);
 
-$(document).ready(function(){
-    $(".j-h-startat").text( new Date((new Date() - 86400000*30)).toISOString().slice(0,10) );
+function close() {
+	$('.j-h-date-wrap')
+		.next()
+		.slideToggle(200);
+};
+
+$(document).ready(function() {
+			$(".j-h-startat").text( new Date((new Date() - 86400000*30)).toISOString().slice(0,10) );
     $(".j-h-endat").text( (new Date()).toISOString().slice(0,10) );
 
-    $(".date-filter-wrap").on("click", ".inner-wrap", function(e){
-        $(this)
-          .closest(".j-h-date-wrap")
-          .next()
-          .slideToggle(200);
-    });
+    $(".date-filter-wrap").on("click", ".inner-wrap", close);
 
-    var now = new Date();
-    $("#j-filter-start-at").datepicker({
-        dateFormat: "yy-mm-dd",
-        defaultDate: now,
-        onClose: function (selectedDate){
-            $(".j-h-startat").text(selectedDate)
-        }
-    });
+	$.datepicker.regional["zh-CN"] = {
+		closeText: "关闭",
+		prevText: "&#x3c;上月",
+		nextText: "下月&#x3e;",
+		currentText: "今天",
+		monthNames: ["一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月", "十二月"],
+		monthNamesShort: ["一", "二", "三", "四", "五", "六", "七", "八", "九", "十", "十一", "十二"],
+		dayNames: ["星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"],
+		dayNamesShort: ["周日", "周一", "周二", "周三", "周四", "周五", "周六"],
+		dayNamesMin: ["日", "一", "二", "三", "四", "五", "六"],
+		weekHeader: "周",
+		dateFormat: "yy-mm-dd",
+		firstDay: 1,
+		isRTL: !1,
+		showMonthAfterYear: !0,
+		yearSuffix: "年"
+	};
+	$.datepicker.setDefaults($.datepicker.regional["zh-CN"]);
+	
+	var now = new Date();
+	$("#j-filter-start-at").datepicker({
+	        dateFormat: "yy-mm-dd",
+	        defaultDate: now,
+	        onClose: function (selectedDate){
+		        	if(selectedDate!=''){
+		        		$(".j-h-startat").text(selectedDate);
+		        	}
+	        }
+	    });
 
     $("#j-filter-end-at").datepicker({
         dateFormat: "yy-mm-dd",
         defaultDate: now,
         onClose: function (selectedDate){
-            $(".j-h-endat").text(selectedDate)
+        		if(selectedDate!=''){
+		        	$(".j-h-endat").text(selectedDate);
+		    }
         }
     });
 });
 
 $(".more-wrap a").on("click", function(){
-     var _today = (+new Date());
+    var _today = (+new Date());
     var h_start = (_today - (86400000*30)) || null;
     var e_start = (_today - (86400000*30)) || null;
     var h_end = _today;
@@ -269,26 +293,31 @@ $(".more-wrap a").on("click", function(){
     switch ($(this).attr('class')) {
         case 'today':
             h_start = e_start = _today || null;
-            j_start_obj.text( new Date().toISOString().slice(0,13) );
-            j_end_obj.text( new Date().toISOString().slice(0,13) );
+            j_start_obj.text( new Date().toISOString().slice(0,10) );
+            j_end_obj.text( new Date().toISOString().slice(0,10) );
+            close();
             break;
         case 'yestoday':
             h_start = e_start =(_today - 86400000) || null;
-            j_start_obj.text( new Date((new Date() - 86400000)).toISOString().slice(0,13) );
-            j_end_obj.text( new Date().toISOString().slice(0,13) );
+            j_start_obj.text( new Date((new Date() - 86400000)).toISOString().slice(0,10) );
+            j_end_obj.text( new Date().toISOString().slice(0,10) );
+            close();
             break;
         case 'lastweek':
             h_start = e_start =(_today - (86400000*7)) || null;
-            j_start_obj.text( new Date((new Date() - 86400000*7)).toISOString().slice(0,13) );
-            j_end_obj.text( new Date().toISOString().slice(0,13) );
+            j_start_obj.text( new Date((new Date() - 86400000*7)).toISOString().slice(0,10) );
+            j_end_obj.text( new Date().toISOString().slice(0,10) );
+            close();
             break;
         case 'confirm-btn':
             h_start = e_start = (+new Date($("#j-filter-start-at").val())) || null;
             h_end = e_end = (+new Date($("#j-filter-end-at").val())) || null;
+            close();
             break;
         case 'lastmouth':
-            j_start_obj.text( new Date((new Date() - 86400000*30)).toISOString().slice(0,13) );
-            j_end_obj.text( new Date().toISOString().slice(0,13) );
+            j_start_obj.text( new Date((new Date() - 86400000*30)).toISOString().slice(0,10) );
+            j_end_obj.text( new Date().toISOString().slice(0,10) );
+            close();
             break;
         default :
             break;
