@@ -396,8 +396,6 @@ def group():
     return render_template('dashboard/group-setting.html')
 
 
-
-
 def get_attr_of_user(uid):
     ret_dcit = {}
     user = {
