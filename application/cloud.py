@@ -219,7 +219,9 @@ def updata_backend_info(parse_dict):
 
                 coordinate = value.get('location')
                 coordinate_tmp = dst_table.get('coordinate') or []
-                coordinate_tmp.append(coordinate)
+                coordinate_tmp.insert(0, coordinate)
+                if len(coordinate_tmp) > 1000:
+                    coordinate_tmp.pop()
                 dst_table.set('coordinate', coordinate_tmp)
             else:
                 dst_table.set(key, value)
