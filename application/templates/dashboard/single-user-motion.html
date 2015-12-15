@@ -1,14 +1,12 @@
 {% extends 'base.html' %} {% block head %}
 
 <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<!--<meta http-equiv="Content-Type" content="text/html; charset=utf-8">-->
 	<meta content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no" name="viewport" /> {#
 	<title>SingleUserMotion</title>#}
 	<link rel="stylesheet" href="{{ url_for('static', filename='styles/bootstrap.min.css') }}">
 	<script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
 	<script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
-	<script src="{{ url_for('static', filename='js/echarts.js') }}"></script>
-	<link rel="stylesheet" href="{{ url_for('static', filename='styles/ball-spin-clockwise-fade.min.css') }}">
 	<link rel="stylesheet" href="{{ url_for('static', filename='lib/jquery-ui-1.11.4/themes/base/jquery-ui.min.css') }}">
 	<script src="{{ url_for('static', filename='lib/jquery-2.1.4.min.js') }}"></script>
 	<script src="{{ url_for('static', filename='lib/jquery-ui-1.11.4/jquery-ui.min.js') }}"></script>
@@ -43,9 +41,9 @@
 {% endblock %} {% block content %}
 
 <div class="container-fluid" style="background: #fff; margin-left: 200px;">
-	<div class="row" style="line-height: 50px;">
+	<div class="row" style="margin-top: 10px;margin-bottom: 10px;">
 		<div class="col-xs-2" style="margin-top: 40px;">
-			<span style="margin-left:10px;">分组</span>
+			<p style="display: inline-block; margin-left:10px;margin-top: 5px;">分组</p>
 			<div class="dropdown" style="float:right;display: inline-block;">
 				<button type="button" class="btn btn-sm dropdown-toggle" id="dropdownMenuClass" data-toggle="dropdown" style="background: #eeeeee;">
 					<span id="currUserGroup">选择分组</span>
@@ -58,7 +56,7 @@
 				</ul>
 			</div>
 		</div>
-		<div class="col-xs-3" style="margin-top: 40px;">
+		<div class="col-xs-3" style="margin-left: 15px; margin-top: 30px;">
 			<div id="date-filter-wrap" class="date-filter-wrap clearfix">
 				<div class="h-date-wrap j-h-date-wrap">
 					<div class="inner-wrap">
@@ -68,8 +66,8 @@
 						<span class="arrow">▾</span>
 					</div>
 				</div>
-				<div class="more-wrap">
-					<div class="filter-by-day" style="">
+				<div class="more-wrap" style="background: #ffffff;position:relative; z-index:99999;">
+					<div class="filter-by-day">
 						<a class="today" href="javascript:;">今日</a>
 						<a class="yestoday" href="javascript:;">昨日</a>
 						<a class="lastweek" href="javascript:;">最近一周</a>
@@ -77,13 +75,13 @@
 					</div>
 					<div class="date-wrap">
 						<span class="time-input">
-              <input id="j-filter-start-at">
-              <span class="dropdown-caret"></span>
+		                <input id="j-filter-start-at">
+		                <span class="dropdown-caret"></span>
 						</span>
 						<span class="arave">至</span>
 						<span class="time-input">
-              <input id="j-filter-end-at">
-               <span class="dropdown-caret"></span>
+		                <input id="j-filter-end-at"/>
+		                <span class="dropdown-caret"></span>
 						</span>
 					</div>
 					<div class="confirm-btn-wrap">
@@ -114,7 +112,7 @@
 				</li>
 			</ul>
 		</div>
-		<div id="mask" class="col-xs-10 hidden">
+		<!--<div id="mask" class="col-xs-10 hidden" style="margin-top: 50px;">
 			<div style="color: #00ACC1;margin-top: 250px;" class="center-block la-ball-spin-clockwise-fade la-2x">
 				<div></div>
 				<div></div>
@@ -125,7 +123,7 @@
 				<div></div>
 				<div></div>
 			</div>
-		</div>
+		</div>-->
 		<div id="content" class="col-xs-10 center-block hidden" style="margin-top: 10px;">
 			<div class="col-xs-1" style="margin-top: 8px;padding: 0px;text-align: center;">
 				<span id="userName">用户名称</span>
@@ -190,7 +188,7 @@
 	var userNames = [];
 	for (var i = 0; i < 100; i++) {
 		userNames.push({
-			id: '213123',
+			id: '560388c100b09b53b59504d2',
 			name: '第' + i + '个用户'
 		});
 	};
@@ -244,6 +242,8 @@
 	var eventChart, homeOfficeChart, actionChart, locationChart;
 	// 当前选中
 	var currUserName;
+	// 当前选中id
+	var currId;
 	// 筛选结果
 	var filterUserNames = userNames;
 	// 加载完成后执行
@@ -329,15 +329,14 @@
 				default:
 					break;
 			}
-			var url = "{{ url_for('dashboard_bp.motion') }}";
-			var workday = $('.h-date-wrap select').val() == "工作日" ? "workday" : "weekend";
+			//			// TODO
+			//			var url = "{{ url_for('dashboard_bp.motion') }}";
 			var data = {
-				name: $(this).parent().parent().attr('id') == "date-filter-wrap" ? "home_office_status" : "context",
+				uid: currId,
 				h_start: h_start,
 				h_end: h_end,
 				e_start: e_start,
 				e_end: e_end,
-				workday: workday
 			};
 			$.ajax({
 				type: "post",
@@ -345,8 +344,15 @@
 				url: url,
 				data: data,
 				success: function(option) {
-					render_home_office(JSON.parse(option));
-					render_context(JSON.parse(option));
+					console.log(option);
+					// TODO
+					var obj = JSON.parse(option);
+					actionData = obj.actionData;
+					eventData = obj.eventData;
+					homeOfficeData = obj.homeOfficeData;
+					locationData = obj.locationData;
+					// 加载用户内容
+					initUserContent();
 				},
 				error: function() {
 					alert("获取内容失败，请稍后再试！");
@@ -359,14 +365,12 @@
 			var e_start = h_start = new Date(h_start).getTime();
 			var e_end = h_end = new Date(h_end).getTime();
 			var url = "{{ url_for('dashboard_bp.motion') }}";
-			var workday = $('.h-date-wrap select').val() == "工作日" ? "workday" : "weekend";
 			var data = {
-				name: $(this).parent().parent().attr('id') == "date-filter-wrap" ? "home_office_status" : "context",
+				uid: currId,
 				h_start: h_start,
 				h_end: h_end,
 				e_start: e_start,
 				e_end: e_end,
-				workday: workday
 			};
 			$.ajax({
 				type: "post",
@@ -374,8 +378,15 @@
 				url: url,
 				data: data,
 				success: function(option) {
-					render_home_office(JSON.parse(option));
-					render_context(JSON.parse(option));
+					console.log(option);
+					// TODO
+					var obj = JSON.parse(option);
+					actionData = obj.actionData;
+					eventData = obj.eventData;
+					homeOfficeData = obj.homeOfficeData;
+					locationData = obj.locationData;
+					// 加载用户内容
+					initUserContent();
 				},
 				error: function() {
 					alert("获取内容失败，请稍后再试！");
@@ -475,6 +486,7 @@
 	function initUserNameList() {
 		// 重置选中用户
 		currUserName = undefined;
+		currId = undefined;
 		// 填充总人数
 		$('#userCount').html(filterUserNames.length + '人');
 		// 填充列表
@@ -484,7 +496,7 @@
 			item.removeClass('hidden');
 			item.addClass('tag');
 			item.html(filterUserNames[i].name);
-			item.val(filterUserNames[i].id);
+			currId = filterUserNames[i].id
 			// 点击换人
 			item.click(function() {
 				// 换人样式变化
@@ -494,16 +506,16 @@
 				}
 				currUserName = $(this);
 				// 换人业务逻辑
-				console.log('change:' + currUserName.val());
+				console.log('change:' + currId);
 				$('#content').addClass('hidden');
-				$('#mask').removeClass('hidden');
+				//				$('#mask').removeClass('hidden');
 				// 换人业务逻辑执行中
 				$.ajax({
 					type: 'post',
 					async: true,
 					url: url,
 					data: {
-						uid: '560388c100b09b53b59504d2'
+						uid: currId,
 					},
 					success: function(option) {
 						var obj = JSON.parse(option);
@@ -514,7 +526,7 @@
 						userNames = obj.userNames;
 						userLabels = obj.userLabels;
 						// 换人业务逻辑完成后
-						$('#mask').addClass('hidden');
+						//						$('#mask').addClass('hidden');
 						$('#content').removeClass('hidden');
 						// 加载用户内容
 						initUserContent();
