@@ -214,6 +214,13 @@ def updata_backend_info(parse_dict):
                 for k, v in parse_dict['motion'].items():
                     motion[k] = v
                 dst_table.set('motion', motion)
+            elif key is 'location':
+                dst_table.set('location', value)
+
+                coordinate = value.get('location')
+                coordinate_tmp = dst_table.get('coordinate') or []
+                coordinate_tmp.append(coordinate)
+                dst_table.set('coordinate', coordinate_tmp)
             else:
                 dst_table.set(key, value)
         dst_table.save()

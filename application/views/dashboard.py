@@ -373,19 +373,23 @@ def motion():
 def single():
     context_dict = get_app_list()
     app_id = context_dict['app_id']
+    username = context_dict['username']
+    app_list = context_dict['app_list']
+
     developer = Developer()
     developer.session_token = session.get('session_token')
-
     if request.method == 'POST':
         req_type = request.form.get('type')
+        uid = request.form.get('uid')
+        print req_type, uid
         if req_type == 'user_list':
             user_list = developer.get_tracker_of_app(app_id)
             return json.dumps({"userNames": user_list})
 
-        uid = request.form.get('uid')
         ret_dict = get_attr_of_user(uid)
         return json.dumps(ret_dict)
-    return render_template('dashboard/single-user-motion.html')
+    return render_template('dashboard/single-user-motion.html',
+                           username=username, app_id=app_id, app_list=app_list)
 
 
 def get_attr_of_user(uid):
@@ -401,8 +405,9 @@ def get_attr_of_user(uid):
     query.equal_to('user', user)
     attrs = query.find()[0] if query.count() else {}
 
-    labels = filter(lambda y: y, map(lambda x: attrs.attributes.get(x), type_list)) if attrs else []
-    user_labels = [y for x in labels for y in x if isinstance(x, list)]
+    labels = map(lambda x: attrs.attributes.get(x), type_list) if attrs else []
+    user_labels = [y for x in filter(lambda y: y, labels) for y in x if isinstance(x, list)]
+    user_labels += [type_list[labels.index(x)] for x in labels if isinstance(x, unicode)]
     ret_dcit['userLabels'] = user_labels
 
     event = attrs.attributes.get('event')
@@ -433,10 +438,10 @@ def get_attr_of_user(uid):
     }
     ret_dcit['homeOfficeData'] = home_office_data
 
-    location = attrs.attributes.get('location')
+    coordinate = attrs.attributes.get('coordinate') or []
     location_data = {
         "mapType": "北京",
-        "data": []
+        "data": map(lambda x: [x.get('latitude'), x.get('longitude'), 0.9], coordinate)
     }
     ret_dcit['locationData'] = location_data
     return ret_dcit
