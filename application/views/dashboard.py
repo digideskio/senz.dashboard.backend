@@ -377,11 +377,13 @@ def single():
     developer.session_token = session.get('session_token')
 
     if request.method == 'POST':
+        req_type = request.form.get('type')
+        if req_type == 'user_list':
+            user_list = developer.get_tracker_of_app(app_id)
+            return json.dumps({"userNames": user_list})
+
         uid = request.form.get('uid')
-        user_attr = get_attr_of_user(uid)
-        user_attr['userNames'] = developer.get_tracker_of_app(app_id)
         ret_dict = get_attr_of_user(uid)
-        ret_dict['userNames'] = user_attr
         return json.dumps(ret_dict)
     return render_template('dashboard/single-user-motion.html')
 
@@ -420,18 +422,14 @@ def get_attr_of_user(uid):
     home_office = attrs.attributes.get('home_office_status')
     home_office_data = {
         "category": [i for i in xrange(0, 24)],
-        "atHomeData": map(lambda x: home_office.values().count(x),
-                          filter(lambda x: x is u"at_home" or u"contextAtHome",
-                                 list(set(home_office.values())))),
-        "atOfficeData": map(lambda x: home_office.values().count(x),
-                            filter(lambda x: x is u"at_office" or u"contextAtWork",
-                                   list(set(home_office.values())))),
-        "toHomeData": map(lambda x: home_office.values().count(x),
-                          filter(lambda x: x is u"going_home" or u"contextCommutingHome",
-                                 list(set(home_office.values())))),
-        "toOfficeData": map(lambda x: home_office.values().count(x),
-                            filter(lambda x: x is u"going_office" or u"contextCommutingWork",
-                                   list(set(home_office.values()))))
+        "atHomeData": map(lambda x: len(filter(lambda z: z[1] == u"at_home" or z[1] == u"contextAtHome" and time.localtime(int(z[0][:10]))[3] == x,
+                                               home_office.items())), xrange(0, 24)),
+        "atOfficeData": map(lambda x: len(filter(lambda z: z[1] == u"at_office" or z[1] == u"contextAtWork" and time.localtime(int(z[0][:10]))[3] == x,
+                                                 home_office.items())), xrange(0, 24)),
+        "toHomeData": map(lambda x: len(filter(lambda z: z[1] == u"going_home" or z[1] == u"contextCommutingHome" and time.localtime(int(z[0][:10]))[3] == x,
+                                                 home_office.items())), xrange(0, 24)),
+        "toOfficeData": map(lambda x: len(filter(lambda z: z[1] == u"going_office" or z[1] == u"contextCommutingWork" and time.localtime(int(z[0][:10]))[3] == x,
+                                                 home_office.items())), xrange(0, 24))
     }
     ret_dcit['homeOfficeData'] = home_office_data
 
