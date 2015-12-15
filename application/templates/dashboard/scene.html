@@ -234,7 +234,7 @@ function close() {
 };
 
 $(document).ready(function() {
-			$(".j-h-startat").text( new Date((new Date() - 86400000*30)).toISOString().slice(0,10) );
+	$(".j-h-startat").text( new Date((new Date() - 86400000*30)).toISOString().slice(0,10) );
     $(".j-h-endat").text( (new Date()).toISOString().slice(0,10) );
 
     $(".date-filter-wrap").on("click", ".inner-wrap", close);
