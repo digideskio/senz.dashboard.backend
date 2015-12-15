@@ -187,6 +187,21 @@
 			data: heatData
 		};
 		// TODO 假数据 end
+		// 网络请求地址
+		var url = "{{ url_for('dashboard_bp.single') }}";
+		// 加载列表
+        $.ajax({
+            type: 'post',
+            async: false,
+            url: url,
+            data: {type: 'user_list'},
+            success: function (option) {
+                console.log(option);
+            },
+            error: function () {
+                alert("获取内容失败，请稍后再试！");
+            }
+        });
 		// 定义图表
 		var eventChart, homeOfficeChart, actionChart, locationChart;
 		// 当前选中
@@ -310,17 +325,13 @@
 					console.log('change:'+currUserName.val());
 					$('#content').addClass('hidden');
 					$('#mask').removeClass('hidden');
-					// TODO 换人业务逻辑执行中
-					// 请求数据
-			        var url = "{{ url_for('dashboard_bp.single') }}";
+					// 换人业务逻辑执行中
 			        $.ajax({
-			            type: "post",
+			            type: 'post',
 			            async: true,
 			            url: url,
-			            // TODO
-			            data: {uid: "560388c100b09b53b59504d2"},
+			            data: {uid: '560388c100b09b53b59504d2'},
 			            success: function (option) {
-//			                console.log(option);
 			                var obj = JSON.parse(option);
 			                actionData = obj.actionData;
 			                eventData = obj.eventData;

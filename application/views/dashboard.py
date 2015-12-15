@@ -386,6 +386,13 @@ def single():
     return render_template('dashboard/single-user-motion.html')
 
 
+@dashboard_bp.route('/dashboard/group', methods=['GET', 'POST'])
+def group():
+    return render_template('dashboard/group-setting.html')
+
+
+
+
 def get_attr_of_user(uid):
     ret_dcit = {}
     user = {
