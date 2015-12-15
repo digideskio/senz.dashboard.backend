@@ -381,7 +381,6 @@ def single():
     if request.method == 'POST':
         req_type = request.form.get('type')
         uid = request.form.get('uid')
-        print req_type, uid
         if req_type == 'user_list':
             user_list = developer.get_tracker_of_app(app_id)
             return json.dumps({"userNames": user_list})
@@ -441,7 +440,7 @@ def get_attr_of_user(uid):
     coordinate = attrs.attributes.get('coordinate') or []
     location_data = {
         "mapType": "北京",
-        "data": map(lambda x: [x.get('latitude'), x.get('longitude'), 0.9], coordinate)
+        "data": map(lambda x: [x.dump().get('longitude'), x.dump().get('latitude'), 0.9], coordinate)
     }
     ret_dcit['locationData'] = location_data
     return ret_dcit
