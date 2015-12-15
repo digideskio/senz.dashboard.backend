@@ -373,17 +373,22 @@ def motion():
 def single():
     context_dict = get_app_list()
     app_id = context_dict['app_id']
+    username = context_dict['username']
+    app_list = context_dict['app_list']
+
     developer = Developer()
     developer.session_token = session.get('session_token')
-
     if request.method == 'POST':
+        req_type = request.form.get('type')
         uid = request.form.get('uid')
-        user_attr = get_attr_of_user(uid)
-        user_attr['userNames'] = developer.get_tracker_of_app(app_id)
+        if req_type == 'user_list':
+            user_list = developer.get_tracker_of_app(app_id)
+            return json.dumps({"userNames": user_list})
+
         ret_dict = get_attr_of_user(uid)
-        ret_dict['userNames'] = user_attr
         return json.dumps(ret_dict)
-    return render_template('dashboard/single-user-motion.html')
+    return render_template('dashboard/single-user-motion.html',
+                           username=username, app_id=app_id, app_list=app_list)
 
 
 @dashboard_bp.route('/dashboard/group', methods=['GET', 'POST'])
@@ -406,8 +411,9 @@ def get_attr_of_user(uid):
     query.equal_to('user', user)
     attrs = query.find()[0] if query.count() else {}
 
-    labels = filter(lambda y: y, map(lambda x: attrs.attributes.get(x), type_list)) if attrs else []
-    user_labels = [y for x in labels for y in x if isinstance(x, list)]
+    labels = map(lambda x: attrs.attributes.get(x), type_list) if attrs else []
+    user_labels = [y for x in filter(lambda y: y, labels) for y in x if isinstance(x, list)]
+    user_labels += [type_list[labels.index(x)] for x in labels if isinstance(x, unicode)]
     ret_dcit['userLabels'] = user_labels
 
     event = attrs.attributes.get('event')
@@ -427,25 +433,21 @@ def get_attr_of_user(uid):
     home_office = attrs.attributes.get('home_office_status')
     home_office_data = {
         "category": [i for i in xrange(0, 24)],
-        "atHomeData": map(lambda x: home_office.values().count(x),
-                          filter(lambda x: x is u"at_home" or u"contextAtHome",
-                                 list(set(home_office.values())))),
-        "atOfficeData": map(lambda x: home_office.values().count(x),
-                            filter(lambda x: x is u"at_office" or u"contextAtWork",
-                                   list(set(home_office.values())))),
-        "toHomeData": map(lambda x: home_office.values().count(x),
-                          filter(lambda x: x is u"going_home" or u"contextCommutingHome",
-                                 list(set(home_office.values())))),
-        "toOfficeData": map(lambda x: home_office.values().count(x),
-                            filter(lambda x: x is u"going_office" or u"contextCommutingWork",
-                                   list(set(home_office.values()))))
+        "atHomeData": map(lambda x: len(filter(lambda z: z[1] == u"at_home" or z[1] == u"contextAtHome" and time.localtime(int(z[0][:10]))[3] == x,
+                                               home_office.items())), xrange(0, 24)),
+        "atOfficeData": map(lambda x: len(filter(lambda z: z[1] == u"at_office" or z[1] == u"contextAtWork" and time.localtime(int(z[0][:10]))[3] == x,
+                                                 home_office.items())), xrange(0, 24)),
+        "toHomeData": map(lambda x: len(filter(lambda z: z[1] == u"going_home" or z[1] == u"contextCommutingHome" and time.localtime(int(z[0][:10]))[3] == x,
+                                                 home_office.items())), xrange(0, 24)),
+        "toOfficeData": map(lambda x: len(filter(lambda z: z[1] == u"going_office" or z[1] == u"contextCommutingWork" and time.localtime(int(z[0][:10]))[3] == x,
+                                                 home_office.items())), xrange(0, 24))
     }
     ret_dcit['homeOfficeData'] = home_office_data
 
-    location = attrs.attributes.get('location')
+    coordinate = attrs.attributes.get('coordinate') or []
     location_data = {
         "mapType": "北京",
-        "data": []
+        "data": map(lambda x: [x.dump().get('longitude'), x.dump().get('latitude'), 0.9], coordinate)
     }
     ret_dcit['locationData'] = location_data
     return ret_dcit
