@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<meta content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no" name="viewport" />
+		<title>GroupSetting</title>
+		<!-- 新 Bootstrap 核心 CSS 文件 -->
+		<link rel="stylesheet" href="css/bootstrap.min.css">
+		<!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
+		<script src="js/jquery.min.js"></script>
+		<!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+		<script src="js/bootstrap.min.js"></script>
+		<!-- ECharts单文件引入 -->
+		<script src="js/echarts.js"></script>
+		<!-- Loading插件引入 -->
+		<link rel="stylesheet" type="text/css" href="css/ball-spin-clockwise-fade.min.css" />
+		<style type="text/css">
+			.btn-custom-label {
+				border-radius: 6px;
+				border-color: #999999;
+			}
+			
+			.list-group-custom {
+				border: 1px solid #eeeeee;
+				text-align: center;
+				height: 600px;
+				margin-top: 15px;
+				overflow-x: hidden;
+				overflow-y: scroll;
+			}
+			
+			.list-group-item-custom {
+				border-width: 0;
+				cursor: pointer;
+			}
+			
+			.click {
+				color: #00D0BF;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="container-fluid">
+			<div class="row" style="border-bottom: 1px solid #CCCCCC;">
+				<div class="col-xs-2" style="border-right: 1px solid #CCCCCC;padding-top: 10px;">
+					<p class="pull-left">分组列表</p>
+					<p id="create" class="pull-right click" style="cursor: pointer;">
+						<img style="width: 10px;height: 10px;" src="img/add.png" /> 新建分组
+					</p>
+				</div>
+				<div class="col-xs-10" style="padding-top: 10px;">
+					<p id="createOrEdit" class="pull-left">新建分组</p>
+				</div>
+			</div>
+			<div class="row" style="border-bottom: 1px solid #CCCCCC;">
+				<div class="col-xs-2" style="border-right: 1px solid #CCCCCC;">
+					<ul id="groupListDiv" class="list-group list-group-custom">
+						<li id="groupListHidden" class="list-group-item list-group-item-custom hidden"></li>
+						<li id="groupListNull" class="list-group-item hidden" style="border-width: 0;">没有分组</li>
+					</ul>
+				</div>
+				<div id="content" class="col-xs-10 center-block" style="margin-top: 10px;">
+					<div class="row" style="line-height: 35px;">
+						<div class="col-xs-2">
+							<p class="text-right">分组名称</p>
+						</div>
+						<div class="col-xs-10">
+							<div id="groupNameDiv" class="form-group form-inline">
+								<input style="min-width: 350px;" type="text" class="form-control" placeholder="20字以内,可使用数字、中文、字母和下划线的组合">
+								<span class="hidden text-danger" style="margin-left: 20px;">输入不合法!请重新输入!</span>
+							</div>
+						</div>
+					</div>
+					<div class="row" style="line-height: 35px;">
+						<div class="col-xs-2">
+							<p class="text-right">添加筛选条件</p>
+						</div>
+						<div class="col-xs-10">
+							<button id="addFilterDiv" style="background-color: #000000;color: #FFFFFF;" type="button" class="btn btn-sm">添加</button>
+						</div>
+					</div>
+					<option class="hidden" id="optionHidden"></option>
+					<div class="row hidden" id="filterDivHidden">
+						<div class="col-xs-offset-2 col-xs-5">
+							<div class="form-group form-inline">
+								<select class="form-control firstSelect">
+								</select>
+								<select class="form-control secondSelect hidden">
+								</select>
+								<select class="form-control thirdSelect hidden">
+								</select>
+								<button type="button" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+							</div>
+						</div>
+					</div>
+					<div class="row" id="filterPoint">
+						<div class="col-xs-offset-2 col-xs-5">
+							<button id="saveBtn" type="button" class="btn" style="background-color: #00acc1;color: #FFFFFF;width: 45%;">保存分组</button>
+							<button id="delBtn" type="button" class="btn" style="background-color: #c65353;color: #FFFFFF;width: 45%;margin-left: 2%;" data-toggle="modal" data-target="#delModal">删除分组</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- 模态框（Modal） -->
+		<div class="modal fade" id="delModal" tabindex="-1" role="dialog" aria-labelledby="delModalLabel" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+							&times;
+						</button>
+						<h4 class="modal-title" id="delModalLabel">删除分组</h4>
+					</div>
+					<div class="modal-body">
+						您确定要删除该分组么？一经删除，无法找回！
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">
+							取消
+						</button>
+						<button id="delModalBtn" type="button" class="btn btn-danger">
+							删除
+						</button>
+					</div>
+				</div>
+				<!-- /.modal-content -->
+			</div>
+		</div>
+		<!-- /.modal -->
+	</body>
+
+	<script type="text/javascript">
+		// TODO 假数据 start
+		var groupListNames = [{
+			id: '1',
+			name: '分组一',
+			tags: ['16岁以下', '5000-10000', '销售'],
+		}, {
+			id: '2',
+			name: '分组二',
+		}, {
+			id: '3',
+			name: '分组三',
+		}];
+		var groupFilter = [{
+			name: '年龄',
+			data: ['16岁以下', '16-35岁', '35-55岁', '55岁以上'],
+		}, {
+			name: '专业',
+			data: ['IT', '贸易', '法律', '体育', '医务', '人力', '金融', '建筑', '人文科学', '自然科学', '制造业', '农业', '服务'],
+		}, {
+			name: '职业',
+			data: ['工程师', '销售', '教师', '学生', '军人', '公务员', '管理人员', '自由职业'],
+		}, {
+			name: '消费能力',
+			data: ['5000以下', '5000-10000', '10000-20000', '20000以上'],
+		}, {
+			name: '兴趣爱好',
+			data: ['篮球', '足球', '羽毛球', '兵乓球'],
+		}, {
+			name: '婚姻情况',
+			data: ['已婚', '未婚'],
+		}, {
+			name: '怀孕情况',
+			data: ['怀孕', '未孕'],
+		}, {
+			name: '养宠物与否',
+			data: ['养宠物', '不养宠物'],
+		}, {
+			name: '有车与否',
+			data: ['有车', '无车'],
+		}];
+		// TODO 假数据 end
+		// 当前选中控件
+		var currGroupName;
+		// 当前选中id
+		var currGroupId = -1;
+		// 标签总数
+		var tagNum = 0;
+		// 加载完成后执行
+		$(document).ready(function() {
+			// 加载分组列表
+			loadGroupList();
+			// 新建分组按钮
+			$('#create').click(function() {
+				// 重置选中
+				currGroupId = -1;
+				if (currGroupName != undefined) {
+					currGroupName.removeClass('click');
+					currGroupName = undefined;
+				}
+				// 加载分组内容
+				loadGroupContent();
+			});
+			// 添加筛选信息
+			$('#addFilterDiv').click(function() {
+				tagNum++;
+				var item = $('#filterDivHidden').clone();
+				item.removeAttr('id');
+				item.removeClass('hidden');
+				item.addClass('filter-row');
+				// 默认值
+				var fristOption = $('#optionHidden').clone();
+				fristOption.removeAttr('id');
+				fristOption.removeClass('hidden');
+				fristOption.html('请选择');
+				item.find('.firstSelect').append(fristOption);
+				// 一级选项
+				for (var i = 0; i < groupFilter.length; i++) {
+					var fristOption = $('#optionHidden').clone();
+					fristOption.removeAttr('id');
+					fristOption.removeClass('hidden');
+					fristOption.val(i);
+					fristOption.html(groupFilter[i].name);
+					item.find('.firstSelect').append(fristOption);
+				}
+				$('#filterPoint').before(item);
+				// 一级监听
+				item.find('.firstSelect').change(listener);
+				// 删除筛选信息
+				item.find('button').click(function() {
+					tagNum--;
+					$(this).closest('.row').empty();
+				});
+			});
+			// 保存
+			$('#saveBtn').click(function() {
+				var name = $('#groupNameDiv').find('input').val();
+				// 判断是否合法
+				var flag = new RegExp('^[a-zA-Z0-9_\u4e00-\u9fa5]{1,20}$').test(name);
+				if (!flag) {
+					$('#groupNameDiv').addClass('has-error');
+					$('#groupNameDiv span').removeClass('hidden');
+					return;
+				} else {
+					$('#groupNameDiv').removeClass('has-error');
+					$('#groupNameDiv span').addClass('hidden');
+				}
+				var index = 1;
+				var tags = [];
+				for (var i = 0; i < tagNum; i++) {
+					var value = $('.tag').eq(i).val();
+					if (value != '请选择' && value != null) {
+						tags.push(value);
+					}
+				}
+				// TODO 保存逻辑
+				var data = {
+					id: currGroupId,
+					name: name,
+					tags: tags,
+				};
+				console.log('要保存的数据:' + data.id + "---" + data.name + "---" + data.tags);
+			});
+			// 删除
+			$('#delModalBtn').click(function() {
+				// TODO 删除逻辑
+				console.log('要删除的id:' + currGroupId);
+				// 关闭弹窗
+				$('#delModal').modal('hide');
+				// 刷新页面
+				window.location.reload();
+			});
+		});
+		// 加载分组列表
+		function loadGroupList() {
+			// 判断是否为空
+			if (groupListNames.length == 0) {
+				$('#groupListNull').removeClass('hidden');
+				return;
+			}
+			// 填充列表
+			for (var i = 0; i < groupListNames.length; i++) {
+				var item = $('#groupListHidden').clone();
+				item.removeAttr('id');
+				item.removeClass('hidden');
+				item.html(groupListNames[i].name);
+				item.val(groupListNames[i].id);
+				// 点击换人
+				item.click(function() {
+					// 换人样式变化
+					if (currGroupName != undefined) {
+						currGroupName.removeClass('click');
+					}
+					$(this).addClass('click');
+					currGroupName = $(this);
+					currGroupId = $(this).val();
+					// 换人业务逻辑
+					console.log('change:' + currGroupId);
+					// 加载分组内容
+					loadGroupContent();
+				});
+				$('#groupListNull').before(item);
+			};
+		}
+		// 加载分组内容
+		function loadGroupContent() {
+			// 重置页面
+			$('#groupNameDiv input').val('');
+			$('#groupNameDiv').removeClass('has-error');
+			$('#groupNameDiv span').addClass('hidden');
+			$('.filter-row').remove();
+			tagNum = 0;
+			// 判断创建还是编辑
+			if (currGroupId == -1) {
+				$('#createOrEdit').html('新建分组');
+			} else {
+				$('#createOrEdit').html('编辑分组');
+				var obj;
+				// TODO 加载数据
+				for (var i = 0; i < groupListNames.length; i++) {
+					if (currGroupId == groupListNames[i].id) {
+						obj = groupListNames[i];
+						break;
+					}
+				}
+				// 设置组名
+				$('#groupNameDiv').find('input').val(obj.name);
+				// 遍历标签
+				for (var i = 0; i < obj.tags.length; i++) {
+					for (var j1 = 0; j1 < groupFilter.length; j1++) {
+						for (var j2 = 0; j2 < groupFilter[j1].data.length; j2++) {
+							if (obj.tags[i] == groupFilter[j1].data[j2]) {
+								console.log(groupFilter[j1].name + '-' + groupFilter[j1].data[j2]);
+								// 设置标签
+								tagNum++;
+								var item = $('#filterDivHidden').clone();
+								item.removeAttr('id');
+								item.removeClass('hidden');
+								item.addClass('filter-row');
+								// 默认值
+								var fristOption = $('#optionHidden').clone();
+								fristOption.removeAttr('id');
+								fristOption.removeClass('hidden');
+								fristOption.html('请选择');
+								item.find('.firstSelect').append(fristOption);
+								// 一级选项
+								for (var k = 0; k < groupFilter.length; k++) {
+									var fristOption = $('#optionHidden').clone();
+									fristOption.removeAttr('id');
+									fristOption.removeClass('hidden');
+									fristOption.val(k);
+									fristOption.html(groupFilter[k].name);
+									if (groupFilter[j1].name == groupFilter[k].name) {
+										// 设置选中
+										fristOption.attr("selected", true);
+									}
+									item.find('.firstSelect').append(fristOption);
+								}
+								item.find('.firstSelect').val();
+								$('#filterPoint').before(item);
+								// 二级菜单
+								var secondSelect = item.find('.secondSelect');
+								secondSelect.removeClass('hidden');
+								secondSelect.addClass('tag');
+								// 默认值
+								var secondOption = $('#optionHidden').clone();
+								secondOption.removeAttr('id');
+								secondOption.removeClass('hidden');
+								secondOption.html('请选择');
+								secondSelect.append(secondOption);
+								// 二级选项
+								for (var k = 0; k < groupFilter[j1].data.length; k++) {
+									var secondOption = $('#optionHidden').clone();
+									secondOption.removeAttr('id');
+									secondOption.removeClass('hidden');
+									secondOption.html(groupFilter[j1].data[k]);
+									if (groupFilter[j1].data[j2] == groupFilter[j1].data[k]) {
+										// 设置选中
+										secondOption.attr("selected", true);
+									}
+									secondSelect.append(secondOption);
+								}
+								// 一级监听
+								item.find('.firstSelect').change(listener);
+								// 删除筛选信息
+								item.find('button').click(function() {
+									tagNum--;
+									$(this).closest('.row').empty();
+								});
+							}
+						}
+					}
+				}
+			}
+		};
+		// 监听
+		function listener() {
+			if ($(this).val() == '请选择') {
+				$(this).parent().find('.secondSelect').addClass('hidden');
+				return;
+			}
+			var index = $(this).val();
+			// 二级菜单
+			var secondSelect = $(this).parent().find('.secondSelect');
+			secondSelect.removeClass('hidden');
+			secondSelect.addClass('tag');
+			// 清空原来的选项
+			secondSelect.find('option').remove();
+			// 默认值
+			var secondOption = $('#optionHidden').clone();
+			secondOption.removeAttr('id');
+			secondOption.removeClass('hidden');
+			secondOption.html('请选择');
+			secondSelect.append(secondOption);
+			// 二级选项
+			for (var i = 0; i < groupFilter[index].data.length; i++) {
+				var secondOption = $('#optionHidden').clone();
+				secondOption.removeAttr('id');
+				secondOption.removeClass('hidden');
+				secondOption.html(groupFilter[index].data[i]);
+				secondSelect.append(secondOption);
+			}
+		};
+	</script>
+
+</html>
