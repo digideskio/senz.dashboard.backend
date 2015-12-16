@@ -93,7 +93,7 @@
 	</div>
 	<div class="row" style="height: 1px;background: #CCCCCC;"></div>
 	<div class="row">
-		<div class="col-xs-2" style="border-right: 1px solid #CCCCCC;">
+		<div class="col-xs-2">
 			<div style="margin-top: 15px;">
 				<span style="margin-left:10px;">用户列表</span>
 				<span id="userCount" style="float: right;margin-right: 10px;"></span>
@@ -124,7 +124,7 @@
 				<div></div>
 			</div>
 		</div>-->
-		<div id="content" class="col-xs-10 center-block hidden" style="margin-top: 10px;">
+		<div id="content" class="col-xs-10 center-block hidden" style="padding-top: 10px;border-left: 1px solid #CCCCCC;">
 			<div class="col-xs-1" style="margin-top: 8px;padding: 0px;text-align: center;">
 				<span id="userName">用户名称</span>
 			</div>
@@ -139,6 +139,7 @@
 				<li><a href="#" style="color: #00ACC1;">上下班</a></li>
 				<li><a href="#" style="color: #00ACC1;">动作状态</a></li>
 				<li><a href="#" style="color: #00ACC1;">常去地点</a></li>
+				<li><a href="#" style="color: #00ACC1;">详细日志</a></li>
 			</ul>
 			<div id="pageContainer" style="margin-top: 15px;">
 				<div id="事件" class="page show">
@@ -171,6 +172,25 @@
 				<div id="常去地点" class="page hidden">
 					<div id="locationChart" style="height:600px"></div>
 				</div>
+
+				<div id="详细日志" class="page hidden">
+					<table class="table table-bordered" style="height:600px;overflow: scroll">
+						<thead>
+							<th class="text-center">时间</th>
+							<th class="text-center">情境</th>
+							<th class="text-center">上下班</th>
+							<th class="text-center">动作状态</th>
+						</thead>
+						<tbody>
+							<tr id="detailTrHidden" class="hidden">
+								<td class="time text-center">2015-12-16 12:00</td>
+								<td class="sence text-center">商圈工作中</td>
+								<td class="status text-center">上班路上</td>
+								<td class="action text-center">走路</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -183,7 +203,7 @@
 			.next()
 			.slideToggle(200);
 	};
-	// TODO 假数据 start
+	// 假数据 start
 	var userGroups = ['全部用户', '分组一', '分组二', '分组三'];
 	var userNames = [];
 	for (var i = 0; i < 100; i++) {
@@ -220,7 +240,98 @@
 		mapType: '北京',
 		data: heatData
 	};
-	// TODO 假数据 end
+	var detailData = [{
+		time: '2015-12-16 12:00',
+		sence: '商圈工作中',
+		status: '上班路上',
+		action: '走路',
+	},{
+		time: '2015-12-16 12:00',
+		sence: '商圈工作中',
+		status: '上班路上',
+		action: '走路',
+	},{
+		time: '2015-12-16 12:00',
+		sence: '商圈工作中',
+		status: '上班路上',
+		action: '走路',
+	},{
+		time: '2015-12-16 12:00',
+		sence: '商圈工作中',
+		status: '上班路上',
+		action: '走路',
+	},{
+		time: '2015-12-16 12:00',
+		sence: '商圈工作中',
+		status: '上班路上',
+		action: '走路',
+	},{
+		time: '2015-12-16 12:00',
+		sence: '商圈工作中',
+		status: '上班路上',
+		action: '走路',
+	},{
+		time: '2015-12-16 12:00',
+		sence: '商圈工作中',
+		status: '上班路上',
+		action: '走路',
+	}, {
+		time: '2015-12-16 12:00',
+		sence: '商圈工作中',
+		status: '上班路上',
+		action: '走路',
+	},{
+		time: '2015-12-16 12:00',
+		sence: '商圈工作中',
+		status: '上班路上',
+		action: '走路',
+	},{
+		time: '2015-12-16 12:00',
+		sence: '商圈工作中',
+		status: '上班路上',
+		action: '走路',
+	},{
+		time: '2015-12-16 12:00',
+		sence: '商圈工作中',
+		status: '上班路上',
+		action: '走路',
+	},{
+		time: '2015-12-16 12:00',
+		sence: '商圈工作中',
+		status: '上班路上',
+		action: '走路',
+	},{
+		time: '2015-12-16 12:00',
+		sence: '商圈工作中',
+		status: '上班路上',
+		action: '走路',
+	},{
+		time: '2015-12-16 12:00',
+		sence: '商圈工作中',
+		status: '上班路上',
+		action: '走路',
+	},{
+		time: '2015-12-16 12:00',
+		sence: '商圈工作中',
+		status: '上班路上',
+		action: '走路',
+	},{
+		time: '2015-12-16 12:00',
+		sence: '商圈工作中',
+		status: '上班路上',
+		action: '走路',
+	},{
+		time: '2015-12-16 12:00',
+		sence: '商圈工作中',
+		status: '上班路上',
+		action: '走路',
+	},{
+		time: '2015-12-16 12:00',
+		sence: '商圈工作中',
+		status: '上班路上',
+		action: '走路',
+	},];
+	// 假数据 end
 	// 网络请求地址
 	var url = "{{ url_for('dashboard_bp.single') }}";
 	// 加载列表
@@ -229,7 +340,7 @@
 		async: false,
 		url: url,
 		data: {
-			type: 'user_list'
+			type: 'user_list',
 		},
 		success: function(option) {
 			console.log(option);
@@ -329,8 +440,6 @@
 				default:
 					break;
 			}
-			//			// TODO
-			//			var url = "{{ url_for('dashboard_bp.motion') }}";
 			var data = {
 				uid: currId,
 				h_start: h_start,
@@ -424,6 +533,9 @@
 				case '常去地点':
 					loadLocationChart();
 					break;
+				case '详细日志':
+					loadDetailLog();
+					break;
 			}
 		});
 		// 初始化图表
@@ -497,7 +609,7 @@
 			item.addClass('tag');
 			item.html(filterUserNames[i].name);
 			currId = filterUserNames[i].id
-			// 点击换人
+				// 点击换人
 			item.click(function() {
 				// 换人样式变化
 				$(this).addClass('click');
@@ -956,6 +1068,19 @@
 		$(window).resize(function() {
 			locationChart.resize();
 		});
+	};
+	// 加载详细日志
+	function loadDetailLog() {
+		for (var i = 0; i < detailData.length; i++) {
+			var obj = $('#detailTrHidden').clone();
+			obj.removeAttr('id');
+			obj.removeClass('hidden');
+			obj.find('.time').html(detailData[i].time);
+			obj.find('.sence').html(detailData[i].sence);
+			obj.find('.status').html(detailData[i].status);
+			obj.find('.action').html(detailData[i].action);
+			$('#detailTrHidden').after(obj);
+		}
 	};
 </script>
 
