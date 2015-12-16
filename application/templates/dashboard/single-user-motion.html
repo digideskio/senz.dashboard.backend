@@ -176,10 +176,12 @@
 				<div id="详细日志" class="page hidden">
 					<table class="table table-bordered" style="height:600px;overflow: scroll">
 						<thead>
-							<th class="text-center">时间</th>
-							<th class="text-center">情境</th>
-							<th class="text-center">上下班</th>
-							<th class="text-center">动作状态</th>
+							<tr>
+								<th class="text-center" style="background: rgb(241,241,241);">时间</th>
+								<th class="text-center" style="background: rgb(241,241,241);">情境</th>
+								<th class="text-center" style="background: rgb(241,241,241);">上下班</th>
+								<th class="text-center" style="background: rgb(241,241,241);">动作状态</th>
+							</tr>
 						</thead>
 						<tbody>
 							<tr id="detailTrHidden" class="hidden">
@@ -609,13 +611,13 @@
 			item.addClass('tag');
 			item.html(filterUserNames[i].name);
 			currId = filterUserNames[i].id
-				// 点击换人
+			// 点击换人
 			item.click(function() {
 				// 换人样式变化
-				$(this).addClass('click');
 				if (currUserName != undefined) {
 					currUserName.removeClass('click');
 				}
+				$(this).addClass('click');
 				currUserName = $(this);
 				// 换人业务逻辑
 				console.log('change:' + currId);
