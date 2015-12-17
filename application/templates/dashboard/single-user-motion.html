@@ -180,13 +180,11 @@
 						</tbody>
 					</table>
 					<div class="row">
-						<!--<div class="col-xs-1" style="line-height: 35px;width: 110px;">
-							点击选择页码
-						</div>-->
-						<div class="col-xs-5">
+						<div class="col-xs-4">
 						</div>
-						<div class="col-xs-2">
-							<div class="btn-group dropup pull-right">
+						<div class="col-xs-4">
+							<button id="pageBefore" type="button" class="btn btn-default" style="margin-left: 18%;">上一页</button>
+							<div class="btn-group dropup">
 								<button id="pageIndexBtn" type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
 									第 1 页 <span class="caret"></span>
 								</button>
@@ -196,8 +194,9 @@
 									</li>
 								</ul>
 							</div>
+							<button id="pageNext" type="button" class="btn btn-default">下一页</button>
 						</div>
-						<div class="col-xs-5">
+						<div class="col-xs-4">
 						</div>
 					</div>
 				</div>
@@ -671,7 +670,7 @@
 			item.html(userLabels[i]);
 			$('#userLabelDiv').append(item);
 		};
-		// 加载标签
+		// 加载分页
 		for (var i = 1; i <= detailData.pageCount; i++) {
 			var item = $('#pageIndexHidden').clone();
 			item.removeAttr('id');
@@ -682,15 +681,57 @@
 			item.find('a').click(function() {
 				// 字符分割 
 				pageIndex = $(this).html().split(' ')[1];
-				// 设置当前页样式
-				$('#pageIndexBtn').html('第 ' + pageIndex + ' 页  <span class="caret"></span>');
-				// TODO 请求数据
-				// 加载数据
-				loadDetailLog();
+				// 判断上下页禁用
+				checkPage();
+				// 改变分页
+				changePage();
 			});
 			$('#pageIndexDiv').append(item);
 		}
+		// 判断初始情况
+		checkPage();
+		// 上一页
+		$('#pageBefore').click(function() {
+			console.log('before');
+			pageIndex--;
+			// 判断上下页禁用
+			checkPage();
+			// 改变分页
+			changePage();
+		});
+		// 下一页
+		$('#pageNext').click(function() {
+			console.log('next');
+			pageIndex++;
+			// 判断上下页禁用
+			checkPage();
+			// 改变分页
+			changePage();
+		});
 	};
+	// 判断上下页禁用
+	function checkPage() {
+		// 设置当前页样式
+		$('#pageIndexBtn').html('第 ' + pageIndex + ' 页  <span class="caret"></span>');
+		// 判断禁用
+		if (pageIndex == 1) {
+			$('#pageBefore').attr("disabled", true);
+		} else {
+			$('#pageBefore').attr("disabled", false);
+		}
+		// 判断禁用
+		if (pageIndex == detailData.pageCount) {
+			$('#pageNext').attr("disabled", true);
+		} else {
+			$('#pageNext').attr("disabled", false);
+		}
+	}
+	// 改变分页
+	function changePage() {
+		// TODO 请求数据
+		// 加载数据
+		loadDetailLog();
+	}
 	// 切换分组
 	function changeUserGroup() {
 		$('#currUserGroup').html($(this).html());
