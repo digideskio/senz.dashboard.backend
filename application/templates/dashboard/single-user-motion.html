@@ -363,6 +363,11 @@
 	var pageIndex = 1;
 	// 日志单页面条数
 	var perPageCount = 15;
+	// 默认日期参数
+	var h_start = ((+new Date()) - (86400000 * 30)) || null;
+	var e_start = ((+new Date()) - (86400000 * 30)) || null;
+	var h_end = (+new Date());
+	var e_end = (+new Date());
 	// 加载完成后执行
 	$(document).ready(function() {
 		// 填充日期选择器
@@ -408,10 +413,10 @@
 		});
 		$(".more-wrap a").on("click", function() {
 			var _today = (+new Date());
-			var h_start = (_today - (86400000 * 30)) || null;
-			var e_start = (_today - (86400000 * 30)) || null;
-			var h_end = _today;
-			var e_end = _today;
+			h_start = (_today - (86400000 * 30)) || null;
+			e_start = (_today - (86400000 * 30)) || null;
+			h_end = _today;
+			e_end = _today;
 			var j_start_obj = $(".j-h-startat");
 			var j_end_obj = $(".j-h-endat");
 			switch ($(this).attr('class')) {
@@ -446,6 +451,11 @@
 				default:
 					break;
 			}
+			// 判断是否选中用户
+			if (currId == undefined) {
+				console.log('请先选择用户!');
+				return;
+			}
 			var data = {
 				uid: currId,
 				perPageCount: perPageCount,
@@ -454,6 +464,7 @@
 				e_start: e_start,
 				e_end: e_end,
 			};
+			console.log(data);
 			$.ajax({
 				type: "post",
 				async: true,
@@ -475,40 +486,6 @@
 				}
 			});
 		});
-		//		$('.h-date-wrap select').on('change', function() {
-		//			var h_start = $(".j-h-startat").text() || new Date() - 86400000 * 30;
-		//			var h_end = $(".j-h-endat").text() || new Date();
-		//			var e_start = h_start = new Date(h_start).getTime();
-		//			var e_end = h_end = new Date(h_end).getTime();
-		//			var data = {
-		//				uid: currId,
-		//				perPageCount: perPageCount,
-		//				h_start: h_start,
-		//				h_end: h_end,
-		//				e_start: e_start,
-		//				e_end: e_end,
-		//			};
-		//			$.ajax({
-		//				type: "post",
-		//				async: true,
-		//				url: url,
-		//				data: data,
-		//				success: function(option) {
-		//					console.log(option);
-		//					// TODO
-		//					var obj = JSON.parse(option);
-		//					actionData = obj.actionData;
-		//					eventData = obj.eventData;
-		//					homeOfficeData = obj.homeOfficeData;
-		//					locationData = obj.locationData;
-		//					// 加载用户内容
-		//					initUserContent();
-		//				},
-		//				error: function() {
-		//					alert("获取内容失败，请稍后再试！");
-		//				}
-		//			});
-		//		});
 		// 填充分组
 		for (var i = 0; i < userGroups.length; i++) {
 			var item = $('#userGroupHidden').clone();
@@ -549,8 +526,6 @@
 		initCharts();
 		// 填充用户
 		initUserNameList();
-		// 加载用户内容
-		initUserContent();
 		// 查找逻辑
 		$('#doSearch').click(function() {
 			$('#userNameNull').addClass('hidden');
@@ -630,14 +605,20 @@
 				console.log('change:' + currId);
 				$('#content').addClass('hidden');
 				// 换人业务逻辑执行中
+				var data = {
+					uid: currId,
+					perPageCount: perPageCount,
+					h_start: h_start,
+					h_end: h_end,
+					e_start: e_start,
+					e_end: e_end,
+				};
+				console.log(data);
 				$.ajax({
 					type: 'post',
 					async: true,
 					url: url,
-					data: {
-						uid: currId,
-						perPageCount: perPageCount,
-					},
+					data: data,
 					success: function(option) {
 						var obj = JSON.parse(option);
 						actionData = obj.actionData;
@@ -726,7 +707,6 @@
 	};
 	// 加载事件图表
 	function loadEventChart() {
-		console.log(eventData.category);
 		// 使用
 		require(
 			[
