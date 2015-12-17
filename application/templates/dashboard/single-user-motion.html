@@ -1,7 +1,6 @@
 {% extends 'base.html' %} {% block head %}
 
 <head>
-	<!--<meta http-equiv="Content-Type" content="text/html; charset=utf-8">-->
 	<meta content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no" name="viewport" /> {#
 	<title>SingleUserMotion</title>#}
 	<link rel="stylesheet" href="{{ url_for('static', filename='styles/bootstrap.min.css') }}">
@@ -42,7 +41,7 @@
 
 <div class="container-fluid" style="background: #fff; margin-left: 200px;">
 	<div class="row" style="margin-top: 10px;margin-bottom: 10px;">
-		<div class="col-xs-2" style="margin-top: 40px;">
+		<div class="col-xs-2" style="margin-top: 40px;width: 250px;">
 			<p style="display: inline-block; margin-left:10px;margin-top: 5px;">分组</p>
 			<div class="dropdown" style="float:right;display: inline-block;">
 				<button type="button" class="btn btn-sm dropdown-toggle" id="dropdownMenuClass" data-toggle="dropdown" style="background: #eeeeee;">
@@ -56,7 +55,7 @@
 				</ul>
 			</div>
 		</div>
-		<div class="col-xs-3" style="margin-left: 15px; margin-top: 30px;">
+		<div class="col-xs-3" style="margin-left: 40px;margin-top: 30px;width: 250px;">
 			<div id="date-filter-wrap" class="date-filter-wrap clearfix">
 				<div class="h-date-wrap j-h-date-wrap">
 					<div class="inner-wrap">
@@ -93,7 +92,7 @@
 	</div>
 	<div class="row" style="height: 1px;background: #CCCCCC;"></div>
 	<div class="row">
-		<div class="col-xs-2">
+		<div class="col-xs-2" style="width: 250px;">
 			<div style="margin-top: 15px;">
 				<span style="margin-left:10px;">用户列表</span>
 				<span id="userCount" style="float: right;margin-right: 10px;"></span>
@@ -112,23 +111,11 @@
 				</li>
 			</ul>
 		</div>
-		<!--<div id="mask" class="col-xs-10 hidden" style="margin-top: 50px;">
-			<div style="color: #00ACC1;margin-top: 250px;" class="center-block la-ball-spin-clockwise-fade la-2x">
-				<div></div>
-				<div></div>
-				<div></div>
-				<div></div>
-				<div></div>
-				<div></div>
-				<div></div>
-				<div></div>
-			</div>
-		</div>-->
-		<div id="content" class="col-xs-10 center-block hidden" style="padding-top: 10px;border-left: 1px solid #CCCCCC;">
-			<div class="col-xs-1" style="margin-top: 8px;padding: 0px;text-align: center;">
+		<div id="content" class="col-xs-9 center-block hidden" style="padding-top: 10px;border-left: 1px solid #CCCCCC;">
+			<div class="col-xs-3" style="margin-top: 8px;padding: 0px;text-align: center;width: 160px;">
 				<span id="userName">用户名称</span>
 			</div>
-			<div class="col-xs-11" style="margin-bottom: 10px;">
+			<div class="col-xs-9" style="margin-bottom: 10px;">
 				<div id="userLabelDiv" style="display: inline-block;margin-left: 5px;">
 					<a id="userLabelHidden" role="button" class="btn btn-default btn-sm btn-custom-label hidden disabled" style="margin-left: 10px;margin-top: 5px;"></a>
 				</div>
@@ -151,16 +138,16 @@
 					<div style="margin-left: 90px;margin-right: 90px;height:130px;border: 1px solid #CCCCCC;">
 						<div style="float: left;margin-left: 30px;margin-top: 20px;">
 							<img style="width: 15px; height: 15px" src="{{ url_for('static', filename='images/single-user-motion-schedule.png') }}" />
-							<p style="margin-left: 5px;display: inline-block;">离家时间 : <span>8:20 - 9:10</span></p>
-							<p style="margin-left: 22px;">到家时间 : <span>8:20 - 9:10</span></p>
-							<p style="margin-left: 22px;">到公司时间 : <span>8:20 - 9:10</span></p>
-							<p style="margin-left: 22px;">离开公司时间 : <span>8:20 - 9:10</span></p>
-							<p style="margin-left: 22px;">平均工作时长 : <span>8 hour</span></p>
+							<p style="margin-left: 5px;display: inline-block;">离家时间 : <span id="leaveHome">8:20 - 9:10</span></p>
+							<p style="margin-left: 22px;">到家时间 : <span id="arriveHome">8:20 - 9:10</span></p>
+							<p style="margin-left: 22px;">到公司时间 : <span id="arriveHome">8:20 - 9:10</span></p>
+							<p style="margin-left: 22px;">离开公司时间 : <span id="leaveOffice">8:20 - 9:10</span></p>
+							<p style="margin-left: 22px;">平均工作时长 : <span id="avgWorkHours">8 hour</span></p>
 						</div>
 						<div style="margin-left: 50%;margin-top: 20px;">
 							<img style="width: 15px; height: 20px;" src="{{ url_for('static', filename='images/single-user-motion-map.png') }}" />
-							<p style="margin-left: 5px;display: inline-block;">家庭地址 : <span>北京市天通西苑一区 34#</span></p>
-							<p style="margin-left: 22px;">公司地址 : <span>北京市海淀南路苏州街纽约客公寓</span></p>
+							<p style="margin-left: 5px;display: inline-block;">家庭地址 : <span id="homeAddress">北京市天通西苑一区 34#</span></p>
+							<p style="margin-left: 22px;">公司地址 : <span id="officeAddress">北京市海淀南路苏州街纽约客公寓</span></p>
 						</div>
 					</div>
 				</div>
@@ -174,7 +161,7 @@
 				</div>
 
 				<div id="详细日志" class="page hidden">
-					<table class="table table-bordered" style="height:600px;overflow: scroll">
+					<table class="table table-bordered" style="overflow: scroll">
 						<thead>
 							<tr>
 								<th class="text-center" style="background: rgb(241,241,241);">时间</th>
@@ -192,6 +179,27 @@
 							</tr>
 						</tbody>
 					</table>
+					<div class="row">
+						<!--<div class="col-xs-1" style="line-height: 35px;width: 110px;">
+							点击选择页码
+						</div>-->
+						<div class="col-xs-5">
+						</div>
+						<div class="col-xs-2">
+							<div class="btn-group dropup pull-right">
+								<button id="pageIndexBtn" type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+									第 1 页 <span class="caret"></span>
+								</button>
+								<ul id="pageIndexDiv" class="dropdown-menu" role="menu">
+									<li id="pageIndexHidden" class="hidden">
+										<a href="#"></a>
+									</li>
+								</ul>
+							</div>
+						</div>
+						<div class="col-xs-5">
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -209,26 +217,32 @@
 	var userGroups = ['全部用户', '分组一', '分组二', '分组三'];
 	var userNames = [];
 	for (var i = 0; i < 100; i++) {
-		userNames.push({
-			id: '560388c100b09b53b59504d2',
-			name: '第' + i + '个用户'
-		});
+		userNames.push('560388c100b09b53b59504d2');
 	};
 	var userLabels = ['16岁以下', '人文科学', '管理人员', '10000-20000', '时事新闻', '已婚', '怀孕', '不养宠物', '无车', '时事新闻', '已婚', '怀孕', '不养宠物', '无车'];
 	var eventData = {
 		category: ['地点1', '地点2', '地点3', '地点4', '地点5', '地点6'],
-		data: [2.0, 4.9, 7.0, 23.2, 25.6, 76.7]
+		data: [2.0, 4.9, 7.0, 23.2, 25.6, 76.7],
+		avgData: [2.0, 4.9, 7.0, 23.2, 25.6, 76.7],
 	};
 	var homeOfficeData = {
 		category: ['1:00', '3:00', '5:00', '7:00', '9:00', '11:00', '13:00', '15:00', '17:00', '19:00', '21:00', '23:00'],
 		atHomeData: [5.1, 6, 4, 3, 4, 6, 6, 5, 1, 1, 0, 7],
 		atOfficeData: [7, 5.1, 6, 4, 3, 4, 6, 6, 5, 1, 1, 0],
 		toHomeData: [0, 1.7, 2.1, 2.6, 1.4, 3, 1.4, 0.6, 1.6, 1.5, 1, 1],
-		toOfficeData: [1, 0, 3, 2.1, 0.6, 4, 3, 4, 2, 1, 3.5, 1]
+		toOfficeData: [1, 0, 3, 2.1, 0.6, 4, 3, 4, 2, 1, 3.5, 1],
+		leaveHome: '8:20 - 9:10',
+		leaveOffice: '8:20 - 9:10',
+		arriveHome: '8:20 - 9:10',
+		arriveOffice: '8:20 - 9:10',
+		avgWorkHours: '8 hour',
+		homeAddress: '北京市天通西苑一区 34#',
+		officeAddress: '北京市海淀南路苏州街纽约客公寓',
 	};
 	var actionData = {
 		category: ['走路', '坐车', '静坐', '跑步', '骑车', '乘车'],
-		data: [2.0, 4.9, 17.0, 3.2, 5.6, 6.7]
+		data: [2.0, 4.9, 17.0, 3.2, 5.6, 6.7],
+		avgData: [2.0, 4.9, 17.0, 3.2, 5.6, 6.7],
 	};
 	var heatData = [];
 	for (var i = 0; i < 200; ++i) {
@@ -242,97 +256,80 @@
 		mapType: '北京',
 		data: heatData
 	};
-	var detailData = [{
-		time: '2015-12-16 12:00',
-		sence: '商圈工作中',
-		status: '上班路上',
-		action: '走路',
-	},{
-		time: '2015-12-16 12:00',
-		sence: '商圈工作中',
-		status: '上班路上',
-		action: '走路',
-	},{
-		time: '2015-12-16 12:00',
-		sence: '商圈工作中',
-		status: '上班路上',
-		action: '走路',
-	},{
-		time: '2015-12-16 12:00',
-		sence: '商圈工作中',
-		status: '上班路上',
-		action: '走路',
-	},{
-		time: '2015-12-16 12:00',
-		sence: '商圈工作中',
-		status: '上班路上',
-		action: '走路',
-	},{
-		time: '2015-12-16 12:00',
-		sence: '商圈工作中',
-		status: '上班路上',
-		action: '走路',
-	},{
-		time: '2015-12-16 12:00',
-		sence: '商圈工作中',
-		status: '上班路上',
-		action: '走路',
-	}, {
-		time: '2015-12-16 12:00',
-		sence: '商圈工作中',
-		status: '上班路上',
-		action: '走路',
-	},{
-		time: '2015-12-16 12:00',
-		sence: '商圈工作中',
-		status: '上班路上',
-		action: '走路',
-	},{
-		time: '2015-12-16 12:00',
-		sence: '商圈工作中',
-		status: '上班路上',
-		action: '走路',
-	},{
-		time: '2015-12-16 12:00',
-		sence: '商圈工作中',
-		status: '上班路上',
-		action: '走路',
-	},{
-		time: '2015-12-16 12:00',
-		sence: '商圈工作中',
-		status: '上班路上',
-		action: '走路',
-	},{
-		time: '2015-12-16 12:00',
-		sence: '商圈工作中',
-		status: '上班路上',
-		action: '走路',
-	},{
-		time: '2015-12-16 12:00',
-		sence: '商圈工作中',
-		status: '上班路上',
-		action: '走路',
-	},{
-		time: '2015-12-16 12:00',
-		sence: '商圈工作中',
-		status: '上班路上',
-		action: '走路',
-	},{
-		time: '2015-12-16 12:00',
-		sence: '商圈工作中',
-		status: '上班路上',
-		action: '走路',
-	},{
-		time: '2015-12-16 12:00',
-		sence: '商圈工作中',
-		status: '上班路上',
-		action: '走路',
-	},{
-		time: '2015-12-16 12:00',
-		sence: '商圈工作中',
-		status: '上班路上',
-		action: '走路',
-	},];
+	var detailData = {
+		pageCount: 5,
+		data: [{
+			time: '2015-12-16 12:00',
+			sence: '商圈工作中',
+			status: '上班路上',
+			action: '走路',
+		}, {
+			time: '2015-12-16 12:00',
+			sence: '商圈工作中',
+			status: '上班路上',
+			action: '走路',
+		}, {
+			time: '2015-12-16 12:00',
+			sence: '商圈工作中',
+			status: '上班路上',
+			action: '走路',
+		}, {
+			time: '2015-12-16 12:00',
+			sence: '商圈工作中',
+			status: '上班路上',
+			action: '走路',
+		}, {
+			time: '2015-12-16 12:00',
+			sence: '商圈工作中',
+			status: '上班路上',
+			action: '走路',
+		}, {
+			time: '2015-12-16 12:00',
+			sence: '商圈工作中',
+			status: '上班路上',
+			action: '走路',
+		}, {
+			time: '2015-12-16 12:00',
+			sence: '商圈工作中',
+			status: '上班路上',
+			action: '走路',
+		}, {
+			time: '2015-12-16 12:00',
+			sence: '商圈工作中',
+			status: '上班路上',
+			action: '走路',
+		}, {
+			time: '2015-12-16 12:00',
+			sence: '商圈工作中',
+			status: '上班路上',
+			action: '走路',
+		}, {
+			time: '2015-12-16 12:00',
+			sence: '商圈工作中',
+			status: '上班路上',
+			action: '走路',
+		}, {
+			time: '2015-12-16 12:00',
+			sence: '商圈工作中',
+			status: '上班路上',
+			action: '走路',
+		}, {
+			time: '2015-12-16 12:00',
+			sence: '商圈工作中',
+			status: '上班路上',
+			action: '走路',
+		}, {
+			time: '2015-12-16 12:00',
+			sence: '商圈工作中',
+			status: '上班路上',
+			action: '走路',
+		}, {
+			time: '2015-12-16 12:00',
+			sence: '商圈工作中',
+			status: '上班路上',
+			action: '走路',
+		}]
+	};
 	// 假数据 end
 	// 网络请求地址
 	var url = "{{ url_for('dashboard_bp.single') }}";
@@ -346,6 +343,9 @@
 		},
 		success: function(option) {
 			console.log(option);
+			// TODO
+			//			var obj = JSON.parse(option);
+			//			userNames = obj.userNames;
 		},
 		error: function() {
 			alert("获取内容失败，请稍后再试！");
@@ -359,6 +359,10 @@
 	var currId;
 	// 筛选结果
 	var filterUserNames = userNames;
+	// 日志当前页面
+	var pageIndex = 1;
+	// 日志单页面条数
+	var perPageCount = 15;
 	// 加载完成后执行
 	$(document).ready(function() {
 		// 填充日期选择器
@@ -444,6 +448,7 @@
 			}
 			var data = {
 				uid: currId,
+				perPageCount: perPageCount,
 				h_start: h_start,
 				h_end: h_end,
 				e_start: e_start,
@@ -470,40 +475,40 @@
 				}
 			});
 		});
-		$('.h-date-wrap select').on('change', function() {
-			var h_start = $(".j-h-startat").text() || new Date() - 86400000 * 30;
-			var h_end = $(".j-h-endat").text() || new Date();
-			var e_start = h_start = new Date(h_start).getTime();
-			var e_end = h_end = new Date(h_end).getTime();
-			var url = "{{ url_for('dashboard_bp.motion') }}";
-			var data = {
-				uid: currId,
-				h_start: h_start,
-				h_end: h_end,
-				e_start: e_start,
-				e_end: e_end,
-			};
-			$.ajax({
-				type: "post",
-				async: true,
-				url: url,
-				data: data,
-				success: function(option) {
-					console.log(option);
-					// TODO
-					var obj = JSON.parse(option);
-					actionData = obj.actionData;
-					eventData = obj.eventData;
-					homeOfficeData = obj.homeOfficeData;
-					locationData = obj.locationData;
-					// 加载用户内容
-					initUserContent();
-				},
-				error: function() {
-					alert("获取内容失败，请稍后再试！");
-				}
-			});
-		});
+		//		$('.h-date-wrap select').on('change', function() {
+		//			var h_start = $(".j-h-startat").text() || new Date() - 86400000 * 30;
+		//			var h_end = $(".j-h-endat").text() || new Date();
+		//			var e_start = h_start = new Date(h_start).getTime();
+		//			var e_end = h_end = new Date(h_end).getTime();
+		//			var data = {
+		//				uid: currId,
+		//				perPageCount: perPageCount,
+		//				h_start: h_start,
+		//				h_end: h_end,
+		//				e_start: e_start,
+		//				e_end: e_end,
+		//			};
+		//			$.ajax({
+		//				type: "post",
+		//				async: true,
+		//				url: url,
+		//				data: data,
+		//				success: function(option) {
+		//					console.log(option);
+		//					// TODO
+		//					var obj = JSON.parse(option);
+		//					actionData = obj.actionData;
+		//					eventData = obj.eventData;
+		//					homeOfficeData = obj.homeOfficeData;
+		//					locationData = obj.locationData;
+		//					// 加载用户内容
+		//					initUserContent();
+		//				},
+		//				error: function() {
+		//					alert("获取内容失败，请稍后再试！");
+		//				}
+		//			});
+		//		});
 		// 填充分组
 		for (var i = 0; i < userGroups.length; i++) {
 			var item = $('#userGroupHidden').clone();
@@ -609,20 +614,21 @@
 			item.removeAttr('id');
 			item.removeClass('hidden');
 			item.addClass('tag');
-			item.html(filterUserNames[i].name);
-			currId = filterUserNames[i].id
+			item.html(filterUserNames[i]);
 			// 点击换人
 			item.click(function() {
+				// 重置页码
+				pageIndex = 1;
 				// 换人样式变化
 				if (currUserName != undefined) {
 					currUserName.removeClass('click');
 				}
 				$(this).addClass('click');
 				currUserName = $(this);
+				currId = $(this).html();
 				// 换人业务逻辑
 				console.log('change:' + currId);
 				$('#content').addClass('hidden');
-				//				$('#mask').removeClass('hidden');
 				// 换人业务逻辑执行中
 				$.ajax({
 					type: 'post',
@@ -630,6 +636,7 @@
 					url: url,
 					data: {
 						uid: currId,
+						perPageCount: perPageCount,
 					},
 					success: function(option) {
 						var obj = JSON.parse(option);
@@ -640,7 +647,6 @@
 						userNames = obj.userNames;
 						userLabels = obj.userLabels;
 						// 换人业务逻辑完成后
-						//						$('#mask').addClass('hidden');
 						$('#content').removeClass('hidden');
 						// 加载用户内容
 						initUserContent();
@@ -663,6 +669,8 @@
 		$('#pageContainer .page').addClass('hidden');
 		currPage.removeClass('hidden');
 		currPage.addClass('show');
+		// 清空分页
+		$('.changePage').remove();
 		// 加载默认图表
 		loadEventChart();
 		// 判断是否显示
@@ -682,6 +690,25 @@
 			item.html(userLabels[i]);
 			$('#userLabelDiv').append(item);
 		};
+		// 加载标签
+		for (var i = 1; i <= detailData.pageCount; i++) {
+			var item = $('#pageIndexHidden').clone();
+			item.removeAttr('id');
+			item.removeClass('hidden');
+			item.addClass('changePage');
+			item.find('a').html('第 ' + i + ' 页');
+			// 日志翻页
+			item.find('a').click(function() {
+				// 字符分割 
+				pageIndex = $(this).html().split(' ')[1];
+				// 设置当前页样式
+				$('#pageIndexBtn').html('第 ' + pageIndex + ' 页  <span class="caret"></span>');
+				// TODO 请求数据
+				// 加载数据
+				loadDetailLog();
+			});
+			$('#pageIndexDiv').append(item);
+		}
 	};
 	// 切换分组
 	function changeUserGroup() {
@@ -699,6 +726,7 @@
 	};
 	// 加载事件图表
 	function loadEventChart() {
+		console.log(eventData.category);
 		// 使用
 		require(
 			[
@@ -710,7 +738,6 @@
 				// 基于准备好的dom，初始化echarts图表
 				eventChart = ec.init(document.getElementById('eventChart'));
 				option = {
-					color: ['#00acc1'],
 					title: {
 						text: '事件统计图',
 					},
@@ -718,8 +745,11 @@
 						trigger: 'axis',
 						formatter: '{b} : {c} 次',
 					},
+					legend: {
+						data: ['个人数据', '平均水平'],
+					},
 					toolbox: {
-						show: true,
+						show: false,
 						feature: {
 							magicType: {
 								show: true,
@@ -744,8 +774,9 @@
 						},
 					}],
 					series: [{
+						name: '个人数据',
 						type: 'bar',
-						barMaxWidth: 80,
+						barMaxWidth: 30,
 						data: eventData.data,
 						markPoint: {
 							data: [{
@@ -754,15 +785,43 @@
 							}, {
 								type: 'min',
 								name: '最小值'
-							}]
+							}],
+							itemStyle: {
+								normal: {
+									color: '#00acc1',
+								},
+							},
 						},
-						markLine: {
+						itemStyle: {
+							normal: {
+								color: '#00acc1',
+							},
+						},
+					}, {
+						name: '平均水平',
+						type: 'bar',
+						barMaxWidth: 30,
+						data: eventData.data,
+						markPoint: {
 							data: [{
-								type: 'average',
-								name: '平均值'
-							}]
-						}
-					}]
+								type: 'max',
+								name: '最大值'
+							}, {
+								type: 'min',
+								name: '最小值'
+							}],
+							itemStyle: {
+								normal: {
+									color: '#918bd5',
+								},
+							},
+						},
+						itemStyle: {
+							normal: {
+								color: '#918bd5',
+							},
+						},
+					}, ]
 				};
 				// 为echarts对象加载数据 
 				eventChart.setOption(option);
@@ -775,6 +834,14 @@
 	};
 	// 加载上下班图表
 	function loadHomeOfficeChart() {
+		// 加载静态信息
+		$('#leaveHome').html(homeOfficeData.leaveHome);
+		$('#leaveOffice').html(homeOfficeData.leaveOffice);
+		$('#arriveHome').html(homeOfficeData.arriveHome);
+		$('#arriveOffice').html(homeOfficeData.arriveOffice);
+		$('#avgWorkHours').html(homeOfficeData.avgWorkHours);
+		$('#homeAddress').html(homeOfficeData.homeAddress);
+		$('#officeAddress').html(homeOfficeData.officeAddress);
 		// 使用
 		require(
 			[
@@ -794,7 +861,7 @@
 						formatter: '{b} : {c} 次',
 					},
 					toolbox: {
-						show: true,
+						show: false,
 						feature: {
 							magicType: {
 								show: true,
@@ -824,7 +891,6 @@
 					series: [{
 						name: '在家',
 						type: 'line',
-						barMaxWidth: 80,
 						data: homeOfficeData.atHomeData,
 						markPoint: {
 							data: [{
@@ -835,12 +901,6 @@
 								name: '最小值'
 							}]
 						},
-						markLine: {
-							data: [{
-								type: 'average',
-								name: '平均值'
-							}]
-						},
 						itemStyle: {
 							normal: {
 								color: '#0080ff',
@@ -849,7 +909,6 @@
 					}, {
 						name: '在公司',
 						type: 'line',
-						barMaxWidth: 80,
 						data: homeOfficeData.atOfficeData,
 						markPoint: {
 							data: [{
@@ -860,12 +919,6 @@
 								name: '最小值'
 							}]
 						},
-						markLine: {
-							data: [{
-								type: 'average',
-								name: '平均值'
-							}]
-						},
 						itemStyle: {
 							normal: {
 								color: '#00acc1',
@@ -874,7 +927,6 @@
 					}, {
 						name: '在回家路上',
 						type: 'line',
-						barMaxWidth: 80,
 						data: homeOfficeData.toHomeData,
 						markPoint: {
 							data: [{
@@ -885,12 +937,6 @@
 								name: '最小值'
 							}]
 						},
-						markLine: {
-							data: [{
-								type: 'average',
-								name: '平均值'
-							}]
-						},
 						itemStyle: {
 							normal: {
 								color: '#f8b62d',
@@ -899,7 +945,6 @@
 					}, {
 						name: '在上班路上',
 						type: 'line',
-						barMaxWidth: 80,
 						data: homeOfficeData.toOfficeData,
 						markPoint: {
 							data: [{
@@ -908,12 +953,6 @@
 							}, {
 								type: 'min',
 								name: '最小值'
-							}]
-						},
-						markLine: {
-							data: [{
-								type: 'average',
-								name: '平均值'
 							}]
 						},
 						itemStyle: {
@@ -945,16 +984,18 @@
 				// 基于准备好的dom，初始化echarts图表
 				actionChart = ec.init(document.getElementById('actionChart'));
 				option = {
-					color: ['#00acc1'],
 					title: {
 						text: '动作状态平均时长统计图',
+					},
+					legend: {
+						data: ['个人数据', '平均水平'],
 					},
 					tooltip: {
 						trigger: 'axis',
 						formatter: '{b} : {c} 分钟',
 					},
 					toolbox: {
-						show: true,
+						show: false,
 						feature: {
 							magicType: {
 								show: true,
@@ -979,8 +1020,9 @@
 						},
 					}],
 					series: [{
+						name: '个人数据',
 						type: 'bar',
-						barMaxWidth: 80,
+						barMaxWidth: 30,
 						data: actionData.data,
 						markPoint: {
 							data: [{
@@ -989,15 +1031,43 @@
 							}, {
 								type: 'min',
 								name: '最小值'
-							}]
+							}],
+							itemStyle: {
+								normal: {
+									color: '#00acc1',
+								},
+							},
 						},
-						markLine: {
+						itemStyle: {
+							normal: {
+								color: '#00acc1',
+							},
+						},
+					}, {
+						name: '平均水平',
+						type: 'bar',
+						barMaxWidth: 30,
+						data: actionData.data,
+						markPoint: {
 							data: [{
-								type: 'average',
-								name: '平均值'
-							}]
-						}
-					}]
+								type: 'max',
+								name: '最大值'
+							}, {
+								type: 'min',
+								name: '最小值'
+							}],
+							itemStyle: {
+								normal: {
+									color: '#918bd5',
+								},
+							},
+						},
+						itemStyle: {
+							normal: {
+								color: '#918bd5',
+							},
+						},
+					}, ]
 				};
 				// 为echarts对象加载数据 
 				actionChart.setOption(option);
@@ -1028,7 +1098,7 @@
 						formatter: '{b}'
 					},
 					toolbox: {
-						show: true,
+						show: false,
 						orient: 'vertical',
 						x: 'right',
 						y: 'top',
@@ -1073,14 +1143,18 @@
 	};
 	// 加载详细日志
 	function loadDetailLog() {
-		for (var i = 0; i < detailData.length; i++) {
+		// 清除历史数据
+		$('.logRow').remove();
+		// 加载数据
+		for (var i = 0; i < detailData.data.length; i++) {
 			var obj = $('#detailTrHidden').clone();
 			obj.removeAttr('id');
 			obj.removeClass('hidden');
-			obj.find('.time').html(detailData[i].time);
-			obj.find('.sence').html(detailData[i].sence);
-			obj.find('.status').html(detailData[i].status);
-			obj.find('.action').html(detailData[i].action);
+			obj.addClass('logRow');
+			obj.find('.time').html(detailData.data[i].time);
+			obj.find('.sence').html(detailData.data[i].sence);
+			obj.find('.status').html(detailData.data[i].status);
+			obj.find('.action').html(detailData.data[i].action);
 			$('#detailTrHidden').after(obj);
 		}
 	};
