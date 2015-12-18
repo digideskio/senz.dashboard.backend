@@ -1,0 +1,85 @@
+{% extends 'settings/create.html' %}
+
+{%  block content %}
+<style type="text/css">
+    * {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+    /*容器div*/
+
+    #settings {
+        position: relative;
+        width: 100%;
+        margin-top: 50px;
+        margin-left: 40px;
+        color: #3a3a3a;
+        font-size: 16px;
+        font-family: "Microsoft YaHei" ! important;
+    }
+    .info {
+        color: #686868;
+    }
+    #app_id_div {
+        margin-top: 10px;
+    }
+    #app_key,
+    #app_id {
+        border-style: solid;
+        border-width: 1px;
+        border-color: rgb(202, 202, 202);
+        border-radius: 6px;
+        background-color: rgb(247, 247, 247);
+        outline: none;
+        font-size: 100%;
+        color: #999999;
+        width: 300px;
+        height: 30px;
+        padding-left: 10px;
+    }
+    #app_key {
+        margin-left: 10px;
+    }
+    #app_id {
+        margin-left: 23px;
+    }
+    #remark_div {
+        margin-top: 15px;
+        line-height: 25px;
+    }
+    .link {
+        text-decoration: none;
+        color: #00ACC1;
+    }
+</style>
+<div id="container" class="container">
+    <div id="content" class="content pd40" style="min-height: 678px; margin-top: 40px;">
+        <div id="settings">
+            <form action="/upload" enctype=multipart/form-data method="post">
+                APPID: <input type="text" name="appId" ><br>
+                CERT: <input type="file" name="cert"><br>
+                KEY: <input type="file" name="key"><br>
+                PASS: <input type="password" name="passphrase"><br>
+                <input type="submit">
+            </form>
+		</div>
+    </div>
+</div>
+{%  endblock %}
+
+<script>
+{% block app_select %}
+var post_url = function(){
+    var obj = document.getElementById("select_app");
+    document.getElementById("app_name").value = obj.options[obj.selectedIndex].text;
+    document.getElementById("app_id").value = obj.value;
+    document.getElementById("app_key").value = obj.options[obj.selectedIndex].id;
+    var cur_url = window.location.href;
+    $.post("/", {app_id: obj.value}, function () {
+        window.location.href = cur_url;
+    });
+};
+{% endblock %}
+</script>
+

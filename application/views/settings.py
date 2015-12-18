@@ -1,5 +1,8 @@
-from flask import Blueprint, render_template, session, request, redirect, url_for
+from flask import Blueprint, render_template, session, request, redirect, url_for, make_response
 from ..models import Developer
+from leancloud import File
+from StringIO import StringIO
+from leancloud import Object, Query
 
 
 settings = Blueprint('settings', __name__, template_folder='templates')
@@ -79,3 +82,32 @@ def modify_app():
             user.session_token = session.get('session_token')
             user.modify_app(app_id, app_name, app_type)
         return redirect(url_for('settings.manage_app'))
+
+
+@settings.route('/upload', methods=['GET', 'POST'])
+def upload():
+    if request.method == "POST":
+        cert = request.files.get('cert')
+        key = request.files.get('key')
+        appId = request.form.get('appId')
+        passphrase = request.form.get('passphrase')
+
+        print appId, passphrase
+
+        cert_pem = File('cert.pem', StringIO(cert.read()))
+        key_pem = File('key.pem', StringIO(key.read()))
+
+        cert_url = cert_pem.save().url
+        key_url = key_pem.save().url
+
+        app_query = Query(Object.extend('Application'))
+        app_query.equal_to('objectId', appId)
+        app = app_query.find()[0] if app_query.count() else None
+
+        if app:
+            app.set('cert_url', cert_url)
+            app.set('key_url', key_url)
+            app.set('passphrase', passphrase)
+            app.save()
+        return make_response("SUCCESS")
+    return render_template('settings/upload.html')
