@@ -384,7 +384,6 @@ def single():
         if req_type == 'user_list':
             user_list = developer.get_tracker_of_app(app_id)
             return json.dumps({"userNames": user_list})
-
         ret_dict = get_attr_of_user(uid)
         return json.dumps(ret_dict)
     return render_template('dashboard/single-user-motion.html',
