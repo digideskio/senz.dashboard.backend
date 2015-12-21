@@ -415,7 +415,8 @@ def get_attr_of_user(uid, h_start=None, h_end=None, e_start=None, e_end=None, pe
     user_labels += [type_list[labels.index(x)] for x in labels if isinstance(x, unicode)]
     ret_dcit['userLabels'] = user_labels
 
-    event = attrs.attributes.get('event')
+    event = attrs.attributes.get('event') or None
+    event = dict(filter(lambda x: e_start < x[0] < e_end, event.items()))
     event_data = {
         "category": list(set(event.values())),
         "data": map(lambda x: event.values().count(x), list(set(event.values())))
@@ -429,7 +430,8 @@ def get_attr_of_user(uid, h_start=None, h_end=None, e_start=None, e_end=None, pe
     }
     ret_dcit['actionData'] = avtion_data
 
-    home_office = attrs.attributes.get('home_office_status')
+    home_office = attrs.attributes.get('home_office_status') or {}
+    home_office = dict(filter(lambda x: h_start < x[0] < h_end, home_office.items()))
     home_office_data = {
         "category": [i for i in xrange(0, 24)],
         "atHomeData": map(lambda x: len(filter(lambda z: z[1] == u"at_home" or z[1] == u"contextAtHome" and time.localtime(int(z[0][:10]))[3] == x,
