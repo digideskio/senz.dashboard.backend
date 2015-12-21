@@ -122,6 +122,8 @@ def parse_event_info(event_info):
     ret_dict['user_id'] = user_id
     event_tmp = sorted(events.items(), key=lambda value: -value[1])
     event = translate(event_tmp[0][0], 'event_old') if event_tmp else None
+    if event_info.get('isOnSubway'):
+        event = 'contextTakingSubway'
     ret_dict['event'] = {timestamp: event}
     post_panel_data(tracker=user_id, context_type='context', context_val=event, timestamp=timestamp)
     return ret_dict
