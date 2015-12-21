@@ -380,22 +380,24 @@ def single():
     developer.session_token = session.get('session_token')
     if request.method == 'POST':
         req_type = request.form.get('type')
-        uid = request.form.get('uid')
         if req_type == 'user_list':
             user_list = developer.get_tracker_of_app(app_id)
             return json.dumps({"userNames": user_list})
-        ret_dict = get_attr_of_user(uid)
+
+        uid = request.form.get('uid')
+        h_start = request.form.get('h_start')
+        h_end = request.form.get('h_end')
+        e_start = request.form.get('e_start')
+        e_end = request.form.get('e_end')
+        per_page = request.form.get('perPageCount')
+        ret_dict = get_attr_of_user(uid, h_start=h_start, h_end=h_end, e_start=e_start,
+                                    e_end=e_end, per_page=per_page)
         return json.dumps(ret_dict)
     return render_template('dashboard/single-user-motion.html',
                            username=username, app_id=app_id, app_list=app_list)
 
 
-@dashboard_bp.route('/dashboard/group', methods=['GET', 'POST'])
-def group():
-    return render_template('dashboard/group-setting.html')
-
-
-def get_attr_of_user(uid):
+def get_attr_of_user(uid, h_start=None, h_end=None, e_start=None, e_end=None, per_page=15):
     ret_dcit = {}
     user = {
         "__type": "Pointer",
@@ -448,6 +450,11 @@ def get_attr_of_user(uid):
     }
     ret_dcit['locationData'] = location_data
     return ret_dcit
+
+
+@dashboard_bp.route('/dashboard/group', methods=['GET', 'POST'])
+def group():
+    return render_template('dashboard/group-setting.html')
 
 
 def get_query_list(app_id='', *field):
