@@ -86,6 +86,8 @@ def modify_app():
 
 @settings.route('/upload', methods=['GET', 'POST'])
 def upload():
+    if not session.get('session_token'):
+        return redirect(url_for('accounts_bp.login'))
     if request.method == "POST":
         cert = request.files.get('cert')
         key = request.files.get('key')
@@ -110,4 +112,12 @@ def upload():
             app.set('passphrase', passphrase)
             app.save()
         return make_response("SUCCESS")
-    return render_template('settings/upload.html')
+    app_id = session.get('app_id', None)
+    developer = Developer()
+    developer.session_token = session.get('session_token')
+    username = developer.username()
+    app_list = developer.get_app_list()
+    return render_template('settings/upload.html',
+                           username=username,
+                           app_id=app_id,
+                           app_list=app_list)
