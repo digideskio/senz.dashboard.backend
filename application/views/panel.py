@@ -61,7 +61,7 @@ def get_installationid_by_trackerid(tracker_id=None):
     return installation.id, installation.get('deviceType')
 
 
-def push_ios_message(installation_id, type, value):
+def push_ios_message(installation_id, type, value, timestamp):
     url = "https://leancloud.cn/1.1/functions/pushAPNMessage"
     headers = {
         "X-AVOSCloud-Application-Id": "9ra69chz8rbbl77mlplnl4l2pxyaclm612khhytztl8b1f9o",
@@ -72,7 +72,7 @@ def push_ios_message(installation_id, type, value):
             "senz-sdk-notify": {
                 "type": type,
                 "status": value,
-                "timestamp": int(time.time())*1000,
+                "timestamp": timestamp,
                 "probability": 0.789
             }
         },
@@ -113,7 +113,7 @@ def post_panel_data(**param):
             payload["type"] = motion_type
             payload["val"] = motion_val
             if installation[1] == u'ios':
-                push_ios_message(installation[0], motion_type, motion_val)
+                push_ios_message(installation[0], motion_type, motion_val, timestamp)
             else:
                 requests.post("https://leancloud.cn/1.1/functions/notify_new_details",  headers=headers, data=payload)
         if context_type and context_val and context_val in home_office_type:
@@ -121,14 +121,14 @@ def post_panel_data(**param):
             payload["val"] = context_val
             payload["expire"] = expire
             if installation[1] == u'ios':
-                push_ios_message(installation[0], "home_office_status", context_val)
+                push_ios_message(installation[0], "home_office_status", context_val, timestamp)
             else:
                 requests.post("https://leancloud.cn/1.1/functions/notify_new_details", headers=headers, data=payload)
         elif context_type and context_val and context_val not in home_office_type:
             payload["type"] = "event"
             payload["val"] = context_val
             if installation[1] == u'ios':
-                push_ios_message(installation[0], "event", context_val)
+                push_ios_message(installation[0], "event", context_val, timestamp)
             else:
                 requests.post("https://leancloud.cn/1.1/functions/notify_new_details",  headers=headers, data=payload)
         print payload
