@@ -79,7 +79,7 @@ def push_ios_message(installation_id, type, value):
         "installationId": installation_id
     }
     print body
-    print requests.post(url, headers=headers, data=body)
+    requests.post(url, headers=headers, data=body)
 
 
 def post_panel_data(**param):
