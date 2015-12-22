@@ -48,6 +48,7 @@
 var post_url = function(){
     var obj = document.getElementById("select_app");
     var cur_url = window.location.href;
+    document.getElementsByName('appId').value = obj.value;
     $.post("/", {app_id: obj.value}, function () {
         window.location.href = cur_url;
     });
