@@ -98,34 +98,25 @@ def post_panel_data(**param):
                "X-AVOSCloud-Application-Key": "6z6n0w3dopxmt32oi2eam2dt0orh8rxnqc8lgpf2hqnar4tr"}
     for item in tracker_list:
         installation = get_installationid_by_trackerid(item)
-        print installation
-        if installation[1] == u'ios':
-            headers = {
-                "X-AVOSCloud-Application-Id": "9ra69chz8rbbl77mlplnl4l2pxyaclm612khhytztl8b1f9o",
-                "X-AVOSCloud-Application-Key": "1zohz2ihxp9dhqamhfpeaer8nh1ewqd9uephe9ztvkka544b"
-            }
         payload = {"userId": item, "source": source, "timestamp": timestamp}
         if motion_type and motion_val:
             payload["type"] = motion_type
             payload["val"] = motion_val
             if installation[1] == u'ios':
                 push_ios_message(installation[0], motion_type, motion_val, timestamp)
-            else:
-                requests.post("https://leancloud.cn/1.1/functions/notify_new_details",  headers=headers, data=payload)
+            requests.post("https://leancloud.cn/1.1/functions/notify_new_details",  headers=headers, data=payload)
         if context_type and context_val and context_val in home_office_type:
             payload["type"] = "home_office_status"
             payload["val"] = context_val
             payload["expire"] = expire
             if installation[1] == u'ios':
                 push_ios_message(installation[0], "home_office_status", context_val, timestamp)
-            else:
-                requests.post("https://leancloud.cn/1.1/functions/notify_new_details", headers=headers, data=payload)
+            requests.post("https://leancloud.cn/1.1/functions/notify_new_details", headers=headers, data=payload)
         elif context_type and context_val and context_val not in home_office_type:
             payload["type"] = "event"
             payload["val"] = context_val
             if installation[1] == u'ios':
                 push_ios_message(installation[0], "event", context_val, timestamp)
-            else:
-                requests.post("https://leancloud.cn/1.1/functions/notify_new_details",  headers=headers, data=payload)
+            requests.post("https://leancloud.cn/1.1/functions/notify_new_details",  headers=headers, data=payload)
         print payload
 
