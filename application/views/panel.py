@@ -73,7 +73,7 @@ def push_ios_message(installation_id, type, value, timestamp):
                 "type": type,
                 "status": value,
                 "timestamp": timestamp,
-                "probability": 0.789
+                "probability": 1
             }
         },
         "installationId": installation_id
