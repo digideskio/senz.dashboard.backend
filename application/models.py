@@ -3,6 +3,9 @@
 from leancloud import User, Object, Query, LeanCloudError
 from itsdangerous import Signer
 
+Application = Object.extend('Application')
+Installation = Object.extend('BindingInstallation')
+
 
 class Developer(User):
     def __init__(self):
@@ -28,9 +31,8 @@ class Developer(User):
         if not app_name:
             return False
         user = self.become(session_token=self.session_token)
-        application = Object.extend('Application')
-        app = application()
-        query = Query(application)
+        app = Application()
+        query = Query(Application)
         query.equal_to('user', user)
         query.equal_to('app_name', app_name)
         if not query.find():
@@ -50,8 +52,7 @@ class Developer(User):
     def delete_app(self, app_id=None):
         try:
             user = self.become(session_token=self.session_token)
-            application = Object.extend('Application')
-            query = Query(application)
+            query = Query(Application)
             query.equal_to('user', user)
             query.equal_to('app_id', app_id)
             result = query.find()
@@ -66,8 +67,7 @@ class Developer(User):
     def modify_app(self, app_id=None, app_name=None, app_type=None):
         try:
             user = self.become(session_token=self.session_token)
-            application = Object.extend('Application')
-            query = Query(application)
+            query = Query(Application)
             query.equal_to('user', user)
             query.equal_to('app_id', app_id)
             app = query.find()[0] if query.count() else None
@@ -85,7 +85,7 @@ class Developer(User):
     def get_app_list(self):
         try:
             user = self.become(session_token=self.session_token)
-            query = Query(Object.extend('Application'))
+            query = Query(Application)
             query.equal_to('user', user)
             query.limit(1000)
             result = query.find()
@@ -101,14 +101,14 @@ class Developer(User):
 
     def get_tracker_of_app(self, app_id=''):
         try:
-            query = Query(Object.extend('Application'))
+            query = Query(Application)
             query.equal_to('app_id', app_id)
             app_list = query.find()
             if not app_list:
                 return []
             the_app = app_list[0]
 
-            query = Query(Object.extend('BindingInstallation'))
+            query = Query(Installation)
             query.equal_to('application', the_app)
             query.select('user')
             installation_list = query.find()
