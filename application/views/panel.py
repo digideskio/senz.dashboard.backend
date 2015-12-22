@@ -61,21 +61,17 @@ def get_installationid_by_trackerid(tracker_id=None):
     return installation.id, installation.get('deviceType')
 
 
-def push_ios_message(installation_id, type, value, timestamp):
+def push_ios_message(installation_id, content_type, value, timestamp):
     url = "https://leancloud.cn/1.1/functions/pushAPNMessage"
     headers = {
         "X-AVOSCloud-Application-Id": "9ra69chz8rbbl77mlplnl4l2pxyaclm612khhytztl8b1f9o",
         "X-AVOSCloud-Application-Key": "1zohz2ihxp9dhqamhfpeaer8nh1ewqd9uephe9ztvkka544b"
     }
     body = {
-        "msg": {
-            "senz-sdk-notify": {
-                "type": type,
-                "status": value,
-                "timestamp": timestamp,
-                "probability": 1
-            }
-        },
+        "type": content_type,
+        "status": value,
+        "timestamp": timestamp,
+        "probability": 1,
         "installationId": installation_id
     }
     print body
