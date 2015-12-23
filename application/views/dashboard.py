@@ -516,17 +516,22 @@ def get_attr_of_user(uid, h_start=None, h_end=None, e_start=None, e_end=None):
 
 
 def get_query_list(app_id='', *field):
-    if not app_id:
-        app_id = '5621fb0f60b27457e863fabb'
+    app_id = app_id or '5621fb0f60b27457e863fabb'
 
-    app_query = Query(Object.extend('Application'))
-    app_query.equal_to('app_id', app_id)
-    app = app_query.find()[0] if app_query.count() else None
+    # app_query = Query(Object.extend('Application'))
+    # app_query.equal_to('app_id', app_id)
+    # app = app_query.find()[0] if app_query.count() else None
+
+    app = {
+        "__type": "Pointer",
+        "className": "Application",
+        "objectId": app_id
+    }
 
     try:
         query_limit = 100
         if app_id == '5621fb0f60b27457e863fabb':
-            query = Query(Object.extend('DashDataSource'))
+            query = Query(DashboardSource)
             query.equal_to('app_id', app_id)
         else:
             query = Query(Object.extend('DashboardSource'))

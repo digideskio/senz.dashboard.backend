@@ -38,8 +38,12 @@
 var post_url = function(){
     var obj = document.getElementById("select_app");
     $('#appId').val(obj.value);
-    $.post("/", {app_id: obj.value}, function () {});
+    $.post("/", {app_id: obj.value});
 };
+
+$(document).ready(function(){
+    $('#appId').val($("#select_app").val());
+});
 {% endblock %}
 </script>
 

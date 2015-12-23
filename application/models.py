@@ -101,12 +101,17 @@ class Developer(User):
 
     def get_tracker_of_app(self, app_id=''):
         try:
-            query = Query(Application)
-            query.equal_to('app_id', app_id)
-            app_list = query.find()
-            if not app_list:
-                return []
-            the_app = app_list[0]
+            # query = Query(Application)
+            # query.equal_to('app_id', app_id)
+            # app_list = query.find()
+            # if not app_list:
+            #     return []
+            # the_app = app_list[0]
+            the_app = {
+                "__type": "Pointer",
+                "className": "Application",
+                "objectId": app_id
+            }
 
             query = Query(Installation)
             query.equal_to('application', the_app)
