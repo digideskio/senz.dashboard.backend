@@ -342,9 +342,8 @@
 		},
 		success: function(option) {
 			console.log(option);
-			// TODO
-            var obj = JSON.parse(option);
-            userNames = obj.userNames;
+			var obj = JSON.parse(option);
+			userNames = obj.userNames;
 		},
 		error: function() {
 			alert("获取内容失败，请稍后再试！");
@@ -477,6 +476,14 @@
 					eventData = obj.eventData;
 					homeOfficeData = obj.homeOfficeData;
 					locationData = obj.locationData;
+					userLabels = obj.userLabels;
+					detailData = obj.detailData;
+					console.log('actionData:' + actionData);
+					console.log('eventData:' + eventData);
+					console.log('homeOfficeData:' + homeOfficeData);
+					console.log('locationData:' + locationData);
+					console.log('userLabels:' + userLabels);
+					console.log('detailData:' + detailData);
 					// 加载用户内容
 					initUserContent();
 				},
@@ -546,7 +553,7 @@
 			// 清空
 			filterUserNames = [];
 			for (var i = 0; i < userNames.length; i++) {
-				if (userNames[i].name.indexOf(name) >= 0) {
+				if (userNames[i].indexOf(name) >= 0) {
 					// 匹配
 					filterUserNames.push(userNames[i]);
 				}
@@ -619,13 +626,21 @@
 					url: url,
 					data: data,
 					success: function(option) {
+						console.log(option);
+						// TODO
 						var obj = JSON.parse(option);
 						actionData = obj.actionData;
 						eventData = obj.eventData;
 						homeOfficeData = obj.homeOfficeData;
 						locationData = obj.locationData;
-						userNames = obj.userNames;
 						userLabels = obj.userLabels;
+						detailData = obj.detailData;
+						console.log('actionData:' + actionData);
+						console.log('eventData:' + eventData);
+						console.log('homeOfficeData:' + homeOfficeData);
+						console.log('locationData:' + locationData);
+						console.log('userLabels:' + userLabels);
+						console.log('detailData:' + detailData);
 						// 换人业务逻辑完成后
 						$('#content').removeClass('hidden');
 						// 加载用户内容

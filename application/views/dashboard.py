@@ -476,7 +476,10 @@ def get_attr_of_user(uid, h_start=None, h_end=None, e_start=None, e_end=None, pe
         "sence": motion.get(x),
         "status": home_office.get(x),
         "action": event.get(x)}, time_list)
-    ret_dcit['detailData'] = detail_data
+    ret_dcit['detailData'] = {
+        "pageCount": 5,
+        "data": detail_data[:15]
+    }
     return ret_dcit
 
 
