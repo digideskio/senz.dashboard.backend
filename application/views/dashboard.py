@@ -463,7 +463,6 @@ def get_attr_of_user(uid, h_start=None, h_end=None, e_start=None, e_end=None):
     attrs = query.first()
 
     labels = map(lambda x: attrs.attributes.get(x), type_list)
-    print labels
     user_labels = [y for x in filter(lambda y: y, labels) for y in x if isinstance(x, list)]
     user_labels += [type_list[labels.index(x)] for x in labels if isinstance(x, unicode)]
     ret_dcit['userLabels'] = filter(lambda x: x, user_labels)
