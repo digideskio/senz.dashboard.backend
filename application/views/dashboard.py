@@ -7,6 +7,9 @@ import time
 
 dashboard_bp = Blueprint('dashboard_bp', __name__, template_folder='templates')
 
+DashboardSource = Object.extend('DashboardSource')
+DBUser = Object.extend('User')
+
 
 def get_app_list():
     ret_dict = {}
@@ -381,7 +384,7 @@ def single():
     if request.method == 'POST':
         req_type = request.form.get('type')
         if req_type == 'user_list':
-            user_list = developer.get_tracker_of_app(app_id)
+            user_list = get_tracker_of_app(app_id)
             return json.dumps({"userNames": user_list})
 
         uid = request.form.get('uid')
@@ -397,7 +400,21 @@ def single():
                            username=username, app_id=app_id, app_list=app_list)
 
 
+def get_tracker_of_app(app_id=''):
+    app = {
+        "__type": "Pointer",
+        "className": "Application",
+        "objectId": app_id
+    }
+    query = Query(DashboardSource)
+    query.equal_to('app', app)
+    query.select('user')
+    installation_list = query.find()
+    return sorted(list(set(map(lambda x: x.attributes['user'].id, installation_list))))
+
+
 def get_attr_of_user(uid, h_start=None, h_end=None, e_start=None, e_end=None, per_page=15):
+    print uid
     ret_dcit = {}
     user = {
         "__type": "Pointer",
@@ -406,16 +423,16 @@ def get_attr_of_user(uid, h_start=None, h_end=None, e_start=None, e_end=None, pe
     }
     type_list = ['gender', 'age', 'field', 'occupation', 'interest',
                  'marriage', 'pregnant', 'consumption', 'has_car', 'has_pet']
-    query = Query(Object.extend('DashboardSource'))
+    query = Query(DashboardSource)
     query.equal_to('user', user)
-    attrs = query.find()[0] if query.count() else {}
+    attrs = query.first()
 
-    labels = map(lambda x: attrs.attributes.get(x), type_list) if attrs else []
+    labels = filter(lambda y: y, map(lambda x: attrs.attributes.get(x), type_list))
     user_labels = [y for x in filter(lambda y: y, labels) for y in x if isinstance(x, list)]
     user_labels += [type_list[labels.index(x)] for x in labels if isinstance(x, unicode)]
     ret_dcit['userLabels'] = user_labels
 
-    event = attrs.attributes.get('event') or None
+    event = attrs.attributes.get('event') or {}
     event = dict(filter(lambda x: str(e_start) < str(x[0]) < str(e_end), event.items()))
     event_data = {
         "category": list(set(event.values())),
@@ -423,12 +440,13 @@ def get_attr_of_user(uid, h_start=None, h_end=None, e_start=None, e_end=None, pe
     }
     ret_dcit['eventData'] = event_data
 
-    motion = attrs.attributes.get('motion')
-    avtion_data = {
+    motion = attrs.attributes.get('motion') or {}
+    motion = dict(filter(lambda x: str(h_start) < str(x[0]) < str(h_end), motion.items()))
+    action_data = {
         "category": list(set(motion.values())),
         "data": map(lambda x: motion.values().count(x), list(set(motion.values())))
     }
-    ret_dcit['actionData'] = avtion_data
+    ret_dcit['actionData'] = action_data
 
     home_office = attrs.attributes.get('home_office_status') or {}
     home_office = dict(filter(lambda x: str(h_start) < str(x[0]) < str(h_end), home_office.items()))
@@ -439,7 +457,7 @@ def get_attr_of_user(uid, h_start=None, h_end=None, e_start=None, e_end=None, pe
         "atOfficeData": map(lambda x: len(filter(lambda z: z[1] == u"at_office" or z[1] == u"contextAtWork" and time.localtime(int(z[0][:10]))[3] == x,
                                                  home_office.items())), xrange(0, 24)),
         "toHomeData": map(lambda x: len(filter(lambda z: z[1] == u"going_home" or z[1] == u"contextCommutingHome" and time.localtime(int(z[0][:10]))[3] == x,
-                                                 home_office.items())), xrange(0, 24)),
+                                               home_office.items())), xrange(0, 24)),
         "toOfficeData": map(lambda x: len(filter(lambda z: z[1] == u"going_office" or z[1] == u"contextCommutingWork" and time.localtime(int(z[0][:10]))[3] == x,
                                                  home_office.items())), xrange(0, 24))
     }
@@ -451,6 +469,14 @@ def get_attr_of_user(uid, h_start=None, h_end=None, e_start=None, e_end=None, pe
         "data": map(lambda x: [x.dump().get('longitude'), x.dump().get('latitude'), 0.9], coordinate)
     }
     ret_dcit['locationData'] = location_data
+
+    time_list = sorted(motion.keys() + event.keys() + home_office.keys())
+    detail_data = map(lambda x: {
+        "time": time.strftime("%Y-%m-%d %H:%M", time.localtime(int(x[:10]))),
+        "sence": motion.get(x),
+        "status": home_office.get(x),
+        "action": event.get(x)}, time_list)
+    ret_dcit['detailData'] = detail_data
     return ret_dcit
 
 

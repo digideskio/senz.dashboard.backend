@@ -338,13 +338,13 @@
 		async: false,
 		url: url,
 		data: {
-			type: 'user_list',
+			type: 'user_list'
 		},
 		success: function(option) {
 			console.log(option);
 			// TODO
-			//			var obj = JSON.parse(option);
-			//			userNames = obj.userNames;
+            var obj = JSON.parse(option);
+            userNames = obj.userNames;
 		},
 		error: function() {
 			alert("获取内容失败，请稍后再试！");
