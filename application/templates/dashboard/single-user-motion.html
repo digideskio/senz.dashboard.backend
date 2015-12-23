@@ -188,7 +188,7 @@
 								<button id="pageIndexBtn" type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
 									第 1 页 <span class="caret"></span>
 								</button>
-								<ul id="pageIndexDiv" class="dropdown-menu" role="menu">
+								<ul id="pageIndexDiv" class="dropdown-menu" role="menu" style="overflow-x: hidden;overflow-y: scroll; height: 200px;">
 									<li id="pageIndexHidden" class="hidden">
 										<a href="#"></a>
 									</li>
@@ -256,7 +256,6 @@
 		data: heatData
 	};
 	var detailData = {
-		pageCount: 5,
 		data: [{
 			time: '2015-12-16 12:00',
 			sence: '商圈工作中',
@@ -456,7 +455,6 @@
 			}
 			var data = {
 				uid: currId,
-				perPageCount: perPageCount,
 				h_start: h_start,
 				h_end: h_end,
 				e_start: e_start,
@@ -613,7 +611,6 @@
 				// 换人业务逻辑执行中
 				var data = {
 					uid: currId,
-					perPageCount: perPageCount,
 					h_start: h_start,
 					h_end: h_end,
 					e_start: e_start,
@@ -686,7 +683,7 @@
 			$('#userLabelDiv').append(item);
 		};
 		// 加载分页
-		for (var i = 1; i <= detailData.pageCount; i++) {
+		for (var i = 1; i <= Math.floor(detailData.data.length / perPageCount); i++) {
 			var item = $('#pageIndexHidden').clone();
 			item.removeAttr('id');
 			item.removeClass('hidden');
@@ -1182,7 +1179,7 @@
 		// 清除历史数据
 		$('.logRow').remove();
 		// 加载数据
-		for (var i = 0; i < detailData.data.length; i++) {
+		for (var i = (pageIndex - 1) * perPageCount; i < pageIndex * perPageCount && i < detailData.data.length; i++) {
 			var obj = $('#detailTrHidden').clone();
 			obj.removeAttr('id');
 			obj.removeClass('hidden');
