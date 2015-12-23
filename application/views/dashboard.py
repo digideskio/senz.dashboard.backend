@@ -392,10 +392,8 @@ def single():
         h_end = request.form.get('h_end')
         e_start = request.form.get('e_start')
         e_end = request.form.get('e_end')
-        per_page = request.form.get('perPageCount')
-        print dict(map(lambda x: (x, request.form.get(x)), request.form))
-        ret_dict = get_attr_of_user(uid, h_start=h_start, h_end=h_end, e_start=e_start,
-                                    e_end=e_end, per_page=per_page)
+        # print dict(map(lambda x: (x, request.form.get(x)), request.form))
+        ret_dict = get_attr_of_user(uid, h_start=h_start, h_end=h_end, e_start=e_start, e_end=e_end)
         return json.dumps(ret_dict)
     return render_template('dashboard/single-user-motion.html',
                            username=username, app_id=app_id, app_list=app_list)
@@ -437,6 +435,8 @@ def delete_group(group_name):
 
 
 def get_tracker_of_app(app_id=''):
+    if not app_id or app_id == u'5621fb0f60b27457e863fabb':
+        return [u'560388c100b09b53b59504d2']
     app = {
         "__type": "Pointer",
         "className": "Application",
@@ -449,16 +449,15 @@ def get_tracker_of_app(app_id=''):
     return sorted(list(set(map(lambda x: x.attributes['user'].id, installation_list))))
 
 
-def get_attr_of_user(uid, h_start=None, h_end=None, e_start=None, e_end=None, per_page=15):
-    print uid
+def get_attr_of_user(uid, h_start=None, h_end=None, e_start=None, e_end=None):
     ret_dcit = {}
     user = {
         "__type": "Pointer",
         "className": "_User",
         "objectId": uid
     }
-    type_list = ['gender', 'age', 'field', 'occupation', 'interest',
-                 'marriage', 'pregnant', 'consumption', 'has_car', 'has_pet']
+    type_list = [u'gender', u'age', u'field', u'occupation', u'interest',
+                 u'marriage', u'pregnant', u'consumption', u'has_car', u'has_pet']
     query = Query(DashboardSource)
     query.equal_to('user', user)
     attrs = query.first()
@@ -512,9 +511,7 @@ def get_attr_of_user(uid, h_start=None, h_end=None, e_start=None, e_end=None, pe
         "sence": motion.get(x),
         "status": home_office.get(x),
         "action": event.get(x)}, time_list)
-    ret_dcit['detailData'] = {
-        "data": detail_data
-    }
+    ret_dcit['detailData'] = {"data": detail_data}
     return ret_dcit
 
 
