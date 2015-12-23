@@ -462,10 +462,11 @@ def get_attr_of_user(uid, h_start=None, h_end=None, e_start=None, e_end=None):
     query.equal_to('user', user)
     attrs = query.first()
 
-    labels = filter(lambda y: y, map(lambda x: attrs.attributes.get(x), type_list))
+    labels = map(lambda x: attrs.attributes.get(x), type_list)
+    print labels
     user_labels = [y for x in filter(lambda y: y, labels) for y in x if isinstance(x, list)]
     user_labels += [type_list[labels.index(x)] for x in labels if isinstance(x, unicode)]
-    ret_dcit['userLabels'] = user_labels
+    ret_dcit['userLabels'] = filter(lambda x: x, user_labels)
 
     event = attrs.attributes.get('event') or {}
     event = dict(filter(lambda x: str(e_start) < str(x[0]) < str(e_end), event.items()))
