@@ -8,7 +8,7 @@ import time
 dashboard_bp = Blueprint('dashboard_bp', __name__, template_folder='templates')
 
 DashboardSource = Object.extend('DashboardSource')
-DBUser = Object.extend('User')
+DashboardGroup = Object.extend('DashboardGroup')
 
 
 def get_app_list():
@@ -393,11 +393,47 @@ def single():
         e_start = request.form.get('e_start')
         e_end = request.form.get('e_end')
         per_page = request.form.get('perPageCount')
+        print dict(map(lambda x: (x, request.form.get(x)), request.form))
         ret_dict = get_attr_of_user(uid, h_start=h_start, h_end=h_end, e_start=e_start,
                                     e_end=e_end, per_page=per_page)
         return json.dumps(ret_dict)
     return render_template('dashboard/single-user-motion.html',
                            username=username, app_id=app_id, app_list=app_list)
+
+
+@dashboard_bp.route('/dashboard/group', methods=['GET', 'POST'])
+def group():
+    if request.method == 'POST':
+        req_type = request.form.get('action')
+        if req_type == 'update':
+            args = dict(map(lambda x: (x, request.form.get(x)), request.form))
+            create_group(args)
+            return make_response("success")
+        elif req_type == 'delete':
+            group_name = request.form.get('group_name')
+            delete_group(group_name)
+            return make_response("success")
+        else:
+            return make_response("invalid action type!")
+    return render_template('dashboard/group-setting.html')
+
+
+def create_group(args):
+    group_name = args.get('group_name')
+    query = Query(DashboardGroup)
+    query.equal_to('name', group_name)
+    group = query.first() or DashboardGroup()
+    for k, v in args.items():
+        group.set(k, v)
+    group.save()
+
+
+def delete_group(group_name):
+    query = Query(DashboardGroup)
+    query.equal_to('name', group_name)
+    group = query.find()
+    for item in group:
+        item.remove()
 
 
 def get_tracker_of_app(app_id=''):
@@ -481,11 +517,6 @@ def get_attr_of_user(uid, h_start=None, h_end=None, e_start=None, e_end=None, pe
         "data": detail_data[:15]
     }
     return ret_dcit
-
-
-@dashboard_bp.route('/dashboard/group', methods=['GET', 'POST'])
-def group():
-    return render_template('dashboard/group-setting.html')
 
 
 def get_query_list(app_id='', *field):
