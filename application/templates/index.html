@@ -46,7 +46,7 @@ var rankData = JSON.parse({{ option | tojson | safe }});
       if(data[i].rank==1) continue;
       tpl.push('<div class="pr '+ (data[i].rank==1 ? 'main-title' : 'pr' + data[i].rank) + '" ' +
               'style="left:' + (((data[i].rank-1) * 140)+(150 * Math.random()*1) ) + 'px; ' +
-              'top:' + (430* Math.random()*1) + 'px;" title="'+ data[i].rank +'" >'+
+              'top:' + (430* Math.random()*1) + 'px;" title="'+ data[i].count +'" >'+
               '<div class="text">'+ data[i].name+'</div></div>')
     }
     return tpl.join('');
