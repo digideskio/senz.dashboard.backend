@@ -101,14 +101,14 @@ def upload():
         key = request.files.get('key')
         app_id = request.form.get('appId')
         passphrase = request.form.get('passphrase')
-        print app_id
-        print app_list
         if app_id not in map(lambda x: x['app_id'], app_list):
             flash("This appId owned by others", "alert")
             return redirect(url_for("settings.upload"))
 
-        cert_pem = File('cert.pem', StringIO(cert.read()))
-        key_pem = File('key.pem', StringIO(key.read()))
+        cert_pem = File(app_id + '_cert.pem', StringIO(cert.read()))
+        key_pem = File(app_id + '_key.pem', StringIO(key.read()))
+        cert_pem.metadata.update(owner=username)
+        key_pem.metadata.update(owner=username)
         cert_url = cert_pem.save().url
         key_url = key_pem.save().url
 
