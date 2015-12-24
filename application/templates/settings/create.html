@@ -17,10 +17,10 @@
         <div id="settings">
             <div class="ng-scope">
             <form action="{{ url_for('settings.add_app') }}" method="post">
-                <div>
+                <div style="display: inline-block;">
                     <label>应用名称: <input type="text" size="36" name="app_name" placeholder="app_name" required/></label>
                 </div>
-                <div>
+                <div style="display: inline-block;margin-left: 10px;">
                     <label>应用类型: <select name="app_type">
                         <option>社交应用</option>
                         <option>地图导航</option>
@@ -35,7 +35,7 @@
                         <option>新闻资讯</option>
                     </select></label>
                 </div>
-                <div><input type="submit" id="create-app" value="提交并获取APP KEY" ></div>
+                <div style="margin-top: 10px;"><input type="submit" id="create-app" value="提交并获取APP KEY" ></div>
             </form>
             </div>
         </div>
