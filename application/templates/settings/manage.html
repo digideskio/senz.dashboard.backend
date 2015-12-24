@@ -36,12 +36,12 @@
             <div class="ng-scope">
             <table id="table" align="center">
 				<tr>
-					<th style="width: 200px;">应用名</th>
-					<th>AppId</th>
-					<th>AppKey</th>
-					<th style="width: 200px;">应用类型</th>
-					<th>创建时间</th>
-					<th>编辑应用</th>
+					<th style="width: 200px;background: #dedede;">应用名</th>
+					<th style="background: #dedede;">AppId</th>
+					<th style="background: #dedede;">AppKey</th>
+					<th style="width: 200px;background: #dedede;">应用类型</th>
+					<th style="background: #dedede;">创建时间</th>
+					<th style="background: #dedede;">编辑应用</th>
 				</tr>
                 {% for app in app_list %}
                     <tr id={{ app['app_id'] }}>
@@ -78,8 +78,8 @@
                             <label for="createdAt">{{ app['createdAt'] }}</label>
                         </td>
                         <td>
-                            <img src="{{ url_for('static', filename='images/iconfont-edit.png') }}" class="edit_btn"> </img>
-			                <img src="{{ url_for('static', filename='images/iconfont-delete.png') }}" class="del_btn"> </img>
+                            <img style="width: 25px;height: 25px;" src="{{ url_for('static', filename='images/iconfont-edit.png') }}" class="edit_btn"> </img>
+			                <img style="width: 25px;height: 25px;" src="{{ url_for('static', filename='images/iconfont-delete.png') }}" class="del_btn"> </img>
                         </td>
                     </tr>
                 {% endfor %}
