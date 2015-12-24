@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, session, request, redirect, url_for, make_response
+from flask import Blueprint, render_template, session, request, redirect, url_for, make_response, flash
 from ..models import Developer
 from leancloud import File
 from StringIO import StringIO
@@ -6,6 +6,7 @@ from leancloud import Object, Query
 
 
 settings = Blueprint('settings', __name__, template_folder='templates')
+Application = Object.extend('Application')
 
 
 @settings.route('/settings')
@@ -88,36 +89,39 @@ def modify_app():
 def upload():
     if not session.get('session_token'):
         return redirect(url_for('accounts_bp.login'))
+
+    app_id = session.get('app_id', None)
+    developer = Developer()
+    developer.session_token = session.get('session_token')
+    username = developer.username()
+    app_list = developer.get_app_list()
+
     if request.method == "POST":
         cert = request.files.get('cert')
         key = request.files.get('key')
-        appId = request.form.get('appId')
+        app_id = request.form.get('appId')
         passphrase = request.form.get('passphrase')
-
-        print appId, passphrase
+        print app_id
+        print app_list
+        if app_id not in map(lambda x: x['app_id'], app_list):
+            flash("This appId owned by others", "alert")
+            return redirect(url_for("settings.upload"))
 
         cert_pem = File('cert.pem', StringIO(cert.read()))
         key_pem = File('key.pem', StringIO(key.read()))
-
         cert_url = cert_pem.save().url
         key_url = key_pem.save().url
 
-        app_query = Query(Object.extend('Application'))
-        app_query.equal_to('objectId', appId)
-        app = app_query.find()[0] if app_query.count() else None
+        app_query = Query(Application)
+        app_query.equal_to('objectId', app_id)
+        app = app_query.first()
 
         if app:
             app.set('cert_url', cert_url)
             app.set('key_url', key_url)
             app.set('passphrase', passphrase)
             app.save()
-        return make_response("SUCCESS")
-    app_id = session.get('app_id', None)
-    developer = Developer()
-    developer.session_token = session.get('session_token')
-    username = developer.username()
-    app_list = developer.get_app_list()
-    return render_template('settings/upload.html',
-                           username=username,
-                           app_id=app_id,
-                           app_list=app_list)
+        flash("Certificate has added done!")
+        return redirect(url_for("settings.upload"))
+    return render_template('settings/upload.html', username=username,
+                           app_id=app_id, app_list=app_list)

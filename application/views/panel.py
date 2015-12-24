@@ -57,6 +57,7 @@ def get_installationid_by_trackerid(tracker_id=None):
         "objectId": tracker_id
     }
     query.equal_to('user', user)
+    query.descending('updatedAt')
     installation = query.first() or {}
     return installation.id, installation.get('deviceType')
 
@@ -98,6 +99,7 @@ def post_panel_data(**param):
                "X-AVOSCloud-Application-Key": "6z6n0w3dopxmt32oi2eam2dt0orh8rxnqc8lgpf2hqnar4tr"}
     for item in tracker_list:
         installation = get_installationid_by_trackerid(item)
+        print installation
         payload = {"userId": item, "source": source, "timestamp": timestamp}
         if motion_type and motion_val:
             payload["type"] = motion_type

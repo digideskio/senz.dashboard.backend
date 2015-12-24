@@ -35,7 +35,7 @@ class Developer(User):
         query = Query(Application)
         query.equal_to('user', user)
         query.equal_to('app_name', app_name)
-        if not query.find():
+        if not query.count():
             app.set('app_name', app_name)
             app.set('type', app_type)
             app.set('user', user)
@@ -101,12 +101,6 @@ class Developer(User):
 
     def get_tracker_of_app(self, app_id=''):
         try:
-            # query = Query(Application)
-            # query.equal_to('app_id', app_id)
-            # app_list = query.find()
-            # if not app_list:
-            #     return []
-            # the_app = app_list[0]
             the_app = {
                 "__type": "Pointer",
                 "className": "Application",
