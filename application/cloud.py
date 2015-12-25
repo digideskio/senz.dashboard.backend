@@ -10,6 +10,9 @@ from server import app
 import time
 
 engine = Engine(app)
+DashboardStatistics = Object.extend("DashboardStatistics")
+BindingInstallation = Object.extend('BindingInstallation')
+DashboardSource = Object.extend('DashboardSource')
 
 
 @engine.define
@@ -170,7 +173,7 @@ def updata_backend_info(parse_dict):
     user = to_lean_user(user_id)
 
     # get app Object
-    query = Query(Object.extend('BindingInstallation'))
+    query = Query(BindingInstallation)
     query.equal_to('user', user)
     result_list = query.find()
     app_set = set()
@@ -178,9 +181,15 @@ def updata_backend_info(parse_dict):
         app_set.add(result.attributes['application'].id)
     app_id_list = list(app_set)
 
+    ts = int(time.mktime(list(time.localtime()[:3]) + [0*x for x in range(0, 6)]))*1000
+    statistic_query = Query(DashboardStatistics)
+    statistic_query.equal_to('timestamp', ts)
+    statistic = statistic_query.first() if statistic_query.count() else DashboardStatistics()
+    statistic.set('timestamp', ts)
+
     for app_id in app_id_list:
         app = to_lean_app(app_id)
-        table_dash = Object.extend('DashboardSource')
+        table_dash = DashboardSource
         query = Query(table_dash)
         query.equal_to('app', app)
         query.equal_to('user', user)
@@ -191,6 +200,7 @@ def updata_backend_info(parse_dict):
             if key is 'user_id':
                 dst_table.set('user', user)
             elif key is 'home_office_status':
+                home_office_count = statistic.attributes.get('home_office_status') or {}
                 home_office_status_tmp = dst_table.get('home_office_status') or {}
                 home_office_status = {}
                 for item in filter(lambda x: x[0] > str(1416200315), home_office_status_tmp.items()):
@@ -198,14 +208,20 @@ def updata_backend_info(parse_dict):
 
                 for k, v in parse_dict['home_office_status'].items():
                     home_office_status[k] = v
+                    home_office_count[v] = (home_office_count.get(v) or 0) + 1
+                print home_office_count
+                statistic.set('home_office_status', home_office_count)
                 dst_table.set('home_office_status', home_office_status)
             elif key is 'event':
+                event_count = statistic.attributes.get('event') or {}
                 event_tmp = dst_table.get('event') or {}
                 event = {}
                 for item in filter(lambda x: x[0] > str(1416200315), event_tmp.items()):
                     event[item[0]] = item[1]
                 for k, v in parse_dict['event'].items():
                     event[k] = v
+                    event_count[v] = (event_count.get(v) or 0) + 1
+                statistic.set('event', event_count)
                 dst_table.set('event', event)
             elif key is 'motion':
                 motion_tmp = dst_table.get('motion') or {}
@@ -228,4 +244,13 @@ def updata_backend_info(parse_dict):
             else:
                 dst_table.set(key, value)
         dst_table.save()
+        statistic.save()
         return True
+
+
+def count_increase():
+    ts = int(time.mktime(list(time.localtime()[:3]) + [0*x for x in range(0, 6)]))
+    statistic = DashboardStatistics()
+    statistic.set('timestamp', ts)
+
+

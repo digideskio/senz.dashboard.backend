@@ -1,9 +1,8 @@
 # coding: utf-8
-from flask import Blueprint, render_template, json, session, request, make_response
+from flask import Blueprint, render_template, json, session, request, make_response, redirect, url_for, flash
 from leancloud import Object, Query, LeanCloudError
 from application.models import Developer
 from os.path import dirname, join
-import leancloud
 import time
 
 dashboard_bp = Blueprint('dashboard_bp', __name__, template_folder='templates')
@@ -394,7 +393,6 @@ def single():
         h_end = request.form.get('h_end')
         e_start = request.form.get('e_start')
         e_end = request.form.get('e_end')
-        # print dict(map(lambda x: (x, request.form.get(x)), request.form))
         ret_dict = get_attr_of_user(uid, h_start=h_start, h_end=h_end, e_start=e_start, e_end=e_end)
         return json.dumps(ret_dict)
     return render_template('dashboard/single-user-motion.html',
@@ -408,11 +406,16 @@ def group():
         if req_type == 'update':
             args = dict(map(lambda x: (x, request.form.get(x)), request.form))
             create_group(args)
-            return make_response("success")
+            flash("Update group info success!", 'msg')
+            return redirect(url_for('settings.group'))
         elif req_type == 'delete':
             group_name = request.form.get('group_name')
             delete_group(group_name)
-            return make_response("success")
+            flash("Delete group info success!", 'msg')
+            return redirect(url_for('settings.group'))
+        elif req_type == 'checkout':
+            group_name = request.form.get('group_name')
+            return json.dumps({})
         else:
             return make_response("invalid action type!")
     return render_template('dashboard/group-setting.html')
@@ -438,12 +441,14 @@ def delete_group(group_name):
 
 @dashboard_bp.route('/test')
 def query_attr_by_group():
-    group_name = request.args.get('group_name')
-    create_group({"group_name": group_name})
+    # cache.set('test', 'abc')
+    # group_name = request.args.get('group_name')
+    # create_group({"group_name": group_name})
     # group_query = Query(DashboardGroup)
     # group_query.equal_to('group_name', group_name)
     # group = group_query.first()
-    return make_response("OK")
+    # return make_response(cache.get('test'))
+    return
 
 
 def get_tracker_of_app(app_id=''):

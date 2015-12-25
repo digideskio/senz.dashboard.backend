@@ -3,14 +3,15 @@
 from flask import Flask
 from datetime import timedelta
 from config import load_config
-from .views.panel import panel
-from .views.dashboard import dashboard_bp
-from .views.integration import integration
-from .views.settings import settings
-from .views.account import accounts_bp
+from application.views.panel import panel
+from application.views.dashboard import dashboard_bp
+from application.views.integration import integration
+from application.views.settings import settings
+from application.views.account import accounts_bp
 from os.path import dirname
 import bugsnag
 from bugsnag.flask import handle_exceptions
+
 
 bugsnag.configure(
     api_key="A0Zr98j/3yX R~XHH!jmN]LWX/,?RT",
