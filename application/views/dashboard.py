@@ -11,6 +11,7 @@ dashboard_bp = Blueprint('dashboard_bp', __name__, template_folder='templates')
 DashboardSource = Object.extend('DashboardSource')
 DashDataSource = Object.extend('DashDataSource')
 DashboardGroup = Object.extend('DashboardGroup')
+DashboardStatistics = Object.extend('DashboardStatistics')
 
 
 def get_app_list():
@@ -465,8 +466,12 @@ def get_attr_of_user(uid, h_start=None, h_end=None, e_start=None, e_end=None):
     type_list = [u'gender', u'age', u'field', u'occupation', u'interest',
                  u'marriage', u'pregnant', u'consumption', u'has_car', u'has_pet']
     query = Query(DashboardSource)
+    user_count = query.count()
     query.equal_to('user', user)
     attrs = query.first()
+
+    avg_query = Query(DashboardStatistics)
+    counts = avg_query.find()
 
     labels = map(lambda x: attrs.attributes.get(x), type_list)
     user_labels = [y for x in filter(lambda y: y, labels) for y in x if isinstance(x, list)]
@@ -474,18 +479,41 @@ def get_attr_of_user(uid, h_start=None, h_end=None, e_start=None, e_end=None):
     ret_dcit['userLabels'] = filter(lambda x: x, user_labels)
 
     event = attrs.attributes.get('event') or {}
+    event_counts = map(lambda x: x.attributes.get('event'),
+                       filter(lambda y: str(e_start) < str(y.attributes.get('timestamp'))[:10] < str(e_end), counts))
+    for i in xrange(1, len(event_counts)):
+        for k in event_counts[i].keys():
+            if k in event_counts[0]:
+                event_counts[0][k] += event_counts[i].get(k)
+            else:
+                event_counts[0][k] = event_counts[i].get(k)
+    event_count = event_counts[0] if event_counts else {}
+
     event = dict(filter(lambda x: str(e_start) < str(x[0]) < str(e_end), event.items()))
+    event_np = list(set(event.values()))
     event_data = {
-        "category": list(set(event.values())),
-        "data": map(lambda x: event.values().count(x), list(set(event.values())))
+        "category": event_np,
+        "data": map(lambda x: event.values().count(x), event_np),
+        "avg": map(lambda x: (event_count.get(x) or 0)/user_count, event_np)
     }
     ret_dcit['eventData'] = event_data
 
     motion = attrs.attributes.get('motion') or {}
+    motion_counts = map(lambda x: x.attributes.get('motion') or {},
+                        filter(lambda y: str(e_start) < str(y.attributes.get('timestamp'))[:10] < str(e_end), counts))
+    for i in xrange(1, len(motion_counts)):
+        for k in motion_counts[i].keys():
+            if k in motion_counts[0]:
+                motion_counts[0][k] += motion_counts[i].get(k)
+            else:
+                motion_counts[0][k] = motion_counts[i].get(k)
+    motion_count = motion_counts[0] if motion_counts else {}
     motion = dict(filter(lambda x: str(h_start) < str(x[0]) < str(h_end), motion.items()))
+    motion_np = list(set(motion.values()))
     action_data = {
-        "category": list(set(motion.values())),
-        "data": map(lambda x: motion.values().count(x), list(set(motion.values())))
+        "category": motion_np,
+        "data": map(lambda x: motion.values().count(x), motion_np),
+        "avg": map(lambda x: (motion_count.get(x) or 0)/user_count, motion_np)
     }
     ret_dcit['actionData'] = action_data
 

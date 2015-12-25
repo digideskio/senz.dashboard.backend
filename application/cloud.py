@@ -209,7 +209,6 @@ def updata_backend_info(parse_dict):
                 for k, v in parse_dict['home_office_status'].items():
                     home_office_status[k] = v
                     home_office_count[v] = (home_office_count.get(v) or 0) + 1
-                print home_office_count
                 statistic.set('home_office_status', home_office_count)
                 dst_table.set('home_office_status', home_office_status)
             elif key is 'event':
@@ -224,6 +223,7 @@ def updata_backend_info(parse_dict):
                 statistic.set('event', event_count)
                 dst_table.set('event', event)
             elif key is 'motion':
+                motion_count = statistic.attributes.get('motion') or {}
                 motion_tmp = dst_table.get('motion') or {}
                 motion = {}
                 for item in filter(lambda x: x[0] > str(1416200315), motion_tmp.items()):
@@ -231,6 +231,8 @@ def updata_backend_info(parse_dict):
                         motion[item[0]] = item[1]
                 for k, v in parse_dict['motion'].items():
                     motion[k] = v
+                    motion_count[v] = (motion_count.get(v) or 0) + 1
+                statistic.set('motion', motion_count)
                 dst_table.set('motion', motion)
             elif key is 'location':
                 dst_table.set('location', value)
