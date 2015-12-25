@@ -2,8 +2,8 @@
 
 from leancloud import Engine, Query, Object
 from datetime import datetime
-from application.views.panel import post_panel_data
-from application.views.dashboard import translate
+from application.common.util import post_panel_data
+from application.common.util import translate
 from flask import json
 from os.path import dirname, join
 from server import app

@@ -1,6 +1,7 @@
 # coding: utf-8
 from flask import Blueprint, render_template, json, session, request, make_response, redirect, url_for, flash
 from leancloud import Object, Query, LeanCloudError
+from application.common.util import translate
 from application.models import Developer
 from os.path import dirname, join
 import time
@@ -439,18 +440,6 @@ def delete_group(group_name):
         item.remove()
 
 
-@dashboard_bp.route('/test')
-def query_attr_by_group():
-    # cache.set('test', 'abc')
-    # group_name = request.args.get('group_name')
-    # create_group({"group_name": group_name})
-    # group_query = Query(DashboardGroup)
-    # group_query.equal_to('group_name', group_name)
-    # group = group_query.first()
-    # return make_response(cache.get('test'))
-    return
-
-
 def get_tracker_of_app(app_id=''):
     if not app_id or app_id == u'5621fb0f60b27457e863fabb':
         return [u'560388c100b09b53b59504d2']
@@ -586,11 +575,6 @@ def get_query_list(app_id='', *field):
                 ret_dict[item] = map(lambda result: result.attributes.get(item), result_list)
     return ret_dict
 
-
-def translate(target, arg):
-    f = file(join(dirname(dirname(__file__)), 'translate.json'))
-    s = json.load(f)
-    return s.get(arg).get(target) or target
 
 
 
