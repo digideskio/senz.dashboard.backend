@@ -1,13 +1,15 @@
 # coding: utf-8
 from flask import Blueprint, render_template, json, session, request, make_response
 from leancloud import Object, Query, LeanCloudError
-from ..models import Developer
+from application.models import Developer
 from os.path import dirname, join
+import leancloud
 import time
 
 dashboard_bp = Blueprint('dashboard_bp', __name__, template_folder='templates')
 
 DashboardSource = Object.extend('DashboardSource')
+DashDataSource = Object.extend('DashDataSource')
 DashboardGroup = Object.extend('DashboardGroup')
 
 
@@ -419,8 +421,8 @@ def group():
 def create_group(args):
     group_name = args.get('group_name')
     query = Query(DashboardGroup)
-    query.equal_to('name', group_name)
-    group = query.first() or DashboardGroup()
+    query.equal_to('group_name', group_name)
+    group = query.first() if query.count() else DashboardGroup()
     for k, v in args.items():
         group.set(k, v)
     group.save()
@@ -432,6 +434,16 @@ def delete_group(group_name):
     group = query.find()
     for item in group:
         item.remove()
+
+
+@dashboard_bp.route('/test')
+def query_attr_by_group():
+    group_name = request.args.get('group_name')
+    create_group({"group_name": group_name})
+    # group_query = Query(DashboardGroup)
+    # group_query.equal_to('group_name', group_name)
+    # group = group_query.first()
+    return make_response("OK")
 
 
 def get_tracker_of_app(app_id=''):
@@ -517,25 +529,23 @@ def get_attr_of_user(uid, h_start=None, h_end=None, e_start=None, e_end=None):
 
 def get_query_list(app_id='', *field):
     app_id = app_id or '5621fb0f60b27457e863fabb'
-
-    # app_query = Query(Object.extend('Application'))
-    # app_query.equal_to('app_id', app_id)
-    # app = app_query.find()[0] if app_query.count() else None
-
     app = {
         "__type": "Pointer",
         "className": "Application",
         "objectId": app_id
     }
-
     try:
         query_limit = 100
-        if app_id == '5621fb0f60b27457e863fabb':
-            query = Query(DashboardSource)
+        if app_id == u'5621fb0f60b27457e863fabb':
+            query = Query(DashDataSource)
             query.equal_to('app_id', app_id)
+        elif app_id == u'all':
+            query = Query(DashboardSource)
         else:
-            query = Query(Object.extend('DashboardSource'))
+            query = Query(DashboardSource)
             query.equal_to('app', app)
+        for item in field:
+            query.select(item)
         total_count = query.count()
         query_times = (total_count + query_limit - 1) / query_limit
         result_list = []
@@ -545,17 +555,6 @@ def get_query_list(app_id='', *field):
             result_list.extend(query.find())
     except LeanCloudError:
         return {}
-    # check all record in DashboardSource and ignore app_id simultaneous
-    # select in front end
-    if app_id == 'all':
-        query = Query(Object.extend('DashboardSource'))
-        total_count = query.count()
-        query_times = (total_count + query_limit - 1) / query_limit
-        result_list = []
-        for index in xrange(query_times):
-            query.limit(query_limit)
-            query.skip(index * query_limit)
-            result_list.extend(query.find())
 
     ret_dict = {}
     for item in field:
@@ -579,7 +578,7 @@ def get_query_list(app_id='', *field):
                                    map(lambda result: result.attributes.get('location'), result_list))
                 ret_dict[item] = map(lambda x: x.get(item), locations)
             else:
-                ret_dict[item] = map(lambda result: result.attributes.get(item, None), result_list)
+                ret_dict[item] = map(lambda result: result.attributes.get(item), result_list)
     return ret_dict
 
 
@@ -587,5 +586,6 @@ def translate(target, arg):
     f = file(join(dirname(dirname(__file__)), 'translate.json'))
     s = json.load(f)
     return s.get(arg).get(target) or target
+
 
 
