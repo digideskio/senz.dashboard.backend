@@ -187,6 +187,8 @@
 		success: function(option) {
 			console.log(option);
 			// TODO
+			var obj = JSON.parse(option);
+			groupListNames = obj.group_list;
 		},
 		error: function() {
 			alert("获取内容失败，请稍后再试！");
