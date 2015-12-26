@@ -445,9 +445,7 @@ def delete_group(group_id):
 def get_groups():
     query = Query(DashboardGroup)
     groups = query.find()
-    attrs = map(lambda x: {"tags": map(lambda y: y[1], filter(lambda z: z[0] != 'name', x.attributes.items())),
-                           "id": x.id, "name": x.attributes.get('name')}, groups)
-    return attrs
+    return map(lambda x: dict(x.attributes, id=x.id), groups)
 
 
 def get_label_list():
