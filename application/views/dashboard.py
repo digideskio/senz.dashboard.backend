@@ -417,6 +417,8 @@ def group():
             delete_group(group_id)
             flash("Delete group info success!", 'msg')
             return redirect(url_for('dashboard_bp.group'))
+        elif req_type == 'label_list':
+            return json.dumps(get_label_list())
         else:
             return make_response("invalid action type!")
     return render_template('dashboard/group-setting.html')
@@ -443,9 +445,17 @@ def delete_group(group_id):
 def get_groups():
     query = Query(DashboardGroup)
     groups = query.find()
-    attrs = map(lambda x: {"tags": map(lambda y: y[1], filter(lambda z: z[0] != 'group_name', x.attributes.items())),
-                           "id": x.id, "group_name": x.attributes.get('group_name')}, groups)
+    attrs = map(lambda x: {"tags": map(lambda y: y[1], filter(lambda z: z[0] != 'name', x.attributes.items())),
+                           "id": x.id, "name": x.attributes.get('name')}, groups)
     return attrs
+
+
+def get_label_list():
+    label = ['age', 'gender', 'marriage', 'pregnant', 'has_car',
+             'has_pet', 'occupation', 'field', 'consumption', 'interest']
+    f = file(join(dirname(dirname(__file__)), 'translate.json'))
+    s = json.load(f)
+    return map(lambda x: {"name": x, "data": s.get(x).keys()}, label)
 
 
 def get_tracker_of_app(app_id=''):
