@@ -183,7 +183,7 @@
 			action: "group_list"
 		},
 		success: function(option) {
-			//			console.log(option);
+						console.log(option);
 			var obj = JSON.parse(option);
 			groupListNames = obj.group_list;
 		},
@@ -200,7 +200,7 @@
 			action: "label_list"
 		},
 		success: function(option) {
-			//			console.log(option);
+						console.log(option);
 			var obj = JSON.parse(option);
 			groupFilter = obj;
 		},
@@ -296,7 +296,7 @@
 				type: 'post',
 				async: true,
 				url: url,
-				data: data,
+				data: $.param(data, true),
 				success: function(option) {
 					console.log(option);
 					// 刷新页面

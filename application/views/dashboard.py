@@ -405,16 +405,12 @@ def single():
 def group():
     if request.method == 'POST':
         req_type = request.form.get('action')
-        print "###########request"
-        print request
-        print "###########form"
-        print request.form
-        print "###########json"
-        print request.json
         if req_type == 'group_list':
             return json.dumps({'group_list': get_groups()})
         elif req_type == 'update':
-            args = dict(filter(lambda y: y[1] != req_type, map(lambda x: (x, request.form.get(x)), request.form)))
+            args = dict(filter(lambda y: y[0] != 'action' and y[0] != 'id' and y[0] != 'name', dict(request.form).items()))
+            args['id'] = request.form.get('id')
+            args['name'] = request.form.get('name')
             create_group(args)
             flash("Update group info success!", 'msg')
             return redirect(url_for('dashboard_bp.group'))
@@ -452,7 +448,6 @@ def get_groups():
     query = Query(DashboardGroup)
     groups = query.find()
     return map(lambda x: dict(x.attributes, id=x.id), groups)
-
 
 
 def get_label_list():
