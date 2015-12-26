@@ -405,7 +405,9 @@ def single():
 def group():
     if request.method == 'POST':
         req_type = request.form.get('action')
-        if req_type == 'update':
+        if req_type == 'group_list':
+            return get_groups()
+        elif req_type == 'update':
             args = dict(map(lambda x: (x, request.form.get(x)), request.form))
             create_group(args)
             flash("Update group info success!", 'msg')
@@ -417,7 +419,7 @@ def group():
             return redirect(url_for('settings.group'))
         elif req_type == 'checkout':
             group_name = request.form.get('group_name')
-            return json.dumps({})
+            return json.dumps(get_group(group_name))
         else:
             return make_response("invalid action type!")
     return render_template('dashboard/group-setting.html')
@@ -439,6 +441,18 @@ def delete_group(group_name):
     group = query.find()
     for item in group:
         item.remove()
+
+
+def get_groups():
+    query = Query(DashboardGroup)
+    groups = query.find()
+    return map(lambda x: x.attributes, groups)
+
+
+def get_group(group_name):
+    query = Query(DashboardGroup)
+    query.equal_to('group_name', group_name)
+    return query.first() or {}
 
 
 def get_tracker_of_app(app_id=''):
