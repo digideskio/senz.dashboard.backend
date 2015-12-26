@@ -282,7 +282,7 @@
 				if (value != '请选择' && value != null) {
 					var one = $('.tag').eq(i).prev().find("option:selected").text();
 					console.log('one:' + one);
-					//					data[one] = value;
+//										data[one] = value;
 					if (data[one] == undefined) {
 						data[one] = [];
 					}
@@ -296,11 +296,11 @@
 				type: 'post',
 				async: true,
 				url: url,
-				data: data,
+				data: JSON.stringify(data),
 				success: function(option) {
 					console.log(option);
 					// 刷新页面
-					window.location.reload();
+//					window.location.reload();
 				},
 				error: function() {
 					alert("获取内容失败，请稍后再试！");
