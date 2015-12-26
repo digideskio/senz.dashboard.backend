@@ -405,6 +405,12 @@ def single():
 def group():
     if request.method == 'POST':
         req_type = request.form.get('action')
+        print "###########request"
+        print request
+        print "###########form"
+        print request.form
+        print "###########json"
+        print request.json
         if req_type == 'group_list':
             return json.dumps({'group_list': get_groups()})
         elif req_type == 'update':
