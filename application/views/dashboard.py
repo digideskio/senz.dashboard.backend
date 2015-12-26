@@ -404,17 +404,16 @@ def single():
 @dashboard_bp.route('/dashboard/group', methods=['GET', 'POST'])
 def group():
     if request.method == 'POST':
-        print request.json
-        req_type = request.json.get('action')
+        req_type = request.form.get('action')
         if req_type == 'group_list':
             return json.dumps({'group_list': get_groups()})
         elif req_type == 'update':
-            args = dict(filter(lambda y: y[1] != req_type, map(lambda x: (x, request.json.get(x)), request.json)))
+            args = dict(filter(lambda y: y[1] != req_type, map(lambda x: (x, request.form.get(x)), request.form)))
             create_group(args)
             flash("Update group info success!", 'msg')
             return redirect(url_for('dashboard_bp.group'))
         elif req_type == 'delete':
-            group_id = request.json.get('id')
+            group_id = request.form.get('id')
             delete_group(group_id)
             flash("Delete group info success!", 'msg')
             return redirect(url_for('dashboard_bp.group'))
@@ -447,6 +446,7 @@ def get_groups():
     query = Query(DashboardGroup)
     groups = query.find()
     return map(lambda x: dict(x.attributes, id=x.id), groups)
+
 
 
 def get_label_list():
