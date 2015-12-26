@@ -404,19 +404,21 @@ def single():
 @dashboard_bp.route('/dashboard/group', methods=['GET', 'POST'])
 def group():
     if request.method == 'POST':
+        print request.form
         req_type = request.form.get('action')
         if req_type == 'group_list':
-            return get_groups()
+            return json.dumps({'group_list': get_groups()})
         elif req_type == 'update':
-            args = dict(map(lambda x: (x, request.form.get(x)), request.form))
+            args = dict(filter(lambda y: y[1] != req_type, map(lambda x: (x, request.form.get(x)), request.form)))
+            print args
             create_group(args)
             flash("Update group info success!", 'msg')
-            return redirect(url_for('settings.group'))
+            return redirect(url_for('dashboard_bp.group'))
         elif req_type == 'delete':
             group_name = request.form.get('group_name')
             delete_group(group_name)
             flash("Delete group info success!", 'msg')
-            return redirect(url_for('settings.group'))
+            return redirect(url_for('dashboard_bp.group'))
         elif req_type == 'checkout':
             group_name = request.form.get('group_name')
             return json.dumps(get_group(group_name))
@@ -437,10 +439,11 @@ def create_group(args):
 
 def delete_group(group_name):
     query = Query(DashboardGroup)
-    query.equal_to('name', group_name)
+    query.equal_to('group_name', group_name)
     group = query.find()
+    print group
     for item in group:
-        item.remove()
+        item.destroy()
 
 
 def get_groups():
@@ -453,6 +456,14 @@ def get_group(group_name):
     query = Query(DashboardGroup)
     query.equal_to('group_name', group_name)
     return query.first() or {}
+
+
+import requests
+@dashboard_bp.route('/dashboard/test', methods=['GET', 'POST'])
+def test():
+    rep = requests.post("http://127.0.0.1:3000/dashboard/group", headers={}, data={"type": "update"})
+    print rep.content
+    return make_response("END")
 
 
 def get_tracker_of_app(app_id=''):
