@@ -1,22 +1,22 @@
-{% extends 'base.html' %}
-{% block head %}
-	<head>
-		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-		<meta content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no" name="viewport" />
-{#		<title>GroupSetting</title>#}
-        <link rel="stylesheet" href="{{ url_for('static', filename='styles/bootstrap.min.css') }}">
-		<script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
-		<script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
-		<script src="{{ url_for('static', filename='js/echarts.js') }}"></script>
-        <link rel="stylesheet" href="{{ url_for('static', filename='styles/ball-spin-clockwise-fade.min.css') }}">
-        <link rel="stylesheet" href="{{ url_for('static', filename='lib/jquery-ui-1.11.4/themes/base/jquery-ui.min.css') }}">
-        <script src="{{ url_for('static', filename='lib/jquery-2.1.4.min.js') }}"></script>
-        <script src="{{ url_for('static', filename='lib/jquery-ui-1.11.4/jquery-ui.min.js') }}"></script>
-        <script src="{{ url_for('static', filename='lib/echarts-2.2.7/build/dist/echarts.js') }}"></script>
-        <link rel="stylesheet" href="{{ url_for('static', filename='styles/login.css') }}">
-        <link rel="stylesheet" href="{{ url_for('static', filename='styles/dashboard.css') }}">
-		<style type="text/css">
-			.btn-custom-label {
+{% extends 'base.html' %} {% block head %}
+
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<meta content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no" name="viewport" /> {#
+	<title>GroupSetting</title>#}
+	<link rel="stylesheet" href="{{ url_for('static', filename='styles/bootstrap.min.css') }}">
+	<script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+	<script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+	<script src="{{ url_for('static', filename='js/echarts.js') }}"></script>
+	<link rel="stylesheet" href="{{ url_for('static', filename='styles/ball-spin-clockwise-fade.min.css') }}">
+	<link rel="stylesheet" href="{{ url_for('static', filename='lib/jquery-ui-1.11.4/themes/base/jquery-ui.min.css') }}">
+	<script src="{{ url_for('static', filename='lib/jquery-2.1.4.min.js') }}"></script>
+	<script src="{{ url_for('static', filename='lib/jquery-ui-1.11.4/jquery-ui.min.js') }}"></script>
+	<script src="{{ url_for('static', filename='lib/echarts-2.2.7/build/dist/echarts.js') }}"></script>
+	<link rel="stylesheet" href="{{ url_for('static', filename='styles/login.css') }}">
+	<link rel="stylesheet" href="{{ url_for('static', filename='styles/dashboard.css') }}">
+	<style type="text/css">
+		.btn-custom-label {
 				border-radius: 6px;
 				border-color: #999999;
 			}
@@ -38,104 +38,102 @@
 			.click {
 				color: #00D0BF;
 			}
-		</style>
-	</head>
-{% endblock %}
-
-{% block content %}
-		<div class="container-fluid" style="background: #ffffff;margin-left: 200px;">
-			<div class="row" style="height: 40px;"></div>
-			<div class="row" style="border-bottom: 1px solid #CCCCCC;">
-				<div class="col-xs-2" style="border-right: 1px solid #CCCCCC;padding-top: 10px;padding-bottom: 10px;">
-					<p class="pull-left">分组列表</p>
-					<p id="create" class="pull-right click" style="cursor: pointer;">
-						<img style="width: 10px;height: 10px;margin-bottom: 3px;" src="{{ url_for('static', filename='images/add.png') }}" /> 新建分组
-					</p>
+	</style>
+</head>
+{% endblock %} {% block content %}
+<div class="container-fluid" style="background: #ffffff;margin-left: 200px;">
+	<div class="row" style="height: 40px;"></div>
+	<div class="row" style="border-bottom: 1px solid #CCCCCC;">
+		<div class="col-xs-2" style="border-right: 1px solid #CCCCCC;padding-top: 10px;padding-bottom: 10px;">
+			<p class="pull-left">分组列表</p>
+			<p id="create" class="pull-right click" style="cursor: pointer;">
+				<img style="width: 10px;height: 10px;margin-bottom: 3px;" src="{{ url_for('static', filename='images/add.png') }}" /> 新建分组
+			</p>
+		</div>
+		<div class="col-xs-10" style="padding-top: 10px;">
+			<p id="createOrEdit" class="pull-left">新建分组</p>
+		</div>
+	</div>
+	<div class="row" style="border-bottom: 1px solid #CCCCCC;">
+		<div class="col-xs-2" style="border-right: 1px solid #CCCCCC;">
+			<ul id="groupListDiv" class="list-group list-group-custom">
+				<li id="groupListHidden" class="list-group-item list-group-item-custom hidden"></li>
+				<li id="groupListNull" class="list-group-item hidden" style="border-width: 0;">没有分组</li>
+			</ul>
+		</div>
+		<div id="content" class="col-xs-10 center-block" style="margin-top: 10px;">
+			<div class="row" style="line-height: 35px;">
+				<div class="col-xs-2">
+					<p class="text-right">分组名称</p>
 				</div>
-				<div class="col-xs-10" style="padding-top: 10px;">
-					<p id="createOrEdit" class="pull-left">新建分组</p>
+				<div class="col-xs-10">
+					<div id="groupNameDiv" class="form-group form-inline">
+						<input style="min-width: 350px;" type="text" class="form-control" placeholder="20字以内,可使用数字、中文、字母和下划线的组合">
+						<span class="hidden text-danger" style="margin-left: 20px;">输入不合法!请重新输入!</span>
+					</div>
 				</div>
 			</div>
-			<div class="row" style="border-bottom: 1px solid #CCCCCC;">
-				<div class="col-xs-2" style="border-right: 1px solid #CCCCCC;">
-					<ul id="groupListDiv" class="list-group list-group-custom">
-						<li id="groupListHidden" class="list-group-item list-group-item-custom hidden"></li>
-						<li id="groupListNull" class="list-group-item hidden" style="border-width: 0;">没有分组</li>
-					</ul>
+			<div class="row" style="line-height: 35px;margin-bottom: 10px;">
+				<div class="col-xs-2">
+					<p class="text-right">添加筛选条件</p>
 				</div>
-				<div id="content" class="col-xs-10 center-block" style="margin-top: 10px;">
-					<div class="row" style="line-height: 35px;">
-						<div class="col-xs-2">
-							<p class="text-right">分组名称</p>
-						</div>
-						<div class="col-xs-10">
-							<div id="groupNameDiv" class="form-group form-inline">
-								<input style="min-width: 350px;" type="text" class="form-control" placeholder="20字以内,可使用数字、中文、字母和下划线的组合">
-								<span class="hidden text-danger" style="margin-left: 20px;">输入不合法!请重新输入!</span>
-							</div>
-						</div>
+				<div class="col-xs-10">
+					<button id="addFilterDiv" style="background-color: #000000;color: #FFFFFF;" type="button" class="btn btn-sm">添加</button>
+				</div>
+			</div>
+			<option class="hidden" id="optionHidden"></option>
+			<div class="row hidden" id="filterDivHidden">
+				<div class="col-xs-offset-2 col-xs-5">
+					<div class="form-group form-inline">
+						<select class="form-control firstSelect">
+						</select>
+						<select class="form-control secondSelect hidden">
+						</select>
+						<select class="form-control thirdSelect hidden">
+						</select>
+						<button type="button" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 					</div>
-					<div class="row" style="line-height: 35px;margin-bottom: 10px;">
-						<div class="col-xs-2">
-							<p class="text-right">添加筛选条件</p>
-						</div>
-						<div class="col-xs-10">
-							<button id="addFilterDiv" style="background-color: #000000;color: #FFFFFF;" type="button" class="btn btn-sm">添加</button>
-						</div>
-					</div>
-					<option class="hidden" id="optionHidden"></option>
-					<div class="row hidden" id="filterDivHidden">
-						<div class="col-xs-offset-2 col-xs-5">
-							<div class="form-group form-inline">
-								<select class="form-control firstSelect">
-								</select>
-								<select class="form-control secondSelect hidden">
-								</select>
-								<select class="form-control thirdSelect hidden">
-								</select>
-								<button type="button" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-							</div>
-						</div>
-					</div>
-					<div class="row" id="filterPoint">
-						<div class="col-xs-offset-2 col-xs-5">
-							<button id="saveBtn" type="button" class="btn" style="background-color: #00acc1;color: #FFFFFF;width: 45%;">保存分组</button>
-							<button id="delBtn" type="button" class="btn" style="background-color: #c65353;color: #FFFFFF;width: 45%;margin-left: 2%;" data-toggle="modal" data-target="#delModal">删除分组</button>
-						</div>
-					</div>
+				</div>
+			</div>
+			<div class="row" id="filterPoint">
+				<div class="col-xs-offset-2 col-xs-5">
+					<button id="saveBtn" type="button" class="btn" style="background-color: #00acc1;color: #FFFFFF;width: 45%;">保存分组</button>
+					<button id="delBtn" type="button" class="btn" style="background-color: #c65353;color: #FFFFFF;width: 45%;margin-left: 2%;" data-toggle="modal" data-target="#delModal">删除分组</button>
 				</div>
 			</div>
 		</div>
+	</div>
+</div>
 
-		<!-- 模态框（Modal） -->
-		<div class="modal fade" id="delModal" tabindex="-1" role="dialog" aria-labelledby="delModalLabel" aria-hidden="true">
-			<div class="modal-dialog">
-				<div class="modal-content">
-					<div class="modal-header">
-						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-							&times;
-						</button>
-						<h4 class="modal-title" id="delModalLabel">删除分组</h4>
-					</div>
-					<div class="modal-body">
-						您确定要删除该分组么？一经删除，无法找回！
-					</div>
-					<div class="modal-footer">
-						<button type="button" class="btn btn-default" data-dismiss="modal">
-							取消
-						</button>
-						<button id="delModalBtn" type="button" class="btn btn-danger">
-							删除
-						</button>
-					</div>
-				</div>
-				<!-- /.modal-content -->
+<!-- 模态框（Modal） -->
+<div class="modal fade" id="delModal" tabindex="-1" role="dialog" aria-labelledby="delModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+					&times;
+				</button>
+				<h4 class="modal-title" id="delModalLabel">删除分组</h4>
+			</div>
+			<div class="modal-body">
+				您确定要删除该分组么？一经删除，无法找回！
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">
+					取消
+				</button>
+				<button id="delModalBtn" type="button" class="btn btn-danger">
+					删除
+				</button>
 			</div>
 		</div>
-		<!-- /.modal -->
+		<!-- /.modal-content -->
+	</div>
+</div>
+<!-- /.modal -->
 
-	<script type="text/javascript">
-		// TODO 假数据 start
+<script type="text/javascript">
+	// TODO 假数据 start
 		var groupListNames = [{
 			id: '1',
 			name: '分组一',
@@ -176,6 +174,24 @@
 			data: ['有车', '无车'],
 		}];
 		// TODO 假数据 end
+		// 网络请求地址
+		var url = "{{ url_for('dashboard_bp.group') }}";
+		// 加载列表
+		$.ajax({
+			type: 'post',
+			async: false,
+			url: url,
+			data: {
+				action: 'group_list'
+			},
+			success: function(option) {
+				console.log(option);
+				// TODO
+			},
+			error: function() {
+				alert("获取内容失败，请稍后再试！");
+			}
+		});
 		// 当前选中控件
 		var currGroupName;
 		// 当前选中id
@@ -417,5 +433,5 @@
 				secondSelect.append(secondOption);
 			}
 		};
-	</script>
+</script>
 {% endblock %}
