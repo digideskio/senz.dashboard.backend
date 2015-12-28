@@ -136,12 +136,6 @@
 		id: '1',
 		name: '分组一',
 		婚姻情况: ['已婚'],
-	}, {
-		id: '2',
-		name: '分组二',
-	}, {
-		id: '3',
-		name: '分组三',
 	}];
 	var groupFilter = [{
 		name: '年龄',
@@ -456,71 +450,6 @@
 					}
 				}
 			}
-			//			for (var i = 0; i < obj.tags.length; i++) {
-			//				for (var j1 = 0; j1 < groupFilter.length; j1++) {
-			//					for (var j2 = 0; j2 < groupFilter[j1].data.length; j2++) {
-			//						if (obj.tags[i] == groupFilter[j1].data[j2]) {
-			//							console.log(groupFilter[j1].name + '-' + groupFilter[j1].data[j2]);
-			//							// 设置标签
-			//							tagNum++;
-			//							var item = $('#filterDivHidden').clone();
-			//							item.removeAttr('id');
-			//							item.removeClass('hidden');
-			//							item.addClass('filter-row');
-			//							// 默认值
-			//							var fristOption = $('#optionHidden').clone();
-			//							fristOption.removeAttr('id');
-			//							fristOption.removeClass('hidden');
-			//							fristOption.html('请选择');
-			//							item.find('.firstSelect').append(fristOption);
-			//							// 一级选项
-			//							for (var k = 0; k < groupFilter.length; k++) {
-			//								var fristOption = $('#optionHidden').clone();
-			//								fristOption.removeAttr('id');
-			//								fristOption.removeClass('hidden');
-			//								fristOption.val(k);
-			//								fristOption.html(groupFilter[k].name);
-			//								if (groupFilter[j1].name == groupFilter[k].name) {
-			//									// 设置选中
-			//									fristOption.attr("selected", true);
-			//								}
-			//								item.find('.firstSelect').append(fristOption);
-			//							}
-			//							item.find('.firstSelect').val();
-			//							$('#filterPoint').before(item);
-			//							// 二级菜单
-			//							var secondSelect = item.find('.secondSelect');
-			//							secondSelect.removeClass('hidden');
-			//							secondSelect.addClass('tag');
-			//							// 默认值
-			//							var secondOption = $('#optionHidden').clone();
-			//							secondOption.removeAttr('id');
-			//							secondOption.removeClass('hidden');
-			//							secondOption.html('请选择');
-			//							secondSelect.append(secondOption);
-			//							// 二级选项
-			//							for (var k = 0; k < groupFilter[j1].data.length; k++) {
-			//								var secondOption = $('#optionHidden').clone();
-			//								secondOption.removeAttr('id');
-			//								secondOption.removeClass('hidden');
-			//								secondOption.html(groupFilter[j1].data[k]);
-			//								if (groupFilter[j1].data[j2] == groupFilter[j1].data[k]) {
-			//									// 设置选中
-			//									secondOption.attr("selected", true);
-			//								}
-			//								secondSelect.append(secondOption);
-			//							}
-			//							// 一级监听
-			//							item.find('.firstSelect').change(listener);
-			//							// 删除筛选信息
-			//							item.find('button').click(function() {
-			//								tagNum--;
-			//								$(this).closest('.row').empty();
-			//							});
-			//						}
-			//					}
-			//				}
-			//			}
 		}
 	};
 	// 监听
