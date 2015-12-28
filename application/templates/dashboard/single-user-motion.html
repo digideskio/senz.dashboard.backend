@@ -781,16 +781,24 @@
 		$('#currUserGroup').html($(this).html());
 		currGroupId = $(this).attr('id');
 		console.log('currGroupId:'+currGroupId);
+		var data;
 		// 点击分组逻辑
+		if (currGroupId===-1||currGroupId==undefined) {
+			data={
+				type: 'user_list',
+			};
+		}else{
+			data={
+				type: 'user_list_group',
+				gourp_id: currGroupId,
+			};
+		};
 		// 加载列表
 		$.ajax({
 			type: 'post',
 			async: false,
 			url: url,
-			data: {
-				type: 'user_list',
-				gourpid: currGroupId,
-			},
+			data: data,
 			success: function(option) {
 				// console.log(option);
 				var obj = JSON.parse(option);
