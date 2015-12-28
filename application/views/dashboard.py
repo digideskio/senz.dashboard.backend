@@ -387,8 +387,10 @@ def single():
     if request.method == 'POST':
         req_type = request.form.get('type')
         if req_type == 'user_list':
-            user_list = get_tracker_of_app(app_id)
-            return json.dumps({"userNames": user_list})
+            return json.dumps({"userNames": get_tracker_of_app(app_id)})
+        elif req_type == "user_list_group":
+            group_id = request.form.get('group_id')
+            return json.dumps({"userNames": get_tracker_of_app(app_id, group_id=group_id)})
 
         uid = request.form.get('uid')
         h_start = request.form.get('h_start')
@@ -458,7 +460,7 @@ def get_label_list():
     return map(lambda x: {"name": x, "data": s.get(x).keys()}, label)
 
 
-def get_tracker_of_app(app_id=''):
+def get_tracker_of_app(app_id=None, group_id=None):
     if not app_id or app_id == u'5621fb0f60b27457e863fabb':
         return [u'560388c100b09b53b59504d2']
     app = {
@@ -469,6 +471,13 @@ def get_tracker_of_app(app_id=''):
     query = Query(DashboardSource)
     query.equal_to('app', app)
     query.select('user')
+
+    if group_id:
+        group_query = Query(DashboardGroup)
+        group = group_query.first() or {}
+        for k, v in group.attributes.items():
+            for ele in v:
+                query.equal_to(k, ele)
     installation_list = query.find()
     return sorted(list(set(map(lambda x: x.attributes['user'].id, installation_list))))
 
