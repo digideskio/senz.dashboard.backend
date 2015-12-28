@@ -385,12 +385,10 @@ def single():
     developer = Developer()
     developer.session_token = session.get('session_token')
     if request.method == 'POST':
-        print request.json
         req_type = request.json.get('type')
+        group_id = request.json.get('gourpid')
+
         if req_type == 'user_list':
-            return json.dumps({"userNames": get_tracker_of_app(app_id)})
-        elif req_type == "user_list_group":
-            group_id = request.json.get('group_id')
             return json.dumps({"userNames": get_tracker_of_app(app_id, group_id=group_id)})
 
         uid = request.json.get('uid')
@@ -434,6 +432,7 @@ def create_group(args):
     query = Query(DashboardGroup)
     query.equal_to('objectId', group_id)
     group = query.first() if query.count() else DashboardGroup()
+    group.clear()
     for k, v in args.items():
         group.set(k, v)
     group.save()
@@ -473,12 +472,17 @@ def get_tracker_of_app(app_id=None, group_id=None):
     query.equal_to('app', app)
     query.select('user')
 
+    label = ['age', 'gender', 'marriage', 'pregnant', 'has_car',
+             'has_pet', 'occupation', 'field', 'consumption', 'interest']
+
     if group_id:
         group_query = Query(DashboardGroup)
+        group_query.equal_to("objectId", group_id)
         group = group_query.first() or {}
         for k, v in group.attributes.items():
-            for ele in v:
-                query.equal_to(k, ele)
+            if k in label:
+                for ele in v:
+                    query.equal_to(k, ele)
     installation_list = query.find()
     return sorted(list(set(map(lambda x: x.attributes['user'].id, installation_list))))
 
