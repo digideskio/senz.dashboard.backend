@@ -167,9 +167,10 @@
 		type: 'post',
 		async: false,
 		url: url,
-		data: {
+        contentType: "application/json",
+		data: JSON.stringify({
 			action: "group_list"
-		},
+		}),
 		success: function(option) {
 			console.log(option);
 			var obj = JSON.parse(option);
@@ -184,9 +185,10 @@
 		type: 'post',
 		async: false,
 		url: url,
-		data: {
+        contentType: "application/json",
+		data: JSON.stringify({
 			action: "label_list"
-		},
+		}),
 		success: function(option) {
 			console.log(option);
 			var obj = JSON.parse(option);
@@ -284,7 +286,8 @@
 				type: 'post',
 				async: true,
 				url: url,
-				data: $.param(data, true),
+                contentType: "application/json",
+				data: JSON.stringify(data),
 				success: function(option) {
 					console.log(option);
 					// 刷新页面
@@ -304,10 +307,11 @@
 				type: 'post',
 				async: true,
 				url: url,
-				data: {
+                contentType: "application/json",
+				data: JSON.stringify({
 					action: 'delete',
-					id: currGroupId,
-				},
+					id: currGroupId
+				}),
 				success: function(option) {
 					console.log(option);
 					// 刷新页面
