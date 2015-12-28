@@ -213,7 +213,7 @@
 			.slideToggle(200);
 	};
 	// 假数据 start
-	var userGroups = ['全部用户', '分组一', '分组二', '分组三'];
+	var userGroups = [];
 	var userNames = [];
 	for (var i = 0; i < 100; i++) {
 		userNames.push('560388c100b09b53b59504d2');
@@ -340,14 +340,39 @@
 			type: 'user_list'
 		},
 		success: function(option) {
-			console.log(option);
+			// console.log(option);
 			var obj = JSON.parse(option);
-			userNames = obj.userNames;
+			userNames = obj.userNames;	
 		},
 		error: function() {
 			alert("获取内容失败，请稍后再试！");
 		}
 	});
+	// 网络请求地址
+	var group_url = "{{ url_for('dashboard_bp.group') }}";
+	// 加载列表
+	$.ajax({
+		type: 'post',
+		async: false,
+		url: group_url,
+		data: {
+			action: "group_list"
+		},
+		success: function(option) {
+			var obj = JSON.parse(option);
+			userGroups = obj.group_list;
+			userGroups.unshift({
+				id:'-1',
+				name: '全部用户',
+			});
+			// console.log(userGroups);
+		},
+		error: function() {
+			alert("获取内容失败，请稍后再试！");
+		}
+	});
+	// 当前选中组id
+	var currGroupId = -1;
 	// 定义图表
 	var eventChart, homeOfficeChart, actionChart, locationChart;
 	// 当前选中
@@ -455,6 +480,7 @@
 			}
 			var data = {
 				uid: currId,
+				gourpid: currGroupId,
 				h_start: h_start,
 				h_end: h_end,
 				e_start: e_start,
@@ -476,12 +502,12 @@
 					locationData = obj.locationData;
 					userLabels = obj.userLabels;
 					detailData = obj.detailData;
-					console.log('actionData:' + actionData);
-					console.log('eventData:' + eventData);
-					console.log('homeOfficeData:' + homeOfficeData);
-					console.log('locationData:' + locationData);
-					console.log('userLabels:' + userLabels);
-					console.log('detailData:' + detailData);
+					// console.log('actionData:' + actionData);
+					// console.log('eventData:' + eventData);
+					// console.log('homeOfficeData:' + homeOfficeData);
+					// console.log('locationData:' + locationData);
+					// console.log('userLabels:' + userLabels);
+					// console.log('detailData:' + detailData);
 					// 加载用户内容
 					initUserContent();
 				},
@@ -495,7 +521,8 @@
 			var item = $('#userGroupHidden').clone();
 			item.removeAttr('id');
 			item.removeClass('hidden');
-			item.children().html(userGroups[i]);
+			item.children().html(userGroups[i].name);
+			item.children().attr('id',userGroups[i].id);
 			item.children().click(changeUserGroup);
 			$('#userGroupDiv').append(item);
 		};
@@ -611,6 +638,7 @@
 				// 换人业务逻辑执行中
 				var data = {
 					uid: currId,
+					gourpid: currGroupId,
 					h_start: h_start,
 					h_end: h_end,
 					e_start: e_start,
@@ -632,12 +660,12 @@
 						locationData = obj.locationData;
 						userLabels = obj.userLabels;
 						detailData = obj.detailData;
-						console.log('actionData:' + actionData);
-						console.log('eventData:' + eventData);
-						console.log('homeOfficeData:' + homeOfficeData);
-						console.log('locationData:' + locationData);
-						console.log('userLabels:' + userLabels);
-						console.log('detailData:' + detailData);
+						// console.log('actionData:' + actionData);
+						// console.log('eventData:' + eventData);
+						// console.log('homeOfficeData:' + homeOfficeData);
+						// console.log('locationData:' + locationData);
+						// console.log('userLabels:' + userLabels);
+						// console.log('detailData:' + detailData);
 						// 换人业务逻辑完成后
 						$('#content').removeClass('hidden');
 						// 加载用户内容
@@ -650,6 +678,11 @@
 			});
 			$('#userNameNull').before(item);
 		};
+	}
+	// 隐藏用户数据
+	function hiddenUserContent(){
+		$('#content').removeClass('show');
+		$('#content').addClass('hidden');
 	}
 	// 加载用户内容
 	function initUserContent() {
@@ -740,14 +773,42 @@
 	}
 	// 改变分页
 	function changePage() {
-		// TODO 请求数据
 		// 加载数据
 		loadDetailLog();
 	}
 	// 切换分组
 	function changeUserGroup() {
 		$('#currUserGroup').html($(this).html());
-		// TODO 点击分组逻辑-不在本周任务内
+		currGroupId = $(this).attr('id');
+		console.log('currGroupId:'+currGroupId);
+		// 点击分组逻辑
+		// 加载列表
+		$.ajax({
+			type: 'post',
+			async: false,
+			url: url,
+			data: {
+				type: 'user_list',
+				gourpid: currGroupId,
+			},
+			success: function(option) {
+				// console.log(option);
+				var obj = JSON.parse(option);
+				userNames = obj.userNames;
+				filterUserNames = userNames;
+				hiddenUserContent();
+				// 清空现有列表
+				$('#userNameDiv').children('.tag').remove();
+				$('#userNameNull').addClass('hidden');
+				$('#userNameInput').val('');
+				filterUserNames = userNames;
+				// 重新加载
+				initUserNameList();
+			},
+			error: function() {
+				alert("获取内容失败，请稍后再试！");
+			}
+		});
 	}
 	// 初始化
 	function initCharts() {

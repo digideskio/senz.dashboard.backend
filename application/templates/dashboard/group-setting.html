@@ -7,12 +7,6 @@
 	<link rel="stylesheet" href="{{ url_for('static', filename='styles/bootstrap.min.css') }}">
 	<script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
 	<script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
-	<!--<script src="{{ url_for('static', filename='js/echarts.js') }}"></script>-->
-	<!--<link rel="stylesheet" href="{{ url_for('static', filename='styles/ball-spin-clockwise-fade.min.css') }}">-->
-	<!--<link rel="stylesheet" href="{{ url_for('static', filename='lib/jquery-ui-1.11.4/themes/base/jquery-ui.min.css') }}">-->
-	<!--<script src="{{ url_for('static', filename='lib/jquery-2.1.4.min.js') }}"></script>-->
-	<!--<script src="{{ url_for('static', filename='lib/jquery-ui-1.11.4/jquery-ui.min.js') }}"></script>-->
-	<!--<script src="{{ url_for('static', filename='lib/echarts-2.2.7/build/dist/echarts.js') }}"></script>-->
 	<link rel="stylesheet" href="{{ url_for('static', filename='styles/login.css') }}">
 	<link rel="stylesheet" href="{{ url_for('static', filename='styles/dashboard.css') }}">
 	<style type="text/css">
@@ -177,7 +171,7 @@
 			action: "group_list"
 		},
 		success: function(option) {
-						console.log(option);
+			console.log(option);
 			var obj = JSON.parse(option);
 			groupListNames = obj.group_list;
 		},
@@ -194,7 +188,7 @@
 			action: "label_list"
 		},
 		success: function(option) {
-						console.log(option);
+			console.log(option);
 			var obj = JSON.parse(option);
 			groupFilter = obj;
 		},
