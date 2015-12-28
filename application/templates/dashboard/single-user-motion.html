@@ -336,9 +336,8 @@
 		type: 'post',
 		async: false,
 		url: url,
-		data: {
-			type: 'user_list'
-		},
+        contentType: "application/json",
+		data: JSON.stringify({type: 'user_list' }),
 		success: function(option) {
 			// console.log(option);
 			var obj = JSON.parse(option);
@@ -355,9 +354,10 @@
 		type: 'post',
 		async: false,
 		url: group_url,
-		data: {
+        contentType: "application/json",
+		data: JSON.stringify({
 			action: "group_list"
-		},
+		}),
 		success: function(option) {
 			var obj = JSON.parse(option);
 			userGroups = obj.group_list;
@@ -484,14 +484,15 @@
 				h_start: h_start,
 				h_end: h_end,
 				e_start: e_start,
-				e_end: e_end,
+				e_end: e_end
 			};
 			console.log(data);
 			$.ajax({
 				type: "post",
 				async: true,
 				url: url,
-				data: data,
+                contentType: "application/json",
+				data: JSON.stringify(data),
 				success: function(option) {
 					console.log(option);
 					// TODO
@@ -642,14 +643,15 @@
 					h_start: h_start,
 					h_end: h_end,
 					e_start: e_start,
-					e_end: e_end,
+					e_end: e_end
 				};
 				console.log(data);
 				$.ajax({
 					type: 'post',
 					async: true,
 					url: url,
-					data: data,
+                    contentType: "application/json",
+					data: JSON.stringify(data),
 					success: function(option) {
 						console.log(option);
 						// TODO
@@ -787,10 +789,11 @@
 			type: 'post',
 			async: false,
 			url: url,
-			data: {
+            contentType: "application/json",
+			data: JSON.stringify({
 				type: 'user_list',
-				gourpid: currGroupId,
-			},
+				gourpid: currGroupId
+			}),
 			success: function(option) {
 				// console.log(option);
 				var obj = JSON.parse(option);

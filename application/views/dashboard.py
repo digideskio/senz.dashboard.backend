@@ -385,18 +385,19 @@ def single():
     developer = Developer()
     developer.session_token = session.get('session_token')
     if request.method == 'POST':
-        req_type = request.form.get('type')
+        print request.json
+        req_type = request.json.get('type')
         if req_type == 'user_list':
             return json.dumps({"userNames": get_tracker_of_app(app_id)})
         elif req_type == "user_list_group":
-            group_id = request.form.get('group_id')
+            group_id = request.json.get('group_id')
             return json.dumps({"userNames": get_tracker_of_app(app_id, group_id=group_id)})
 
-        uid = request.form.get('uid')
-        h_start = request.form.get('h_start')
-        h_end = request.form.get('h_end')
-        e_start = request.form.get('e_start')
-        e_end = request.form.get('e_end')
+        uid = request.json.get('uid')
+        h_start = request.json.get('h_start')
+        h_end = request.json.get('h_end')
+        e_start = request.json.get('e_start')
+        e_end = request.json.get('e_end')
         ret_dict = get_attr_of_user(uid, h_start=h_start, h_end=h_end, e_start=e_start, e_end=e_end)
         return json.dumps(ret_dict)
     return render_template('dashboard/single-user-motion.html',
@@ -406,18 +407,18 @@ def single():
 @dashboard_bp.route('/dashboard/group', methods=['GET', 'POST'])
 def group():
     if request.method == 'POST':
-        req_type = request.form.get('action')
+        req_type = request.json.get('action')
         if req_type == 'group_list':
             return json.dumps({'group_list': get_groups()})
         elif req_type == 'update':
-            args = dict(filter(lambda y: y[0] != 'action' and y[0] != 'id' and y[0] != 'name', dict(request.form).items()))
-            args['id'] = request.form.get('id')
-            args['name'] = request.form.get('name')
+            args = dict(filter(lambda y: y[0] != 'action' and y[0] != 'id' and y[0] != 'name', dict(request.json).items()))
+            args['id'] = request.json.get('id')
+            args['name'] = request.json.get('name')
             create_group(args)
             flash("Update group info success!", 'msg')
             return redirect(url_for('dashboard_bp.group'))
         elif req_type == 'delete':
-            group_id = request.form.get('id')
+            group_id = request.json.get('id')
             delete_group(group_id)
             flash("Delete group info success!", 'msg')
             return redirect(url_for('dashboard_bp.group'))
