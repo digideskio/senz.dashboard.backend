@@ -471,7 +471,7 @@ def get_tracker_of_app(app_id=None, group_id=None):
                 u'5604e5ce60b2521fb8eb240a', u'56406b4a00b0ee7f57b5c3a3', u'5624da0960b27457e89bff13',
                 u'560d3a9960b2ad8a22f32966', u'564bd84b60b2ed362064985f', u'55d845e100b0d7b2266ac668',
                 u'564575ac60b20fc9b99d8d9d', u'56065bba60b2aac0d6f2a38a', u'558a5ee7e4b0acec6b941e96',
-                u'55f788f4ddb25bb7713125ef']
+                u'55f788f4ddb25bb7713125ef', u'5588d20be4b0dc547bacb2ce']
     app = {
         "__type": "Pointer",
         "className": "Application",
@@ -517,7 +517,10 @@ def get_attr_of_user(uid, h_start=None, h_end=None, e_start=None, e_end=None):
     user_labels = [y for x in filter(lambda y: y, labels) for y in x if isinstance(x, list)]
     user_labels += [type_list[labels.index(x)] for x in labels if isinstance(x, unicode) and x in [u'yes', u'no']]
     user_labels += [x for x in labels if isinstance(x, unicode) and x not in [u'yes', u'no']]
-    ret_dcit['userLabels'] = filter(lambda x: x, user_labels)
+    user_labels = filter(lambda x: x, user_labels)
+    for item in type_list:
+        user_labels = map(lambda x: translate(x, item), user_labels)
+    ret_dcit['userLabels'] = user_labels
 
     event = attrs.attributes.get('event') or {}
     event_counts = map(lambda x: x.attributes.get('event'),
@@ -533,7 +536,7 @@ def get_attr_of_user(uid, h_start=None, h_end=None, e_start=None, e_end=None):
     event = dict(filter(lambda x: str(e_start) < str(x[0]) < str(e_end), event.items()))
     event_np = list(set(event.values()))
     event_data = {
-        "category": event_np,
+        "category": map(lambda x: translate(x, "context"), event_np),
         "data": map(lambda x: event.values().count(x), event_np),
         "avg": map(lambda x: (event_count.get(x) or 0)/user_count, event_np)
     }
@@ -552,7 +555,7 @@ def get_attr_of_user(uid, h_start=None, h_end=None, e_start=None, e_end=None):
     motion = dict(filter(lambda x: str(h_start) < str(x[0]) < str(h_end), motion.items()))
     motion_np = list(set(motion.values()))
     action_data = {
-        "category": motion_np,
+        "category": map(lambda x: translate(x, "motion"), motion_np),
         "data": map(lambda x: motion.values().count(x), motion_np),
         "avg": map(lambda x: (motion_count.get(x) or 0)/user_count, motion_np)
     }
