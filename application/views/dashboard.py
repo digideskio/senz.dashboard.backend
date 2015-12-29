@@ -463,7 +463,15 @@ def get_label_list():
 
 def get_tracker_of_app(app_id=None, group_id=None):
     if not app_id or app_id == u'5621fb0f60b27457e863fabb':
-        return [u'560388c100b09b53b59504d2']
+        return [u'560388c100b09b53b59504d2', u'560d7193ddb2dd00356f4e80', u'560bd9b7ddb2e44a621fc217',
+                u'561bdea960b2de2d09810f22', u'5624b97660b296e5979bce05', u'5624ce21ddb24819b84d59d2',
+                u'560bdbcb60b267e6db7aa2a9', u'560e7b25ddb2e44a624f4d4e', u'5625af4060b202593e53cda7',
+                u'562881ae60b2260e76fc77cb', u'5627226c00b09f851ff4a200', u'564156f160b262671ea7aa65',
+                u'564049ae60b262671e9ce28f', u'56404b4200b0ee7f57b44968', u'5624d68460b2b199f7628914',
+                u'5604e5ce60b2521fb8eb240a', u'56406b4a00b0ee7f57b5c3a3', u'5624da0960b27457e89bff13',
+                u'560d3a9960b2ad8a22f32966', u'564bd84b60b2ed362064985f', u'55d845e100b0d7b2266ac668',
+                u'564575ac60b20fc9b99d8d9d', u'56065bba60b2aac0d6f2a38a', u'558a5ee7e4b0acec6b941e96',
+                u'55f788f4ddb25bb7713125ef']
     app = {
         "__type": "Pointer",
         "className": "Application",
@@ -507,7 +515,8 @@ def get_attr_of_user(uid, h_start=None, h_end=None, e_start=None, e_end=None):
 
     labels = map(lambda x: attrs.attributes.get(x), type_list)
     user_labels = [y for x in filter(lambda y: y, labels) for y in x if isinstance(x, list)]
-    user_labels += [type_list[labels.index(x)] for x in labels if isinstance(x, unicode)]
+    user_labels += [type_list[labels.index(x)] for x in labels if isinstance(x, unicode) and x in [u'yes', u'no']]
+    user_labels += [x for x in labels if isinstance(x, unicode) and x not in [u'yes', u'no']]
     ret_dcit['userLabels'] = filter(lambda x: x, user_labels)
 
     event = attrs.attributes.get('event') or {}
