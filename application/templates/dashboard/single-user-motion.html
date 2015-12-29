@@ -222,7 +222,7 @@
 	var eventData = {
 		category: ['地点1', '地点2', '地点3', '地点4', '地点5', '地点6'],
 		data: [2.0, 4.9, 7.0, 23.2, 25.6, 76.7],
-		avgData: [2.0, 4.9, 7.0, 23.2, 25.6, 76.7],
+		avg: [2.0, 4.9, 7.0, 23.2, 25.6, 76.7],
 	};
 	var homeOfficeData = {
 		category: ['1:00', '3:00', '5:00', '7:00', '9:00', '11:00', '13:00', '15:00', '17:00', '19:00', '21:00', '23:00'],
@@ -241,7 +241,7 @@
 	var actionData = {
 		category: ['走路', '坐车', '静坐', '跑步', '骑车', '乘车'],
 		data: [2.0, 4.9, 17.0, 3.2, 5.6, 6.7],
-		avgData: [2.0, 4.9, 17.0, 3.2, 5.6, 6.7],
+		avg: [2.0, 4.9, 17.0, 3.2, 5.6, 6.7],
 	};
 	var heatData = [];
 	for (var i = 0; i < 200; ++i) {
@@ -909,7 +909,7 @@
 						name: '平均水平',
 						type: 'bar',
 						barMaxWidth: 30,
-						data: eventData.data,
+						data: eventData.avg,
 						markPoint: {
 							data: [{
 								type: 'max',
@@ -1155,7 +1155,7 @@
 						name: '平均水平',
 						type: 'bar',
 						barMaxWidth: 30,
-						data: actionData.data,
+						data: actionData.avg,
 						markPoint: {
 							data: [{
 								type: 'max',
