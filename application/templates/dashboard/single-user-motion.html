@@ -495,7 +495,6 @@
 				data: JSON.stringify(data),
 				success: function(option) {
 					console.log(option);
-					// TODO
 					var obj = JSON.parse(option);
 					actionData = obj.actionData;
 					eventData = obj.eventData;
@@ -654,7 +653,6 @@
 					data: JSON.stringify(data),
 					success: function(option) {
 						console.log(option);
-						// TODO
 						var obj = JSON.parse(option);
 						actionData = obj.actionData;
 						eventData = obj.eventData;
@@ -886,20 +884,6 @@
 						type: 'bar',
 						barMaxWidth: 30,
 						data: eventData.data,
-						markPoint: {
-							data: [{
-								type: 'max',
-								name: '最大值'
-							}, {
-								type: 'min',
-								name: '最小值'
-							}],
-							itemStyle: {
-								normal: {
-									color: '#00acc1',
-								},
-							},
-						},
 						itemStyle: {
 							normal: {
 								color: '#00acc1',
@@ -910,20 +894,6 @@
 						type: 'bar',
 						barMaxWidth: 30,
 						data: eventData.avg,
-						markPoint: {
-							data: [{
-								type: 'max',
-								name: '最大值'
-							}, {
-								type: 'min',
-								name: '最小值'
-							}],
-							itemStyle: {
-								normal: {
-									color: '#918bd5',
-								},
-							},
-						},
 						itemStyle: {
 							normal: {
 								color: '#918bd5',
@@ -931,6 +901,39 @@
 						},
 					}, ]
 				};
+				// 如果不为空画线
+				if(eventData.category.length > 0){
+					option.series[0].markPoint = 
+										{
+											data: [{
+												type: 'max',
+												name: '最大值'
+											}, {
+												type: 'min',
+												name: '最小值'
+											}],
+											itemStyle: {
+												normal: {
+													color: '#00acc1',
+												},
+											},
+										};
+					option.series[1].markPoint = 
+										{
+											data: [{
+												type: 'max',
+												name: '最大值'
+											}, {
+												type: 'min',
+												name: '最小值'
+											}],
+											itemStyle: {
+												normal: {
+													color: '#918bd5',
+												},
+											},
+										};
+				}
 				// 为echarts对象加载数据 
 				eventChart.setOption(option);
 			}
@@ -1132,20 +1135,6 @@
 						type: 'bar',
 						barMaxWidth: 30,
 						data: actionData.data,
-						markPoint: {
-							data: [{
-								type: 'max',
-								name: '最大值'
-							}, {
-								type: 'min',
-								name: '最小值'
-							}],
-							itemStyle: {
-								normal: {
-									color: '#00acc1',
-								},
-							},
-						},
 						itemStyle: {
 							normal: {
 								color: '#00acc1',
@@ -1156,20 +1145,6 @@
 						type: 'bar',
 						barMaxWidth: 30,
 						data: actionData.avg,
-						markPoint: {
-							data: [{
-								type: 'max',
-								name: '最大值'
-							}, {
-								type: 'min',
-								name: '最小值'
-							}],
-							itemStyle: {
-								normal: {
-									color: '#918bd5',
-								},
-							},
-						},
 						itemStyle: {
 							normal: {
 								color: '#918bd5',
@@ -1177,6 +1152,39 @@
 						},
 					}, ]
 				};
+				// 如果不为空画线
+				if(actionData.category.length > 0){
+					option.series[0].markPoint = 
+										{
+											data: [{
+												type: 'max',
+												name: '最大值'
+											}, {
+												type: 'min',
+												name: '最小值'
+											}],
+											itemStyle: {
+												normal: {
+													color: '#00acc1',
+												},
+											},
+										};
+					option.series[1].markPoint = 
+										{
+											data: [{
+												type: 'max',
+												name: '最大值'
+											}, {
+												type: 'min',
+												name: '最小值'
+											}],
+											itemStyle: {
+												normal: {
+													color: '#918bd5',
+												},
+											},
+										};
+				}
 				// 为echarts对象加载数据 
 				actionChart.setOption(option);
 			}
@@ -1225,10 +1233,6 @@
 						roam: false,
 						hoverable: false,
 						data: [],
-						heatmap: {
-							minAlpha: 0.1,
-							data: locationData.data
-						},
 						itemStyle: {
 							normal: {
 								borderColor: 'rgba(255,255,255,0.6)',
@@ -1240,6 +1244,14 @@
 						}
 					}]
 				};
+				// 如果不为空加载
+				if(locationData.data.length > 0){
+					option.series[0].heatmap = 
+										{
+											minAlpha: 0.1,
+											data: locationData.data
+										};
+				}
 				// 为echarts对象加载数据 
 				locationChart.setOption(option);
 			}
