@@ -47,7 +47,8 @@ def show():
         event_list = filter(lambda y: y is not None,
                             map(lambda x: translate(translate(x, 'event_old'), 'context'), event_list))
         event_tmp = sorted(map(lambda x: (x, event_list.count(x)), set(event_list)), key=lambda item: -item[1])
-    data = map(lambda x: {'rank': x/3+1, 'name': event_tmp[x-1][0], 'count': event_tmp[x-1][1]}, xrange(1, len(set(event_tmp))+1))
+    data = map(lambda x: {'rank': x/3+1, 'name': event_tmp[x-1][0],
+                          'count': event_tmp[x-1][1]}, xrange(1, len(set(event_tmp))+1))
     event = {
         'errcode': 0,
         'errmsg': 'ok',
