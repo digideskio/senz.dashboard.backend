@@ -18,14 +18,30 @@
                 </div>
                 <div  class="item">
                     <input type="password" placeholder="密码" name="password" id="password" size="20" maxlength="30" />
-    
                 </div>
+
+                <div class="flashes item hide">
+                    {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                    <script>
+                        $(".flashes").removeClass("hide");
+                        setTimeout(function(){$(".flashes").addClass("hide")}, 2000);
+                    </script>
+                    <ul>
+                        {% for category, message in messages %}
+                        <li class="{{ category }}" style="color: red;">{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+                    {% endwith %}
+                </div>
+
                 <div class="item cookiechk">
                     <label><input class="checkbox" type="checkbox" name="remember" id="remember" value="1" />记住我</label>
                     <a href="{{ url_for('accounts_bp.forget') }}">忘记密码？</a>
                 </div>
                 <div class="item">
-                    <input name="register-submit" type="submit" class="button" value="提交" /> 
+                    <input name="register-submit" type="submit" class="button" value="提交" />
                 </div>
             </form>
         </div>

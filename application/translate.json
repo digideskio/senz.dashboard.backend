@@ -101,11 +101,13 @@
     "has_car":{
         "yes": "有",
         "no": "无",
+        "has_car": "有车",
         "unknown": "未知"
     },
     "has_pet":{
         "yes": "有",
         "no": "无",
+        "has_pet": "养宠物",
         "unknown": "未知"
     },
     "home_office_status": {

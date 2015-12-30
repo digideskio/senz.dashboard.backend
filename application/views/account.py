@@ -1,6 +1,6 @@
 # coding: utf-8
 
-from flask import Blueprint, session, render_template, request, redirect, url_for
+from flask import Blueprint, session, render_template, request, redirect, url_for, flash
 from leancloud import LeanCloudError
 from ..models import Developer
 import datetime
@@ -26,6 +26,7 @@ def login():
             user.login(username, password)
             session['session_token'] = user.get_session_token()
         except LeanCloudError:
+            flash("用户名或密码错误!", "error")
             return render_template('account/login.html')
         return redirect(next_url)
     return render_template('account/login.html')
