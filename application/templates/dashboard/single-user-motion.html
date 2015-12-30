@@ -12,6 +12,8 @@
 	<script src="{{ url_for('static', filename='lib/echarts-2.2.7/build/dist/echarts.js') }}"></script>
 	<link rel="stylesheet" href="{{ url_for('static', filename='styles/login.css') }}">
 	<link rel="stylesheet" href="{{ url_for('static', filename='styles/dashboard.css') }}">
+	<script src="http://api.map.baidu.com/api?v=2.0&ak=1q5erVeV9OCE90ZKyeFdVdBb" type="text/javascript"></script>
+	<script src="{{ url_for('static', filename='js/Heatmap_min.js') }}"></script>
 	<style type="text/css">
 		.btn-custom-label {
 			border-radius: 6px;
@@ -243,17 +245,376 @@
 		data: [2.0, 4.9, 17.0, 3.2, 5.6, 6.7],
 		avg: [2.0, 4.9, 17.0, 3.2, 5.6, 6.7],
 	};
-	var heatData = [];
-	for (var i = 0; i < 200; ++i) {
-		heatData.push([
-			116 + Math.random(), // gps
-			39.5 + Math.random(), // gps
-			Math.random() // 热度
-		]);
-	}
+	var heatData = [{
+		"lng": 116.418261,
+		"lat": 39.921984,
+		"count": 50
+	}, {
+		"lng": 116.423332,
+		"lat": 39.916532,
+		"count": 51
+	}, {
+		"lng": 116.419787,
+		"lat": 39.930658,
+		"count": 15
+	}, {
+		"lng": 116.418455,
+		"lat": 39.920921,
+		"count": 40
+	}, {
+		"lng": 116.418843,
+		"lat": 39.915516,
+		"count": 100
+	}, {
+		"lng": 116.42546,
+		"lat": 39.918503,
+		"count": 6
+	}, {
+		"lng": 116.423289,
+		"lat": 39.919989,
+		"count": 18
+	}, {
+		"lng": 116.418162,
+		"lat": 39.915051,
+		"count": 80
+	}, {
+		"lng": 116.422039,
+		"lat": 39.91782,
+		"count": 11
+	}, {
+		"lng": 116.41387,
+		"lat": 39.917253,
+		"count": 7
+	}, {
+		"lng": 116.41773,
+		"lat": 39.919426,
+		"count": 42
+	}, {
+		"lng": 116.421107,
+		"lat": 39.916445,
+		"count": 4
+	}, {
+		"lng": 116.417521,
+		"lat": 39.917943,
+		"count": 27
+	}, {
+		"lng": 116.419812,
+		"lat": 39.920836,
+		"count": 23
+	}, {
+		"lng": 116.420682,
+		"lat": 39.91463,
+		"count": 60
+	}, {
+		"lng": 116.415424,
+		"lat": 39.924675,
+		"count": 8
+	}, {
+		"lng": 116.419242,
+		"lat": 39.914509,
+		"count": 15
+	}, {
+		"lng": 116.422766,
+		"lat": 39.921408,
+		"count": 25
+	}, {
+		"lng": 116.421674,
+		"lat": 39.924396,
+		"count": 21
+	}, {
+		"lng": 116.427268,
+		"lat": 39.92267,
+		"count": 1
+	}, {
+		"lng": 116.417721,
+		"lat": 39.920034,
+		"count": 51
+	}, {
+		"lng": 116.412456,
+		"lat": 39.92667,
+		"count": 7
+	}, {
+		"lng": 116.420432,
+		"lat": 39.919114,
+		"count": 11
+	}, {
+		"lng": 116.425013,
+		"lat": 39.921611,
+		"count": 35
+	}, {
+		"lng": 116.418733,
+		"lat": 39.931037,
+		"count": 22
+	}, {
+		"lng": 116.419336,
+		"lat": 39.931134,
+		"count": 4
+	}, {
+		"lng": 116.413557,
+		"lat": 39.923254,
+		"count": 5
+	}, {
+		"lng": 116.418367,
+		"lat": 39.92943,
+		"count": 3
+	}, {
+		"lng": 116.424312,
+		"lat": 39.919621,
+		"count": 100
+	}, {
+		"lng": 116.423874,
+		"lat": 39.919447,
+		"count": 87
+	}, {
+		"lng": 116.424225,
+		"lat": 39.923091,
+		"count": 32
+	}, {
+		"lng": 116.417801,
+		"lat": 39.921854,
+		"count": 44
+	}, {
+		"lng": 116.417129,
+		"lat": 39.928227,
+		"count": 21
+	}, {
+		"lng": 116.426426,
+		"lat": 39.922286,
+		"count": 80
+	}, {
+		"lng": 116.421597,
+		"lat": 39.91948,
+		"count": 32
+	}, {
+		"lng": 116.423895,
+		"lat": 39.920787,
+		"count": 26
+	}, {
+		"lng": 116.423563,
+		"lat": 39.921197,
+		"count": 17
+	}, {
+		"lng": 116.417982,
+		"lat": 39.922547,
+		"count": 17
+	}, {
+		"lng": 116.426126,
+		"lat": 39.921938,
+		"count": 25
+	}, {
+		"lng": 116.42326,
+		"lat": 39.915782,
+		"count": 100
+	}, {
+		"lng": 116.419239,
+		"lat": 39.916759,
+		"count": 39
+	}, {
+		"lng": 116.417185,
+		"lat": 39.929123,
+		"count": 11
+	}, {
+		"lng": 116.417237,
+		"lat": 39.927518,
+		"count": 9
+	}, {
+		"lng": 116.417784,
+		"lat": 39.915754,
+		"count": 47
+	}, {
+		"lng": 116.420193,
+		"lat": 39.917061,
+		"count": 52
+	}, {
+		"lng": 116.422735,
+		"lat": 39.915619,
+		"count": 100
+	}, {
+		"lng": 116.418495,
+		"lat": 39.915958,
+		"count": 46
+	}, {
+		"lng": 116.416292,
+		"lat": 39.931166,
+		"count": 9
+	}, {
+		"lng": 116.419916,
+		"lat": 39.924055,
+		"count": 8
+	}, {
+		"lng": 116.42189,
+		"lat": 39.921308,
+		"count": 11
+	}, {
+		"lng": 116.413765,
+		"lat": 39.929376,
+		"count": 3
+	}, {
+		"lng": 116.418232,
+		"lat": 39.920348,
+		"count": 50
+	}, {
+		"lng": 116.417554,
+		"lat": 39.930511,
+		"count": 15
+	}, {
+		"lng": 116.418568,
+		"lat": 39.918161,
+		"count": 23
+	}, {
+		"lng": 116.413461,
+		"lat": 39.926306,
+		"count": 3
+	}, {
+		"lng": 116.42232,
+		"lat": 39.92161,
+		"count": 13
+	}, {
+		"lng": 116.4174,
+		"lat": 39.928616,
+		"count": 6
+	}, {
+		"lng": 116.424679,
+		"lat": 39.915499,
+		"count": 21
+	}, {
+		"lng": 116.42171,
+		"lat": 39.915738,
+		"count": 29
+	}, {
+		"lng": 116.417836,
+		"lat": 39.916998,
+		"count": 99
+	}, {
+		"lng": 116.420755,
+		"lat": 39.928001,
+		"count": 10
+	}, {
+		"lng": 116.414077,
+		"lat": 39.930655,
+		"count": 14
+	}, {
+		"lng": 116.426092,
+		"lat": 39.922995,
+		"count": 16
+	}, {
+		"lng": 116.41535,
+		"lat": 39.931054,
+		"count": 15
+	}, {
+		"lng": 116.413022,
+		"lat": 39.921895,
+		"count": 13
+	}, {
+		"lng": 116.415551,
+		"lat": 39.913373,
+		"count": 17
+	}, {
+		"lng": 116.421191,
+		"lat": 39.926572,
+		"count": 1
+	}, {
+		"lng": 116.419612,
+		"lat": 39.917119,
+		"count": 9
+	}, {
+		"lng": 116.418237,
+		"lat": 39.921337,
+		"count": 54
+	}, {
+		"lng": 116.423776,
+		"lat": 39.921919,
+		"count": 26
+	}, {
+		"lng": 116.417694,
+		"lat": 39.92536,
+		"count": 17
+	}, {
+		"lng": 116.415377,
+		"lat": 39.914137,
+		"count": 19
+	}, {
+		"lng": 116.417434,
+		"lat": 39.914394,
+		"count": 43
+	}, {
+		"lng": 116.42588,
+		"lat": 39.922622,
+		"count": 27
+	}, {
+		"lng": 116.418345,
+		"lat": 39.919467,
+		"count": 8
+	}, {
+		"lng": 116.426883,
+		"lat": 39.917171,
+		"count": 3
+	}, {
+		"lng": 116.423877,
+		"lat": 39.916659,
+		"count": 34
+	}, {
+		"lng": 116.415712,
+		"lat": 39.915613,
+		"count": 14
+	}, {
+		"lng": 116.419869,
+		"lat": 39.931416,
+		"count": 12
+	}, {
+		"lng": 116.416956,
+		"lat": 39.925377,
+		"count": 11
+	}, {
+		"lng": 116.42066,
+		"lat": 39.925017,
+		"count": 38
+	}, {
+		"lng": 116.416244,
+		"lat": 39.920215,
+		"count": 91
+	}, {
+		"lng": 116.41929,
+		"lat": 39.915908,
+		"count": 54
+	}, {
+		"lng": 116.422116,
+		"lat": 39.919658,
+		"count": 21
+	}, {
+		"lng": 116.4183,
+		"lat": 39.925015,
+		"count": 15
+	}, {
+		"lng": 116.421969,
+		"lat": 39.913527,
+		"count": 3
+	}, {
+		"lng": 116.422936,
+		"lat": 39.921854,
+		"count": 24
+	}, {
+		"lng": 116.41905,
+		"lat": 39.929217,
+		"count": 12
+	}, {
+		"lng": 116.424579,
+		"lat": 39.914987,
+		"count": 57
+	}, {
+		"lng": 116.42076,
+		"lat": 39.915251,
+		"count": 70
+	}, {
+		"lng": 116.425867,
+		"lat": 39.918989,
+		"count": 8
+	}];
 	var locationData = {
-		mapType: '北京',
-		data: heatData
+		lng: 116.418261,
+		lat: 39.921984,
+		level: 15,
+		heatData: heatData
 	};
 	var detailData = {
 		data: [{
@@ -336,12 +697,14 @@
 		type: 'post',
 		async: false,
 		url: url,
-        contentType: "application/json",
-		data: JSON.stringify({type: 'user_list' }),
+		contentType: "application/json",
+		data: JSON.stringify({
+			type: 'user_list'
+		}),
 		success: function(option) {
 			// console.log(option);
 			var obj = JSON.parse(option);
-			userNames = obj.userNames;	
+			userNames = obj.userNames;
 		},
 		error: function() {
 			alert("获取内容失败，请稍后再试！");
@@ -354,7 +717,7 @@
 		type: 'post',
 		async: false,
 		url: group_url,
-        contentType: "application/json",
+		contentType: "application/json",
 		data: JSON.stringify({
 			action: "group_list"
 		}),
@@ -362,7 +725,7 @@
 			var obj = JSON.parse(option);
 			userGroups = obj.group_list;
 			userGroups.unshift({
-				id:'-1',
+				id: '-1',
 				name: '全部用户',
 			});
 			// console.log(userGroups);
@@ -386,14 +749,16 @@
 	// 日志单页面条数
 	var perPageCount = 15;
 	// 默认日期参数
-	var h_start = ((+new Date()) - (86400000 * 30)) || null;
-	var e_start = ((+new Date()) - (86400000 * 30)) || null;
+	//	var h_start = ((+new Date()) - (86400000 * 30)) || null;
+	//	var e_start = ((+new Date()) - (86400000 * 30)) || null;
+	var h_start = (+new Date());
+	var e_start = (+new Date());
 	var h_end = (+new Date());
 	var e_end = (+new Date());
 	// 加载完成后执行
 	$(document).ready(function() {
 		// 填充日期选择器
-		$(".j-h-startat").text(new Date((new Date() - 86400000 * 30)).toISOString().slice(0, 10));
+		$(".j-h-startat").text(new Date(new Date()).toISOString().slice(0, 10));
 		$(".j-h-endat").text((new Date()).toISOString().slice(0, 10));
 		$(".date-filter-wrap").on("click", ".inner-wrap", close);
 		$.datepicker.regional["zh-CN"] = {
@@ -491,15 +856,16 @@
 				type: "post",
 				async: true,
 				url: url,
-                contentType: "application/json",
+				contentType: "application/json",
 				data: JSON.stringify(data),
 				success: function(option) {
-					console.log(option);
+					//					console.log(option);
 					var obj = JSON.parse(option);
 					actionData = obj.actionData;
 					eventData = obj.eventData;
 					homeOfficeData = obj.homeOfficeData;
-					locationData = obj.locationData;
+					// TODO
+					//					locationData = obj.locationData;
 					userLabels = obj.userLabels;
 					detailData = obj.detailData;
 					// console.log('actionData:' + actionData);
@@ -522,7 +888,7 @@
 			item.removeAttr('id');
 			item.removeClass('hidden');
 			item.children().html(userGroups[i].name);
-			item.children().attr('id',userGroups[i].id);
+			item.children().attr('id', userGroups[i].id);
 			item.children().click(changeUserGroup);
 			$('#userGroupDiv').append(item);
 		};
@@ -649,15 +1015,16 @@
 					type: 'post',
 					async: true,
 					url: url,
-                    contentType: "application/json",
+					contentType: "application/json",
 					data: JSON.stringify(data),
 					success: function(option) {
-						console.log(option);
+						//						console.log(option);
 						var obj = JSON.parse(option);
 						actionData = obj.actionData;
 						eventData = obj.eventData;
 						homeOfficeData = obj.homeOfficeData;
-						locationData = obj.locationData;
+						//TODO
+						//						locationData = obj.locationData;
 						userLabels = obj.userLabels;
 						detailData = obj.detailData;
 						// console.log('actionData:' + actionData);
@@ -680,7 +1047,7 @@
 		};
 	}
 	// 隐藏用户数据
-	function hiddenUserContent(){
+	function hiddenUserContent() {
 		$('#content').removeClass('show');
 		$('#content').addClass('hidden');
 	}
@@ -780,15 +1147,15 @@
 	function changeUserGroup() {
 		$('#currUserGroup').html($(this).html());
 		currGroupId = $(this).attr('id');
-		console.log('currGroupId:'+currGroupId);
+		console.log('currGroupId:' + currGroupId);
 		var data;
 		// 点击分组逻辑
-		if (currGroupId===-1||currGroupId==undefined) {
-			data={
+		if (currGroupId === -1 || currGroupId == undefined) {
+			data = {
 				type: 'user_list',
 			};
-		}else{
-			data={
+		} else {
+			data = {
 				type: 'user_list_group',
 				gourp_id: currGroupId,
 			};
@@ -798,7 +1165,7 @@
 			type: 'post',
 			async: false,
 			url: url,
-            contentType: "application/json",
+			contentType: "application/json",
 			data: JSON.stringify({
 				type: 'user_list',
 				gourpid: currGroupId
@@ -902,37 +1269,35 @@
 					}, ]
 				};
 				// 如果不为空画线
-				if(eventData.category.length > 0){
-					option.series[0].markPoint = 
-										{
-											data: [{
-												type: 'max',
-												name: '最大值'
-											}, {
-												type: 'min',
-												name: '最小值'
-											}],
-											itemStyle: {
-												normal: {
-													color: '#00acc1',
-												},
-											},
-										};
-					option.series[1].markPoint = 
-										{
-											data: [{
-												type: 'max',
-												name: '最大值'
-											}, {
-												type: 'min',
-												name: '最小值'
-											}],
-											itemStyle: {
-												normal: {
-													color: '#918bd5',
-												},
-											},
-										};
+				if (eventData.category.length > 0) {
+					option.series[0].markPoint = {
+						data: [{
+							type: 'max',
+							name: '最大值'
+						}, {
+							type: 'min',
+							name: '最小值'
+						}],
+						itemStyle: {
+							normal: {
+								color: '#00acc1',
+							},
+						},
+					};
+					option.series[1].markPoint = {
+						data: [{
+							type: 'max',
+							name: '最大值'
+						}, {
+							type: 'min',
+							name: '最小值'
+						}],
+						itemStyle: {
+							normal: {
+								color: '#918bd5',
+							},
+						},
+					};
 				}
 				// 为echarts对象加载数据 
 				eventChart.setOption(option);
@@ -1153,37 +1518,35 @@
 					}, ]
 				};
 				// 如果不为空画线
-				if(actionData.category.length > 0){
-					option.series[0].markPoint = 
-										{
-											data: [{
-												type: 'max',
-												name: '最大值'
-											}, {
-												type: 'min',
-												name: '最小值'
-											}],
-											itemStyle: {
-												normal: {
-													color: '#00acc1',
-												},
-											},
-										};
-					option.series[1].markPoint = 
-										{
-											data: [{
-												type: 'max',
-												name: '最大值'
-											}, {
-												type: 'min',
-												name: '最小值'
-											}],
-											itemStyle: {
-												normal: {
-													color: '#918bd5',
-												},
-											},
-										};
+				if (actionData.category.length > 0) {
+					option.series[0].markPoint = {
+						data: [{
+							type: 'max',
+							name: '最大值'
+						}, {
+							type: 'min',
+							name: '最小值'
+						}],
+						itemStyle: {
+							normal: {
+								color: '#00acc1',
+							},
+						},
+					};
+					option.series[1].markPoint = {
+						data: [{
+							type: 'max',
+							name: '最大值'
+						}, {
+							type: 'min',
+							name: '最小值'
+						}],
+						itemStyle: {
+							normal: {
+								color: '#918bd5',
+							},
+						},
+					};
 				}
 				// 为echarts对象加载数据 
 				actionChart.setOption(option);
@@ -1196,70 +1559,33 @@
 	};
 	// 加载地点图表
 	function loadLocationChart() {
-		// 使用
-		require(
-			[
-				'echarts',
-				'echarts/chart/map',
-			],
-			function(ec) {
-				// 基于准备好的dom，初始化echarts图表
-				locationChart = ec.init(document.getElementById('locationChart'));
-				option = {
-					title: {
-						text: '地点统计图',
-					},
-					tooltip: {
-						trigger: 'item',
-						formatter: '{b}'
-					},
-					toolbox: {
-						show: false,
-						orient: 'vertical',
-						x: 'right',
-						y: 'top',
-						feature: {
-							restore: {
-								show: true
-							},
-							saveAsImage: {
-								show: true
-							}
-						}
-					},
-					series: [{
-						type: 'map',
-						mapType: locationData.mapType,
-						roam: false,
-						hoverable: false,
-						data: [],
-						itemStyle: {
-							normal: {
-								borderColor: 'rgba(255,255,255,0.6)',
-								borderWidth: 1,
-								areaStyle: {
-									color: '#dbdbdb'
-								}
-							}
-						}
-					}]
-				};
-				// 如果不为空加载
-				if(locationData.data.length > 0){
-					option.series[0].heatmap = 
-										{
-											minAlpha: 0.1,
-											data: locationData.data
-										};
+		var map = new BMap.Map("locationChart"); // 创建地图实例
+		map.centerAndZoom(new BMap.Point(locationData.lng, locationData.lat), locationData.level); // 初始化地图，设置中心点坐标和地图级别
+		map.enableScrollWheelZoom(); // 允许滚轮缩放
+		//详细的参数,可以查看heatmap.js的文档 https://github.com/pa7/heatmap.js/blob/master/README.md
+		//参数说明如下:
+		/* visible 热力图是否显示,默认为true
+		     * opacity 热力的透明度,1-100
+		     * radius 势力图的每个点的半径大小   
+		     * gradient  {JSON} 热力图的渐变区间 . gradient如下所示
+		     *	{
+					.2:'rgb(0, 255, 255)',
+					.5:'rgb(0, 110, 255)',
+					.8:'rgb(100, 0, 255)'
 				}
-				// 为echarts对象加载数据 
-				locationChart.setOption(option);
-			}
-		);
-		// 自适应
-		$(window).resize(function() {
-			locationChart.resize();
+				其中 key 表示插值的位置, 0~1. 
+				    value 为颜色值. 
+		     */
+		heatmapOverlay = new BMapLib.HeatmapOverlay({
+			visible: true,
+			radius: 20,
 		});
+		map.addOverlay(heatmapOverlay);
+		heatmapOverlay.setDataSet({
+			data: locationData.heatData,
+			max: 100,
+		});
+		//		heatmapOverlay.show();
 	};
 	// 加载详细日志
 	function loadDetailLog() {
