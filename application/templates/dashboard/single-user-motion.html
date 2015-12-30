@@ -749,16 +749,14 @@
 	// 日志单页面条数
 	var perPageCount = 15;
 	// 默认日期参数
-	//	var h_start = ((+new Date()) - (86400000 * 30)) || null;
-	//	var e_start = ((+new Date()) - (86400000 * 30)) || null;
-	var h_start = (+new Date());
-	var e_start = (+new Date());
+	var h_start = ((+new Date()) - (86400000 * 30)) || null;
+	var e_start = ((+new Date()) - (86400000 * 30)) || null;
 	var h_end = (+new Date());
 	var e_end = (+new Date());
 	// 加载完成后执行
 	$(document).ready(function() {
 		// 填充日期选择器
-		$(".j-h-startat").text(new Date(new Date()).toISOString().slice(0, 10));
+		$(".j-h-startat").text(new Date(new Date() - (86400000 * 30)).toISOString().slice(0, 10));
 		$(".j-h-endat").text((new Date()).toISOString().slice(0, 10));
 		$(".date-filter-wrap").on("click", ".inner-wrap", close);
 		$.datepicker.regional["zh-CN"] = {
