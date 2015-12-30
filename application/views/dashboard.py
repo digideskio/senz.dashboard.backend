@@ -523,7 +523,7 @@ def get_attr_of_user(uid, h_start=None, h_end=None, e_start=None, e_end=None):
     ret_dcit['userLabels'] = user_labels
 
     event = attrs.attributes.get('event') or {}
-    event_counts = map(lambda x: x.attributes.get('event'),
+    event_counts = map(lambda x: x.attributes.get('event') or {},
                        filter(lambda y: str(e_start) < str(y.attributes.get('timestamp'))[:10] < str(e_end), counts))
     for i in xrange(1, len(event_counts)):
         for k in event_counts[i].keys():
