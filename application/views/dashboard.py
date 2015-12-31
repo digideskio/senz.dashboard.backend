@@ -576,12 +576,14 @@ def get_attr_of_user(uid, h_start=None, h_end=None, e_start=None, e_end=None):
     }
     ret_dcit['homeOfficeData'] = home_office_data
 
-    coordinate = attrs.attributes.get('coordinate') or []
-    location_data = {
-        "mapType": "北京",
-        "data": map(lambda x: [x.dump().get('longitude'), x.dump().get('latitude'), 0.9], coordinate)
+    coordinate = map(lambda x: {"lng": x.dump().get('longitude'), "lat": x.dump().get('latitude'), "count": 1},
+                     attrs.attributes.get('coordinate') or [])
+    ret_dcit['locationData'] = {
+        "lng": coordinate[len(coordinate)/2]["lng"] if coordinate else None,
+        "lat": coordinate[len(coordinate)/2]["lat"] if coordinate else None,
+        "level": 15,
+        "heatData": coordinate
     }
-    ret_dcit['locationData'] = location_data
 
     time_list = sorted(motion.keys() + event.keys() + home_office.keys(), reverse=True)
     detail_data = map(lambda x: {
