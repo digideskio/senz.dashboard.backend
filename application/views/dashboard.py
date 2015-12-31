@@ -583,7 +583,7 @@ def get_attr_of_user(uid, h_start=None, h_end=None, e_start=None, e_end=None):
     }
     ret_dcit['locationData'] = location_data
 
-    time_list = sorted(motion.keys() + event.keys() + home_office.keys())
+    time_list = sorted(motion.keys() + event.keys() + home_office.keys(), reverse=True)
     detail_data = map(lambda x: {
         "time": time.strftime("%Y-%m-%d %H:%M", time.localtime(int(x[:10]))),
         "sence": motion.get(x),
