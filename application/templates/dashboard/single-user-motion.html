@@ -142,7 +142,7 @@
 							<img style="width: 15px; height: 15px" src="{{ url_for('static', filename='images/single-user-motion-schedule.png') }}" />
 							<p style="margin-left: 5px;display: inline-block;">离家时间 : <span id="leaveHome">8:20 - 9:10</span></p>
 							<p style="margin-left: 22px;">到家时间 : <span id="arriveHome">8:20 - 9:10</span></p>
-							<p style="margin-left: 22px;">到公司时间 : <span id="arriveHome">8:20 - 9:10</span></p>
+							<p style="margin-left: 22px;">到公司时间 : <span id="arriveOffice">8:20 - 9:10</span></p>
 							<p style="margin-left: 22px;">离开公司时间 : <span id="leaveOffice">8:20 - 9:10</span></p>
 							<p style="margin-left: 22px;">平均工作时长 : <span id="avgWorkHours">8 hour</span></p>
 						</div>
@@ -1131,7 +1131,6 @@
 		} else {
 			$('#pageBefore').attr("disabled", false);
 		}
-		console.log('pageCount:'+pageCount);
 		// 判断禁用
 		if (pageIndex == pageCount) {
 			$('#pageNext').attr("disabled", true);
@@ -1312,13 +1311,13 @@
 	// 加载上下班图表
 	function loadHomeOfficeChart() {
 		// 加载静态信息
-		$('#leaveHome').html(homeOfficeData.leaveHome);
-		$('#leaveOffice').html(homeOfficeData.leaveOffice);
-		$('#arriveHome').html(homeOfficeData.arriveHome);
-		$('#arriveOffice').html(homeOfficeData.arriveOffice);
-		$('#avgWorkHours').html(homeOfficeData.avgWorkHours);
-		$('#homeAddress').html(homeOfficeData.homeAddress);
-		$('#officeAddress').html(homeOfficeData.officeAddress);
+		$('#leaveHome').html(homeOfficeData.property.avg_end);
+		$('#leaveOffice').html(homeOfficeData.property.combo_end);
+		$('#arriveHome').html(homeOfficeData.property.avg_start);
+		$('#arriveOffice').html(homeOfficeData.property.combo_start);
+		$('#avgWorkHours').html(homeOfficeData.property.duration);
+		$('#homeAddress').html(homeOfficeData.property.home_addr);
+		$('#officeAddress').html(homeOfficeData.property.office_addr);
 		// 使用
 		require(
 			[
