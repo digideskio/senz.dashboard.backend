@@ -4,6 +4,7 @@ from leancloud import Object, Query, LeanCloudError
 from application.common.util import translate
 from application.models import Developer
 from os.path import dirname, join
+import requests
 import time
 
 dashboard_bp = Blueprint('dashboard_bp', __name__, template_folder='templates')
@@ -566,6 +567,20 @@ def get_attr_of_user(uid, h_start=None, h_end=None, e_start=None, e_end=None):
 
     home_office = attrs.attributes.get('home_office_status') or {}
     home_office = dict(filter(lambda x: str(h_start) < str(x[0]) < str(h_end), home_office.items()))
+
+    home_office_property = requests.get("http://112.126.80.78:9010/stalker/get_home_office/user_id/" + uid)
+    home_office_property = json.loads(home_office_property.content) if home_office_property.status_code == 200 else {}
+    home = home_office_property.get("home") or {}
+    office = home_office_property.get("offices") or {}
+    avg_start = str(int(home.get("avg_start") or 0)/3600) + ":" + str((int(home.get("avg_start") or 0) % 3600)/60)
+    avg_end = str(int(home.get("avg_end") or 0)/3600) + ":" + str((int(home.get("avg_end") or 0) % 3600)/60)
+    combo_start = str(int(office.get("combo_start") or 0)/3600) + ":" + str((int(office.get("combo_start") or 0) % 3600)/60)
+    combo_end = str(int(office.get("combo_end") or 0)/3600) + ":" + str((int(office.get("combo_end") or 0) % 3600)/60)
+    duration = int(((home.get("avg_duration") or 0) + (office.get("combo_duration") or 0))/2)
+    duration = str(duration/3600) + u'小时' + str((duration % 3600)/60) + u'分钟'
+    home_addr = home.get("u_poi").get("poi_address") if home.get("u_poi") else ""
+    office_addr = office.get("offices")[0].get("u_poi").get("poi_address") \
+        if office.get("offices") and office.get("offices")[0].get("u_poi") else ""
     home_office_data = {
         "category": [i for i in xrange(0, 24)],
         "atHomeData": map(lambda x: len(filter(lambda z: z[1] == u"at_home" or z[1] == u"contextAtHome" and time.localtime(int(z[0][:10]))[3] == x,
@@ -575,8 +590,18 @@ def get_attr_of_user(uid, h_start=None, h_end=None, e_start=None, e_end=None):
         "toHomeData": map(lambda x: len(filter(lambda z: z[1] == u"going_home" or z[1] == u"contextCommutingHome" and time.localtime(int(z[0][:10]))[3] == x,
                                                home_office.items())), xrange(0, 24)),
         "toOfficeData": map(lambda x: len(filter(lambda z: z[1] == u"going_office" or z[1] == u"contextCommutingWork" and time.localtime(int(z[0][:10]))[3] == x,
-                                                 home_office.items())), xrange(0, 24))
+                                                 home_office.items())), xrange(0, 24)),
+        "property": {
+            "avg_start": avg_start,
+            "avg_end": avg_end,
+            "combo_start": combo_start,
+            "combo_end": combo_end,
+            "duration": duration,
+            "home_addr": home_addr,
+            "office_addr": office_addr
+        }
     }
+    print home_office_data.get("property")
     ret_dcit['homeOfficeData'] = home_office_data
 
     coordinate = map(lambda x: {"lng": x.dump().get('longitude'), "lat": x.dump().get('latitude'), "count": 1},
