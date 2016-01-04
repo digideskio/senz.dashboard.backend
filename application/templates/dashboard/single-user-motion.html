@@ -748,6 +748,8 @@
 	var pageIndex = 1;
 	// 日志单页面条数
 	var perPageCount = 15;
+	// 日志总页数
+	var pageCount = 0;
 	// 默认日期参数
 	var h_start = ((+new Date()) - (86400000 * 30)) || null;
 	var e_start = ((+new Date()) - (86400000 * 30)) || null;
@@ -865,6 +867,7 @@
 					locationData = obj.locationData;
 					userLabels = obj.userLabels;
 					detailData = obj.detailData;
+					pageCount = Math.ceil(detailData.data.length / perPageCount);
 					// console.log('actionData:' + actionData);
 					// console.log('eventData:' + eventData);
 					// console.log('homeOfficeData:' + homeOfficeData);
@@ -1015,7 +1018,7 @@
 					contentType: "application/json",
 					data: JSON.stringify(data),
 					success: function(option) {
-						//						console.log(option);
+						//console.log(option);
 						var obj = JSON.parse(option);
 						actionData = obj.actionData;
 						eventData = obj.eventData;
@@ -1023,6 +1026,7 @@
 						locationData = obj.locationData;
 						userLabels = obj.userLabels;
 						detailData = obj.detailData;
+						pageCount = Math.ceil(detailData.data.length / perPageCount);
 						// console.log('actionData:' + actionData);
 						// console.log('eventData:' + eventData);
 						// console.log('homeOfficeData:' + homeOfficeData);
@@ -1079,7 +1083,7 @@
 			$('#userLabelDiv').append(item);
 		};
 		// 加载分页
-		for (var i = 1; i <= Math.floor(detailData.data.length / perPageCount); i++) {
+		for (var i = 1; i <= pageCount; i++) {
 			var item = $('#pageIndexHidden').clone();
 			item.removeAttr('id');
 			item.removeClass('hidden');
@@ -1127,8 +1131,9 @@
 		} else {
 			$('#pageBefore').attr("disabled", false);
 		}
+		console.log('pageCount:'+pageCount);
 		// 判断禁用
-		if (pageIndex == detailData.pageCount) {
+		if (pageIndex == pageCount) {
 			$('#pageNext').attr("disabled", true);
 		} else {
 			$('#pageNext').attr("disabled", false);
