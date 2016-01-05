@@ -464,6 +464,8 @@ def get_label_list():
 
 def get_tracker_of_app(app_id=None, group_id=None):
     if not app_id or app_id == u'5621fb0f60b27457e863fabb':
+        return [u'user0', u'user1', u'user2', u'user3']
+    elif app_id == u'all':
         return [u'5689cf3700b09aa2fdd88d3b', u'5684d18200b068a2a955aefc', u'5689cd6d60b2e57ba2c05e4c',
                 u'5684fa9e00b009a31af7efcb',
                 u'560388c100b09b53b59504d2', u'560d7193ddb2dd00356f4e80', u'560bd9b7ddb2e44a621fc217',
@@ -500,8 +502,197 @@ def get_tracker_of_app(app_id=None, group_id=None):
     return sorted(list(set(map(lambda x: x.attributes['user'].id, installation_list))))
 
 
+def get_fake_data_of_user(uid):
+    ret_dict = {}
+    u_index = int(uid[-1]) if uid.startswith('user') else 0
+
+    type_list = [u'gender', u'age', u'field', u'occupation', u'interest',
+                 u'marriage', u'pregnant', u'consumption', u'has_car', u'has_pet']
+    user_labels = [
+        [u'male', u'16to35', u'5000to10000', u'infotech', u'宅', u'游戏新闻'],
+        [],
+        [],
+        []
+    ]
+    eventDatas = [
+        {
+            "category": [u'商圈工作中', u'乘地铁', u'出行', u'在家休息', u'看电影', u'在餐厅吃饭'],
+            "data": [25, 25, 30, 23, 3, 2],
+            "avg": []
+        },
+        {
+            "category": [],
+            "data": [],
+            "avg": []
+        },
+        {
+            "category": [],
+            "data": [],
+            "avg": []
+        },
+        {
+            "category": [],
+            "data": [],
+            "avg": []
+        }
+    ]
+    actionDatas = [
+        {
+            "category": [u'静坐', u'乘车', u'走路', u'跑步', u'骑车'],
+            "data": [200, 70, 20, 5, 0],
+            "avg": []
+        },
+        {
+            "category": [],
+            "data": [],
+            "avg": []
+        },
+        {
+            "category": [],
+            "data": [],
+            "avg": []
+        },
+        {
+            "category": [],
+            "data": [],
+            "avg": []
+        }
+    ]
+    homeOfficeDatas = [
+        {
+            "category": [i for i in xrange(0, 24)],
+            "atHomeData": [],
+            "atOfficeData": [],
+            "toHomeData": [],
+            "toOfficeData": [],
+            "property": {
+                "avg_start": "",
+                "avg_end": "",
+                "combo_start": "",
+                "combo_end": "",
+                "duration": "",
+                "home_addr": "",
+                "office_addr": ""
+            }
+        },
+        {
+            "category": [i for i in xrange(0, 24)],
+            "atHomeData": [],
+            "atOfficeData": [],
+            "toHomeData": [],
+            "toOfficeData": [],
+            "property": {
+                "avg_start": "",
+                "avg_end": "",
+                "combo_start": "",
+                "combo_end": "",
+                "duration": "",
+                "home_addr": "",
+                "office_addr": ""
+            }
+        },
+        {
+            "category": [i for i in xrange(0, 24)],
+            "atHomeData": [],
+            "atOfficeData": [],
+            "toHomeData": [],
+            "toOfficeData": [],
+            "property": {
+                "avg_start": "",
+                "avg_end": "",
+                "combo_start": "",
+                "combo_end": "",
+                "duration": "",
+                "home_addr": "",
+                "office_addr": ""
+            }
+        },
+        {
+            "category": [i for i in xrange(0, 24)],
+            "atHomeData": [],
+            "atOfficeData": [],
+            "toHomeData": [],
+            "toOfficeData": [],
+            "property": {
+                "avg_start": "",
+                "avg_end": "",
+                "combo_start": "",
+                "combo_end": "",
+                "duration": "",
+                "home_addr": "",
+                "office_addr": ""
+            }
+        }
+    ]
+    locationDatas = [
+        {
+            "lng": 39.989956,
+            "lat": 116.323066,
+            "level": 15,
+            "heatData": [{
+                "lng": 39.989956,
+                "lat": 116.323066,
+            }]
+        },
+        {
+            "lng": 39.989956,
+            "lat": 116.323066,
+            "level": 15,
+            "heatData": [{
+                "lng": 39.989956,
+                "lat": 116.323066,
+            }]
+        },
+        {
+            "lng": 39.989956,
+            "lat": 116.323066,
+            "level": 15,
+            "heatData": [{
+                "lng": 39.989956,
+                "lat": 116.323066,
+            }]
+        },
+        {
+            "lng": 39.989956,
+            "lat": 116.323066,
+            "level": 15,
+            "heatData": [{
+                "lng": 39.989956,
+                "lat": 116.323066,
+            }]
+        }
+    ]
+    detailDatas = [
+        {
+            "data": []
+        },
+        {
+            "data": []
+        },
+        {
+            "data": []
+        },
+        {
+            "data": []
+        }
+    ]
+
+    for item in type_list:
+        user_labels[u_index] = map(lambda x: translate(x, item), user_labels[u_index])
+    ret_dict['userLabels'] = user_labels[u_index]
+    ret_dict['eventData'] = eventDatas[u_index]
+    ret_dict['actionData'] = actionDatas[u_index]
+    ret_dict['homeOfficeData'] = homeOfficeDatas[u_index]
+    ret_dict['locationData'] = locationDatas[u_index]
+    ret_dict['detailData'] = detailDatas[u_index]
+    return ret_dict
+
+
 def get_attr_of_user(uid, h_start=None, h_end=None, e_start=None, e_end=None):
-    ret_dcit = {}
+    ret_dict = {}
+    if uid.startswith("user"):
+        return get_fake_data_of_user(uid)
+
     user = {
         "__type": "Pointer",
         "className": "_User",
@@ -524,7 +715,7 @@ def get_attr_of_user(uid, h_start=None, h_end=None, e_start=None, e_end=None):
     user_labels = filter(lambda x: x, user_labels)
     for item in type_list:
         user_labels = map(lambda x: translate(x, item), user_labels)
-    ret_dcit['userLabels'] = user_labels
+    ret_dict['userLabels'] = user_labels
 
     event = attrs.attributes.get('event') or {}
     event_counts = map(lambda x: x.attributes.get('event') or {},
@@ -544,7 +735,7 @@ def get_attr_of_user(uid, h_start=None, h_end=None, e_start=None, e_end=None):
         "data": map(lambda x: event.values().count(x), event_np),
         "avg": map(lambda x: (event_count.get(x) or 0)/user_count, event_np)
     }
-    ret_dcit['eventData'] = event_data
+    ret_dict['eventData'] = event_data
 
     motion = attrs.attributes.get('motion') or {}
     motion_counts = map(lambda x: x.attributes.get('motion') or {},
@@ -563,7 +754,7 @@ def get_attr_of_user(uid, h_start=None, h_end=None, e_start=None, e_end=None):
         "data": map(lambda x: motion.values().count(x), motion_np),
         "avg": map(lambda x: (motion_count.get(x) or 0)/user_count, motion_np)
     }
-    ret_dcit['actionData'] = action_data
+    ret_dict['actionData'] = action_data
 
     home_office = attrs.attributes.get('home_office_status') or {}
     home_office = dict(filter(lambda x: str(h_start) < str(x[0]) < str(h_end), home_office.items()))
@@ -605,12 +796,11 @@ def get_attr_of_user(uid, h_start=None, h_end=None, e_start=None, e_end=None):
             "office_addr": office_addr
         }
     }
-    print home_office_data.get("property")
-    ret_dcit['homeOfficeData'] = home_office_data
+    ret_dict['homeOfficeData'] = home_office_data
 
     coordinate = map(lambda x: {"lng": x.dump().get('longitude'), "lat": x.dump().get('latitude'), "count": 1},
                      attrs.attributes.get('coordinate') or [])
-    ret_dcit['locationData'] = {
+    ret_dict['locationData'] = {
         "lng": coordinate[len(coordinate)/2]["lng"] if coordinate else None,
         "lat": coordinate[len(coordinate)/2]["lat"] if coordinate else None,
         "level": 15,
@@ -623,8 +813,8 @@ def get_attr_of_user(uid, h_start=None, h_end=None, e_start=None, e_end=None):
         "sence": motion.get(x),
         "status": home_office.get(x),
         "action": event.get(x)}, time_list)
-    ret_dcit['detailData'] = {"data": detail_data}
-    return ret_dcit
+    ret_dict['detailData'] = {"data": detail_data}
+    return ret_dict
 
 
 def get_query_list(app_id='', *field):
