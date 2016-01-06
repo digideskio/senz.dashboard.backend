@@ -726,15 +726,9 @@ def get_motion_stastic(motion, motion_counts):
     motion_count = motion_counts[0] if motion_counts else {}
 
     motion_np = list(set(motion.values()))
-    # motion_time = {}
-    # for k, v in motion.items():
-    #     motion_time[k]["start"] = k if motion_time.get(v) and motion_time.get(v).get("start") \
-    #         else motion_time[k]["start"]
-    # print motion_time
-    #     motion_time[v] = {
-    #         "start": k,
-    #         "duration": 0
-    #     } if not motion_time.get(v) else {}
+
+    # TODO calc motion's duration
+
     action_data = {
         "category": map(lambda x: translate(x, "motion"), list(set(motion.values()))),
         "data": map(lambda x: motion.values().count(x), motion_np),
