@@ -509,15 +509,15 @@ def get_fake_data_of_user(uid):
     type_list = [u'gender', u'age', u'field', u'occupation', u'interest',
                  u'marriage', u'pregnant', u'consumption', u'has_car', u'has_pet']
     user_labels = [
-        [u'male', u'16to35', u'5000to10000', u'infotech', u'宅', u'游戏新闻'],
+        [u'女', u'16-35岁', u'5000to10000', u'教师', u'已婚', u'线上购物', u'电视剧'],
         [],
         [],
         []
     ]
     eventDatas = [
         {
-            "category": [u'商圈工作中', u'乘地铁', u'出行', u'在家休息', u'看电影', u'在餐厅吃饭'],
-            "data": [25, 25, 30, 23, 3, 2],
+            "category": [u'演唱会', u'逛街', u'出行', u'在家休息', u'看电影', u'在餐厅吃饭'],
+            "data": [1, 4, 8, 25, 4, 5],
             "avg": []
         },
         {
@@ -539,7 +539,7 @@ def get_fake_data_of_user(uid):
     actionDatas = [
         {
             "category": [u'静坐', u'乘车', u'走路', u'跑步', u'骑车'],
-            "data": [200, 70, 20, 5, 0],
+            "data": [180, 15, 30, 15, 8],
             "avg": []
         },
         {
@@ -561,18 +561,18 @@ def get_fake_data_of_user(uid):
     homeOfficeDatas = [
         {
             "category": [i for i in xrange(0, 24)],
-            "atHomeData": [],
-            "atOfficeData": [],
-            "toHomeData": [],
-            "toOfficeData": [],
+            "atHomeData": [30,30,30,30,30,22,0,0,0,0,0,0,0,0,0,0,30,30,30,30,30,30,30,30,30],
+            "atOfficeData": [0,0,0,0,0,0,22,22,22,22,22,22,22,22,22,22,0,0,0,0,0,0,0,0,0],
+            "toHomeData": [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+            "toOfficeData": [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
             "property": {
-                "avg_start": "",
-                "avg_end": "",
-                "combo_start": "",
-                "combo_end": "",
-                "duration": "",
-                "home_addr": "",
-                "office_addr": ""
+                "avg_start": "6:30",
+                "avg_end": "16:50",
+                "combo_start": "6:40",
+                "combo_end": "16:20",
+                "duration": "9小时40分钟",
+                "home_addr": "北五环",
+                "office_addr": "北五环"
             }
         },
         {
@@ -688,6 +688,29 @@ def get_fake_data_of_user(uid):
     return ret_dict
 
 
+def get_motion_stastic(motion, motion_counts):
+    query = Query(DashboardSource)
+    user_count = query.count()
+
+    for i in xrange(1, len(motion_counts)):
+        for k in motion_counts[i].keys():
+            if k in motion_counts[0]:
+                motion_counts[0][k] += motion_counts[i].get(k)
+            else:
+                motion_counts[0][k] = motion_counts[i].get(k)
+    motion_count = motion_counts[0] if motion_counts else {}
+
+    motion_np = list(set(motion.values()))
+    for k, v in motion.items():
+        pass
+    action_data = {
+        "category": map(lambda x: translate(x, "motion"), list(set(motion.values()))),
+        "data": map(lambda x: motion.values().count(x), motion_np),
+        "avg": map(lambda x: (motion_count.get(x) or 0)/user_count, motion_np)
+    }
+    return action_data
+
+
 def get_attr_of_user(uid, h_start=None, h_end=None, e_start=None, e_end=None):
     ret_dict = {}
     if uid.startswith("user"):
@@ -737,28 +760,14 @@ def get_attr_of_user(uid, h_start=None, h_end=None, e_start=None, e_end=None):
     }
     ret_dict['eventData'] = event_data
 
-    motion = attrs.attributes.get('motion') or {}
     motion_counts = map(lambda x: x.attributes.get('motion') or {},
                         filter(lambda y: str(e_start) < str(y.attributes.get('timestamp'))[:10] < str(e_end), counts))
-    for i in xrange(1, len(motion_counts)):
-        for k in motion_counts[i].keys():
-            if k in motion_counts[0]:
-                motion_counts[0][k] += motion_counts[i].get(k)
-            else:
-                motion_counts[0][k] = motion_counts[i].get(k)
-    motion_count = motion_counts[0] if motion_counts else {}
+    motion = attrs.attributes.get('motion') or {}
     motion = dict(filter(lambda x: str(h_start) < str(x[0]) < str(h_end), motion.items()))
-    motion_np = list(set(motion.values()))
-    action_data = {
-        "category": map(lambda x: translate(x, "motion"), motion_np),
-        "data": map(lambda x: motion.values().count(x), motion_np),
-        "avg": map(lambda x: (motion_count.get(x) or 0)/user_count, motion_np)
-    }
-    ret_dict['actionData'] = action_data
+    ret_dict['actionData'] = get_motion_stastic(motion, motion_counts)
 
     home_office = attrs.attributes.get('home_office_status') or {}
     home_office = dict(filter(lambda x: str(h_start) < str(x[0]) < str(h_end), home_office.items()))
-
     try:
         home_office_property = requests.get("http://112.126.80.78:9010/stalker/get_home_office/user_id/" + uid)
         home_office_property = json.loads(home_office_property.content) if home_office_property.status_code == 200 else {}
