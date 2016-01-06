@@ -509,56 +509,72 @@ def get_fake_data_of_user(uid):
     type_list = [u'gender', u'age', u'field', u'occupation', u'interest',
                  u'marriage', u'pregnant', u'consumption', u'has_car', u'has_pet']
     user_labels = [
+        [u'男', u'16-35岁', u'IT', u'宅', u'游戏新闻'],
         [u'女', u'16-35岁', u'5000to10000', u'教师', u'已婚', u'线上购物', u'电视剧'],
-        [],
-        [],
-        []
+        [u'男', u'16-35岁', u'5000-10000', u'公务员', u'有车', u'已婚', u'跑步', u'游戏玩家', u'体育新闻'],
+        [u'女', u'16-35岁', u'20000以上', u'金融', u'未婚', u'关注健康', u'有车']
     ]
     eventDatas = [
+        {
+            "category": [u'商圈工作中', u'乘地铁', u'出行', u'在家休息', u'看电影', u'在餐厅吃饭'],
+            "data": [25, 25, 30, 23, 3, 2],
+            "avg": []
+        },
         {
             "category": [u'演唱会', u'逛街', u'出行', u'在家休息', u'看电影', u'在餐厅吃饭'],
             "data": [1, 4, 8, 25, 4, 5],
             "avg": []
         },
         {
-            "category": [],
-            "data": [],
+            "category": [u'出行', u'乘地铁', u'在家休息', u'户外锻炼', u'看电影'],
+            "data": [30, 15, 20, 20, 3],
             "avg": []
         },
         {
-            "category": [],
-            "data": [],
-            "avg": []
-        },
-        {
-            "category": [],
-            "data": [],
+            "category": [u'出行', u'乘地铁', u'在家休息', u'户外锻炼', u'室内锻炼'],
+            "data": [35, 16, 18, 3, 15],
             "avg": []
         }
     ]
     actionDatas = [
         {
             "category": [u'静坐', u'乘车', u'走路', u'跑步', u'骑车'],
+            "data": [200, 70, 20, 5, 2],
+            "avg": []
+        },
+        {
+            "category": [u'静坐', u'乘车', u'走路', u'跑步', u'骑车'],
             "data": [180, 15, 30, 15, 8],
             "avg": []
         },
         {
-            "category": [],
-            "data": [],
+            "category": [u'静坐', u'乘车', u'走路', u'跑步', u'骑车'],
+            "data": [180, 42, 25, 30, 15],
             "avg": []
         },
         {
-            "category": [],
-            "data": [],
-            "avg": []
-        },
-        {
-            "category": [],
-            "data": [],
+            "category": [u'静坐', u'走路', u'跑步', u'骑车', u'乘车'],
+            "data": [280, 8, 30, 10, 30],
             "avg": []
         }
     ]
     homeOfficeDatas = [
+        {
+            "category": [i for i in xrange(0, 24)],
+            "atHomeData": [30,30,30,30,30,30,30,22,0,0,0,0,0,0,0,0,0,0,30,30,30,30,30,30,30],
+            "atOfficeData": [0,0,0,0,0,0,0,0,22,22,22,22,22,22,22,22,22,0,0,0,0,0,0,0,0],
+            "toHomeData": [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,22,0,0,0,0,0,0,0,0],
+            "toOfficeData": [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,22,0,0,0,0,0,0,0,0],
+            "property": {
+                "avg_start": "7:10",
+                "avg_end": "19:50",
+                "combo_start": "8:40",
+                "combo_end": "17:20",
+                "duration": "8小时30分钟",
+                "home_addr": "南六环",
+                "office_addr": "海淀桥北"
+            }
+        },
         {
             "category": [i for i in xrange(0, 24)],
             "atHomeData": [30,30,30,30,30,22,0,0,0,0,0,0,0,0,0,0,30,30,30,30,30,30,30,30,30],
@@ -577,89 +593,98 @@ def get_fake_data_of_user(uid):
         },
         {
             "category": [i for i in xrange(0, 24)],
-            "atHomeData": [],
-            "atOfficeData": [],
-            "toHomeData": [],
-            "toOfficeData": [],
+            "atHomeData": [30,30,30,30,30,30,30,30,0,0,0,0,0,0,0,0,0,0,30,30,30,30,30,30,30],
+            "atOfficeData": [0,0,0,0,0,0,0,0,22,22,22,22,22,22,22,22,22,0,0,0,0,0,0,0,0],
+            "toHomeData": [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,22,0,0,0,0,0,0,0,0],
+            "toOfficeData": [0,0,0,0,0,0,0,22,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
             "property": {
-                "avg_start": "",
-                "avg_end": "",
-                "combo_start": "",
-                "combo_end": "",
-                "duration": "",
-                "home_addr": "",
-                "office_addr": ""
+                "avg_start": "7:10",
+                "avg_end": "19:50",
+                "combo_start": "8:40",
+                "combo_end": "17:20",
+                "duration": "8小时30分钟",
+                "home_addr": "橡树湾",
+                "office_addr": "亦庄开发区"
             }
         },
         {
             "category": [i for i in xrange(0, 24)],
-            "atHomeData": [],
-            "atOfficeData": [],
-            "toHomeData": [],
-            "toOfficeData": [],
+            "atHomeData": [30,30,30,30,30,30,30,30,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,30],
+            "atOfficeData": [0,0,0,0,0,0,0,0,0,22,22,22,22,22,22,22,22,22,22,22,22,22,22,0,0],
+            "toHomeData": [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,22,0],
+            "toOfficeData": [0,0,0,0,0,0,0,0,22,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
             "property": {
-                "avg_start": "",
-                "avg_end": "",
-                "combo_start": "",
-                "combo_end": "",
-                "duration": "",
-                "home_addr": "",
-                "office_addr": ""
-            }
-        },
-        {
-            "category": [i for i in xrange(0, 24)],
-            "atHomeData": [],
-            "atOfficeData": [],
-            "toHomeData": [],
-            "toOfficeData": [],
-            "property": {
-                "avg_start": "",
-                "avg_end": "",
-                "combo_start": "",
-                "combo_end": "",
-                "duration": "",
-                "home_addr": "",
-                "office_addr": ""
+                "avg_start": "7:00",
+                "avg_end": "22:30",
+                "combo_start": "8:30",
+                "combo_end": "21:00",
+                "duration": "12小时30分钟",
+                "home_addr": "通州",
+                "office_addr": "国贸CBD"
             }
         }
     ]
     locationDatas = [
         {
-            "lng": 39.989956,
-            "lat": 116.323066,
+            "lat": 39.720367,
+            "lng": 116.384183,
+            "level": 15,
+            "heatData": [
+                {
+                    "lat": 39.720367,
+                    "lng": 116.384183,
+                    "count": 100
+                },
+                {
+                    "lat": 39.993537,
+                    "lng": 116.311717,
+                    "count": 100
+                }
+            ]
+        },
+        {
+            "lat": 40.023846,
+            "lng": 116.3229,
             "level": 15,
             "heatData": [{
-                "lng": 39.989956,
-                "lat": 116.323066,
+                "lat": 40.023846,
+                "lng": 116.3229,
+                "count": 100
             }]
         },
         {
-            "lng": 39.989956,
-            "lat": 116.323066,
+            "lat": 40.037043,
+            "lng": 116.338469,
             "level": 15,
-            "heatData": [{
-                "lng": 39.989956,
-                "lat": 116.323066,
-            }]
+            "heatData": [
+                {
+                    "lat": 40.037043,
+                    "lng": 116.338469,
+                    "count": 100
+                },
+                {
+                    "lat": 39.801202,
+                    "lng": 116.512988,
+                    "count": 100
+                }
+            ]
         },
         {
-            "lng": 39.989956,
-            "lat": 116.323066,
+            "lat": 39.939434,
+            "lng": 116.727444,
             "level": 15,
-            "heatData": [{
-                "lng": 39.989956,
-                "lat": 116.323066,
-            }]
-        },
-        {
-            "lng": 39.989956,
-            "lat": 116.323066,
-            "level": 15,
-            "heatData": [{
-                "lng": 39.989956,
-                "lat": 116.323066,
-            }]
+            "heatData": [
+                {
+                    "lat": 39.914319,
+                    "lng": 116.467524,
+                    "count": 100
+                },
+                {
+                    "lat": 39.939434,
+                    "lng": 116.727444,
+                    "count": 100
+                }
+            ]
         }
     ]
     detailDatas = [
@@ -701,8 +726,15 @@ def get_motion_stastic(motion, motion_counts):
     motion_count = motion_counts[0] if motion_counts else {}
 
     motion_np = list(set(motion.values()))
-    for k, v in motion.items():
-        pass
+    # motion_time = {}
+    # for k, v in motion.items():
+    #     motion_time[k]["start"] = k if motion_time.get(v) and motion_time.get(v).get("start") \
+    #         else motion_time[k]["start"]
+    # print motion_time
+    #     motion_time[v] = {
+    #         "start": k,
+    #         "duration": 0
+    #     } if not motion_time.get(v) else {}
     action_data = {
         "category": map(lambda x: translate(x, "motion"), list(set(motion.values()))),
         "data": map(lambda x: motion.values().count(x), motion_np),
