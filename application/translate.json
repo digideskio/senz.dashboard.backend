@@ -154,6 +154,7 @@
         "going_out": "contextGoingOut",
         "dining_in_restaurant": "contextDinningOut",
         "watch_movie": "contextAtCinema",
+        "watching_movie": "contextAtCinema",
         "study_in_class": "contextStudyingInSchool",
         "visit_sights": "contextTravelling",
         "work_in_office": "contextWorkingInCBD",
