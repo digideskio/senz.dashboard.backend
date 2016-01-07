@@ -626,8 +626,8 @@ def get_fake_data_of_user(uid):
     ]
     locationDatas = [
         {
-            "lat": 39.720367,
-            "lng": 116.384183,
+            "lat": 39.993537,
+            "lng": 116.311717,
             "level": 15,
             "heatData": [
                 {
@@ -636,8 +636,98 @@ def get_fake_data_of_user(uid):
                     "count": 100
                 },
                 {
+                    "lat": 39.721699,
+                    "lng": 116.382135,
+                    "count": 100
+                },
+                {
+                    "lat": 39.720922,
+                    "lng": 116.387668,
+                    "count": 100
+                },
+                {
+                    "lat": 39.721089,
+                    "lng": 116.390399,
+                    "count": 100
+                },
+                {
+                    "lat": 39.715538,
+                    "lng": 116.384219,
+                    "count": 100
+                },
+                {
                     "lat": 39.993537,
                     "lng": 116.311717,
+                    "count": 100
+                },
+                {
+                    "lat": 39.993299,
+                    "lng": 116.3124,
+                    "count": 100
+                },
+                {
+                    "lat": 39.994073,
+                    "lng": 116.312211,
+                    "count": 100
+                },
+                {
+                    "lat": 39.992936,
+                    "lng": 116.313505,
+                    "count": 100
+                },
+                {
+                    "lat": 39.993005,
+                    "lng": 116.311147,
+                    "count": 100
+                },
+                {
+                    "lat": 39.720367,
+                    "lng": 116.384183,
+                    "count": 100
+                },
+                {
+                    "lat": 39.721699,
+                    "lng": 116.382135,
+                    "count": 100
+                },
+                {
+                    "lat": 39.720922,
+                    "lng": 116.387668,
+                    "count": 100
+                },
+                {
+                    "lat": 39.721089,
+                    "lng": 116.390399,
+                    "count": 100
+                },
+                {
+                    "lat": 39.715538,
+                    "lng": 116.384219,
+                    "count": 100
+                },
+                {
+                    "lat": 39.993537,
+                    "lng": 116.311717,
+                    "count": 100
+                },
+                {
+                    "lat": 39.993299,
+                    "lng": 116.3124,
+                    "count": 100
+                },
+                {
+                    "lat": 39.994073,
+                    "lng": 116.312211,
+                    "count": 100
+                },
+                {
+                    "lat": 39.992936,
+                    "lng": 116.313505,
+                    "count": 100
+                },
+                {
+                    "lat": 39.993005,
+                    "lng": 116.311147,
                     "count": 100
                 }
             ]
@@ -806,7 +896,7 @@ def get_attr_of_user(uid, h_start=None, h_end=None, e_start=None, e_end=None):
     avg_end = str(int(home.get("avg_end") or 0)/3600) + ":" + str((int(home.get("avg_end") or 0) % 3600)/60)
     combo_start = str(int(office.get("combo_start") or 0)/3600) + ":" + str((int(office.get("combo_start") or 0) % 3600)/60)
     combo_end = str(int(office.get("combo_end") or 0)/3600) + ":" + str((int(office.get("combo_end") or 0) % 3600)/60)
-    duration = int(office.get("combo_duration") or 0)
+    duration = office.get("combo_duration") or "0"
     duration = str(duration/3600) + u'小时' + str((duration % 3600)/60) + u'分钟'
     home_addr = home.get("u_poi").get("poi_address") if home.get("u_poi") else ""
     office_addr = office.get("offices")[0].get("u_poi").get("poi_address") \
@@ -833,15 +923,15 @@ def get_attr_of_user(uid, h_start=None, h_end=None, e_start=None, e_end=None):
     }
     ret_dict['homeOfficeData'] = home_office_data
 
-    coordinate = map(lambda x: {"lng": x.dump().get('longitude'), "lat": x.dump().get('latitude'), "count": 1},
-                     attrs.attributes.get('coordinate') or [])
+    coordinate = map(lambda x: {"lat": x.get('lat') if isinstance(x, dict) else x.dump().get('latitude'),
+                                "lng": x.get('lng') if isinstance(x, dict) else x.dump().get('longitude'),
+                                "count": 1}, attrs.attributes.get('coordinate') or [])
     ret_dict['locationData'] = {
         "lng": coordinate[len(coordinate)/2]["lng"] if coordinate else None,
         "lat": coordinate[len(coordinate)/2]["lat"] if coordinate else None,
         "level": 15,
         "heatData": coordinate
     }
-
     time_list = sorted(motion.keys() + event.keys() + home_office.keys(), reverse=True)
     detail_data = map(lambda x: {
         "time": time.strftime("%Y-%m-%d %H:%M", time.localtime(int(x[:10]))),
