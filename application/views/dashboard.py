@@ -896,8 +896,8 @@ def get_attr_of_user(uid, h_start=None, h_end=None, e_start=None, e_end=None):
     avg_end = str(int(home.get("avg_end") or 0)/3600) + ":" + str((int(home.get("avg_end") or 0) % 3600)/60)
     combo_start = str(int(office.get("combo_start") or 0)/3600) + ":" + str((int(office.get("combo_start") or 0) % 3600)/60)
     combo_end = str(int(office.get("combo_end") or 0)/3600) + ":" + str((int(office.get("combo_end") or 0) % 3600)/60)
-    duration = office.get("combo_duration") or "0"
-    duration = str(duration/3600) + u'小时' + str((duration % 3600)/60) + u'分钟'
+    duration = office.get("combo_duration") or 0
+    duration = str(int(duration/3600)) + u'小时' + str(int((duration % 3600)/60)) + u'分钟'
     home_addr = home.get("u_poi").get("poi_address") if home.get("u_poi") else ""
     office_addr = office.get("offices")[0].get("u_poi").get("poi_address") \
         if office.get("offices") and office.get("offices")[0].get("u_poi") else ""
