@@ -939,6 +939,10 @@ def get_attr_of_user(uid, h_start=None, h_end=None, e_start=None, e_end=None):
         "level": 15,
         "heatData": coordinate
     }
+    detailData = []
+    for x in timeline:
+        x['label'] = translate(x.get('label'), "event_old")
+        detailData.append(x)
     ret_dict['detailData'] = map(lambda x: x, timeline)
     return ret_dict
 
