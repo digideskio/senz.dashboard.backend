@@ -37,6 +37,22 @@
 		.click {
 			color: #00D0BF;
 		}
+		
+		.timeline-item-big {
+			margin-top: 35px;
+		}
+		
+		.timeline-item-small {
+			margin-top: 15px;
+		}
+		
+		.timeline-item-line {
+			margin-top: 25px;
+		}
+		
+		.locationInfo {
+			font-size: 9px;
+		}
 	</style>
 </head>
 {% endblock %} {% block content %}
@@ -119,45 +135,98 @@
 				</li>
 			</ul>
 		</div>
-		<div id="content" class="col-xs-9 center-block hidden" style="padding-top: 10px;border-left: 1px solid #CCCCCC;">
-			<div class="col-xs-3" style="margin-top: 8px;padding: 0px;text-align: center;width: 160px;">
-				<span id="userName">用户名称</span>
-			</div>
-			<div class="col-xs-9" style="margin-bottom: 10px;">
-				<div id="userLabelDiv" style="display: inline-block;margin-left: 5px;">
-					<a id="userLabelHidden" role="button" class="btn btn-default btn-sm btn-custom-label hidden disabled" style="margin-left: 10px;margin-top: 5px;"></a>
-				</div>
-			</div>
-			<br />
-			<div id="pageContainer" style="margin-top: 15px;">
-
-				<div id="eventChart" style="margin-top: 15px;height:600px"></div>
-
-				<div id="homeOfficeChart" style="margin-top: 15px;height:400px"></div>
-				<div style="margin-left: 90px;margin-right: 90px;height:130px;border: 1px solid #CCCCCC;">
-					<div style="float: left;margin-left: 30px;margin-top: 20px;">
-						<img style="width: 15px; height: 15px" src="{{ url_for('static', filename='images/single-user-motion-schedule.png') }}" />
-						<p style="margin-left: 5px;display: inline-block;">离家时间 : <span id="leaveHome">8:20 - 9:10</span></p>
-						<p style="margin-left: 22px;">到家时间 : <span id="arriveHome">8:20 - 9:10</span></p>
-						<p style="margin-left: 22px;">到公司时间 : <span id="arriveOffice">8:20 - 9:10</span></p>
-						<p style="margin-left: 22px;">离开公司时间 : <span id="leaveOffice">8:20 - 9:10</span></p>
-						<p style="margin-left: 22px;">平均工作时长 : <span id="avgWorkHours">8 hour</span></p>
+		<div id="content" class="col-xs-10 center-block hidden" style="border-left: 1px solid #CCCCCC;">
+			<div class="col-xs-9 center-block">
+				<div class="row">
+					<div class="col-xs-2" style="margin-top: 8px;padding-top: 10px;text-align: center;">
+						<span id="userName">用户名称</span>
 					</div>
-					<div style="margin-left: 50%;margin-top: 20px;">
-						<img style="width: 15px; height: 20px;" src="{{ url_for('static', filename='images/single-user-motion-map.png') }}" />
-						<p style="margin-left: 5px;display: inline-block;">家庭地址 : <span id="homeAddress">北京市天通西苑一区 34#</span></p>
-						<p style="margin-left: 22px;">公司地址 : <span id="officeAddress">北京市海淀南路苏州街纽约客公寓</span></p>
+					<div class="col-xs-10" style="margin-bottom: 10px;padding-top: 10px;">
+						<div id="userLabelDiv" style="display: inline-block;margin-left: 5px;">
+							<a id="userLabelHidden" role="button" class="btn btn-default btn-sm btn-custom-label hidden disabled" style="margin-left: 10px;margin-top: 5px;"></a>
+						</div>
 					</div>
 				</div>
-
-				<div id="actionChart" style="margin-top: 15px;height:600px"></div>
-
-				<div id="locationChart" style="margin-top: 15px;height:600px"></div>
-
+				<div class="row">
+					<div class="col-xs-12" style="margin-top: 15px;">
+						<div id="eventChart" style="margin-top: 15px;height:600px"></div>
+						<div id="homeOfficeChart" style="margin-top: 15px;height:400px"></div>
+						<div style="margin-left: 90px;margin-right: 90px;height:130px;border: 1px solid #CCCCCC;">
+							<div style="float: left;margin-left: 30px;margin-top: 20px;">
+								<img style="width: 15px; height: 15px" src="{{ url_for('static', filename='images/single-user-motion-schedule.png') }}" />
+								<p style="margin-left: 5px;display: inline-block;">离家时间 : <span id="leaveHome">8:20 - 9:10</span></p>
+								<p style="margin-left: 22px;">到家时间 : <span id="arriveHome">8:20 - 9:10</span></p>
+								<p style="margin-left: 22px;">到公司时间 : <span id="arriveOffice">8:20 - 9:10</span></p>
+								<p style="margin-left: 22px;">离开公司时间 : <span id="leaveOffice">8:20 - 9:10</span></p>
+								<p style="margin-left: 22px;">平均工作时长 : <span id="avgWorkHours">8 hour</span></p>
+							</div>
+							<div style="margin-left: 50%;margin-top: 20px;">
+								<img style="width: 15px; height: 20px;" src="{{ url_for('static', filename='images/single-user-motion-map.png') }}" />
+								<p style="margin-left: 5px;display: inline-block;">家庭地址 : <span id="homeAddress">北京市天通西苑一区 34#</span></p>
+								<p style="margin-left: 22px;">公司地址 : <span id="officeAddress">北京市海淀南路苏州街纽约客公寓</span></p>
+							</div>
+						</div>
+						<div id="actionChart" style="margin-top: 15px;height:600px"></div>
+						<span style="font-size: 22px;">常去地点</span>
+						<div id="locationChart" style="margin-left: 10px;margin-right: 10px;margin-top: 5px;height:600px"></div>
+					</div>
+				</div>
 			</div>
-		</div>
-		
-		<div id="content" class="col-xs-9 center-block" style="padding-top: 10px;border-left: 1px solid #CCCCCC;">
+
+			<div id="timeLineContainer" class="col-xs-3" style="padding-top: 10px;border-left: 1px solid #CCCCCC; height: 800px;">
+				<div id="bigHidden">
+					<div class="row">
+						<div class="col-xs-3 timeline-item-big" style="padding-right: 0;">
+							<span class="date">1月11日</span>
+							<br />
+							<span class="time">00:00:00</span>
+						</div>
+						<div class="col-xs-1" style="padding: 0;">
+							<img src="{{ url_for('static', filename='images/unknown.png') }}" style="width: 30px;height: 100px;" style="display: inline-block;" />
+						</div>
+						<div class="col-xs-8 timeline-item-big">
+							<span class="eventInfo">在公司</span>
+							<br />
+							<span class="locationInfo">北京市海淀区中关村南大街</span>
+						</div>
+					</div>
+				</div>
+				<div id="smallHidden">
+					<div class="row">
+						<div class="col-xs-3 timeline-item-small" style="padding-right: 0;">
+							<span class="date">1月11日</span>
+							<br />
+							<span class="time">00:00:00</span>
+						</div>
+						<div class="col-xs-1" style="padding: 0;">
+							<img src="{{ url_for('static', filename='images/unknown.png') }}" style="width: 30px;height: 60px;" style="display: inline-block;" />
+						</div>
+						<div class="col-xs-8 timeline-item-small">
+							<span class="eventInfo">在公司</span>
+							<br />
+							<span class="locationInfo">北京市海淀区中关村南大街</span>
+						</div>
+					</div>
+				</div>
+				<div id="lineHidden">
+					<div class="row">
+						<div class="col-xs-3 timeline-item-line" style="padding-right: 0;">
+							<span class="date">1月11日</span>
+							<br />
+							<span class="time">00:00:00</span>
+						</div>
+						<div class="col-xs-1" style="padding: 0;">
+							<img src="{{ url_for('static', filename='images/unknown.png') }}" style="width: 30px;height: 80px;" style="display: inline-block;" />
+						</div>
+						<div class="col-xs-8 timeline-item-line">
+							<span class="eventInfo">在公司</span>
+							<br />
+							<span class="locationInfo">北京市海淀区中关村南大街</span>
+						</div>
+					</div>
+				</div>
+				<div id="timeLineChart" style="height: 250px;width: 100%;float: left;"></div>
+			</div>
 		</div>
 	</div>
 </div>
@@ -179,51 +248,137 @@
 	var locationData = {};
 	var detailData = {};
 	var timeLineData = [{
-		"end_ts": 123,
-		"objectId": "568f2d5400b0bca0ca1f4405",
-		"createdAt": "2016-01-08T11:30:28.298Z",
-		"updatedAt": "2016-01-08T11:35:28.497Z",
-		"ACL": {
-			"*": {
-				"read": true,
-				"write": true
-			}
+		"_id": "5692ae34c1fdc920e3311e4f",
+		"start_datetime": "2016-01-11T05:12:29+0800",
+		"timestamp": 1452431549749,
+		"start_ts": 1452431549749,
+		"evidence_list": {
+			"location_ids": [],
+			"motion_ids": [],
+			"event_ids": [],
+			"hos_ids": []
 		},
-		"end_datetime": {
-			"__type": "Date",
-			"iso": "2016-01-01T00:00:00.000Z"
-		},
-		"motion_count": {
-			"running": 1,
-			"sitting": 2
-		},
-		"end_location": {
-			"poi_name": "北京市海淀区西屋国际c座",
+		"poi": {
 			"geo_point": {
-				"lat": 37,
-				"lng": 120
-			}
-		},
-		"start_ts": 132334,
-		"user_event_label": "going_out",
-		"home_office_status_label": "unknown",
-		"start_datetime": {
-			"__type": "Date",
-			"iso": "2016-01-01T00:15:00.000Z"
-		},
-		"evidences": {
-			"user_location_ids": [],
-			"user_event_ids": [],
-			"home_office_status_ids": [],
-			"user_motion_ids": []
+				"lat": 39.7579866,
+				"lng": 116.2943813
+			},
+			"dist": 0,
+			"title": "北京建筑大学(大兴校区)"
 		},
 		"start_location": {
-			"poi_name": "北京市海淀区北京邮电大学",
 			"geo_point": {
-				"lat": 37,
-				"lng": 120
-			}
-		}
+				"lat": 39.7580438,
+				"lng": 116.2944526
+			},
+			"dist": 0,
+			"title": "北京建筑大学(大兴校区)"
+		},
+		"end_location": {
+			"geo_point": {
+				"lat": 39.7579699,
+				"lng": 116.2944575
+			},
+			"dist": 0,
+			"title": "北京建筑大学(大兴校区)"
+		},
+		"user_id": "5689cf3700b09aa2fdd88d3b",
+		"motion_count": {
+			"motionSitting": 15,
+			"motionWalking": 10,
+		},
+		"end_ts": 1452434364457,
+		"label": "contextRelaxing",
+		"end_datetime": "2016-01-11T05:59:24+0800",
+		"type": "event"
+	}, {
+		"_id": "5692ae34c1fdc920e3311e4f",
+		"start_datetime": "2016-01-11T05:12:29+0800",
+		"timestamp": 1452431549749,
+		"start_ts": 1452431549749,
+		"evidence_list": {
+			"location_ids": [],
+			"motion_ids": [],
+			"event_ids": [],
+			"hos_ids": []
+		},
+		"poi": {
+			"geo_point": {
+				"lat": 39.7579866,
+				"lng": 116.2943813
+			},
+			"dist": 0,
+			"title": "北京建筑大学(大兴校区)"
+		},
+		"start_location": {
+			"geo_point": {
+				"lat": 39.7580438,
+				"lng": 116.2944526
+			},
+			"dist": 0,
+			"title": "北京建筑大学(大兴校区)"
+		},
+		"end_location": {
+			"geo_point": {
+				"lat": 39.7579699,
+				"lng": 116.2944575
+			},
+			"dist": 0,
+			"title": "北京建筑大学(大兴校区)"
+		},
+		"user_id": "5689cf3700b09aa2fdd88d3b",
+		"motion_count": {
+			"motionSitting": 15,
+			"motionWalking": 10,
+		},
+		"end_ts": 1452434364457,
+		"label": "contextRelaxing",
+		"end_datetime": "2016-01-11T05:59:24+0800",
+		"type": "event"
+	}, {
+		"_id": "5692ae34c1fdc920e3311e4f",
+		"start_datetime": "2016-01-11T05:12:29+0800",
+		"timestamp": 1452431549749,
+		"start_ts": 1452431549749,
+		"evidence_list": {
+			"location_ids": [],
+			"motion_ids": [],
+			"event_ids": [],
+			"hos_ids": []
+		},
+		"poi": {
+			"geo_point": {
+				"lat": 39.7579866,
+				"lng": 116.2943813
+			},
+			"dist": 0,
+			"title": "北京建筑大学(大兴校区)"
+		},
+		"start_location": {
+			"geo_point": {
+				"lat": 39.7580438,
+				"lng": 116.2944526
+			},
+			"dist": 0,
+			"title": "北京建筑大学(大兴校区)"
+		},
+		"end_location": {
+			"geo_point": {
+				"lat": 39.7579699,
+				"lng": 116.2944575
+			},
+			"dist": 0,
+			"title": "北京建筑大学(大兴校区)"
+		},
+		"user_id": "5689cf3700b09aa2fdd88d3b",
+		"motion_count": {
+			"motionSitting": 15,
+			"motionWalking": 10,
+		},
+		"end_ts": 1452434364457,
+		"label": "contextRelaxing",
+		"end_datetime": "2016-01-11T05:59:24+0800",
+		"type": "event"
 	}];
 	// 假数据 end
 	// 网络请求地址
@@ -1074,8 +1229,224 @@
 	};
 	// 加载时间轴
 	function loadTimeLine() {
-		// TODO
+		// 清空
+		$('.timeLineItem').remove();
+		// TODO 加载
+		for (var i = 0; i < timeLineData.length; i++) {
+			var month = timeLineData[i].start_datetime.slice(5, 10).split('-')[0];
+			var day = timeLineData[i].start_datetime.slice(5, 10).split('-')[1];
+			if (month.indexOf('0') == 0) {
+				month = month.substr(1, 1);
+			}
+			if (day.indexOf('0') == 0) {
+				day = day.substr(1, 1);
+			}
+			var date = month + '月' + day + '日';
+			var time = timeLineData[i].start_datetime.slice(11, 19);
+			var label = timeLineData[i].label;
+			var locationInfo = timeLineData[i].poi.title;
+			var type; //0:路径,1:小地点,2:大地点
+			var eventInfo;
+			var src;
+			switch (label) {
+				// 舍弃
+				case 'contextArrivingHome':
+				case 'contextArrivingOffice':
+				case 'contextLeavingHome':
+				case 'contextLeavingOffice':
+					break;
+				case 'contextAtHome':
+					eventInfo = '在家';
+					src = "{{ url_for('static', filename='images/contextAtHome.png') }}";
+					type = 2;
+					break;
+				case 'contextAtWork':
+					eventInfo = '在公司';
+					src = "{{ url_for('static', filename='images/contextAtWork.png') }}";
+					type = 2;
+					break;
+				case 'contextCommutingWork':
+					eventInfo = '上班路上';
+					type = 0;
+					break;
+				case 'contextCommutingHome':
+					eventInfo = '回家路上';
+					type = 0;
+					break;
+				case 'contextGoingOut':
+					eventInfo = '出行';
+					type = 0;
+					break;
+				case 'contextTakingSubway':
+					eventInfo = '乘地铁';
+					type = 0;
+					break;
+				case 'contextWorkingInCBD':
+					eventInfo = '商圈工作中';
+					src = "{{ url_for('static', filename='images/contextWorkingInCBD.png') }}";
+					type = 1;
+					break;
+				case 'contextStudyingInSchool':
+				case 'contextWorkingInSchool':
+					eventInfo = '学校工作中';
+					src = "{{ url_for('static', filename='images/contextAtSchool.png') }}";
+					type = 1;
+					break;
+				case 'contextOutdoorExercise':
+					eventInfo = '户外锻炼';
+					src = "{{ url_for('static', filename='images/contextOutdoorExercise.png') }}";
+					type = 1;
+					break;
+				case 'contextIndoorExercise':
+					eventInfo = '室内锻炼';
+					src = "{{ url_for('static', filename='images/contextIndoorExercise.png') }}";
+					type = 1;
+					break;
+				case 'contextDinningOut':
+					eventInfo = '在餐厅吃饭';
+					src = "{{ url_for('static', filename='images/contextDinningOut.png') }}";
+					type = 1;
+					break;
+				case 'contextTravelling':
+					eventInfo = '旅游';
+					src = "{{ url_for('static', filename='images/contextTravelling.png') }}";
+					type = 1;
+					break;
+				case 'contextInParty':
+					eventInfo = '聚会';
+					src = "{{ url_for('static', filename='images/contextInParty.png') }}";
+					type = 1;
+					break;
+				case 'contextWindowShopping':
+					eventInfo = '逛街';
+					src = "{{ url_for('static', filename='images/contextWindowShopping.png') }}";
+					type = 1;
+					break;
+				case 'contextAtCinema':
+					eventInfo = '看电影';
+					src = "{{ url_for('static', filename='images/contextAtCinema.png') }}";
+					type = 1;
+					break;
+				case 'contextAtExhibition':
+					eventInfo = '展览会';
+					src = "{{ url_for('static', filename='images/contextAtExhibition.png') }}";
+					type = 1;
+					break;
+				case 'contextAtPopsConcert':
+					eventInfo = '演唱会';
+					src = "{{ url_for('static', filename='images/contextAtPopsConcert.png') }}";
+					type = 1;
+					break;
+				case 'contextAtTheatre':
+					eventInfo = '戏剧';
+					src = "{{ url_for('static', filename='images/contextAtTheatre.png') }}";
+					type = 1;
+					break;
+				case 'contextAtClassicsConcert':
+					eventInfo = '音乐会';
+					src = "{{ url_for('static', filename='images/contextAtClassicsConcert.png') }}";
+					type = 1;
+					break;
+				case 'contextRelaxing':
+					eventInfo = '在家休息';
+					src = "{{ url_for('static', filename='images/contextRelaxing.png') }}";
+					type = 1;
+					break;
+				default:
+					src = "{{ url_for('static', filename='images/unknow.png') }}";
+					break;
+			}
+			var item;
+			switch (type) {
+				case 0:
+					item = $('#lineHidden').clone();
+					break;
+				case 1:
+					item = $('#smallHidden').clone();
+					break;
+				case 2:
+					item = $('#bigHidden').clone();
+					break;
+				default:
+					item = $('#smallHidden').clone();
+					break;
+			}
+			item.removeAttr('id');
+			item.removeClass('hidden');
+			item.addClass('timeLineItem');
+			item.find('img').attr('src', src);
+			item.find('img').attr('id', i);
+			item.find('img').hover(function() {
+				// 弹出
+				var id = $(this).attr('id');
+				var motionData = {};
+				motionData.category = [];
+				motionData.data = [];
+				for (var i in timeLineData[id].motion_count) {
+					motionData.category.push(i);
+					motionData.data.push(timeLineData[id].motion_count[i]);
+				}
+				popChart(motionData);
+			}, function() {
+				// 隐藏
+				fideChart();
+			});
+			item.find('.eventInfo').text(eventInfo);
+			item.find('.date').text(date);
+			item.find('.time').text(time);
+			item.find('.locationInfo').text(locationInfo);
+			$('#lineHidden').after(item);
+		}
 	};
+
+	function popChart(motionData) {
+		$('#timeLineChart').removeClass('hidden');
+		$('#timeLineChart').addClass('show');
+		// 使用
+		require(
+			[
+				'echarts',
+				'echarts/chart/bar',
+			],
+			function(ec) {
+				// 基于准备好的dom，初始化echarts图表
+				timeLineChart = ec.init(document.getElementById('timeLineChart'));
+				option = {
+					xAxis: [{
+						type: 'category',
+						data: motionData.category,
+					}],
+					yAxis: [{
+						type: 'value',
+						axisLabel: {
+							formatter: '{value}',
+						},
+					}],
+					series: [{
+						type: 'bar',
+						barMaxWidth: 30,
+						data: motionData.data,
+						itemStyle: {
+							normal: {
+								color: '#00acc1',
+							},
+						},
+					}]
+				};
+				// 为echarts对象加载数据 
+				timeLineChart.setOption(option);
+			}
+		);
+		// 自适应
+		$(window).resize(function() {
+			timeLineChart.resize();
+		});
+	}
+
+	function fideChart() {
+		$('#timeLineChart').removeClass('show');
+		$('#timeLineChart').addClass('hidden');
+	}
 </script>
 
 {% endblock %}
