@@ -4,6 +4,7 @@ from leancloud import Object, Query, LeanCloudError
 from application.common.util import translate
 from application.models import Developer
 from os.path import dirname, join
+from bson.json_util import dumps
 from pymongo import *
 import requests
 import time
@@ -391,7 +392,6 @@ def single():
     developer = Developer()
     developer.session_token = session.get('session_token')
     if request.method == 'POST':
-        print 'single, post body:', request.json
         req_type = request.json.get('type')
         group_id = request.json.get('gourpid')
 
@@ -404,7 +404,7 @@ def single():
         e_start = request.json.get('e_start')
         e_end = request.json.get('e_end')
         ret_dict = get_attr_of_user(uid, h_start=h_start, h_end=h_end, e_start=e_start, e_end=e_end)
-        return json.dumps(ret_dict)
+        return dumps(ret_dict)
     return render_template('dashboard/single-user-motion.html',
                            username=username, app_id=app_id, app_list=app_list)
 
@@ -939,9 +939,7 @@ def get_attr_of_user(uid, h_start=None, h_end=None, e_start=None, e_end=None):
         "level": 15,
         "heatData": coordinate
     }
-
-    print type(map(lambda x: x, timeline))
-    ret_dict['detailData'] = {"data": map(lambda x: x, timeline)}
+    ret_dict['detailData'] = map(lambda x: x, timeline)
     return ret_dict
 
 

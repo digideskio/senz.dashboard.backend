@@ -554,7 +554,7 @@
 					homeOfficeData = obj.homeOfficeData;
 					locationData = obj.locationData;
 					userLabels = obj.userLabels;
-					detailData = obj.detailData.datas;
+					detailData = obj.detailData;
 					// console.log('actionData:' + actionData);
 					// console.log('eventData:' + eventData);
 					// console.log('homeOfficeData:' + homeOfficeData);
@@ -600,7 +600,7 @@
 					homeOfficeData = obj.homeOfficeData;
 					locationData = obj.locationData;
 					userLabels = obj.userLabels;
-					detailData = obj.detailData.datas;
+					detailData = obj.detailData;
 					// console.log('actionData:' + actionData);
 					// console.log('eventData:' + eventData);
 					// console.log('homeOfficeData:' + homeOfficeData);
@@ -733,13 +733,13 @@
 						homeOfficeData = obj.homeOfficeData;
 						locationData = obj.locationData;
 						userLabels = obj.userLabels;
-						detailData = obj.detailData.datas;
+						detailData = obj.detailData;
 						// console.log('actionData:' + actionData);
 						// console.log('eventData:' + eventData);
 						// console.log('homeOfficeData:' + homeOfficeData);
 						// console.log('locationData:' + locationData);
 						// console.log('userLabels:' + userLabels);
-						//						 console.log('detailData:' + detailData);
+												 console.log(obj.detailData);
 						// 换人业务逻辑完成后
 						$('#content').removeClass('hidden');
 						// 加载用户内容
@@ -1237,8 +1237,8 @@
 		}
 		// 加载
 		for (var i = 0; i < detailData.length; i++) {
-			var month = detailData[i].start_datetime.slice(5, 10).split('-')[0];
-			var day = detailData[i].start_datetime.slice(5, 10).split('-')[1];
+			var month = new Date(detailData[i].start_ts).toISOString().slice(5, 10).split('-')[0];
+			var day = new Date(detailData[i].start_ts).toISOString().slice(5, 10).split('-')[1];
 			if (month.indexOf('0') == 0) {
 				month = month.substr(1, 1);
 			}
@@ -1246,7 +1246,7 @@
 				day = day.substr(1, 1);
 			}
 			var date = month + '月' + day + '日';
-			var time = detailData[i].start_datetime.slice(11, 19);
+			var time = new Date(detailData[i].start_ts).toTimeString().slice(0, 8);
 			var label = detailData[i].label;
 			var locationInfo = detailData[i].poi.title;
 			var type; //0:路径,1:小地点,2:大地点
