@@ -4,6 +4,7 @@ from leancloud import Object, Query, LeanCloudError
 from application.common.util import translate
 from application.models import Developer
 from os.path import dirname, join
+from pymongo import *
 import requests
 import time
 
@@ -13,6 +14,9 @@ DashboardSource = Object.extend('DashboardSource')
 DashDataSource = Object.extend('DashDataSource')
 DashboardGroup = Object.extend('DashboardGroup')
 DashboardStatistics = Object.extend('DashboardStatistics')
+
+client = MongoClient('mongodb://senzhub:Senz2everyone@119.254.111.40/RefinedLog')
+CombinedTimelines = client.get_default_database().CombinedTimelines
 
 
 def get_app_list():
@@ -387,6 +391,7 @@ def single():
     developer = Developer()
     developer.session_token = session.get('session_token')
     if request.method == 'POST':
+        print 'single, post body:', request.json
         req_type = request.json.get('type')
         group_id = request.json.get('gourpid')
 
@@ -847,6 +852,8 @@ def get_attr_of_user(uid, h_start=None, h_end=None, e_start=None, e_end=None):
     avg_query = Query(DashboardStatistics)
     counts = avg_query.find()
 
+    timeline = CombinedTimelines.find({"user_id": uid}) or []
+
     labels = map(lambda x: attrs.attributes.get(x), type_list)
     user_labels = [y for x in filter(lambda y: y, labels) for y in x if isinstance(x, list)]
     user_labels += [type_list[labels.index(x)] for x in labels if isinstance(x, unicode) and x in [u'yes', u'no']]
@@ -932,13 +939,9 @@ def get_attr_of_user(uid, h_start=None, h_end=None, e_start=None, e_end=None):
         "level": 15,
         "heatData": coordinate
     }
-    time_list = sorted(motion.keys() + event.keys() + home_office.keys(), reverse=True)
-    detail_data = map(lambda x: {
-        "time": time.strftime("%Y-%m-%d %H:%M", time.localtime(int(x[:10]))),
-        "sence": motion.get(x),
-        "status": home_office.get(x),
-        "action": event.get(x)}, time_list)
-    ret_dict['detailData'] = {"data": detail_data}
+
+    print type(map(lambda x: x, timeline))
+    ret_dict['detailData'] = {"data": map(lambda x: x, timeline)}
     return ret_dict
 
 

@@ -5,3 +5,4 @@ leancloud-sdk>=1.0.9
 flask-login
 bugsnag
 blinker
+pymongo
