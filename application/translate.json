@@ -145,7 +145,7 @@
         "leaving_office": "",
         "arriving_home": "",
         "arriving_office": "",
-        "unknown_status": "",
+        "unknown_status": "unknown",
         "going_office": "contextCommutingWork",
         "going_home": "contextCommutingHome"
     },
