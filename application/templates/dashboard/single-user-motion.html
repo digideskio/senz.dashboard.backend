@@ -1,0 +1,1081 @@
+{% extends 'base.html' %} {% block head %}
+
+<head>
+	<meta content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no" name="viewport" /> {#
+	<title>SingleUserMotion</title>#}
+	<link rel="stylesheet" href="{{ url_for('static', filename='styles/bootstrap.min.css') }}">
+	<script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+	<script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+	<link rel="stylesheet" href="{{ url_for('static', filename='lib/jquery-ui-1.11.4/themes/base/jquery-ui.min.css') }}">
+	<script src="{{ url_for('static', filename='lib/jquery-2.1.4.min.js') }}"></script>
+	<script src="{{ url_for('static', filename='lib/jquery-ui-1.11.4/jquery-ui.min.js') }}"></script>
+	<script src="{{ url_for('static', filename='lib/echarts-2.2.7/build/dist/echarts.js') }}"></script>
+	<link rel="stylesheet" href="{{ url_for('static', filename='styles/login.css') }}">
+	<link rel="stylesheet" href="{{ url_for('static', filename='styles/dashboard.css') }}">
+	<script src="http://api.map.baidu.com/api?v=2.0&ak=1q5erVeV9OCE90ZKyeFdVdBb" type="text/javascript"></script>
+	<script src="{{ url_for('static', filename='js/Heatmap_min.js') }}"></script>
+	<style type="text/css">
+		.btn-custom-label {
+			border-radius: 6px;
+			border-color: #999999;
+		}
+		
+		.list-group-custom {
+			border: 1px solid #eeeeee;
+			text-align: center;
+			height: 600px;
+			margin-top: 15px;
+			overflow-x: hidden;
+			overflow-y: scroll;
+		}
+		
+		.list-group-item-custom {
+			border-width: 0;
+			cursor: pointer;
+		}
+		
+		.click {
+			color: #00D0BF;
+		}
+	</style>
+</head>
+{% endblock %} {% block content %}
+
+<div class="container-fluid" style="background: #fff; margin-left: 200px;">
+	<div class="row" style="margin-top: 10px;margin-bottom: 10px;">
+		<div class="col-xs-2" style="margin-top: 40px;">
+			<p style="display: inline-block; margin-left:10px;margin-top: 5px;">分组</p>
+			<div class="dropdown" style="float:right;display: inline-block;">
+				<button type="button" class="btn btn-sm dropdown-toggle" id="dropdownMenuClass" data-toggle="dropdown" style="background: #eeeeee;">
+					<span id="currUserGroup">选择分组</span>
+					<span class="caret"></span>
+				</button>
+				<ul id="userGroupDiv" class="dropdown-menu" role="menu" aria-labelledby="dropdownMenuClass">
+					<li id="userGroupHidden" role="presentation" class="hidden">
+						<a role="menuitem" tabindex="-1" href="#"></a>
+					</li>
+				</ul>
+			</div>
+		</div>
+		<div class="col-xs-3" style="margin-top: 28px;">
+			<div id="date-filter-wrap" class="date-filter-wrap" style="display: inline-block;">
+				<div class="h-date-wrap j-h-date-wrap">
+					<div class="inner-wrap">
+						<span class="j-h-startat"></span>
+						<span> 至 </span>
+						<span class="j-h-endat"></span>
+						<span class="arrow">▾</span>
+					</div>
+					<div style="display: inline-block;">
+						<select>
+							<option>工作日</option>
+							<option>周末</option>
+						</select>
+					</div>
+				</div>
+				<div class="more-wrap" style="background: #ffffff;position:relative; z-index:99999;">
+					<div class="filter-by-day">
+						<a class="today" href="javascript:;">今日</a>
+						<a class="yestoday" href="javascript:;">昨日</a>
+						<a class="lastweek" href="javascript:;">最近一周</a>
+						<a class="lastmouth" href="javascript:;">最近一月</a>
+					</div>
+					<div class="date-wrap">
+						<span class="time-input">
+		                <input id="j-filter-start-at">
+		                <span class="dropdown-caret"></span>
+						</span>
+						<span class="arave">至</span>
+						<span class="time-input">
+		                <input id="j-filter-end-at"/>
+		                <span class="dropdown-caret"></span>
+						</span>
+					</div>
+					<div class="confirm-btn-wrap">
+						<a id="confirm-btn" class="confirm-btn" href="#">确认</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row" style="height: 1px;background: #CCCCCC;"></div>
+	<div class="row">
+		<div class="col-xs-2">
+			<div style="margin-top: 15px;">
+				<span style="margin-left:10px;">用户列表</span>
+				<span id="userCount" style="float: right;margin-right: 10px;"></span>
+			</div>
+			<div class="input-group" style="margin-top: 15px;">
+				<input id="userNameInput" type="text" class="form-control" placeholder="请输入名称" value="" />
+				<div id="doSearch" class="input-group-addon" style="cursor: pointer;">
+					<img src="{{ url_for('static', filename='images/icon_search.png') }}" style="width: 20px; height: 20px">
+				</div>
+			</div>
+			<ul id="userNameDiv" class="list-group list-group-custom">
+				<li id="userNameHidden" class="list-group-item list-group-item-custom hidden"></li>
+				<li id="userNameNull" class="list-group-item list-group-item-custom hidden">
+					<p id="userNameNullInfo" style="font-size: 10px;">没有匹配的用户</p>
+					<button id="userNameAll" class="btn btn-primary btn-xs btn-block" style="font-size: 12px;background: #00ACC1;border: none;">返回列表</button>
+				</li>
+			</ul>
+		</div>
+		<div id="content" class="col-xs-9 center-block hidden" style="padding-top: 10px;border-left: 1px solid #CCCCCC;">
+			<div class="col-xs-3" style="margin-top: 8px;padding: 0px;text-align: center;width: 160px;">
+				<span id="userName">用户名称</span>
+			</div>
+			<div class="col-xs-9" style="margin-bottom: 10px;">
+				<div id="userLabelDiv" style="display: inline-block;margin-left: 5px;">
+					<a id="userLabelHidden" role="button" class="btn btn-default btn-sm btn-custom-label hidden disabled" style="margin-left: 10px;margin-top: 5px;"></a>
+				</div>
+			</div>
+			<br />
+			<div id="pageContainer" style="margin-top: 15px;">
+
+				<div id="eventChart" style="margin-top: 15px;height:600px"></div>
+
+				<div id="homeOfficeChart" style="margin-top: 15px;height:400px"></div>
+				<div style="margin-left: 90px;margin-right: 90px;height:130px;border: 1px solid #CCCCCC;">
+					<div style="float: left;margin-left: 30px;margin-top: 20px;">
+						<img style="width: 15px; height: 15px" src="{{ url_for('static', filename='images/single-user-motion-schedule.png') }}" />
+						<p style="margin-left: 5px;display: inline-block;">离家时间 : <span id="leaveHome">8:20 - 9:10</span></p>
+						<p style="margin-left: 22px;">到家时间 : <span id="arriveHome">8:20 - 9:10</span></p>
+						<p style="margin-left: 22px;">到公司时间 : <span id="arriveOffice">8:20 - 9:10</span></p>
+						<p style="margin-left: 22px;">离开公司时间 : <span id="leaveOffice">8:20 - 9:10</span></p>
+						<p style="margin-left: 22px;">平均工作时长 : <span id="avgWorkHours">8 hour</span></p>
+					</div>
+					<div style="margin-left: 50%;margin-top: 20px;">
+						<img style="width: 15px; height: 20px;" src="{{ url_for('static', filename='images/single-user-motion-map.png') }}" />
+						<p style="margin-left: 5px;display: inline-block;">家庭地址 : <span id="homeAddress">北京市天通西苑一区 34#</span></p>
+						<p style="margin-left: 22px;">公司地址 : <span id="officeAddress">北京市海淀南路苏州街纽约客公寓</span></p>
+					</div>
+				</div>
+
+				<div id="actionChart" style="margin-top: 15px;height:600px"></div>
+
+				<div id="locationChart" style="margin-top: 15px;height:600px"></div>
+
+			</div>
+		</div>
+		
+		<div id="content" class="col-xs-9 center-block" style="padding-top: 10px;border-left: 1px solid #CCCCCC;">
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript">
+	// 日期
+	function close() {
+		$('.j-h-date-wrap')
+			.next()
+			.slideToggle(200);
+	};
+	// 假数据 start
+	var userGroups = [];
+	var userNames = [];
+	var userLabels = [];
+	var eventData = {};
+	var homeOfficeData = {};
+	var actionData = {};
+	var locationData = {};
+	var detailData = {};
+	var timeLineData = [{
+		"end_ts": 123,
+		"objectId": "568f2d5400b0bca0ca1f4405",
+		"createdAt": "2016-01-08T11:30:28.298Z",
+		"updatedAt": "2016-01-08T11:35:28.497Z",
+		"ACL": {
+			"*": {
+				"read": true,
+				"write": true
+			}
+		},
+		"end_datetime": {
+			"__type": "Date",
+			"iso": "2016-01-01T00:00:00.000Z"
+		},
+		"motion_count": {
+			"running": 1,
+			"sitting": 2
+		},
+		"end_location": {
+			"poi_name": "北京市海淀区西屋国际c座",
+			"geo_point": {
+				"lat": 37,
+				"lng": 120
+			}
+		},
+		"start_ts": 132334,
+		"user_event_label": "going_out",
+		"home_office_status_label": "unknown",
+		"start_datetime": {
+			"__type": "Date",
+			"iso": "2016-01-01T00:15:00.000Z"
+		},
+		"evidences": {
+			"user_location_ids": [],
+			"user_event_ids": [],
+			"home_office_status_ids": [],
+			"user_motion_ids": []
+		},
+		"start_location": {
+			"poi_name": "北京市海淀区北京邮电大学",
+			"geo_point": {
+				"lat": 37,
+				"lng": 120
+			}
+		}
+	}];
+	// 假数据 end
+	// 网络请求地址
+	var url = "{{ url_for('dashboard_bp.single') }}";
+	// 加载列表
+	$.ajax({
+		type: 'post',
+		async: false,
+		url: url,
+		contentType: "application/json",
+		data: JSON.stringify({
+			type: 'user_list'
+		}),
+		success: function(option) {
+			// console.log(option);
+			var obj = JSON.parse(option);
+			userNames = obj.userNames;
+		},
+		error: function() {
+			alert("获取内容失败，请稍后再试！");
+		}
+	});
+	// 网络请求地址
+	var group_url = "{{ url_for('dashboard_bp.group') }}";
+	// 加载列表
+	$.ajax({
+		type: 'post',
+		async: false,
+		url: group_url,
+		contentType: "application/json",
+		data: JSON.stringify({
+			action: "group_list"
+		}),
+		success: function(option) {
+			var obj = JSON.parse(option);
+			userGroups = obj.group_list;
+			userGroups.unshift({
+				id: '-1',
+				name: '全部用户',
+			});
+			// console.log(userGroups);
+		},
+		error: function() {
+			alert("获取内容失败，请稍后再试！");
+		}
+	});
+	// 当前选中组id
+	var currGroupId = -1;
+	// 定义图表
+	var eventChart, homeOfficeChart, actionChart, locationChart;
+	// 当前选中
+	var currUserName;
+	// 当前选中id
+	var currId;
+	// 筛选结果
+	var filterUserNames = userNames;
+	// 默认日期参数
+	var h_start = ((+new Date()) - (86400000 * 30)) || null;
+	var e_start = ((+new Date()) - (86400000 * 30)) || null;
+	var h_end = (+new Date());
+	var e_end = (+new Date());
+	var workday = workday;
+	// 加载完成后执行
+	$(document).ready(function() {
+		// 填充日期选择器
+		$(".j-h-startat").text(new Date(new Date() - (86400000 * 30)).toISOString().slice(0, 10));
+		$(".j-h-endat").text((new Date()).toISOString().slice(0, 10));
+		$(".date-filter-wrap").on("click", ".inner-wrap", close);
+		$.datepicker.regional["zh-CN"] = {
+			closeText: "关闭",
+			prevText: "&#x3c;上月",
+			nextText: "下月&#x3e;",
+			currentText: "今天",
+			monthNames: ["一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月", "十二月"],
+			monthNamesShort: ["一", "二", "三", "四", "五", "六", "七", "八", "九", "十", "十一", "十二"],
+			dayNames: ["星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"],
+			dayNamesShort: ["周日", "周一", "周二", "周三", "周四", "周五", "周六"],
+			dayNamesMin: ["日", "一", "二", "三", "四", "五", "六"],
+			weekHeader: "周",
+			dateFormat: "yy-mm-dd",
+			firstDay: 1,
+			isRTL: !1,
+			showMonthAfterYear: !0,
+			yearSuffix: "年"
+		};
+		$.datepicker.setDefaults($.datepicker.regional["zh-CN"]);
+		var now = new Date();
+		$("#j-filter-start-at").datepicker({
+			dateFormat: "yy-mm-dd",
+			defaultDate: now,
+			onClose: function(selectedDate) {
+				if (selectedDate != '') {
+					$(".j-h-startat").text(selectedDate);
+				}
+			}
+		});
+		$("#j-filter-end-at").datepicker({
+			dateFormat: "yy-mm-dd",
+			defaultDate: now,
+			onClose: function(selectedDate) {
+				if (selectedDate != '') {
+					$(".j-h-endat").text(selectedDate);
+				}
+			}
+		});
+		$(".more-wrap a").on("click", function() {
+			var _today = (+new Date());
+			h_start = (_today - (86400000 * 30)) || null;
+			e_start = (_today - (86400000 * 30)) || null;
+			h_end = _today;
+			e_end = _today;
+			var j_start_obj = $(".j-h-startat");
+			var j_end_obj = $(".j-h-endat");
+			switch ($(this).attr('class')) {
+				case 'today':
+					h_start = e_start = _today || null;
+					j_start_obj.text(new Date().toISOString().slice(0, 10));
+					j_end_obj.text(new Date().toISOString().slice(0, 10));
+					close();
+					break;
+				case 'yestoday':
+					h_start = e_start = (_today - 86400000) || null;
+					j_start_obj.text(new Date((new Date() - 86400000)).toISOString().slice(0, 10));
+					j_end_obj.text(new Date().toISOString().slice(0, 10));
+					close();
+					break;
+				case 'lastweek':
+					h_start = e_start = (_today - (86400000 * 7)) || null;
+					j_start_obj.text(new Date((new Date() - 86400000 * 7)).toISOString().slice(0, 10));
+					j_end_obj.text(new Date().toISOString().slice(0, 10));
+					close();
+					break;
+				case 'confirm-btn':
+					h_start = e_start = (+new Date($("#j-filter-start-at").val())) || null;
+					h_end = e_end = (+new Date($("#j-filter-end-at").val())) || null;
+					close();
+					break;
+				case 'lastmouth':
+					j_start_obj.text(new Date((new Date() - 86400000 * 30)).toISOString().slice(0, 10));
+					j_end_obj.text(new Date().toISOString().slice(0, 10));
+					close();
+					break;
+				default:
+					break;
+			}
+			// 判断是否选中用户
+			if (currId == undefined) {
+				console.log('请先选择用户!');
+				return;
+			}
+			workday = $('.h-date-wrap select').val() == "工作日" ? "workday" : "weekend";
+			var data = {
+				uid: currId,
+				gourpid: currGroupId,
+				h_start: h_start,
+				h_end: h_end,
+				e_start: e_start,
+				e_end: e_end,
+				workday: workday,
+			};
+			console.log(data);
+			$.ajax({
+				type: "post",
+				async: true,
+				url: url,
+				contentType: "application/json",
+				data: JSON.stringify(data),
+				success: function(option) {
+					//					console.log(option);
+					var obj = JSON.parse(option);
+					actionData = obj.actionData;
+					eventData = obj.eventData;
+					homeOfficeData = obj.homeOfficeData;
+					locationData = obj.locationData;
+					userLabels = obj.userLabels;
+					detailData = obj.detailData;
+					// console.log('actionData:' + actionData);
+					// console.log('eventData:' + eventData);
+					// console.log('homeOfficeData:' + homeOfficeData);
+					// console.log('locationData:' + locationData);
+					// console.log('userLabels:' + userLabels);
+					// console.log('detailData:' + detailData);
+					// 加载用户内容
+					initUserContent();
+				},
+				error: function() {
+					alert("获取内容失败，请稍后再试！");
+				}
+			});
+		});
+		$('.h-date-wrap select').on('change', function() {
+			// 判断是否选中用户
+			if (currId == undefined) {
+				console.log('请先选择用户!');
+				return;
+			}
+			workday = $('.h-date-wrap select').val() == "工作日" ? "workday" : "weekend";
+			var data = {
+				uid: currId,
+				gourpid: currGroupId,
+				h_start: h_start,
+				h_end: h_end,
+				e_start: e_start,
+				e_end: e_end,
+				workday: workday,
+			};
+			console.log(data);
+			$.ajax({
+				type: "post",
+				async: true,
+				url: url,
+				contentType: "application/json",
+				data: JSON.stringify(data),
+				success: function(option) {
+					//					console.log(option);
+					var obj = JSON.parse(option);
+					actionData = obj.actionData;
+					eventData = obj.eventData;
+					homeOfficeData = obj.homeOfficeData;
+					locationData = obj.locationData;
+					userLabels = obj.userLabels;
+					detailData = obj.detailData;
+					// console.log('actionData:' + actionData);
+					// console.log('eventData:' + eventData);
+					// console.log('homeOfficeData:' + homeOfficeData);
+					// console.log('locationData:' + locationData);
+					// console.log('userLabels:' + userLabels);
+					// console.log('detailData:' + detailData);
+					// 加载用户内容
+					initUserContent();
+				},
+				error: function() {
+					alert("获取内容失败，请稍后再试！");
+				}
+			});
+		});
+		// 填充分组
+		for (var i = 0; i < userGroups.length; i++) {
+			var item = $('#userGroupHidden').clone();
+			item.removeAttr('id');
+			item.removeClass('hidden');
+			item.children().html(userGroups[i].name);
+			item.children().attr('id', userGroups[i].id);
+			item.children().click(changeUserGroup);
+			$('#userGroupDiv').append(item);
+		};
+		// 初始化图表
+		initCharts();
+		// 填充用户
+		initUserNameList();
+		// 查找逻辑
+		$('#doSearch').click(function() {
+			$('#userNameNull').addClass('hidden');
+			var name = $('#userNameInput').val();
+			if (name == '') {
+				// 没输入条件，显示全部
+				if (filterUserNames != userNames) {
+					// 有效点击
+					filterUserNames = userNames;
+					// 清空现有列表
+					$('#userNameDiv').children('.tag').remove();
+					// 重新加载
+					initUserNameList();
+					console.log('加载全部');
+				}
+				// 返回
+				return;
+			}
+			// 清空
+			filterUserNames = [];
+			for (var i = 0; i < userNames.length; i++) {
+				if (userNames[i].indexOf(name) >= 0) {
+					// 匹配
+					filterUserNames.push(userNames[i]);
+				}
+			}
+			// 清空现有列表
+			$('#userNameDiv').children('.tag').remove();
+			if (filterUserNames.length == 0) {
+				// 空列表
+				$('#userNameNull').removeClass('hidden');
+				$('#userNameNullInfo').removeClass('hidden');
+			} else {
+				$('#userNameNull').removeClass('hidden');
+				$('#userNameNullInfo').addClass('hidden');
+				// 重新加载
+				initUserNameList();
+			}
+		});
+		// 回到全部用户
+		$('#userNameAll').click(function() {
+			// 清空现有列表
+			$('#userNameDiv').children('.tag').remove();
+			$('#userNameNull').addClass('hidden');
+			$('#userNameInput').val('');
+			filterUserNames = userNames;
+			// 重新加载
+			initUserNameList();
+		});
+	});
+	// 初始化用户列表
+	function initUserNameList() {
+		// 重置选中用户
+		currUserName = undefined;
+		currId = undefined;
+		// 填充总人数
+		$('#userCount').html(filterUserNames.length + '人');
+		// 填充列表
+		for (var i = 0; i < filterUserNames.length; i++) {
+			var item = $('#userNameHidden').clone();
+			item.removeAttr('id');
+			item.removeClass('hidden');
+			item.addClass('tag');
+			item.html(filterUserNames[i]);
+			// 点击换人
+			item.click(function() {
+				// 重置页码
+				pageIndex = 1;
+				// 换人样式变化
+				if (currUserName != undefined) {
+					currUserName.removeClass('click');
+				}
+				$(this).addClass('click');
+				currUserName = $(this);
+				currId = $(this).html();
+				// 换人业务逻辑
+				console.log('change:' + currId);
+				$('#content').addClass('hidden');
+				workday = $('.h-date-wrap select').val() == "工作日" ? "workday" : "weekend";
+				// 换人业务逻辑执行中
+				var data = {
+					uid: currId,
+					gourpid: currGroupId,
+					h_start: h_start,
+					h_end: h_end,
+					e_start: e_start,
+					e_end: e_end,
+					workday: workday,
+				};
+				console.log(data);
+				$.ajax({
+					type: 'post',
+					async: true,
+					url: url,
+					contentType: "application/json",
+					data: JSON.stringify(data),
+					success: function(option) {
+						//console.log(option);
+						var obj = JSON.parse(option);
+						actionData = obj.actionData;
+						eventData = obj.eventData;
+						homeOfficeData = obj.homeOfficeData;
+						locationData = obj.locationData;
+						userLabels = obj.userLabels;
+						detailData = obj.detailData;
+						// console.log('actionData:' + actionData);
+						// console.log('eventData:' + eventData);
+						// console.log('homeOfficeData:' + homeOfficeData);
+						// console.log('locationData:' + locationData);
+						// console.log('userLabels:' + userLabels);
+						// console.log('detailData:' + detailData);
+						// 换人业务逻辑完成后
+						$('#content').removeClass('hidden');
+						// 加载用户内容
+						initUserContent();
+					},
+					error: function() {
+						alert("获取内容失败，请稍后再试！");
+					}
+				});
+			});
+			$('#userNameNull').before(item);
+		};
+	};
+	// 隐藏用户数据
+	function hiddenUserContent() {
+		$('#content').removeClass('show');
+		$('#content').addClass('hidden');
+	};
+	// 加载用户内容
+	function initUserContent() {
+		// 加载图表
+		loadEventChart();
+		loadHomeOfficeChart();
+		loadActionChart();
+		loadLocationChart();
+		loadTimeLine();
+		// 判断是否显示
+		if (currUserName == undefined) {
+			return;
+		}
+		// 加载用户名字
+		$('#userName').html(currUserName.html());
+		// 清空标签
+		$('#userLabelDiv').children('.tag').remove();
+		// 填充标签
+		for (var i = 0; i < userLabels.length; i++) {
+			var item = $('#userLabelHidden').clone();
+			item.removeAttr('id');
+			item.removeClass('hidden');
+			item.addClass('tag');
+			item.html(userLabels[i]);
+			$('#userLabelDiv').append(item);
+		}
+	};
+	// 切换分组
+	function changeUserGroup() {
+		$('#currUserGroup').html($(this).html());
+		currGroupId = $(this).attr('id');
+		console.log('currGroupId:' + currGroupId);
+		var data;
+		// 点击分组逻辑
+		if (currGroupId === -1 || currGroupId == undefined) {
+			data = {
+				type: 'user_list',
+			};
+		} else {
+			data = {
+				type: 'user_list_group',
+				gourp_id: currGroupId,
+			};
+		};
+		// 加载列表
+		$.ajax({
+			type: 'post',
+			async: false,
+			url: url,
+			contentType: "application/json",
+			data: JSON.stringify({
+				type: 'user_list',
+				gourpid: currGroupId
+			}),
+			success: function(option) {
+				// console.log(option);
+				var obj = JSON.parse(option);
+				userNames = obj.userNames;
+				filterUserNames = userNames;
+				hiddenUserContent();
+				// 清空现有列表
+				$('#userNameDiv').children('.tag').remove();
+				$('#userNameNull').addClass('hidden');
+				$('#userNameInput').val('');
+				filterUserNames = userNames;
+				// 重新加载
+				initUserNameList();
+			},
+			error: function() {
+				alert("获取内容失败，请稍后再试！");
+			}
+		});
+	};
+	// 初始化
+	function initCharts() {
+		// 路径配置
+		require.config({
+			paths: {
+				echarts: 'http://echarts.baidu.com/build/dist'
+			}
+		});
+	};
+	// 加载事件图表
+	function loadEventChart() {
+		// 使用
+		require(
+			[
+				'echarts',
+				'echarts/chart/line',
+				'echarts/chart/bar',
+			],
+			function(ec) {
+				// 基于准备好的dom，初始化echarts图表
+				eventChart = ec.init(document.getElementById('eventChart'));
+				option = {
+					title: {
+						text: '事件统计图',
+					},
+					tooltip: {
+						trigger: 'axis',
+						formatter: '{b} : {c} 次',
+					},
+					legend: {
+						data: ['个人数据', '平均水平'],
+					},
+					toolbox: {
+						show: false,
+						feature: {
+							magicType: {
+								show: true,
+								type: ['line', 'bar']
+							},
+							restore: {
+								show: true
+							},
+							saveAsImage: {
+								show: true
+							}
+						}
+					},
+					xAxis: [{
+						type: 'category',
+						data: eventData.category,
+					}],
+					yAxis: [{
+						type: 'value',
+						axisLabel: {
+							formatter: '{value} 次',
+						},
+					}],
+					series: [{
+						name: '个人数据',
+						type: 'bar',
+						barMaxWidth: 30,
+						data: eventData.data,
+						itemStyle: {
+							normal: {
+								color: '#00acc1',
+							},
+						},
+					}, {
+						name: '平均水平',
+						type: 'bar',
+						barMaxWidth: 30,
+						data: eventData.avg,
+						itemStyle: {
+							normal: {
+								color: '#918bd5',
+							},
+						},
+					}, ]
+				};
+				// 如果不为空画线
+				if (eventData.category.length > 0) {
+					option.series[0].markPoint = {
+						data: [{
+							type: 'max',
+							name: '最大值'
+						}, {
+							type: 'min',
+							name: '最小值'
+						}],
+						itemStyle: {
+							normal: {
+								color: '#00acc1',
+							},
+						},
+					};
+					option.series[1].markPoint = {
+						data: [{
+							type: 'max',
+							name: '最大值'
+						}, {
+							type: 'min',
+							name: '最小值'
+						}],
+						itemStyle: {
+							normal: {
+								color: '#918bd5',
+							},
+						},
+					};
+				}
+				// 为echarts对象加载数据 
+				eventChart.setOption(option);
+			}
+		);
+		// 自适应
+		$(window).resize(function() {
+			eventChart.resize();
+		});
+	};
+	// 加载上下班图表
+	function loadHomeOfficeChart() {
+		// 加载静态信息
+		$('#leaveHome').html(homeOfficeData.property.avg_end);
+		$('#leaveOffice').html(homeOfficeData.property.combo_end);
+		$('#arriveHome').html(homeOfficeData.property.avg_start);
+		$('#arriveOffice').html(homeOfficeData.property.combo_start);
+		$('#avgWorkHours').html(homeOfficeData.property.duration);
+		$('#homeAddress').html(homeOfficeData.property.home_addr);
+		$('#officeAddress').html(homeOfficeData.property.office_addr);
+		// 使用
+		require(
+			[
+				'echarts',
+				'echarts/chart/line',
+				'echarts/chart/bar',
+			],
+			function(ec) {
+				// 基于准备好的dom，初始化echarts图表
+				homeOfficeChart = ec.init(document.getElementById('homeOfficeChart'));
+				option = {
+					title: {
+						text: '上下班统计图',
+					},
+					tooltip: {
+						trigger: 'axis',
+						formatter: '{b} : {c} 次',
+					},
+					toolbox: {
+						show: false,
+						feature: {
+							magicType: {
+								show: true,
+								type: ['line', 'bar']
+							},
+							restore: {
+								show: true
+							},
+							saveAsImage: {
+								show: true
+							}
+						}
+					},
+					legend: {
+						data: ['在家', '在公司', '在回家路上', '在上班路上'],
+					},
+					xAxis: [{
+						type: 'category',
+						data: homeOfficeData.category,
+					}],
+					yAxis: [{
+						type: 'value',
+						axisLabel: {
+							formatter: '{value} 次',
+						},
+					}],
+					series: [{
+						name: '在家',
+						type: 'line',
+						data: homeOfficeData.atHomeData,
+						markPoint: {
+							data: [{
+								type: 'max',
+								name: '最大值'
+							}, {
+								type: 'min',
+								name: '最小值'
+							}]
+						},
+						itemStyle: {
+							normal: {
+								color: '#0080ff',
+							},
+						},
+					}, {
+						name: '在公司',
+						type: 'line',
+						data: homeOfficeData.atOfficeData,
+						markPoint: {
+							data: [{
+								type: 'max',
+								name: '最大值'
+							}, {
+								type: 'min',
+								name: '最小值'
+							}]
+						},
+						itemStyle: {
+							normal: {
+								color: '#00acc1',
+							},
+						},
+					}, {
+						name: '在回家路上',
+						type: 'line',
+						data: homeOfficeData.toHomeData,
+						markPoint: {
+							data: [{
+								type: 'max',
+								name: '最大值'
+							}, {
+								type: 'min',
+								name: '最小值'
+							}]
+						},
+						itemStyle: {
+							normal: {
+								color: '#f8b62d',
+							},
+						},
+					}, {
+						name: '在上班路上',
+						type: 'line',
+						data: homeOfficeData.toOfficeData,
+						markPoint: {
+							data: [{
+								type: 'max',
+								name: '最大值'
+							}, {
+								type: 'min',
+								name: '最小值'
+							}]
+						},
+						itemStyle: {
+							normal: {
+								color: '#918bd5',
+							},
+						},
+					}]
+				};
+				// 为echarts对象加载数据 
+				homeOfficeChart.setOption(option);
+			}
+		);
+		// 自适应
+		$(window).resize(function() {
+			homeOfficeChart.resize();
+		});
+	};
+	// 加载动作图表
+	function loadActionChart() {
+		// 使用
+		require(
+			[
+				'echarts',
+				'echarts/chart/line',
+				'echarts/chart/bar',
+			],
+			function(ec) {
+				// 基于准备好的dom，初始化echarts图表
+				actionChart = ec.init(document.getElementById('actionChart'));
+				option = {
+					title: {
+						text: '动作状态平均时长统计图',
+					},
+					legend: {
+						data: ['个人数据', '平均水平'],
+					},
+					tooltip: {
+						trigger: 'axis',
+						formatter: '{b} : {c} 分钟',
+					},
+					toolbox: {
+						show: false,
+						feature: {
+							magicType: {
+								show: true,
+								type: ['line', 'bar']
+							},
+							restore: {
+								show: true
+							},
+							saveAsImage: {
+								show: true
+							}
+						}
+					},
+					xAxis: [{
+						type: 'category',
+						data: actionData.category,
+					}],
+					yAxis: [{
+						type: 'value',
+						axisLabel: {
+							formatter: '{value} 分钟',
+						},
+					}],
+					series: [{
+						name: '个人数据',
+						type: 'bar',
+						barMaxWidth: 30,
+						data: actionData.data,
+						itemStyle: {
+							normal: {
+								color: '#00acc1',
+							},
+						},
+					}, {
+						name: '平均水平',
+						type: 'bar',
+						barMaxWidth: 30,
+						data: actionData.avg,
+						itemStyle: {
+							normal: {
+								color: '#918bd5',
+							},
+						},
+					}, ]
+				};
+				// 如果不为空画线
+				if (actionData.category.length > 0) {
+					option.series[0].markPoint = {
+						data: [{
+							type: 'max',
+							name: '最大值'
+						}, {
+							type: 'min',
+							name: '最小值'
+						}],
+						itemStyle: {
+							normal: {
+								color: '#00acc1',
+							},
+						},
+					};
+					option.series[1].markPoint = {
+						data: [{
+							type: 'max',
+							name: '最大值'
+						}, {
+							type: 'min',
+							name: '最小值'
+						}],
+						itemStyle: {
+							normal: {
+								color: '#918bd5',
+							},
+						},
+					};
+				}
+				// 为echarts对象加载数据 
+				actionChart.setOption(option);
+			}
+		);
+		// 自适应
+		$(window).resize(function() {
+			actionChart.resize();
+		});
+	};
+	// 加载地点图表
+	function loadLocationChart() {
+		var map = new BMap.Map("locationChart"); // 创建地图实例
+		map.centerAndZoom(new BMap.Point(locationData.lng, locationData.lat), locationData.level); // 初始化地图，设置中心点坐标和地图级别
+		map.enableScrollWheelZoom(); // 允许滚轮缩放
+		//详细的参数,可以查看heatmap.js的文档 https://github.com/pa7/heatmap.js/blob/master/README.md
+		//参数说明如下:
+		/* visible 热力图是否显示,默认为true
+		     * opacity 热力的透明度,1-100
+		     * radius 势力图的每个点的半径大小   
+		     * gradient  {JSON} 热力图的渐变区间 . gradient如下所示
+		     *	{
+					.2:'rgb(0, 255, 255)',
+					.5:'rgb(0, 110, 255)',
+					.8:'rgb(100, 0, 255)'
+				}
+				其中 key 表示插值的位置, 0~1. 
+				    value 为颜色值. 
+		     */
+		heatmapOverlay = new BMapLib.HeatmapOverlay({
+			visible: true,
+			radius: 20,
+		});
+		map.addOverlay(heatmapOverlay);
+		heatmapOverlay.setDataSet({
+			data: locationData.heatData,
+			max: 100,
+		});
+	};
+	// 加载时间轴
+	function loadTimeLine() {
+		// TODO
+	};
+</script>
+
+{% endblock %}
