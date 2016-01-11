@@ -23,7 +23,7 @@
 		.list-group-custom {
 			border: 1px solid #eeeeee;
 			text-align: center;
-			height: 600px;
+			height: 800px;
 			margin-top: 15px;
 			overflow-x: hidden;
 			overflow-y: scroll;
@@ -39,11 +39,11 @@
 		}
 		
 		.timeline-item-big {
-			margin-top: 35px;
+			margin-top: 85px;
 		}
 		
 		.timeline-item-small {
-			margin-top: 15px;
+			margin-top: 40px;
 		}
 		
 		.timeline-item-line {
@@ -73,8 +73,8 @@
 				</ul>
 			</div>
 		</div>
-		<div class="col-xs-3" style="margin-top: 28px;">
-			<div id="date-filter-wrap" class="date-filter-wrap" style="display: inline-block;">
+		<div class="col-xs-10" style="margin-top: 28px;">
+			<div id="date-filter-wrap" class="date-filter-wrap" >
 				<div class="h-date-wrap j-h-date-wrap">
 					<div class="inner-wrap">
 						<span class="j-h-startat"></span>
@@ -148,7 +148,7 @@
 					</div>
 				</div>
 				<div class="row">
-					<div class="col-xs-12" style="margin-top: 15px;">
+					<div class="col-xs-12" style="margin-top: 15px;height: 800px;overflow-y: scroll;">
 						<div id="eventChart" style="margin-top: 15px;height:600px"></div>
 						<div id="homeOfficeChart" style="margin-top: 15px;height:400px"></div>
 						<div style="margin-left: 90px;margin-right: 90px;height:130px;border: 1px solid #CCCCCC;">
@@ -173,59 +173,64 @@
 				</div>
 			</div>
 
-			<div id="timeLineContainer" class="col-xs-3" style="padding-top: 10px;border-left: 1px solid #CCCCCC; height: 800px;">
-				<div id="bigHidden">
+			<div id="timeLineContainer" class="col-xs-3" style="padding-top: 10px;padding-bottom: 10px;border-left: 1px solid #CCCCCC;position:relative;background: #f7f7f7;height: 900px;overflow-y: scroll;">
+				<span style="font-size: 16px;margin-left: 25%;">现在</span>
+				<div id="bigHidden" class="item hidden">
 					<div class="row">
-						<div class="col-xs-3 timeline-item-big" style="padding-right: 0;">
+						<div class="col-xs-3 timeline-item-big">
 							<span class="date">1月11日</span>
 							<br />
 							<span class="time">00:00:00</span>
 						</div>
-						<div class="col-xs-1" style="padding: 0;">
-							<img src="{{ url_for('static', filename='images/unknown.png') }}" style="width: 30px;height: 100px;" style="display: inline-block;" />
+						<div class="col-xs-2" style="padding: 0;position:relative;height: 190px;">
+							<img src="{{ url_for('static', filename='images/timeline-line.png') }}" style="width: 5px;height: 190px;left: 50%;position:absolute;z-index: 1;" />
+							<img src="{{ url_for('static', filename='images/timeline-big.png') }}" style="width: 59px;height: 189px;position:absolute;z-index: 100;left: 6%;" />
+							<img class="img" src="{{ url_for('static', filename='images/unknown.png') }}" style="width: 25px;height: 25px;position:absolute;z-index: 999;left: 35%;top:80px" />
 						</div>
-						<div class="col-xs-8 timeline-item-big">
+						<div class="col-xs-7 timeline-item-big" style="padding-right: 0;">
 							<span class="eventInfo">在公司</span>
 							<br />
 							<span class="locationInfo">北京市海淀区中关村南大街</span>
 						</div>
 					</div>
 				</div>
-				<div id="smallHidden">
+				<div id="smallHidden" class="item hidden">
 					<div class="row">
-						<div class="col-xs-3 timeline-item-small" style="padding-right: 0;">
+						<div class="col-xs-3 timeline-item-small">
 							<span class="date">1月11日</span>
 							<br />
 							<span class="time">00:00:00</span>
 						</div>
-						<div class="col-xs-1" style="padding: 0;">
-							<img src="{{ url_for('static', filename='images/unknown.png') }}" style="width: 30px;height: 60px;" style="display: inline-block;" />
+						<div class="col-xs-2" style="padding: 0;position:relative;height: 100px;">
+							<img src="{{ url_for('static', filename='images/timeline-line.png') }}" style="width: 5px;height: 100px;left: 50%;position:absolute;z-index: 1;" />
+							<img src="{{ url_for('static', filename='images/timeline-small.png') }}" style="width: 59px;height: 94px;position:absolute;z-index: 100;left: 6%;top: 18px;" />
+							<img class="img" src="{{ url_for('static', filename='images/unknown.png') }}" style="width: 25px;height: 25px;position:absolute;z-index: 999;left: 35%;top:45px" />
 						</div>
-						<div class="col-xs-8 timeline-item-small">
+						<div class="col-xs-7 timeline-item-small" style="padding-right: 0;">
 							<span class="eventInfo">在公司</span>
 							<br />
 							<span class="locationInfo">北京市海淀区中关村南大街</span>
 						</div>
 					</div>
 				</div>
-				<div id="lineHidden">
+				<div id="lineHidden" class="item hidden">
 					<div class="row">
-						<div class="col-xs-3 timeline-item-line" style="padding-right: 0;">
+						<div class="col-xs-3 timeline-item-line">
 							<span class="date">1月11日</span>
 							<br />
 							<span class="time">00:00:00</span>
 						</div>
-						<div class="col-xs-1" style="padding: 0;">
-							<img src="{{ url_for('static', filename='images/unknown.png') }}" style="width: 30px;height: 80px;" style="display: inline-block;" />
+						<div class="col-xs-2" style="padding: 0;">
+							<img src="{{ url_for('static', filename='images/timeline-line.png') }}" style="width: 5px;height: 80px;margin-left: 50%;" style="display: inline-block;" />
 						</div>
-						<div class="col-xs-8 timeline-item-line">
+						<div class="col-xs-7 timeline-item-line" style="padding-right: 0;">
 							<span class="eventInfo">在公司</span>
 							<br />
 							<span class="locationInfo">北京市海淀区中关村南大街</span>
 						</div>
 					</div>
 				</div>
-				<div id="timeLineChart" style="height: 250px;width: 100%;float: left;"></div>
+				<div id="timeLineChart" class="hidden" style="height: 250px;width: 80%;border: 1px solid #CCCCCC;border-radius: 3px;position:absolute;z-index: 999;top: 10px;"></div>
 			</div>
 		</div>
 	</div>
@@ -246,8 +251,7 @@
 	var homeOfficeData = {};
 	var actionData = {};
 	var locationData = {};
-	var detailData = {};
-	var timeLineData = [{
+	var detailData = [{
 		"_id": "5692ae34c1fdc920e3311e4f",
 		"start_datetime": "2016-01-11T05:12:29+0800",
 		"timestamp": 1452431549749,
@@ -436,11 +440,12 @@
 	// 筛选结果
 	var filterUserNames = userNames;
 	// 默认日期参数
-	var h_start = ((+new Date()) - (86400000 * 30)) || null;
-	var e_start = ((+new Date()) - (86400000 * 30)) || null;
-	var h_end = (+new Date());
-	var e_end = (+new Date());
-	var workday = workday;
+	var _today = new Date();
+	var h_start = (_today - (86400000 * 30)) || null;
+	var e_start = (_today - (86400000 * 30)) || null;
+	var h_end = _today;
+	var e_end = _today;
+	var workday = 'workday';
 	// 加载完成后执行
 	$(document).ready(function() {
 		// 填充日期选择器
@@ -485,40 +490,35 @@
 			}
 		});
 		$(".more-wrap a").on("click", function() {
-			var _today = (+new Date());
-			h_start = (_today - (86400000 * 30)) || null;
-			e_start = (_today - (86400000 * 30)) || null;
-			h_end = _today;
-			e_end = _today;
 			var j_start_obj = $(".j-h-startat");
 			var j_end_obj = $(".j-h-endat");
 			switch ($(this).attr('class')) {
 				case 'today':
 					h_start = e_start = _today || null;
-					j_start_obj.text(new Date().toISOString().slice(0, 10));
-					j_end_obj.text(new Date().toISOString().slice(0, 10));
+					j_start_obj.text(_today.toISOString().slice(0, 10));
+					j_end_obj.text(_today.toISOString().slice(0, 10));
 					close();
 					break;
 				case 'yestoday':
 					h_start = e_start = (_today - 86400000) || null;
-					j_start_obj.text(new Date((new Date() - 86400000)).toISOString().slice(0, 10));
-					j_end_obj.text(new Date().toISOString().slice(0, 10));
+					j_start_obj.text(new Date(_today - 86400000).toISOString().slice(0, 10));
+					j_end_obj.text(_today.toISOString().slice(0, 10));
 					close();
 					break;
 				case 'lastweek':
 					h_start = e_start = (_today - (86400000 * 7)) || null;
 					j_start_obj.text(new Date((new Date() - 86400000 * 7)).toISOString().slice(0, 10));
-					j_end_obj.text(new Date().toISOString().slice(0, 10));
+					j_end_obj.text(_today.toISOString().slice(0, 10));
 					close();
 					break;
 				case 'confirm-btn':
-					h_start = e_start = (+new Date($("#j-filter-start-at").val())) || null;
-					h_end = e_end = (+new Date($("#j-filter-end-at").val())) || null;
+					h_start = e_start = (new Date($("#j-filter-start-at").val())) || null;
+					h_end = e_end = (new Date($("#j-filter-end-at").val())) || null;
 					close();
 					break;
 				case 'lastmouth':
-					j_start_obj.text(new Date((new Date() - 86400000 * 30)).toISOString().slice(0, 10));
-					j_end_obj.text(new Date().toISOString().slice(0, 10));
+					j_start_obj.text(new Date((_today - 86400000 * 30)).toISOString().slice(0, 10));
+					j_end_obj.text(_today.toISOString().slice(0, 10));
 					close();
 					break;
 				default:
@@ -547,20 +547,20 @@
 				contentType: "application/json",
 				data: JSON.stringify(data),
 				success: function(option) {
-					//					console.log(option);
+					//					 console.log(option);
 					var obj = JSON.parse(option);
 					actionData = obj.actionData;
 					eventData = obj.eventData;
 					homeOfficeData = obj.homeOfficeData;
 					locationData = obj.locationData;
 					userLabels = obj.userLabels;
-					detailData = obj.detailData;
+					detailData = obj.detailData.datas;
 					// console.log('actionData:' + actionData);
 					// console.log('eventData:' + eventData);
 					// console.log('homeOfficeData:' + homeOfficeData);
 					// console.log('locationData:' + locationData);
 					// console.log('userLabels:' + userLabels);
-					// console.log('detailData:' + detailData);
+										 console.log('detailData:' + detailData.datas);
 					// 加载用户内容
 					initUserContent();
 				},
@@ -593,20 +593,20 @@
 				contentType: "application/json",
 				data: JSON.stringify(data),
 				success: function(option) {
-					//					console.log(option);
+					//					 console.log(option);
 					var obj = JSON.parse(option);
 					actionData = obj.actionData;
 					eventData = obj.eventData;
 					homeOfficeData = obj.homeOfficeData;
 					locationData = obj.locationData;
 					userLabels = obj.userLabels;
-					detailData = obj.detailData;
+					detailData = obj.detailData.datas;
 					// console.log('actionData:' + actionData);
 					// console.log('eventData:' + eventData);
 					// console.log('homeOfficeData:' + homeOfficeData);
 					// console.log('locationData:' + locationData);
 					// console.log('userLabels:' + userLabels);
-					// console.log('detailData:' + detailData);
+					//					 console.log('detailData:' + detailData);
 					// 加载用户内容
 					initUserContent();
 				},
@@ -726,20 +726,20 @@
 					contentType: "application/json",
 					data: JSON.stringify(data),
 					success: function(option) {
-						//console.log(option);
+						//						console.log(option);
 						var obj = JSON.parse(option);
 						actionData = obj.actionData;
 						eventData = obj.eventData;
 						homeOfficeData = obj.homeOfficeData;
 						locationData = obj.locationData;
 						userLabels = obj.userLabels;
-						detailData = obj.detailData;
+						detailData = obj.detailData.datas;
 						// console.log('actionData:' + actionData);
 						// console.log('eventData:' + eventData);
 						// console.log('homeOfficeData:' + homeOfficeData);
 						// console.log('locationData:' + locationData);
 						// console.log('userLabels:' + userLabels);
-						// console.log('detailData:' + detailData);
+						//						 console.log('detailData:' + detailData);
 						// 换人业务逻辑完成后
 						$('#content').removeClass('hidden');
 						// 加载用户内容
@@ -1231,10 +1231,14 @@
 	function loadTimeLine() {
 		// 清空
 		$('.timeLineItem').remove();
-		// TODO 加载
-		for (var i = 0; i < timeLineData.length; i++) {
-			var month = timeLineData[i].start_datetime.slice(5, 10).split('-')[0];
-			var day = timeLineData[i].start_datetime.slice(5, 10).split('-')[1];
+		// 判断是否为空
+		if(detailData == undefined){
+			return;
+		}
+		// 加载
+		for (var i = 0; i < detailData.length; i++) {
+			var month = detailData[i].start_datetime.slice(5, 10).split('-')[0];
+			var day = detailData[i].start_datetime.slice(5, 10).split('-')[1];
 			if (month.indexOf('0') == 0) {
 				month = month.substr(1, 1);
 			}
@@ -1242,9 +1246,9 @@
 				day = day.substr(1, 1);
 			}
 			var date = month + '月' + day + '日';
-			var time = timeLineData[i].start_datetime.slice(11, 19);
-			var label = timeLineData[i].label;
-			var locationInfo = timeLineData[i].poi.title;
+			var time = detailData[i].start_datetime.slice(11, 19);
+			var label = detailData[i].label;
+			var locationInfo = detailData[i].poi.title;
 			var type; //0:路径,1:小地点,2:大地点
 			var eventInfo;
 			var src;
@@ -1374,17 +1378,20 @@
 			item.removeAttr('id');
 			item.removeClass('hidden');
 			item.addClass('timeLineItem');
-			item.find('img').attr('src', src);
-			item.find('img').attr('id', i);
-			item.find('img').hover(function() {
+			item.find('.img').attr('src', src);
+			item.find('.img').attr('id', i);
+			item.find('.img').hover(function() {
+				var position = $(this).parents('.item').position();
+				var offsetTop = position.top > 200 ? position.top - 230 : position.top + 110;
+				$('#timeLineChart').css('top', offsetTop);
 				// 弹出
 				var id = $(this).attr('id');
 				var motionData = {};
 				motionData.category = [];
 				motionData.data = [];
-				for (var i in timeLineData[id].motion_count) {
+				for (var i in detailData[id].motion_count) {
 					motionData.category.push(i);
-					motionData.data.push(timeLineData[id].motion_count[i]);
+					motionData.data.push(detailData[id].motion_count[i]);
 				}
 				popChart(motionData);
 			}, function() {
@@ -1412,6 +1419,7 @@
 				// 基于准备好的dom，初始化echarts图表
 				timeLineChart = ec.init(document.getElementById('timeLineChart'));
 				option = {
+					backgroundColor: '#ffffff',
 					xAxis: [{
 						type: 'category',
 						data: motionData.category,
