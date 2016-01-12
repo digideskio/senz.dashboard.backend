@@ -141,10 +141,10 @@
      "home_office_status_old": {
         "at_office": "contextAtWork",
         "at_home": "contextAtHome",
-        "leaving_home": "",
-        "leaving_office": "",
-        "arriving_home": "",
-        "arriving_office": "",
+        "leaving_home": "contextLeavingHome",
+        "leaving_office": "contextLeavingOffice",
+        "arriving_home": "contextArrivingHome",
+        "arriving_office": "contextArrivingOffice",
         "unknown_status": "unknown",
         "going_office": "contextCommutingWork",
         "going_home": "contextCommutingHome"
