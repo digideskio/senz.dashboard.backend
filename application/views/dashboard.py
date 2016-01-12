@@ -940,10 +940,12 @@ def get_attr_of_user(uid, h_start=None, h_end=None, e_start=None, e_end=None):
         "heatData": coordinate
     }
     detailData = []
+    print timeline.count()
     for x in timeline:
+        motion_count = x.get('motion_count') or {}
         x['motion_count'] = dict(map(lambda y: (translate(translate(y, "motion_old"), "motion"),
-                                                x.get('motion_count').get(y)), x.get('motion_count').keys()))
-        x['label'] = translate(translate(x.get('label'), "event_old"), "home_office_status_old")
+                                                motion_count.get(y)), motion_count.keys()))
+        x['label'] = translate(translate(x.get('label') or "", "event_old"), "home_office_status_old")
         print x.get('label'), x.get("motion_count")
         detailData.append(x)
     ret_dict['detailData'] = detailData
