@@ -166,7 +166,7 @@
 								<p style="margin-left: 22px;">公司地址 : <span id="officeAddress">北京市海淀南路苏州街纽约客公寓</span></p>
 							</div>
 						</div>
-						<div id="actionChart" style="margin-top: 15px;height:600px"></div>
+						<div id="actionChart" style="margin-top: 15px;height:600px" class="hidden"></div>
 						<span style="font-size: 22px;">常去地点</span>
 						<div id="locationChart" style="margin-left: 10px;margin-right: 10px;margin-top: 5px;height:600px"></div>
 					</div>
@@ -557,7 +557,7 @@
 				contentType: "application/json",
 				data: JSON.stringify(data),
 				success: function(option) {
-					//					 console.log(option);
+										 console.log(option);
 					var obj = JSON.parse(option);
 					actionData = obj.actionData;
 					eventData = obj.eventData;
@@ -773,7 +773,7 @@
 		// 加载图表
 		loadEventChart();
 		loadHomeOfficeChart();
-		loadActionChart();
+		//loadActionChart();
 		loadLocationChart();
 		loadTimeLine();
 		// 判断是否显示
@@ -1245,6 +1245,7 @@
 		if (detailData == undefined) {
 			return;
 		}
+        console.log(detailData)
 		// 加载
 		for (var i = 0; i < detailData.length; i++) {
 			var month, day, date, time, label, locationInfo, eventInfo, src, item;
@@ -1383,6 +1384,7 @@
 				break;
 			default:
 				src = "{{ url_for('static', filename='images/unknown.png') }}";
+                type = -1;
 				break;
 		}
 		switch (type) {
@@ -1403,7 +1405,7 @@
 		item.removeClass('hidden');
 		item.addClass('timeLineItem');
 		item.find('.img').attr('src', src);
-		item.find('.img').attr('id', i);
+{#		item.find('.img').attr('id', i);#}
 		if (type == 1 && motion_count != undefined) {
 			item.find('.img').hover(function() {
 				var position = $(this).parents('.item').position();

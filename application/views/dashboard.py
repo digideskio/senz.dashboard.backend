@@ -403,7 +403,9 @@ def single():
         h_end = request.json.get('h_end')
         e_start = request.json.get('e_start')
         e_end = request.json.get('e_end')
-        ret_dict = get_attr_of_user(uid, h_start=h_start, h_end=h_end, e_start=e_start, e_end=e_end)
+        workday = request.json.get('workday')
+        ret_dict = get_attr_of_user(uid, h_start=h_start, h_end=h_end,
+                                    e_start=e_start, e_end=e_end, workday=workday == 'workday')
         return dumps(ret_dict)
     return render_template('dashboard/single-user-motion.html',
                            username=username, app_id=app_id, app_list=app_list)
@@ -571,8 +573,8 @@ def get_fake_data_of_user(uid):
             "toHomeData": [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,22,0,0,0,0,0,0,0,0],
             "toOfficeData": [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,22,0,0,0,0,0,0,0,0],
             "property": {
-                "avg_start": "7:10",
-                "avg_end": "19:50",
+                "avg_start": "19:50",
+                "avg_end": "7:10",
                 "combo_start": "8:40",
                 "combo_end": "17:20",
                 "duration": "8小时30分钟",
@@ -587,8 +589,8 @@ def get_fake_data_of_user(uid):
             "toHomeData": [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
             "toOfficeData": [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
             "property": {
-                "avg_start": "6:30",
-                "avg_end": "16:50",
+                "avg_start": "16:50",
+                "avg_end": "6:30",
                 "combo_start": "6:40",
                 "combo_end": "16:20",
                 "duration": "9小时40分钟",
@@ -603,8 +605,8 @@ def get_fake_data_of_user(uid):
             "toHomeData": [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,22,0,0,0,0,0,0,0,0],
             "toOfficeData": [0,0,0,0,0,0,0,22,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
             "property": {
-                "avg_start": "7:10",
-                "avg_end": "19:50",
+                "avg_start": "19:50",
+                "avg_end": "7:10",
                 "combo_start": "8:40",
                 "combo_end": "17:20",
                 "duration": "8小时30分钟",
@@ -619,8 +621,8 @@ def get_fake_data_of_user(uid):
             "toHomeData": [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,22,0],
             "toOfficeData": [0,0,0,0,0,0,0,0,22,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
             "property": {
-                "avg_start": "7:00",
-                "avg_end": "22:30",
+                "avg_start": "22:30",
+                "avg_end": "7:00",
                 "combo_start": "8:30",
                 "combo_end": "21:00",
                 "duration": "12小时30分钟",
@@ -832,7 +834,7 @@ def get_motion_stastic(motion, motion_counts):
     return action_data
 
 
-def get_attr_of_user(uid, h_start=None, h_end=None, e_start=None, e_end=None):
+def get_attr_of_user(uid, h_start=None, h_end=None, e_start=None, e_end=None, workday=True):
     ret_dict = {}
     if uid.startswith("user"):
         return get_fake_data_of_user(uid)
@@ -940,14 +942,13 @@ def get_attr_of_user(uid, h_start=None, h_end=None, e_start=None, e_end=None):
         "heatData": coordinate
     }
     detailData = []
-    print timeline.count()
     for x in timeline:
         motion_count = x.get('motion_count') or {}
         x['motion_count'] = dict(map(lambda y: (translate(translate(y, "motion_old"), "motion"),
                                                 motion_count.get(y)), motion_count.keys()))
         x['label'] = translate(translate(x.get('label') or "", "event_old"), "home_office_status_old")
-        print x.get('label'), x.get("motion_count")
         detailData.append(x)
+    print detailData
     ret_dict['detailData'] = detailData
     return ret_dict
 
