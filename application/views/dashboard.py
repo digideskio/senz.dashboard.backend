@@ -854,7 +854,7 @@ def get_attr_of_user(uid, h_start=None, h_end=None, e_start=None, e_end=None, wo
     avg_query = Query(DashboardStatistics)
     counts = avg_query.find()
 
-    timeline = CombinedTimelines.find({"user_id": uid}) or []
+    timeline = CombinedTimelines.find({"user_id": uid}).sort("start_datetime", -1) or []
 
     labels = map(lambda x: attrs.attributes.get(x), type_list)
     user_labels = [y for x in filter(lambda y: y, labels) for y in x if isinstance(x, list)]
@@ -948,7 +948,6 @@ def get_attr_of_user(uid, h_start=None, h_end=None, e_start=None, e_end=None, wo
                                                 motion_count.get(y)), motion_count.keys()))
         x['label'] = translate(translate(x.get('label') or "", "event_old"), "home_office_status_old")
         detailData.append(x)
-    print detailData
     ret_dict['detailData'] = detailData
     return ret_dict
 
