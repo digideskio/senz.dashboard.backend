@@ -61,6 +61,7 @@
         "contextAtClassicsConcert": "音乐会",
         "contextRelaxing": "休息",
         "contextTakingSubway": "乘地铁",
+        "contextEntertaining": "娱乐",
         "unknown": "未知"
         },
     "occupation": {
@@ -162,6 +163,8 @@
         "shopping_in_mall": "contextWindowShopping",
         "exercise_indoor": "contextIndoorExercise",
         "relaxing": "contextRelaxing",
+        "entertainment": "contextEntertaining",
+        "entertainments": "contextEntertaining",
         "contextShortTrip": "contextGoingOut",
         "ContextCommuting": "contextGoingOut",
         "contextCommuting": "contextGoingOut",

@@ -879,7 +879,7 @@ def get_attr_of_user(uid, h_start=None, h_end=None, e_start=None, e_end=None, wo
     event = dict(filter(lambda x: str(e_start) < str(x[0]) < str(e_end), event.items()))
     event_np = list(set(event.values()))
     event_data = {
-        "category": map(lambda x: translate(x, "context"), event_np),
+        "category": map(lambda x: translate(translate(x, "event_old"), "context"), event_np),
         "data": map(lambda x: event.values().count(x), event_np),
         "avg": map(lambda x: (event_count.get(x) or 0)/user_count, event_np)
     }
