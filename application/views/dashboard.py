@@ -902,7 +902,7 @@ def get_attr_of_user(uid, h_start=None, h_end=None, e_start=None, e_end=None, wo
     home_office = dict(filter(lambda x: str(h_start) < str(x[0]) < str(h_end) and
                                         time.localtime(int(x[0]))[6] < workday_limit, home_office.items()))
     try:
-        home_office_property = requests.get("http://api.trysenz.com/get_home_office/user_id/" + uid)
+        home_office_property = requests.get("http://api.trysenz.com/stalker/get_home_office/user_id/" + uid)
         home_office_property = json.loads(home_office_property.content) if home_office_property.status_code == 200 else {}
     except Exception, e:
         print e

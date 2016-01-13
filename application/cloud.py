@@ -40,12 +40,12 @@ def parse_motion_info(motion_obj):
     ret_dict['user_id'] = user_id
     timestamp = motion_obj.get('timestamp') or None
     motion_prob = motion_obj.get('motionProb') or {}
-    motion = translate(sorted(filter(lambda x: x is not None, motion_prob.items()),
-                              key=lambda v: -v[1])[0][0], 'motion_old')
-    ret_dict['motion'] = {
-        timestamp:  motion
-    }
-    post_panel_data(tracker=user_id, motion_type='motion', motion_val=motion, timestamp=timestamp)
+    print motion_prob
+    motion_prob = sorted(filter(lambda x: x, motion_prob.items()), key=lambda v: -v[1])
+    motion = translate(motion_prob[0][0] if motion_prob else "", 'motion_old')
+    if motion:
+        ret_dict['motion'] = {timestamp:  motion}
+        post_panel_data(tracker=user_id, motion_type='motion', motion_val=motion, timestamp=timestamp)
     return ret_dict
 
 

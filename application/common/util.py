@@ -2,7 +2,7 @@ import time
 import json
 import requests
 from os.path import dirname, join
-from leancloud import Query, Object
+from leancloud import Query, Object, LeanCloudError
 
 Installation = Object.extend('BindingInstallation')
 
@@ -16,7 +16,10 @@ def get_installationid_by_trackerid(tracker_id=None):
     }
     query.equal_to('user', user)
     query.descending('updatedAt')
-    installation = query.first() or {}
+    try:
+        installation = query.first() or {}
+    except LeanCloudError:
+        installation = {}
     return installation.id, installation.get('deviceType')
 
 
