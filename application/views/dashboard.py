@@ -898,7 +898,9 @@ def get_attr_of_user(uid, h_start=None, h_end=None, e_start=None, e_end=None, wo
     ret_dict['actionData'] = get_motion_stastic(motion, motion_counts)
 
     home_office = attrs.attributes.get('home_office_status') or {}
-    home_office = dict(filter(lambda x: str(h_start) < str(x[0]) < str(h_end), home_office.items()))
+    workday_limit = 5 if workday else 7
+    home_office = dict(filter(lambda x: str(h_start) < str(x[0]) < str(h_end) and
+                                        time.localtime(int(x[0]))[6] < workday_limit, home_office.items()))
     try:
         home_office_property = requests.get("http://api.trysenz.com/get_home_office/user_id/" + uid)
         home_office_property = json.loads(home_office_property.content) if home_office_property.status_code == 200 else {}
