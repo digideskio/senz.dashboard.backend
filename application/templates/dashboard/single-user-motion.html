@@ -184,8 +184,8 @@
 						</div>
 						<div class="col-xs-2" style="padding: 0;position:relative;height: 190px;">
 							<img src="{{ url_for('static', filename='images/timeline-line.png') }}" style="width: 5px;height: 190px;left: 50%;position:absolute;z-index: 1;" />
-							<img src="{{ url_for('static', filename='images/timeline-big.png') }}" style="width: 59px;height: 189px;position:absolute;z-index: 100;left: 6%;" />
-							<img class="img" src="{{ url_for('static', filename='images/unknown.png') }}" style="width: 25px;height: 25px;position:absolute;z-index: 999;left: 35%;top:80px" />
+							<img src="{{ url_for('static', filename='images/timeline-big.png') }}" style="width: 59px;height: 189px;position:absolute;z-index: 100;left: 6%;top: 5px" />
+							<img class="img" src="{{ url_for('static', filename='images/unknown.png') }}" style="width: 25px;height: 25px;position:absolute;z-index: 999;left: 35%;top:90px" />
 						</div>
 						<div class="col-xs-7 timeline-item-big" style="padding-right: 0;">
 							<span class="eventInfo">在公司</span>
@@ -203,8 +203,8 @@
 						</div>
 						<div class="col-xs-2" style="padding: 0;position:relative;height: 100px;">
 							<img src="{{ url_for('static', filename='images/timeline-line.png') }}" style="width: 5px;height: 100px;left: 50%;position:absolute;z-index: 1;" />
-							<img src="{{ url_for('static', filename='images/timeline-small.png') }}" style="width: 59px;height: 94px;position:absolute;z-index: 100;left: 6%;top: 18px;" />
-							<img class="img" src="{{ url_for('static', filename='images/unknown.png') }}" style="width: 25px;height: 25px;position:absolute;z-index: 999;left: 35%;top:45px" />
+							<img src="{{ url_for('static', filename='images/timeline-small.png') }}" style="width: 59px;height: 94px;position:absolute;z-index: 100;left: 6%;top: 5px;" />
+							<img class="img" src="{{ url_for('static', filename='images/unknown.png') }}" style="width: 25px;height: 25px;position:absolute;z-index: 999;left: 35%;top:40px" />
 						</div>
 						<div class="col-xs-7 timeline-item-small" style="padding-right: 0;">
 							<span class="eventInfo">在公司</span>
@@ -582,7 +582,7 @@
 					homeOfficeData = obj.homeOfficeData;
 					locationData = obj.locationData;
 					userLabels = obj.userLabels;
-								detailData = obj.detailData;
+					detailData = obj.detailData;
 					// console.log('actionData:' + actionData);
 					// console.log('eventData:' + eventData);
 					// console.log('homeOfficeData:' + homeOfficeData);
@@ -628,7 +628,7 @@
 					homeOfficeData = obj.homeOfficeData;
 					locationData = obj.locationData;
 					userLabels = obj.userLabels;
-							detailData = obj.detailData;
+					detailData = obj.detailData;
 					// console.log('actionData:' + actionData);
 					// console.log('eventData:' + eventData);
 					// console.log('homeOfficeData:' + homeOfficeData);
@@ -761,7 +761,7 @@
 						homeOfficeData = obj.homeOfficeData;
 						locationData = obj.locationData;
 						userLabels = obj.userLabels;
-											detailData = obj.detailData;
+						detailData = obj.detailData;
 						// console.log('actionData:' + actionData);
 						// console.log('eventData:' + eventData);
 						// console.log('homeOfficeData:' + homeOfficeData);
@@ -1265,20 +1265,6 @@
 		}
 		// 加载
 		for (var i = 0; i < detailData.length; i++) {
-			//			// 判断是否显示start
-			//			if (i >= 1 && detailData[i - 1].end_hos == detailData[i].start_hos) {
-			//				// 省略
-			//			} else {
-			//				// 显示
-			//				loadItem(detailData[i].start_ts, detailData[i].start_hos, detailData[i].start_location.title);
-			//			}
-			//			// 显示event
-			//			for (var j = 0; j < detailData[i].event_timeline.length; j++) {
-			//				var obj = detailData[i].event_timeline[j];
-			//				loadItem(obj.start_ts, obj.label, obj.start_location.title, obj.motion_count);
-			//			}
-			//			// 显示end
-			//			loadItem(detailData[i].end_ts, detailData[i].end_hos, detailData[i].end_location.title);
 			// 显示
 			loadItem(detailData[i].start_ts, detailData[i].label, detailData[i].start_location.title, detailData[i].motion_count, i);
 		}
@@ -1425,8 +1411,12 @@
 		item.find('.img').attr('src', src);
 		item.find('.img').attr('id', index);
 		item.find('.img').hover(function() {
-			var position = $(this).parents('.item').position();
-			var offsetTop = position.top > 200 ? position.top - 230 : position.top + 110;
+			var offsetTop = $(this).parents('.item').parent().scrollTop() + $(this).parents('.item').position().top;
+			if (offsetTop < 200) {
+				offsetTop = offsetTop + 130;
+			} else {
+				offsetTop = offsetTop - 250;
+			}
 			$('#timeLineChart').css('top', offsetTop);
 			// 弹出
 			var id = $(this).attr('id');
