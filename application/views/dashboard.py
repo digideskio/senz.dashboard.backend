@@ -805,8 +805,10 @@ def get_fake_data_of_user(uid):
     fake_data = json.load(file(join(dirname(dirname(__file__)), 'fake_data.json')))
     detail_data = fake_data.get("detailData")
     for de in detail_data:
+        print de.get('start_ts')
         de['start_ts'] = (int(time.mktime((time.localtime()[0], time.localtime()[1], time.localtime()[2],
                                           8, 39, 0, 0, 0, 0))) - int(de.get('start_ts')))*1000
+        print de.get('start_ts')
     ret_dict['userLabels'] = user_labels[u_index]
     ret_dict['eventData'] = eventDatas[u_index]
     ret_dict['actionData'] = actionDatas[u_index]
