@@ -801,12 +801,19 @@ def get_fake_data_of_user(uid):
 
     for item in type_list:
         user_labels[u_index] = map(lambda x: translate(x, item), user_labels[u_index])
+
+    fake_data = json.load(file(join(dirname(dirname(__file__)), 'fake_data.json')))
+    detail_data = fake_data.get("detailData")
+    for de in detail_data:
+        de['start_ts'] = (int(time.mktime((time.localtime()[0], time.localtime()[1], time.localtime()[2],
+                                          8, 39, 0, 0, 0, 0))) - int(de.get('start_ts')))*1000
     ret_dict['userLabels'] = user_labels[u_index]
     ret_dict['eventData'] = eventDatas[u_index]
     ret_dict['actionData'] = actionDatas[u_index]
     ret_dict['homeOfficeData'] = homeOfficeDatas[u_index]
     ret_dict['locationData'] = locationDatas[u_index]
-    ret_dict['detailData'] = detailDatas[u_index]
+    print detail_data
+    ret_dict['detailData'] = detail_data
     return ret_dict
 
 
