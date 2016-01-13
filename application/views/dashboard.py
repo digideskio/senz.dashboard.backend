@@ -812,7 +812,6 @@ def get_fake_data_of_user(uid):
     ret_dict['actionData'] = actionDatas[u_index]
     ret_dict['homeOfficeData'] = homeOfficeDatas[u_index]
     ret_dict['locationData'] = locationDatas[u_index]
-    print detail_data
     ret_dict['detailData'] = detail_data
     return ret_dict
 
