@@ -894,7 +894,7 @@ def get_attr_of_user(uid, h_start=None, h_end=None, e_start=None, e_end=None, wo
     home_office = attrs.attributes.get('home_office_status') or {}
     home_office = dict(filter(lambda x: str(h_start) < str(x[0]) < str(h_end), home_office.items()))
     try:
-        home_office_property = requests.get("http://112.126.80.78:9010/stalker/get_home_office/user_id/" + uid)
+        home_office_property = requests.get("http://api.trysenz.com/get_home_office/user_id/" + uid)
         home_office_property = json.loads(home_office_property.content) if home_office_property.status_code == 200 else {}
     except Exception, e:
         print e
@@ -947,7 +947,7 @@ def get_attr_of_user(uid, h_start=None, h_end=None, e_start=None, e_end=None, wo
         x['motion_count'] = dict(map(lambda y: (translate(translate(y, "motion_old"), "motion"),
                                                 motion_count.get(y)), motion_count.keys()))
         x['label'] = translate(translate(x.get('label') or "", "event_old"), "home_office_status_old")
-        # print x['label'], x['motion_count']
+        print x['label'], x['motion_count']
         detailData.append(x)
     ret_dict['detailData'] = detailData
     return ret_dict
