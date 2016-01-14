@@ -5,9 +5,11 @@ from os.path import dirname, join
 from leancloud import Query, Object, LeanCloudError
 
 Installation = Object.extend('BindingInstallation')
+User = Object.extend('User')
 
 
 def get_installationid_by_trackerid(tracker_id=None):
+    print "tracker_id", tracker_id
     query = Query(Installation)
     user = {
         "__type": "Pointer",
@@ -16,11 +18,15 @@ def get_installationid_by_trackerid(tracker_id=None):
     }
     query.equal_to('user', user)
     query.descending('updatedAt')
-    try:
-        installation = query.first() or {}
-    except LeanCloudError:
-        installation = {}
-    return installation.get('objectId'), installation.get('deviceType')
+    print "query.count", query.count()
+    installation = query.find()[0] if query.count() else {}
+    # try:
+    #     installation = query.first() or {}
+    # except LeanCloudError:
+    #     installation = {}
+    print "query Installaton", installation
+    print "query Installaton", installation.id
+    return installation.id, installation.get('deviceType')
 
 
 def push_ios_message(installation_id, content_type, value, timestamp, source=None):
@@ -40,7 +46,7 @@ def push_ios_message(installation_id, content_type, value, timestamp, source=Non
     }
     print "push_ios_message", body
     rep = requests.post(url, headers=headers, data=body)
-    print rep
+    print type(rep), rep, rep.status_code, rep.content
 
 
 def post_panel_data(**param):
@@ -63,7 +69,7 @@ def post_panel_data(**param):
                "X-AVOSCloud-Application-Key": "6z6n0w3dopxmt32oi2eam2dt0orh8rxnqc8lgpf2hqnar4tr"}
     for item in tracker_list:
         installation = get_installationid_by_trackerid(item)
-        print installation
+        print "installation", installation
         payload = {"userId": item, "source": source, "timestamp": timestamp}
         if motion_type and motion_val:
             payload["type"] = motion_type
@@ -84,7 +90,7 @@ def post_panel_data(**param):
             if installation[1] == u'ios':
                 push_ios_message(installation[0], "event", context_val, timestamp, source=source)
             requests.post("https://leancloud.cn/1.1/functions/notify_new_details",  headers=headers, data=payload)
-        print payload
+        print "payload", payload
 
 
 def translate(target, arg):
