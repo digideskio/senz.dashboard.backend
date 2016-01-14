@@ -20,12 +20,13 @@ def get_installationid_by_trackerid(tracker_id=None):
         installation = query.first() or {}
     except LeanCloudError:
         installation = {}
-    return installation.id, installation.get('deviceType')
+    return installation.get('objectId'), installation.get('deviceType')
 
 
 def push_ios_message(installation_id, content_type, value, timestamp, source=None):
     url = "https://leancloud.cn/1.1/functions/pushAPNMessage"
     headers = {
+        "Content-Type": "application/json",
         "X-AVOSCloud-Application-Id": "9ra69chz8rbbl77mlplnl4l2pxyaclm612khhytztl8b1f9o",
         "X-AVOSCloud-Application-Key": "1zohz2ihxp9dhqamhfpeaer8nh1ewqd9uephe9ztvkka544b"
     }
@@ -37,8 +38,9 @@ def push_ios_message(installation_id, content_type, value, timestamp, source=Non
         "probability": 1,
         "installationId": installation_id
     }
-    print body
-    requests.post(url, headers=headers, data=body)
+    print "push_ios_message", body
+    rep = requests.post(url, headers=headers, data=body)
+    print rep
 
 
 def post_panel_data(**param):
