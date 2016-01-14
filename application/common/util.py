@@ -44,7 +44,7 @@ def push_ios_message(installation_id, content_type, value, timestamp, source=Non
         "installationId": installation_id
     }
     print "push_ios_message", body
-    rep = requests.post(url, headers=headers, data=body)
+    rep = requests.post(url, headers=headers, data=json.dumps(body))
     print type(rep), rep, rep.status_code, rep.content
 
 
@@ -75,20 +75,23 @@ def post_panel_data(**param):
             payload["val"] = motion_val
             if installation[1] == u'ios':
                 push_ios_message(installation[0], motion_type, motion_val, timestamp, source=source)
-            requests.post("https://leancloud.cn/1.1/functions/notify_new_details",  headers=headers, data=payload)
+            print requests.post("https://leancloud.cn/1.1/functions/notify_new_details",
+                                headers=headers, data=json.dumps(payload))
         if context_type and context_val and context_val in home_office_type:
             payload["type"] = "home_office_status"
             payload["val"] = context_val
             payload["expire"] = expire
             if installation[1] == u'ios':
                 push_ios_message(installation[0], "home_office_status", context_val, timestamp, source=source)
-            requests.post("https://leancloud.cn/1.1/functions/notify_new_details", headers=headers, data=payload)
+            print requests.post("https://leancloud.cn/1.1/functions/notify_new_details",
+                                headers=headers, data=json.dumps(payload))
         elif context_type and context_val and context_val not in home_office_type:
             payload["type"] = "event"
             payload["val"] = context_val
             if installation[1] == u'ios':
                 push_ios_message(installation[0], "event", context_val, timestamp, source=source)
-            requests.post("https://leancloud.cn/1.1/functions/notify_new_details",  headers=headers, data=payload)
+            print requests.post("https://leancloud.cn/1.1/functions/notify_new_details",
+                                headers=headers, data=json.dumps(payload))
         print "payload", payload
 
 
