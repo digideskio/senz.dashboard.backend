@@ -7,26 +7,25 @@ from leancloud import Query, Object, LeanCloudError
 Installation = Object.extend('BindingInstallation')
 User = Object.extend('User')
 
+user_to_installation = {}
+
 
 def get_installationid_by_trackerid(tracker_id=None):
     print "tracker_id", tracker_id
-    query = Query(Installation)
-    user = {
-        "__type": "Pointer",
-        "className": "_User",
-        "objectId": tracker_id
-    }
-    query.equal_to('user', user)
-    query.descending('updatedAt')
-    print "query.count", query.count()
-    installation = query.find()[0] if query.count() else {}
-    # try:
-    #     installation = query.first() or {}
-    # except LeanCloudError:
-    #     installation = {}
-    print "query Installaton", installation
-    print "query Installaton", installation.id
-    return installation.id, installation.get('deviceType')
+    if not user_to_installation.get(tracker_id):
+        query = Query(Installation)
+        user = {
+            "__type": "Pointer",
+            "className": "_User",
+            "objectId": tracker_id
+        }
+        query.equal_to('user', user)
+        query.descending('updatedAt')
+        print "query.count", query.count()
+        installation = query.find()[0] if query.count() else {}
+        print "query Installaton", installation.id
+        user_to_installation[tracker_id] = [installation.id, installation.get('deviceType')]
+    return user_to_installation.get(tracker_id)
 
 
 def push_ios_message(installation_id, content_type, value, timestamp, source=None):
@@ -52,11 +51,11 @@ def push_ios_message(installation_id, content_type, value, timestamp, source=Non
 def post_panel_data(**param):
     tracker = param.get('tracker')
     tracker_list = param.get('tracker_list')
-    motion_type = param.get('motion_type')
-    motion_val = param.get('motion_val')
-    context_type = param.get('context_type')
-    context_val = param.get('context_val')
-    source = param.get('source')
+    motion_type = param.get('motion_type') or ""
+    motion_val = param.get('motion_val') or ""
+    context_type = param.get('context_type') or ""
+    context_val = param.get('context_val') or ""
+    source = param.get('source') or ""
     timestamp = param.get('timestamp') or int(time.time()*1000)
     expire = param.get('expire')
 
