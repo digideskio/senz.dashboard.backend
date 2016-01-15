@@ -2,7 +2,7 @@ import time
 import json
 import requests
 from os.path import dirname, join
-from leancloud import Query, Object, LeanCloudError
+from leancloud import Query, Object
 
 Installation = Object.extend('BindingInstallation')
 User = Object.extend('User')
@@ -31,19 +31,19 @@ def get_installationid_by_trackerid(tracker_id=None):
 def push_ios_message(installation_id, content_type, value, timestamp, source=None):
     url = "https://leancloud.cn/1.1/functions/pushAPNMessage"
     headers = {
+        "Content-Type": "application/json",
         "X-AVOSCloud-Application-Id": "9ra69chz8rbbl77mlplnl4l2pxyaclm612khhytztl8b1f9o",
         "X-AVOSCloud-Application-Key": "1zohz2ihxp9dhqamhfpeaer8nh1ewqd9uephe9ztvkka544b"
     }
     body = {
         "type": content_type,
-        "source": source,
         "status": value,
         "timestamp": timestamp,
         "probability": 1,
         "installationId": installation_id
     }
     print "push_ios_message", body
-    rep = requests.post(url, headers=headers, data=body)
+    rep = requests.post(url, headers=headers, data=json.dumps(body))
     print type(rep), rep, rep.status_code, rep.content
 
 
