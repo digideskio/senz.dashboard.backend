@@ -43,7 +43,7 @@ def push_ios_message(installation_id, content_type, value, timestamp, source=Non
         "installationId": installation_id
     }
     print "push_ios_message", body
-    rep = requests.post(url, headers=headers, data=json.dumps(body))
+    rep = requests.post(url, headers=headers, data=body)
     print type(rep), rep, rep.status_code, rep.content
 
 
@@ -76,7 +76,7 @@ def post_panel_data(**param):
                 push_ios_message(installation[0], motion_type, motion_val, timestamp, source=source)
             rep = requests.post("https://leancloud.cn/1.1/functions/notify_new_details",
                                 headers=headers, data=payload)
-            print "motion", rep
+            print "motion", rep, rep.status_code, rep.content
         if context_type and context_val and context_val in home_office_type:
             payload["type"] = "home_office_status"
             payload["val"] = context_val
@@ -85,7 +85,7 @@ def post_panel_data(**param):
                 push_ios_message(installation[0], "home_office_status", context_val, timestamp, source=source)
             rep = requests.post("https://leancloud.cn/1.1/functions/notify_new_details",
                                 headers=headers, data=payload)
-            print "home_office_status", rep
+            print "home_office_status", rep, rep.status_code, rep.content
         elif context_type and context_val and context_val not in home_office_type:
             payload["type"] = "event"
             payload["val"] = context_val
@@ -93,7 +93,7 @@ def post_panel_data(**param):
                 push_ios_message(installation[0], "event", context_val, timestamp, source=source)
             rep = requests.post("https://leancloud.cn/1.1/functions/notify_new_details",
                                 headers=headers, data=payload)
-            print "event", rep
+            print "event", rep, rep.status_code, rep.content
         print "payload", payload
 
 
@@ -101,3 +101,19 @@ def translate(target, arg):
     f = file(join(dirname(dirname(__file__)), 'translate.json'))
     s = json.load(f)
     return s.get(arg).get(target) or target
+
+
+if __name__ == '__main__':
+    msg = {
+        "status": "contextAtWork",
+        "probability": 1,
+        "timestamp": 1452876156178,
+        "source": "",
+        "installationId": "4Y5KKBtB7TuPrAiQd14xE1EarhJu0EQ0",
+        "type": "home_office_status"
+    }
+    push_ios_message(msg.get("installationId"),
+                     msg.get("type"),
+                     msg.get("status"),
+                     msg.get("timestamp"))
+
