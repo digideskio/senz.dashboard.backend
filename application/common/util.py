@@ -31,7 +31,6 @@ def get_installationid_by_trackerid(tracker_id=None):
 def push_ios_message(installation_id, content_type, value, timestamp, source=None):
     url = "https://leancloud.cn/1.1/functions/pushAPNMessage"
     headers = {
-        "Content-Type": "application/json",
         "X-AVOSCloud-Application-Id": "9ra69chz8rbbl77mlplnl4l2pxyaclm612khhytztl8b1f9o",
         "X-AVOSCloud-Application-Key": "1zohz2ihxp9dhqamhfpeaer8nh1ewqd9uephe9ztvkka544b"
     }
@@ -75,23 +74,26 @@ def post_panel_data(**param):
             payload["val"] = motion_val
             if installation[1] == u'ios':
                 push_ios_message(installation[0], motion_type, motion_val, timestamp, source=source)
-            print requests.post("https://leancloud.cn/1.1/functions/notify_new_details",
-                                headers=headers, data=json.dumps(payload))
+            rep = requests.post("https://leancloud.cn/1.1/functions/notify_new_details",
+                                headers=headers, data=payload)
+            print "motion", rep
         if context_type and context_val and context_val in home_office_type:
             payload["type"] = "home_office_status"
             payload["val"] = context_val
             payload["expire"] = expire
             if installation[1] == u'ios':
                 push_ios_message(installation[0], "home_office_status", context_val, timestamp, source=source)
-            print requests.post("https://leancloud.cn/1.1/functions/notify_new_details",
-                                headers=headers, data=json.dumps(payload))
+            rep = requests.post("https://leancloud.cn/1.1/functions/notify_new_details",
+                                headers=headers, data=payload)
+            print "home_office_status", rep
         elif context_type and context_val and context_val not in home_office_type:
             payload["type"] = "event"
             payload["val"] = context_val
             if installation[1] == u'ios':
                 push_ios_message(installation[0], "event", context_val, timestamp, source=source)
-            print requests.post("https://leancloud.cn/1.1/functions/notify_new_details",
-                                headers=headers, data=json.dumps(payload))
+            rep = requests.post("https://leancloud.cn/1.1/functions/notify_new_details",
+                                headers=headers, data=payload)
+            print "event", rep
         print "payload", payload
 
 
