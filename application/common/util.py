@@ -104,6 +104,12 @@ def translate(target, arg):
 
 
 if __name__ == '__main__':
+    msg = {'status': u'contextAtHome', 'probability': 1, 'timestamp': 1452848189611, 'source': '',
+           'installationId': u'ntK466fF6qCfJeYLwGYJ8od5L8n1gwXD', 'type': 'home_office_status'}
+    push_ios_message(msg.get("installationId"), msg.get("type"), msg.get("status"), msg.get("timestamp"))
+
+
+if __name__ == '__main__':
     msg = {
         "status": "contextAtWork",
         "probability": 1,
