@@ -22,6 +22,9 @@ def show():
     app_list = developer.get_app_list()
     tracker_list = developer.get_tracker_of_app(app_id)
 
+    s = json.load(file(join(dirname(dirname(__file__)), 'translate.json')))
+    home_office_type = s.get("home_office_status").keys() + s.get("home_office_status_old").keys()
+
     if request.method == 'POST':
         tracker = request.form.get('tracker')
         motion_type = request.form.get('motionType')
@@ -29,13 +32,16 @@ def show():
         context_type = request.form.get('contextType')
         context_val = request.form.get('contextVal')
         source = request.form.get('source')
-        post_panel_data(tracker=tracker,
-                        tracker_list=tracker_list,
-                        motion_type=motion_type,
-                        motion_val=motion_val,
-                        context_type=context_type,
-                        context_val=context_val,
-                        source=source)
+        if motion_type and motion_val:
+            post_panel_data(tracker=tracker, tracker_list=tracker_list,
+                            type="motion", value=motion_val, source=source)
+        if context_type and context_val and context_type in home_office_type:
+            post_panel_data(tracker=tracker, tracker_list=tracker_list,
+                            type="home_office_status", value=context_val, source=source)
+        if context_type and context_val and context_type not in home_office_type:
+            post_panel_data(tracker=tracker, tracker_list=tracker_list,
+                            type="event", value=context_val, source=source)
+
     motion_list = ['motionSitting', 'motionWalking', 'motionRunning', 'motionBiking', 'motionCommuting']
     f = file(join(dirname(dirname(__file__)), 'translate.json'))
     context_list = filter(lambda x: str(x) != '', json.load(f).get('context').keys())

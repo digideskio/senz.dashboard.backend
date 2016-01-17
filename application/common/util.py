@@ -40,61 +40,51 @@ def push_ios_message(installation_id, content_type, value, timestamp, source=Non
         "status": value,
         "timestamp": timestamp,
         "probability": 1,
+        "source": source or "",
         "installationId": installation_id
     }
     print "push_ios_message", body
     rep = requests.post(url, headers=headers, data=json.dumps(body))
-    print type(rep), rep, rep.status_code, rep.content
+    print "push_ios_message", rep, rep.content
+
+
+def push_android_message(uid, feature, value, timestamp, expire=None, source=None):
+    url = "https://leancloud.cn/1.1/functions/notify_new_details"
+    headers = {
+        "Content-Type": "application/json",
+        "X-AVOSCloud-Application-Id": "wsbz6p3ouef94ubvsdqk2jfty769wkyed3qsry5hebi2va2h",
+        "X-AVOSCloud-Application-Key": "6z6n0w3dopxmt32oi2eam2dt0orh8rxnqc8lgpf2hqnar4tr"
+    }
+    body = {
+        "type": feature,
+        "val": value,
+        "timestamp": timestamp,
+        "userId": uid,
+        "source": source or "",
+        "expire": expire or ""
+    }
+    print "push_android_message", body
+    rep = requests.post(url, headers=headers, data=json.dumps(body))
+    print "push_android_message", rep, rep.content
 
 
 def post_panel_data(**param):
     tracker = param.get('tracker')
     tracker_list = param.get('tracker_list')
-    motion_type = param.get('motion_type') or ""
-    motion_val = param.get('motion_val') or ""
-    context_type = param.get('context_type') or ""
-    context_val = param.get('context_val') or ""
     source = param.get('source') or ""
     timestamp = param.get('timestamp') or int(time.time()*1000)
-    expire = param.get('expire')
-
-    s = json.load(file(join(dirname(dirname(__file__)), 'translate.json')))
-    home_office_type = s.get("home_office_status").keys() + s.get("home_office_status_old").keys()
+    feature = param.get('type')
+    value = param.get('value')
 
     if tracker != 'all':
         tracker_list = [tracker]
-    headers = {"X-AVOSCloud-Application-Id": "wsbz6p3ouef94ubvsdqk2jfty769wkyed3qsry5hebi2va2h",
-               "X-AVOSCloud-Application-Key": "6z6n0w3dopxmt32oi2eam2dt0orh8rxnqc8lgpf2hqnar4tr"}
-    for item in tracker_list:
-        installation = get_installationid_by_trackerid(item)
-        print "installation", installation
-        payload = {"userId": item, "source": source, "timestamp": timestamp}
-        if motion_type and motion_val:
-            payload["type"] = motion_type
-            payload["val"] = motion_val
+    for uid in tracker_list:
+        if feature and value:
+            installation = get_installationid_by_trackerid(uid)
+            print "installation", installation
             if installation[1] == u'ios':
-                push_ios_message(installation[0], motion_type, motion_val, timestamp, source=source)
-            rep = requests.post("https://leancloud.cn/1.1/functions/notify_new_details",
-                                headers=headers, data=payload)
-            print "motion", rep, rep.status_code, rep.content
-        if context_type and context_val and context_type in home_office_type:
-            payload["type"] = "home_office_status"
-            payload["val"] = context_val
-            payload["expire"] = expire
-            if installation[1] == u'ios':
-                push_ios_message(installation[0], "home_office_status", context_val, timestamp, source=source)
-            rep = requests.post("https://leancloud.cn/1.1/functions/notify_new_details",
-                                headers=headers, data=payload)
-            print "home_office_status", rep, rep.status_code, rep.content
-        elif context_type and context_val and context_type not in home_office_type:
-            payload["type"] = "event"
-            payload["val"] = context_val
-            if installation[1] == u'ios':
-                push_ios_message(installation[0], "event", context_val, timestamp, source=source)
-            rep = requests.post("https://leancloud.cn/1.1/functions/notify_new_details",
-                                headers=headers, data=payload)
-            print "event", rep, rep.status_code, rep.content
-        print "payload", payload
+                push_ios_message(installation[0], feature, value, timestamp, source=source)
+            push_android_message(uid, feature, value, timestamp, source=source)
 
 
 def translate(target, arg):
@@ -104,22 +94,12 @@ def translate(target, arg):
 
 
 if __name__ == '__main__':
-    msg = {'status': u'contextAtHome', 'probability': 1, 'timestamp': 1452848189611, 'source': '',
-           'installationId': u'ntK466fF6qCfJeYLwGYJ8od5L8n1gwXD', 'type': 'home_office_status'}
-    push_ios_message(msg.get("installationId"), msg.get("type"), msg.get("status"), msg.get("timestamp"))
+    msg = {'source': '', 'type': 'motion', 'userId': u'5624d68460b2b199f7628914',
+           'val': u'motionWalking', 'timestamp': 1453032377975}
+    push_android_message(msg.get('userId'), "motion", msg.get("val"), msg.get("timestamp"))
+#     msg = {'status': u'contextAtHome', 'probability': 1, 'timestamp': 1452848189611, 'source': '',
+#            'installationId': u'ntK466fF6qCfJeYLwGYJ8od5L8n1gwXD', 'type': 'home_office_status'}
+#     push_ios_message(msg.get("installationId"), msg.get("type"), msg.get("status"), msg.get("timestamp"))
 
 
-if __name__ == '__main__':
-    msg = {
-        "status": "contextAtWork",
-        "probability": 1,
-        "timestamp": 1452876156178,
-        "source": "",
-        "installationId": "4Y5KKBtB7TuPrAiQd14xE1EarhJu0EQ0",
-        "type": "home_office_status"
-    }
-    push_ios_message(msg.get("installationId"),
-                     msg.get("type"),
-                     msg.get("status"),
-                     msg.get("timestamp"))
 
