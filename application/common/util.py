@@ -77,7 +77,7 @@ def post_panel_data(**param):
             rep = requests.post("https://leancloud.cn/1.1/functions/notify_new_details",
                                 headers=headers, data=payload)
             print "motion", rep, rep.status_code, rep.content
-        if context_type and context_val and context_val in home_office_type:
+        if context_type and context_val and context_type in home_office_type:
             payload["type"] = "home_office_status"
             payload["val"] = context_val
             payload["expire"] = expire
@@ -86,7 +86,7 @@ def post_panel_data(**param):
             rep = requests.post("https://leancloud.cn/1.1/functions/notify_new_details",
                                 headers=headers, data=payload)
             print "home_office_status", rep, rep.status_code, rep.content
-        elif context_type and context_val and context_val not in home_office_type:
+        elif context_type and context_val and context_type not in home_office_type:
             payload["type"] = "event"
             payload["val"] = context_val
             if installation[1] == u'ios':
