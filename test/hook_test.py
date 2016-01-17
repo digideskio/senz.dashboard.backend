@@ -1,22 +1,28 @@
 from leancloud import Object, Query, init
 import time
-from datetime import datetime
+
+Installation = Object.extend('BindingInstallation')
+
+
+def get_installationid_by_trackerid(tracker_id=None):
+    print "tracker_id", tracker_id
+    query = Query(Installation)
+    user = {
+        "__type": "Pointer",
+        "className": "_User",
+        "objectId": tracker_id
+    }
+    query.equal_to('user', user)
+    query.descending('updatedAt')
+    print "query.count", query.count()
+    installation = query.find()[0] if query.count() else {}
+    print "query Installaton", installation.id
+    return installation.id, installation.get('deviceType')
 
 if __name__ == '__main__':
-    init('pin72fr1iaxb7sus6newp250a4pl2n5i36032ubrck4bej81',
-         'qs4o5iiywp86eznvok4tmhul360jczk7y67qj0ywbcq35iia')
+    init('2x27tso41inyau4rkgdqts0mrao1n6rq1wfd6644vdrz2qfo',
+         '3fuabth1ar3sott9sgxy4sf8uq31c9x8bykugv3zh7eam5ll')
 
-    event_table = Object.extend('UserEvent')
-    query = Query(event_table)
-    result_list = query.find()
-    event_obj = result_list[0]
-
-    time = event_obj.created_at
-    print time.strftime("%d-%m-%y")
-
-    # event = event_table()
-    # event.set('user', event_obj.get('user'))
-    # event.set('event', event_obj.get('event'))
-    # event.set('startTime', event_obj.get('startTime'))
-    # event.set('endTime', event_obj.get('endTime'))
-    # event.save()
+    installation = get_installationid_by_trackerid("560388c100b09b53b59504d2")
+    if installation[1] == u'ios':
+        print "##########"
