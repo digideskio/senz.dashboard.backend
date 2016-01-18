@@ -949,14 +949,16 @@ def get_attr_of_user(uid, h_start=None, h_end=None, e_start=None, e_end=None, wo
         "level": 15,
         "heatData": coordinate
     }
-    detailData = []
+    detail_data = []
     for x in timeline:
         motion_count = x.get('motion_count') or {}
         x['motion_count'] = dict(map(lambda y: (translate(translate(y, "motion_old"), "motion"),
                                                 motion_count.get(y)), motion_count.keys()))
         x['label'] = translate(translate(x.get('label') or "", "event_old"), "home_office_status_old")
-        detailData.append(x)
-    ret_dict['detailData'] = detailData
+        x['level2_event'] = translate(x.get('level2_event') or "", "level2_event")
+        print x['level2_event']
+        detail_data.append(x)
+    ret_dict['detailData'] = detail_data
     return ret_dict
 
 

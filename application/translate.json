@@ -189,5 +189,9 @@
         "other": "",
         "lecture": "",
         "public": ""
+    },
+    "level2_event": {
+        "watching_movie": "看电影",
+        "on_subway": "乘地铁"
     }
 }
