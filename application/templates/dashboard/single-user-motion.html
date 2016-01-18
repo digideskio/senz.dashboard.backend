@@ -1101,16 +1101,20 @@
 		if (detailData == undefined) {
 			return;
 		}
-		var cacheLabel;
 		// 加载
 		for (var i = 0; i < detailData.length; i++) {
-//			console.log(cacheLabel);
+			var label;
+			if (detailData[i].level2_event != '' && detailData[i].level2_event != undefined) {
+				label = detailData[i].level2_event;
+			} else {
+				label = detailData[i].label;
+			}
 			// 显示
-			cacheLabel = loadItem(detailData[i].start_ts, detailData[i].label, detailData[i].start_location.title, detailData[i].motion_count, i, cacheLabel);
+			loadItem(detailData[i].start_ts, label, detailData[i].start_location.title, detailData[i].motion_count, i);
 		}
 	};
 
-	function loadItem(start, label, locationInfo, motion_count, index,cacheLabel) {
+	function loadItem(start, label, locationInfo, motion_count, index) {
 		var month, day, date, time, locationInfo, eventInfo, type, src, item;
 		date = new Date(start).pattern('MM月dd日');
 		time = new Date(start).pattern('HH:mm:ss');
@@ -1120,7 +1124,7 @@
 			case 'contextArrivingOffice':
 			case 'contextLeavingHome':
 			case 'contextLeavingOffice':
-				return cacheLabel;
+				return;
 			case 'contextAtHome':
 				eventInfo = '在家';
 				src = "{{ url_for('static', filename='images/contextAtHome.png') }}";
@@ -1218,6 +1222,11 @@
 				src = "{{ url_for('static', filename='images/contextRelaxing.png') }}";
 				type = 1;
 				break;
+			case 'contextEntertaining':
+				eventInfo = '休闲娱乐';
+				src = "{{ url_for('static', filename='images/contextEntertaining.png') }}";
+				type = 1;
+				break;
 			default:
 				eventInfo = '未知';
 				src = "{{ url_for('static', filename='images/unknown.png') }}";
@@ -1225,9 +1234,6 @@
 				break;
 		}
 		// 判断是否显示
-		if(eventInfo == cacheLabel){
-			return cacheLabel;
-		}
 		switch (type) {
 			case 0:
 				item = $('#lineHidden').clone();
@@ -1276,8 +1282,6 @@
 			item.find('.locationInfo').text(locationInfo);
 		}
 		$('#lineHidden').before(item);
-		// 返回cacheLabel
-		return eventInfo;
 	}
 
 	function popChart(motionData) {
