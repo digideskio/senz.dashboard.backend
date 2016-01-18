@@ -94,12 +94,12 @@ def translate(target, arg):
 
 
 if __name__ == '__main__':
-    msg = {'source': '', 'type': 'motion', 'userId': u'5624d68460b2b199f7628914',
-           'val': u'motionWalking', 'timestamp': 1453032377975}
-    push_android_message(msg.get('userId'), "motion", msg.get("val"), msg.get("timestamp"))
-#     msg = {'status': u'contextAtHome', 'probability': 1, 'timestamp': 1452848189611, 'source': '',
-#            'installationId': u'ntK466fF6qCfJeYLwGYJ8od5L8n1gwXD', 'type': 'home_office_status'}
-#     push_ios_message(msg.get("installationId"), msg.get("type"), msg.get("status"), msg.get("timestamp"))
+    # msg = {'source': '', 'type': 'motion', 'userId': u'5624d68460b2b199f7628914',
+    #        'val': u'motionWalking', 'timestamp': 1453032377975}
+    # push_android_message(msg.get('userId'), "motion", msg.get("val"), msg.get("timestamp"))
+    msg = {'status': u'contextAtHome', 'probability': 1, 'timestamp': 1452848189611, 'source': '',
+           'installationId': u'4Y5KKBtB7TuPrAiQd14xE1EarhJu0EQ0', 'type': 'home_office_status'}
+    push_ios_message(msg.get("installationId"), msg.get("type"), msg.get("status"), msg.get("timestamp"))
 
 
 
