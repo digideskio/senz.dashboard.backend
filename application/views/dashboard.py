@@ -413,6 +413,9 @@ def single():
 
 @dashboard_bp.route('/dashboard/group', methods=['GET', 'POST'])
 def group():
+    if not session.get('session_token'):
+        next_url = '/dashboard/group'
+        return redirect(url_for('accounts_bp.login') + '?next=' + next_url)
     if request.method == 'POST':
         req_type = request.json.get('action')
         if req_type == 'group_list':

@@ -35,10 +35,10 @@ def show():
         if motion_type and motion_val:
             post_panel_data(tracker=tracker, tracker_list=tracker_list,
                             type="motion", value=motion_val, source=source)
-        if context_type and context_val and context_type in home_office_type:
+        if context_type and context_val and context_val in home_office_type:
             post_panel_data(tracker=tracker, tracker_list=tracker_list,
                             type="home_office_status", value=context_val, source=source)
-        if context_type and context_val and context_type not in home_office_type:
+        if context_type and context_val and context_val not in home_office_type:
             post_panel_data(tracker=tracker, tracker_list=tracker_list,
                             type="event", value=context_val, source=source)
 
