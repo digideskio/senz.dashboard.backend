@@ -2,7 +2,7 @@
 
 from leancloud import Engine, Query, Object
 from datetime import datetime
-from application.common.util import post_panel_data
+# from application.common.util import post_panel_data
 from application.common.util import translate
 from flask import json
 from os.path import dirname, join
@@ -45,7 +45,7 @@ def parse_motion_info(motion_obj):
     motion = translate(motion_prob[0][0] if motion_prob else "", 'motion_old')
     if motion:
         ret_dict['motion'] = {timestamp:  motion}
-        post_panel_data(tracker=user_id, type='motion', value=motion, timestamp=timestamp)
+        # post_panel_data(tracker=user_id, type='motion', value=motion, timestamp=timestamp)
     return ret_dict
 
 
@@ -111,7 +111,7 @@ def parse_home_office_info(homeoffice_info):
     ret_dict['user_id'] = user_id
     ret_dict['home_office_status'] = {timestamp: status}
     # if time.time()*1000 - timestamp < 300:
-    post_panel_data(tracker=user_id, type='home_office_status', value=status, timestamp=timestamp, expire=expire)
+    # post_panel_data(tracker=user_id, type='home_office_status', value=status, timestamp=timestamp, expire=expire)
     return ret_dict
 
 
@@ -128,7 +128,7 @@ def parse_event_info(event_info):
     if event_info.get('isOnSubway'):
         event = 'contextTakingSubway'
     ret_dict['event'] = {timestamp: event}
-    post_panel_data(tracker=user_id, type='event', value=event, timestamp=timestamp)
+    # post_panel_data(tracker=user_id, type='event', value=event, timestamp=timestamp)
     return ret_dict
 
 
@@ -146,7 +146,7 @@ def parse_avtivity_info(activity_info):
     ret_dict['activity'] = {'category': activity,
                             'timestamp': timestamp}
     ret_dict['user_id'] = user_id
-    post_panel_data(tracker=user_id, type='activity', value=activity, timestamp=timestamp)
+    # post_panel_data(tracker=user_id, type='activity', value=activity, timestamp=timestamp)
     return ret_dict
 
 
