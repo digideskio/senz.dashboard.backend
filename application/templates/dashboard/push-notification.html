@@ -1,0 +1,19 @@
+{% extends 'base.html' %} {% block head %}
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<meta content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no" name="viewport" /> {#
+	<title>GroupSetting</title>#}
+	<link rel="stylesheet" href="{{ url_for('static', filename='styles/bootstrap.min.css') }}">
+	<script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+	<script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+	<link rel="stylesheet" href="{{ url_for('static', filename='styles/login.css') }}">
+	<link rel="stylesheet" href="{{ url_for('static', filename='styles/dashboard.css') }}">
+</head>
+{% endblock %}
+
+{% block content %}
+<div id="container" class="container">
+   <div id="content" class="content" style="margin-top: 40px;">
+   </div>
+</div>
+{% endblock %}

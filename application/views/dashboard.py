@@ -416,6 +416,14 @@ def group():
     if not session.get('session_token'):
         next_url = '/dashboard/group'
         return redirect(url_for('accounts_bp.login') + '?next=' + next_url)
+
+    app_id = session.get('app_id', None)
+    developer = Developer()
+    developer.session_token = session.get('session_token')
+    username = developer.username()
+    app_list = developer.get_app_list()
+    # tracker_list = developer.get_tracker_of_app(app_id)
+
     if request.method == 'POST':
         req_type = request.json.get('action')
         if req_type == 'group_list':
@@ -436,7 +444,25 @@ def group():
             return json.dumps(get_label_list())
         else:
             return make_response("invalid action type!")
-    return render_template('dashboard/group-setting.html')
+    return render_template('dashboard/group-setting.html', username=username,
+                           app_id=app_id, app_list=app_list)
+
+
+@dashboard_bp.route('/dashboard/push', methods=['GET', 'POST'])
+def push():
+    if not session.get('session_token'):
+        next_url = '/dashboard/push'
+        return redirect(url_for('accounts_bp.login') + '?next=' + next_url)
+
+    app_id = session.get('app_id', None)
+    developer = Developer()
+    developer.session_token = session.get('session_token')
+    username = developer.username()
+    app_list = developer.get_app_list()
+    tracker_list = developer.get_tracker_of_app(app_id)
+
+    return render_template("dashboard/push-notification.html", username=username,
+                           app_id=app_id, app_list=app_list, tracker_list=tracker_list)
 
 
 def create_group(args):
