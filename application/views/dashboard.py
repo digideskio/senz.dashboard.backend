@@ -29,6 +29,8 @@ def get_app_list():
     app_list = developer.get_app_list()
     ret_dict['app_id'] = app_id
     ret_dict['username'] = username
+    # if username == "yzg963@163.com":
+    #     app_list.append("564573f660b25b79f067aeef")
     ret_dict['app_list'] = app_list
     return ret_dict
 
@@ -939,8 +941,8 @@ def get_attr_of_user(uid, h_start=None, h_end=None, e_start=None, e_end=None, wo
         home_office_property = {}
     home = home_office_property.get("home") or {}
     office = home_office_property.get("offices") or {}
-    avg_start = str(int(home.get("avg_start") or 0)/3600) + ":" + str((int(home.get("avg_start") or 0) % 3600)/60)
-    avg_end = str(int(home.get("avg_end") or 0)/3600) + ":" + str((int(home.get("avg_end") or 0) % 3600)/60)
+    avg_start = str(int(home.get("combo_start") or 0)/3600) + ":" + str((int(home.get("combo_start") or 0) % 3600)/60)
+    avg_end = str(int(home.get("combo_end") or 0)/3600) + ":" + str((int(home.get("combo_end") or 0) % 3600)/60)
     combo_start = str(int(office.get("combo_start") or 0)/3600) + ":" + str((int(office.get("combo_start") or 0) % 3600)/60)
     combo_end = str(int(office.get("combo_end") or 0)/3600) + ":" + str((int(office.get("combo_end") or 0) % 3600)/60)
     duration = office.get("combo_duration") or 0

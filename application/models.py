@@ -89,6 +89,13 @@ class Developer(User):
             query.equal_to('user', user)
             query.limit(1000)
             result = query.find()
+            if user.attributes.get("username") == "yzg963@163.com":
+                other_query = Query(Application)
+                other_query.equal_to('objectId', "564573f660b25b79f067aeef")
+                result += other_query.find()
+                other_query2 = Query(Application)
+                other_query2.equal_to('objectId', "5678df1560b2f2e841665918")
+                result += other_query2.find()
         except LeanCloudError:
             return []
 
