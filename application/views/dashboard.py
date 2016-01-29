@@ -467,6 +467,23 @@ def push():
                            app_id=app_id, app_list=app_list, tracker_list=tracker_list)
 
 
+@dashboard_bp.route('/dashboard/history', methods=['GET', 'POST'])
+def history():
+    if not session.get('session_token'):
+        next_url = '/dashboard/push'
+        return redirect(url_for('accounts_bp.login') + '?next=' + next_url)
+    if request.method == "POST":
+        print request.json
+    app_id = session.get('app_id', None)
+    developer = Developer()
+    developer.session_token = session.get('session_token')
+    username = developer.username()
+    app_list = developer.get_app_list()
+    tracker_list = developer.get_tracker_of_app(app_id)
+    return render_template('dashboard/push-notification-history.html', username=username,
+                           app_id=app_id, app_list=app_list, tracker_list=tracker_list)
+
+
 def create_group(args):
     group_id = args.get('id')
     query = Query(DashboardGroup)
