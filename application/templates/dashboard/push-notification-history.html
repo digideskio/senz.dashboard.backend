@@ -1,0 +1,165 @@
+{% extends 'base.html' %} {% block head %}
+
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<meta content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no" name="viewport" /> {#
+	<title>PushNotificationHistory</title>#}
+	<link rel="stylesheet" href="{{ url_for('static', filename='styles/bootstrap.min.css') }}">
+	<script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+	<script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+	<link rel="stylesheet" href="{{ url_for('static', filename='styles/login.css') }}">
+	<link rel="stylesheet" href="{{ url_for('static', filename='styles/dashboard.css') }}">
+</head>
+{% endblock %} {% block content %}
+<div class="container" style="background: #FFFFFF;">
+	<div class="content" style="margin-top: 40px;">
+		<h1>推送历史</h1>
+		<table class="table table-bordered">
+			<tr>
+				<th>通知标题</th>
+				<th>状态</th>
+				<th>推送时间</th>
+				<th>成功下发数</th>
+				<th>到达数</th>
+				<th>展示数</th>
+				<th>点击数</th>
+			</tr>
+			<tr id="itemHidden" style="display: none;">
+				<td class="title"></td>
+				<td class="status"></td>
+				<td class="push_time"></td>
+				<td class="send_count"></td>
+				<td class="arrive_count"></td>
+				<td class="show_count"></td>
+				<td class="click_count"></td>
+			</tr>
+		</table>
+	</div>
+</div>
+
+<script>
+	// 数据格式
+	var data = [{
+		title: 'title',
+		status: 'status',
+		push_time: 1454061940,
+		send_count: 123,
+		arrive_count: 123,
+		show_count: 123,
+		click_count: 123
+	}, {
+		title: 'title',
+		status: 'status',
+		push_time: 1454061940,
+		send_count: 123,
+		arrive_count: 123,
+		show_count: 123,
+		click_count: 123
+	}, {
+		title: 'title',
+		status: 'status',
+		push_time: 1454061940,
+		send_count: 123,
+		arrive_count: 123,
+		show_count: 123,
+		click_count: 123
+	}];
+	// TODO 网络请求地址
+	var url = "";
+	// 加载列表
+	//	$.ajax({
+	//		type: 'post',
+	//		async: false,
+	//		url: static_url,
+	//		contentType: "application/json",
+	//		data: JSON.stringify({
+	//			action: "label_list"
+	//		}),
+	//		success: function(option) {
+	//			//			console.log(option);
+	//			var obj = JSON.parse(option);
+	//			groupFilter = obj;
+	//		},
+	//		error: function() {
+	//			alert("获取内容失败，请稍后再试！");
+	//		}
+	//	});
+	$(function() {
+		for (var i = 0; i < data.length; i++) {
+			var item = $('#itemHidden').clone();
+			item.removeAttr('id');
+			item.css('display', 'block');
+			item.find('.title').text(data[i].title);
+			item.find('.status').text(data[i].status);
+			item.find('.push_time').text(new Date(data[i].push_time).pattern('yyyy-MM-dd HH:mm:ss'));
+			item.find('.send_count').text(data[i].send_count);
+			item.find('.arrive_count').text(data[i].arrive_count);
+			item.find('.show_count').text(data[i].show_count);
+			item.find('.click_count').text(data[i].click_count);
+			$('#itemHidden').before(item);
+		}
+	});
+	Date.prototype.pattern = function(fmt) {
+		var o = {
+			"M+": this.getMonth() + 1, //月份
+			"d+": this.getDate(), //日
+			"h+": this.getHours() % 12 == 0 ? 12 : this.getHours() % 12, //小时
+			"H+": this.getHours(), //小时
+			"m+": this.getMinutes(), //分
+			"s+": this.getSeconds(), //秒
+			"q+": Math.floor((this.getMonth() + 3) / 3), //季度
+			"S": this.getMilliseconds() //毫秒
+		};
+		var week = {
+			"0": "/u65e5",
+			"1": "/u4e00",
+			"2": "/u4e8c",
+			"3": "/u4e09",
+			"4": "/u56db",
+			"5": "/u4e94",
+			"6": "/u516d"
+		};
+		if (/(y+)/.test(fmt)) {
+			fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+		}
+		if (/(E+)/.test(fmt)) {
+			fmt = fmt.replace(RegExp.$1, ((RegExp.$1.length > 1) ? (RegExp.$1.length > 2 ? "/u661f/u671f" : "/u5468") : "") + week[this.getDay() + ""]);
+		}
+		for (var k in o) {
+			if (new RegExp("(" + k + ")").test(fmt)) {
+				fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+			}
+		}
+		return fmt;
+	};
+	Date.prototype.DateAdd = function(strInterval, Number) {
+		var dtTmp = this;
+		switch (strInterval) {
+			case 's':
+				return new Date(Date.parse(dtTmp) + (1000 * Number));
+			case 'n':
+				return new Date(Date.parse(dtTmp) + (60000 * Number));
+			case 'h':
+				return new Date(Date.parse(dtTmp) + (3600000 * Number));
+			case 'd':
+				return new Date(Date.parse(dtTmp) + (86400000 * Number));
+			case 'w':
+				return new Date(Date.parse(dtTmp) + ((86400000 * 7) * Number));
+			case 'q':
+				return new Date(dtTmp.getFullYear(), (dtTmp.getMonth()) + Number * 3, dtTmp.getDate(), dtTmp.getHours(), dtTmp.getMinutes(), dtTmp.getSeconds());
+			case 'm':
+				return new Date(dtTmp.getFullYear(), (dtTmp.getMonth()) + Number, dtTmp.getDate(), dtTmp.getHours(), dtTmp.getMinutes(), dtTmp.getSeconds());
+			case 'y':
+				return new Date((dtTmp.getFullYear() + Number), dtTmp.getMonth(), dtTmp.getDate(), dtTmp.getHours(), dtTmp.getMinutes(), dtTmp.getSeconds());
+		}
+	};
+
+	function IsURL(str_url) {
+		if (str_url != "" && /(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/.test(str_url)) {
+			return true;
+		} else {
+			return false;
+		}
+	};
+</script>
+{% endblock %}
