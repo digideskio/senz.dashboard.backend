@@ -49,3 +49,4 @@ pip-log.txt  # Installer logs
 .gitignore
 .avoscloud/
 .avoscloud/
+.avoscloud/
