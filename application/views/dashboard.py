@@ -460,10 +460,13 @@ def push():
     developer = Developer()
     developer.session_token = session.get('session_token')
     username = developer.username()
+    user_id = developer.user_id()
     app_list = developer.get_app_list()
     tracker_list = developer.get_tracker_of_app(app_id)
     if request.method == "POST":
         data = request.json
+        data['devId'] = user_id
+        data['appId'] = app_id
         url = "http://api.trysenz.com/notifyStrategy/createStrategy"
         rep = post_data(url=url, data=data)
         return make_response(json.dumps(rep))
