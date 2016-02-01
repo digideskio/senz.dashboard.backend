@@ -45,12 +45,7 @@ def show():
     motion_list = ['motionSitting', 'motionWalking', 'motionRunning', 'motionBiking', 'motionCommuting']
     f = file(join(dirname(dirname(__file__)), 'translate.json'))
     context_list = filter(lambda x: str(x) != '', json.load(f).get('context').keys())
-    return render_template('panel/debug.html',
-                           username=username,
-                           motion_list=motion_list,
-                           context_list=context_list,
-                           tracker_list=tracker_list,
-                           app_id=app_id,
-                           app_list=app_list)
+    return render_template('panel/debug.html', username=username, motion_list=motion_list, context_list=context_list,
+                           tracker_list=tracker_list, app_id=app_id, app_list=app_list)
 
 

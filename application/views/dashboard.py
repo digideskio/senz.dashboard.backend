@@ -1,7 +1,7 @@
 # coding: utf-8
 from flask import Blueprint, render_template, json, session, request, make_response, redirect, url_for, flash
 from leancloud import Object, Query, LeanCloudError
-from application.common.util import translate
+from application.common.util import translate, post_data
 from application.models import Developer
 from os.path import dirname, join
 from bson.json_util import dumps
@@ -460,9 +460,16 @@ def push():
     developer = Developer()
     developer.session_token = session.get('session_token')
     username = developer.username()
+    user_id = developer.user_id()
     app_list = developer.get_app_list()
     tracker_list = developer.get_tracker_of_app(app_id)
-
+    if request.method == "POST":
+        data = request.json
+        data['devId'] = user_id
+        data['appId'] = app_id
+        url = "http://api.trysenz.com/notifyStrategy/createStrategy"
+        rep = post_data(url=url, data=data)
+        return make_response(json.dumps(rep))
     return render_template("dashboard/push-notification.html", username=username,
                            app_id=app_id, app_list=app_list, tracker_list=tracker_list)
 
@@ -522,7 +529,7 @@ def get_tracker_of_app(app_id=None, group_id=None):
         return [u'user0', u'user1', u'user2', u'user3']
     elif app_id == u'all':
         return [u'5689cf3700b09aa2fdd88d3b', u'5684d18200b068a2a955aefc', u'5689cd6d60b2e57ba2c05e4c',
-                u'5684fa9e00b009a31af7efcb', u'5634da2360b22ab52ef82a45',
+                u'5684fa9e00b009a31af7efcb', u'5634da2360b22ab52ef82a45', u'56ab329fc4c97100530f5281',
                 u'560388c100b09b53b59504d2', u'560d7193ddb2dd00356f4e80', u'560bd9b7ddb2e44a621fc217',
                 u'561bdea960b2de2d09810f22', u'5624b97660b296e5979bce05', u'5624ce21ddb24819b84d59d2',
                 u'560bdbcb60b267e6db7aa2a9', u'560e7b25ddb2e44a624f4d4e', u'5625af4060b202593e53cda7',
