@@ -1,7 +1,7 @@
 # coding: utf-8
 from flask import Blueprint, render_template, json, session, request, make_response, redirect, url_for, flash
 from leancloud import Object, Query, LeanCloudError
-from application.common.util import translate
+from application.common.util import translate, post_data
 from application.models import Developer
 from os.path import dirname, join
 from bson.json_util import dumps
@@ -462,7 +462,11 @@ def push():
     username = developer.username()
     app_list = developer.get_app_list()
     tracker_list = developer.get_tracker_of_app(app_id)
-
+    if request.method == "POST":
+        data = request.json
+        url = "http://api.trysenz.com/notifyStrategy/createStrategy"
+        rep = post_data(url=url, data=data)
+        return make_response(json.dumps(rep))
     return render_template("dashboard/push-notification.html", username=username,
                            app_id=app_id, app_list=app_list, tracker_list=tracker_list)
 

@@ -153,7 +153,7 @@
 	// 网络请求地址
 	var static_url = "{{ url_for('dashboard_bp.group') }}";
 	// TODO 提交地址
-	var submit_url = "/dashboard/history";
+	var submit_url = "{{ url_for('dashboard_bp.push') }}";
 	// 加载列表
 	$.ajax({
 		type: 'post',
@@ -378,6 +378,7 @@
 				toHistory();
 			},
 			error: function() {
+                console.log(data);
 				alert("获取内容失败，请稍后再试！");
 			}
 		});

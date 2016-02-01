@@ -87,6 +87,13 @@ def post_panel_data(**param):
             push_android_message(uid, feature, value, timestamp, source=source)
 
 
+def post_data(url=None, headers=None, data=None):
+    if not url:
+        return {}
+    rep = requests.post(url, headers=headers, data=json.dumps(data))
+    return rep.content
+
+
 def translate(target, arg):
     f = file(join(dirname(dirname(__file__)), 'translate.json'))
     s = json.load(f)
