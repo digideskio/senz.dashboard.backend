@@ -310,15 +310,17 @@
 		// 获取
 		data.title = $('#title').val();
 		data.content = $('#content').val();
-		data.next = $('input:radio[name=next]:checked').val();
-		if (data.next == 'openUrl') {
-			data.url = $('#url').val();
-			if (!IsURL(data.url)) {
+        var next = $('input:radio[name=next]:checked').val();
+		if (next == 'openUrl') {
+            var next_url = $('#url').val();
+			data.next = {type:next,url:next_url};
+			if (!IsURL(next_url)) {
 				alert('URL不合法');
 				return;
 			}
-			nextStr = '打开链接 : ' + data.url;
+			nextStr = '打开链接 : ' + next_url;
 		} else {
+            data.next = {type:next};
 			nextStr = '打开应用';
 		}
 		data.target = [];
@@ -345,11 +347,13 @@
 		} else {
 			conditionStr = '指定标签 : ' + JSON.stringify(data.condition.data);
 		}
-		data.type = $('input:radio[name=type]:checked').val();
-		if (data.type == 'timing') {
-			data.datetime = $('input[name=date]').val() + ' ' + $('input[name=time]').val();
-			typeStr = '定时发送 : ' + data.datetime;
+        var type = $('input:radio[name=type]:checked').val();
+		if (type == 'timing') {
+            var datetime = $('input[name=date]').val() + ' ' + $('input[name=time]').val()
+            data.type={type:type,datetime:datetime};
+			typeStr = '定时发送 : ' + datetime;
 		} else {
+            data.type={type:type};
 			typeStr = '立即发送';
 		}
 		data.valid = $('input[name=valid]').val();
