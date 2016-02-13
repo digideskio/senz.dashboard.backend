@@ -8,6 +8,7 @@ from application.views.dashboard import dashboard_bp
 from application.views.integration import integration
 from application.views.settings import settings
 from application.views.account import accounts_bp
+from application.views.exhibition import exhibition_bp
 from os.path import dirname, join
 import bugsnag
 from bugsnag.flask import handle_exceptions
@@ -25,6 +26,7 @@ app.config.from_object(config)
 app.permanent_session_lifetime = timedelta(hours=1)
 app.register_blueprint(panel)
 app.register_blueprint(dashboard_bp)
+app.register_blueprint(exhibition_bp)
 app.register_blueprint(integration)
 app.register_blueprint(settings)
 app.register_blueprint(accounts_bp)

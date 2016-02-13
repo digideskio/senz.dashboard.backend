@@ -29,41 +29,40 @@ def get_app_list():
     app_list = developer.get_app_list()
     ret_dict['app_id'] = app_id
     ret_dict['username'] = username
-    # if username == "yzg963@163.com":
-    #     app_list.append("564573f660b25b79f067aeef")
     ret_dict['app_list'] = app_list
     return ret_dict
 
 
 @dashboard_bp.route('/dashboard')
 def show():
-    context_dict = get_app_list()
-    app_id = context_dict['app_id']
-    username = context_dict['username']
-    app_list = context_dict['app_list']
-
-    if not app_id or app_id == '5621fb0f60b27457e863fabb':  # Demo App
-        fake_data = json.load(file(join(dirname(dirname(__file__)), 'fake_data.json')))
-        context_fake = fake_data.get('context')
-        event_tmp = sorted(map(lambda x: (translate(translate(x, 'event_old'), 'context'), context_fake[x]),
-                               context_fake.keys()), key=lambda item: -item[1])
-    else:
-        result_dict = get_query_list(app_id, 'event')
-        event_list = filter(lambda x: x is not None, result_dict['event'])
-        event_list_tmp = map(lambda item: map(lambda x: item[x],  item.keys()), event_list)
-        event_list = [i for row in event_list_tmp for i in row]
-        event_list = filter(lambda y: y is not None,
-                            map(lambda x: translate(translate(x, 'event_old'), 'context'), event_list))
-        event_tmp = sorted(map(lambda x: (x, event_list.count(x)), set(event_list)), key=lambda item: -item[1])
-    data = map(lambda x: {'rank': x/3+1, 'name': event_tmp[x-1][0],
-                          'count': event_tmp[x-1][1]}, xrange(1, len(set(event_tmp))+1))
-    event = {
-        'errcode': 0,
-        'errmsg': 'ok',
-        'data': data
-    }
-    return render_template('index.html', username=username, app_id=app_id,
-                           app_list=app_list, option=json.dumps(event))
+    pass
+    # context_dict = get_app_list()
+    # app_id = context_dict['app_id']
+    # username = context_dict['username']
+    # app_list = context_dict['app_list']
+    #
+    # if not app_id or app_id == '5621fb0f60b27457e863fabb':  # Demo App
+    #     fake_data = json.load(file(join(dirname(dirname(__file__)), 'fake_data.json')))
+    #     context_fake = fake_data.get('context')
+    #     event_tmp = sorted(map(lambda x: (translate(translate(x, 'event_old'), 'context'), context_fake[x]),
+    #                            context_fake.keys()), key=lambda item: -item[1])
+    # else:
+    #     result_dict = get_query_list(app_id, 'event')
+    #     event_list = filter(lambda x: x is not None, result_dict['event'])
+    #     event_list_tmp = map(lambda item: map(lambda x: item[x],  item.keys()), event_list)
+    #     event_list = [i for row in event_list_tmp for i in row]
+    #     event_list = filter(lambda y: y is not None,
+    #                         map(lambda x: translate(translate(x, 'event_old'), 'context'), event_list))
+    #     event_tmp = sorted(map(lambda x: (x, event_list.count(x)), set(event_list)), key=lambda item: -item[1])
+    # data = map(lambda x: {'rank': x/3+1, 'name': event_tmp[x-1][0],
+    #                       'count': event_tmp[x-1][1]}, xrange(1, len(set(event_tmp))+1))
+    # event = {
+    #     'errcode': 0,
+    #     'errmsg': 'ok',
+    #     'data': data
+    # }
+    # return render_template('index.html', username=username, app_id=app_id,
+    #                        app_list=app_list, option=json.dumps(event))
 
 
 @dashboard_bp.route('/dashboard/profile')
@@ -972,9 +971,15 @@ def get_attr_of_user(uid, h_start=None, h_end=None, e_start=None, e_end=None, wo
     combo_end = str(int(office.get("combo_end") or 0)/3600) + ":" + str((int(office.get("combo_end") or 0) % 3600)/60)
     duration = office.get("combo_duration") or 0
     duration = str(int(duration/3600)) + u'小时' + str(int((duration % 3600)/60)) + u'分钟'
-    home_addr = home.get("u_poi").get("poi_address") if home.get("u_poi") else ""
-    office_addr = office.get("offices")[0].get("u_poi").get("poi_address") \
-        if office.get("offices") and office.get("offices")[0].get("u_poi") else ""
+
+    home_upoi = home.get("u_poi_visit_logs")[0].get("u_poi") if home.get("u_poi_visit_logs") else ""
+    office_upoi = office.get("u_poi_visit_logs")[0].get("u_poi") \
+        if office.get("u_poi_visit_logs") and office.get("u_poi_visit_logs")[0].get("u_poi") else ""
+
+    home_addr = home_upoi.get('nation') + home_upoi.get('province') + home_upoi.get('city') \
+        + home_upoi.get('district') + home_upoi.get('street')
+    office_addr = office_upoi.get('nation') + office_upoi.get('province') + office_upoi.get('city') \
+        + office_upoi.get('district') + office_upoi.get('street')
     home_office_data = {
         "category": [i for i in xrange(0, 24)],
         "atHomeData": map(lambda x: len(filter(lambda z: z[1] == u"at_home" or z[1] == u"contextAtHome" and time.localtime(int(z[0][:10]))[3] == x,

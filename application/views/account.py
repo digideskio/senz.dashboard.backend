@@ -4,7 +4,6 @@ from flask import Blueprint, session, render_template, request, redirect, url_fo
 from leancloud import LeanCloudError
 from ..models import Developer
 import datetime
-import leancloud
 
 accounts_bp = Blueprint('accounts_bp', __name__, template_folder='templates')
 

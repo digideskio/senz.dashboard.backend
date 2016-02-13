@@ -84,7 +84,8 @@ def post_panel_data(**param):
             print "installation", installation
             if installation[1] == u'ios':
                 push_ios_message(installation[0], feature, value, timestamp, source=source)
-            push_android_message(uid, feature, value, timestamp, source=source)
+            elif installation[1] == u'android':
+                push_android_message(uid, feature, value, timestamp, source=source)
 
 
 def post_data(url=None, headers=None, data=None):
@@ -98,6 +99,7 @@ def translate(target, arg):
     f = file(join(dirname(dirname(__file__)), 'translate.json'))
     s = json.load(f)
     return s.get(arg).get(target) or target
+
 
 
 if __name__ == '__main__':
