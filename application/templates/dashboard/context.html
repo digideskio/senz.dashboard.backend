@@ -68,6 +68,7 @@
 
    </div>
   </div>
+
 <script>
 var profile = JSON.parse({{ option|tojson|safe }});
 
@@ -231,7 +232,7 @@ function close() {
 	$('.j-h-date-wrap')
 		.next()
 		.slideToggle(200);
-};
+}
 
 $(document).ready(function() {
 	$(".j-h-startat").text( new Date((new Date() - 86400000*30)).toISOString().slice(0,10) );
@@ -322,7 +323,7 @@ $(".more-wrap a").on("click", function(){
         default :
             break;
     }
-    var url = "{{ url_for('dashboard_bp.motion') }}";
+    var url = "{{ url_for('exhibition_context.show') }}";
     var workday = $('.h-date-wrap select').val() == "工作日" ? "workday": "weekend";
     var data = {
         name: $(this).parent().parent().attr('id') == "date-filter-wrap"
@@ -355,7 +356,7 @@ $('.h-date-wrap select').on('change', function(){
     var e_start = h_start = new Date(h_start).getTime();
     var e_end = h_end = new Date(h_end).getTime();
 
-    var url = "{{ url_for('dashboard_bp.motion') }}";
+    var url = "{{ url_for('exhibition_context.show') }}";
     var workday = $('.h-date-wrap select').val() == "工作日" ? "workday": "weekend";
     var data = {
         name: $(this).parent().parent().attr('id') == "date-filter-wrap"

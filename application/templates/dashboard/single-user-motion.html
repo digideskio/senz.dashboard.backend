@@ -252,7 +252,7 @@
 	var detailData = [];
 	// 假数据 end
 	// 网络请求地址
-	var url = "{{ url_for('dashboard_bp.single') }}";
+	var url = "{{ url_for('exhibition_single.show') }}";
 	// 加载列表
 	$.ajax({
 		type: 'post',
@@ -272,7 +272,7 @@
 		}
 	});
 	// 网络请求地址
-	var group_url = "{{ url_for('dashboard_bp.group') }}";
+	var group_url = "{{ url_for('exhibition_group.show') }}";
 	// 加载列表
 	$.ajax({
 		type: 'post',

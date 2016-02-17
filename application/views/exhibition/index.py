@@ -1,12 +1,13 @@
-from exhibition import exhibition_bp
-from flask import render_template
+from flask import render_template, Blueprint
 from common import get_app_list, get_query_list
 from application.common.util import translate
 from os.path import dirname, join
 import json
 
+exhibition_index = Blueprint('exhibition_index', __name__, template_folder='templates')
 
-@exhibition_bp.route('/dashboard1')
+
+@exhibition_index.route('/dashboard')
 def show():
     context_dict = get_app_list()
     app_id = context_dict['app_id']
@@ -14,7 +15,7 @@ def show():
     app_list = context_dict['app_list']
 
     if not app_id or app_id == '5621fb0f60b27457e863fabb':  # Demo App
-        fake_data = json.load(file(join(dirname(dirname(__file__)), 'fake_data.json')))
+        fake_data = json.load(file(join(dirname(dirname(dirname(__file__))), 'fake_data.json')))
         context_fake = fake_data.get('context')
         event_tmp = sorted(map(lambda x: (translate(translate(x, 'event_old'), 'context'), context_fake[x]),
                                context_fake.keys()), key=lambda item: -item[1])
