@@ -24,7 +24,7 @@
 				<th>展示数</th>
 				<th>点击数</th>
 			</tr>
-			<tr id="itemHidden" style="display: none;">
+			<tr id="itemHidden">
 				<td class="title"></td>
 				<td class="status"></td>
 				<td class="push_time"></td>
@@ -88,7 +88,7 @@
 		for (var i = 0; i < data.length; i++) {
 			var item = $('#itemHidden').clone();
 			item.removeAttr('id');
-			item.css('display', 'block');
+			// item.css('display', 'block');
 			item.find('.title').text(data[i].title);
 			item.find('.status').text(data[i].status);
 			item.find('.push_time').text(new Date(data[i].push_time).pattern('yyyy-MM-dd HH:mm:ss'));
@@ -98,6 +98,8 @@
 			item.find('.click_count').text(data[i].click_count);
 			$('#itemHidden').before(item);
 		}
+		// hide item
+		$('#itemHidden').css('display','none');
 	});
 	Date.prototype.pattern = function(fmt) {
 		var o = {
@@ -151,14 +153,6 @@
 				return new Date(dtTmp.getFullYear(), (dtTmp.getMonth()) + Number, dtTmp.getDate(), dtTmp.getHours(), dtTmp.getMinutes(), dtTmp.getSeconds());
 			case 'y':
 				return new Date((dtTmp.getFullYear() + Number), dtTmp.getMonth(), dtTmp.getDate(), dtTmp.getHours(), dtTmp.getMinutes(), dtTmp.getSeconds());
-		}
-	};
-
-	function IsURL(str_url) {
-		if (str_url != "" && /(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/.test(str_url)) {
-			return true;
-		} else {
-			return false;
 		}
 	};
 </script>
