@@ -151,9 +151,9 @@
 	var eventFilter = ['在家', '在公司', '上班路上', '回家路上', '刚离开家', '快到公司', '刚离开公司', '快到家', '看电影', '在餐厅吃饭', '出行'];
 	var motionFilter = ['静坐', '走路', '乘车', '跑步', '骑车'];
 	// 网络请求地址
-	var static_url = "{{ url_for('dashboard_bp.group') }}";
+	var static_url = "{{ url_for('exhibition_group.show') }}";
 	// TODO 提交地址
-	var submit_url = "{{ url_for('dashboard_bp.push') }}";
+	var submit_url = "{{ url_for('exhibition_push.show') }}";
 	// 加载列表
 	$.ajax({
 		type: 'post',
