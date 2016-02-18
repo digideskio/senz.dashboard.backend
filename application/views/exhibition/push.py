@@ -7,7 +7,7 @@ import json
 exhibition_push = Blueprint('exhibition_push', __name__, template_folder='templates')
 
 
-@exhibition_push.route('/dashboard/push')
+@exhibition_push.route('/dashboard/push', methods=['GET', 'POST'])
 def show():
     if not session.get('session_token'):
         next_url = '/dashboard/push'
@@ -31,7 +31,7 @@ def show():
                            app_id=app_id, app_list=app_list, tracker_list=tracker_list)
 
 
-@exhibition_push.route('/dashboard/history')
+@exhibition_push.route('/dashboard/history', methods=['GET', 'POST'])
 def history():
     if not session.get('session_token'):
         next_url = '/dashboard/push'

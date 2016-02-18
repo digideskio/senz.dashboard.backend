@@ -449,7 +449,6 @@ def get_motion_stastic(motion, motion_counts):
 
     motion_np = list(set(motion.values()))
 
-    # TODO calc motion's duration
 
     action_data = {
         "category": map(lambda x: translate(x, "motion"), list(set(motion.values()))),
