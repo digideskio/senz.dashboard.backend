@@ -70,7 +70,6 @@ def reset():
         user.session_token = session.get('session_token')
         user.logout()
     email = request.form['email_phone']
-    print(email)
     user.request_password_reset(email=email)
     return render_template('account/notify.html')
 

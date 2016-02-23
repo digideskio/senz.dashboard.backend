@@ -91,6 +91,5 @@ def show():
     }
     if request.method == 'POST':
         return json.dumps(context)
-    print "@@@@@@@@@@@@@@@@@@@@@@"
     return render_template('dashboard/context.html', option=json.dumps(context),
                            username=username, app_id=app_id, app_list=app_list)

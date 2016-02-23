@@ -3,6 +3,7 @@ from flask import render_template, Blueprint, request, session
 from common import get_app_list, get_tracker_of_app, get_attr_of_user
 from application.models import Developer
 import json
+import bson.json_util
 
 exhibition_single = Blueprint('exhibition_single', __name__, template_folder='templates')
 
@@ -31,6 +32,6 @@ def show():
         workday = request.json.get('workday')
         ret_dict = get_attr_of_user(uid, h_start=h_start, h_end=h_end,
                                     e_start=e_start, e_end=e_end, workday=workday == 'workday')
-        return json.dumps(ret_dict)
+        return bson.json_util.dumps(ret_dict)
     return render_template('dashboard/single-user-motion.html',
                            username=username, app_id=app_id, app_list=app_list)

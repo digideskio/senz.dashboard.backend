@@ -40,7 +40,6 @@ def parse_motion_info(motion_obj):
     ret_dict['user_id'] = user_id
     timestamp = motion_obj.get('timestamp') or None
     motion_prob = motion_obj.get('motionProb') or {}
-    print motion_prob
     motion_prob = sorted(filter(lambda x: x, motion_prob.items()), key=lambda v: -v[1])
     motion = translate(motion_prob[0][0] if motion_prob else "", 'motion_old')
     if motion:

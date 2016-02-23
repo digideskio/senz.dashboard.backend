@@ -527,6 +527,7 @@ def get_attr_of_user(uid, h_start=None, h_end=None, e_start=None, e_end=None, wo
         home_office_property = {}
     home = home_office_property.get("home") or {}
     office = home_office_property.get("offices") or {}
+
     avg_start = str(int(home.get("combo_start") or 0)/3600) + ":" + str((int(home.get("combo_start") or 0) % 3600)/60)
     avg_end = str(int(home.get("combo_end") or 0)/3600) + ":" + str((int(home.get("combo_end") or 0) % 3600)/60)
     combo_start = str(int(office.get("combo_start") or 0)/3600) + ":" + str((int(office.get("combo_start") or 0) % 3600)/60)
@@ -534,14 +535,12 @@ def get_attr_of_user(uid, h_start=None, h_end=None, e_start=None, e_end=None, wo
     duration = office.get("combo_duration") or 0
     duration = str(int(duration/3600)) + u'小时' + str(int((duration % 3600)/60)) + u'分钟'
 
-    home_upoi = home.get("u_poi_visit_logs")[0].get("u_poi") if home.get("u_poi_visit_logs") else ""
-    office_upoi = office.get("u_poi_visit_logs")[0].get("u_poi") \
-        if office.get("u_poi_visit_logs") and office.get("u_poi_visit_logs")[0].get("u_poi") else ""
+    home_upoi = home.get("u_poi_visit_logs")[0].get("u_poi") if home.get("u_poi_visit_logs") else {}
+    office_upoi = office.get("u_poi_visit_logs")[0].get("u_poi") if office.get("u_poi_visit_logs") else {}
 
-    home_addr = home_upoi.get('nation') + home_upoi.get('province') + home_upoi.get('city') \
-        + home_upoi.get('district') + home_upoi.get('street')
-    office_addr = office_upoi.get('nation') + office_upoi.get('province') + office_upoi.get('city') \
-        + office_upoi.get('district') + office_upoi.get('street')
+    home_addr = home_upoi.get('poi_address') or ""
+    office_addr = office_upoi.get('poi_address') or ""
+
     home_office_data = {
         "category": [i for i in xrange(0, 24)],
         "atHomeData": map(lambda x: len(filter(lambda z: z[1] == u"at_home" or z[1] == u"contextAtHome" and time.localtime(int(z[0][:10]))[3] == x,
@@ -580,7 +579,7 @@ def get_attr_of_user(uid, h_start=None, h_end=None, e_start=None, e_end=None, wo
                                                 motion_count.get(y)), motion_count.keys()))
         x['label'] = translate(translate(x.get('label') or "", "event_old"), "home_office_status_old")
         x['level2_event'] = translate(x.get('level2_event') or "", "level2_event")
-        print x['level2_event']
+        # print x['level2_event']
         detail_data.append(x)
     ret_dict['detailData'] = detail_data
     return ret_dict
