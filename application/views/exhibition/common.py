@@ -535,8 +535,8 @@ def get_attr_of_user(uid, h_start=None, h_end=None, e_start=None, e_end=None, wo
     duration = office.get("combo_duration") or 0
     duration = str(int(duration/3600)) + u'小时' + str(int((duration % 3600)/60)) + u'分钟'
 
-    home_upoi = home.get("u_poi_visit_logs")[0].get("u_poi") if home.get("u_poi_visit_logs") else {}
-    office_upoi = office.get("u_poi_visit_logs")[0].get("u_poi") if office.get("u_poi_visit_logs") else {}
+    home_upoi = home.get("u_poi_visit_logs")[-1].get("u_poi") if home.get("u_poi_visit_logs") else {}
+    office_upoi = office.get("u_poi_visit_logs")[-1].get("u_poi") if office.get("u_poi_visit_logs") else {}
 
     home_addr = home_upoi.get('poi_address') or ""
     office_addr = office_upoi.get('poi_address') or ""
